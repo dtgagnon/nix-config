@@ -1,0 +1,3 @@
+.sops.yaml
+secrets/
+home/modules/ssh
