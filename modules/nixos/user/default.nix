@@ -11,14 +11,10 @@ with lib.${namespace};
 let cfg = config.${namespace}.user;
 in {
   options.${namespace}.user = with types; {
-    name = mkOpt str 
-      "dtgagnon" "The name to use for the user account.";
-    fullName = mkOpt str 
-      "Derek Gagnon" "The full name of the user.";
-    email = mkOpt str 
-      "gagnon.derek@gmail.com" "The email of the user.";
-    initialPassword = mkOpt str 
-      "password" "The initial password for the user account.";
+    name = mkOpt str "dtgagnon" "The name to use for the user account.";
+    fullName = mkOpt str "Derek Gagnon" "The full name of the user.";
+    email = mkOpt str "gagnon.derek@gmail.com" "The email of the user.";
+    initialPassword = mkOpt str "password" "The initial password for the user account.";
 
     prompt-init = mkBoolOpt true "Whether or not to show an initial message when opening a new shell.";
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned.";
@@ -31,26 +27,20 @@ in {
       enable = true;
     };
 
-    sn.home = {
-      extraOptions = {
-        programs.starship = {
-          enable = true;
-          settings = {
-            character = {
-              success_symbol = "[➜](bold green)";
-              error_symbol = "[✗](bold red) ";
-              vicmd_symbol = "[](bold blue) ";
-            };
-          };
-        };
-
-        programs.zsh = {
-          enable = true;
-          autosuggestion = enabled;
-          syntaxHighlighting = enabled;
-        };
-      };
-    };
+    # sn.home = {
+    #   extraOptions = {
+    #     programs.starship = {
+    #       enable = true;
+    #       settings = {
+    #         character = {
+    #           success_symbol = "[➜](bold green)";
+    #           error_symbol = "[✗](bold red) ";
+    #           vicmd_symbol = "[](bold blue) ";
+    #         };
+    #       };
+    #     };
+    #   };
+    # };
 
 
     users.users.${cfg.name} = {

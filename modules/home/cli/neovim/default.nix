@@ -6,18 +6,19 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
-
-  cfg = config.${namespace}.cli-apps.neovim;
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.cli.neovim;
 in
 {
-  options.${namespace}.cli-apps.neovim = {
-    enable = mkEnableOption "Neovim";
+  options.${namespace}.cli.neovim = {
+    enable = mkBoolOpt false "Neovim";
   };
 
   config = mkIf cfg.enable {
     programs.neovim = {
       enable = true;
+
       defaultEditor = true;
       
       viAlias = true;
@@ -25,26 +26,19 @@ in
 
       plugins = with pkgs.vimPlugins; [
         nvim-lspconfig
-
         neo-tree-nvim
-
         comment-nvim
         gruvbox-nvim
-
         neodev-nvim
         nvim-cmp
         telescope-nvim
         telescope-fzf-native-nvim
-
         cmp_luasnip
         cmp-nvim-lsp
-
         luasnip
         friendly-snippets
-
         lualine-nvim
         nvim-web-devicons
-
         (nvim-treesitter.withPlugins (p: [
           p.tree-sitter-nix
           p.tree-sitter-vim
@@ -53,9 +47,7 @@ in
           p.tree-sitter-python
           p.tree-sitter-json
         ]))
-
         vim-nix
-
       ];
       
       extraPackages = with pkgs; [
@@ -63,7 +55,6 @@ in
       ];
 
       extraLuaConfig = '' 
-
         ${builtins.readFile ./options.lua}
         ${builtins.readFile ./plugin/lsp.lua}
         ${builtins.readFile ./plugin/cmp.lua}

@@ -9,7 +9,6 @@
 let
   inherit (lib) types mkEnableOption mkIf;
   inherit (lib.${namespace}) mkOpt enabled;
-
   cfg = config.${namespace}.tools.git;
   user = config.${namespace}.user;
 in {
@@ -26,27 +25,19 @@ in {
     programs.git = {
       enable = true;
       inherit (cfg) userName userEmail;
-      # lfs = enabled;
+      lfs = enabled;
       # signing = {
       #   key = cfg.signingKey;
       #   inherit (cfg) signByDefault;
       # };
       extraConfig = {
-        init = {
-          defaultBranch = "main";
-        };
-        pull = {
-          rebase = true;
-        };
-        push = {
-          autoSetupRemote = true;
-        };
+        init.defaultBranch = "main";
+        pull.rebase = true;
+        push.autoSetupRemote = true;
         core = {
           whitespace = "trailing-space,space-before-tab";
         };
-        safe = {
-          directory = "${user.home}/work/config/.git";
-        };
+        safe.directory = "${user.home}/.config/.git";
       };
     };
   };

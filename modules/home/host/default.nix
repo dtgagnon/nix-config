@@ -13,6 +13,6 @@ let
 in
 {
   options.${namespace}.host = {
-    name = mkOpt (types.nullOr types.str) host "The host name.";
+    name = mkOpt (types.nullOr types.str) host "The host-name.";
   };
 }

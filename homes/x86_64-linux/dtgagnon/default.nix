@@ -7,18 +7,22 @@
 , namespace
 , ...
 }:
-with lib.${namespace};
-{
-  sn = {
+let
+  inherit (lib.${namespace}) enabled;
+in {
+  spirenix = {
     user = {
       enable = true;
       name = config.snowfallorg.user.name;
     };
 
-    cli-apps = {
+    cli = {
       home-manager = enabled;
       zsh = enabled;
       neovim = enabled;
+      zoxide = enabled;
+      eza = enabled;
+      fzf = enabled;
     };
 
     tools = {

@@ -25,6 +25,6 @@ in {
       vimdiff = "nvim -d";
     };
 
-    stateVersion = "23.11";
+    stateVersion = "24.05";
   };
 }

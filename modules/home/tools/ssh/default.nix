@@ -6,12 +6,13 @@
   ...
 }:
 let
-  inherit (lib) types mkEnableOption mkIf;
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.tools.ssh;
 in
 {
   options.${namespace}.tools.ssh = {
-    enable = mkEnableOption "SSH";
+    enable = mkBoolOpt "ssh";
   };
 
   config = mkIf cfg.enable {

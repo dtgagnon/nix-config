@@ -5,22 +5,24 @@
   namespace,
   ...
 }:
-
 let
-  inherit (lib) mkEnableOption mkIf;
-  cfg = config.${namespace}.cli-apps.zsh;
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.cli.zsh;
 in {
-  options.${namespace}.cli-apps.zsh.enable = mkEnableOption "Enables zsh shell";
+  options.${namespace}.cli.zsh.enable = mkBoolOpt false "Enables zsh shell";
 
 
   config = mkIf cfg.enable {
     programs.zsh = {
       enable = true;
-      dotDir = ".config/zsh/";
+
       autocd = true;
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
+
+      dotDir = ".config/zsh/";
       history = {
         size = 10000;
         path = "$HOME/.config/zsh/.zsh_history";

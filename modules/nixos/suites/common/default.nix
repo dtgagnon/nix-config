@@ -1,21 +1,21 @@
 {
-options
-, config
+  config
 , lib
-, pkgs
 , namespace
 , ...
 }:
-with lib;
-with lib.${namespace};
-let cfg = config.${namespace}.suites.common;
-in {
-  options.${namespace}.suites.common = with types; {
+let 
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) enabled mkBoolOpt;
+  cfg = config.${namespace}.suites.common;
+in 
+{
+  options.${namespace}.suites.common = {
     enable = mkBoolOpt false "Whether or not to enable common configuration.";
   };
 
   config = mkIf cfg.enable {
-    sn = {
+    spirenix = {
       nix = enabled;
 
       tools = {

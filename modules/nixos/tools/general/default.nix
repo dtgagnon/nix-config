@@ -15,12 +15,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # spirenet.home.configFile."wgetrc".text = "";
+    # sn.home.configFile."wgetrc".text = "";
 
     environment.systemPackages = with pkgs; [
-      fzf
-      zoxide
-      eza
       killall
       unzip
       file

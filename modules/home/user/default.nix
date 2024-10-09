@@ -8,31 +8,23 @@
 }:
 
 let
-  inherit (lib)
-    types
-    mkIf
-    mkDefault
-    mkMerge
-    ;
-  inherit (lib.${namespace}) mkOpt;
-
+  inherit (lib) types mkIf mkDefault mkMerge;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
 
-  is-linux = pkgs.stdenv.isLinux;
+  is-linux = pkgs.stdenv.isLinux; ## Line isn't used because if it's linux, it's just using the final else statement.
   is-darwin = pkgs.stdenv.isDarwin;
 
   home-directory =
-    if cfg.name == null then
-      null
-    else if is-darwin then
-      "/Users/${cfg.name}"
-    else
-      "/home/${cfg.name}";
-in {
+    if cfg.name == null then null
+    else if is-darwin then "/Users/${cfg.name}"
+    else "/home/${cfg.name}";
+in 
+{
   options.${namespace}.user = {
-    enable = mkOpt types.bool true "Whether to configure the user account.";
-    name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "dtgagnon") "The user account.";
+    enable = mkBoolOpt true "Whether to configure the user account.";
 
+    name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "dtgagnon") "The user account.";
     fullName = mkOpt types.str "Derek Gagnon" "The full name of the user.";
     email = mkOpt types.str "gagnon.derek@gmail.com" "The email of the user.";
 
