@@ -87,12 +87,10 @@ in {
       
         # Edit Configs
         cfgflk = "sudo vi /etc/nixos/flake.nix";
-        cfgsys = "sudo vi /etc/nixos/configuration.nix";
-        cfghm = "sudo vi /etc/nixos/home.nix";
-        cfgsh = "sudo vi /etc/nixos/modules/zsh.nix";
-        cfged = "sudo vi /etc/nixos/modules/nvim/nvim.nix";
-
       };
+      initExtra = ''
+        eval "$(zoxide init zsh)"
+      '';
     };
 
     programs.starship = {
