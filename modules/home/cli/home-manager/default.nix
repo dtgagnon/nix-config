@@ -1,5 +1,6 @@
 {
   lib,
+  options,
   config,
   namespace,
   ...
