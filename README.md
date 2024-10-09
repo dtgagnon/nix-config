@@ -25,37 +25,27 @@
 
 ## ✨ Features 
 
-- ❄️ Flakes -- for precise dependency management of the entire system.
-- 🏡 Home Manager -- to configure all used software for the user.
-- 💽 Disko -- for declarative disk management: luks + lvm + btrfs.
-- ⚠️ Impermanence -- to remove junk files and directories that are not specified in the config.
-- 💈 Stylix -- to customize the theme for the entire system and the software you use.
-- 🍎 NixDarwin -- to declaratively customize MacOS.
-- 🔐 Lanzaboot -- to securely boot the system.
-- 📁 Config file structure and modules with options.
+- [X]❄️ Flakes -- for precise dependency management of the entire system.
+- [X]🏡 Home Manager -- to configure all used software for the user.
+- [ ]💽 Disko -- for declarative disk management: luks + lvm + btrfs.
+- [ ]⚠️ Impermanence -- to remove junk files and directories that are not specified in the config.
+- [ ]💈 Stylix -- to customize the theme for the entire system and the software you use.
+- [ ]🍎 NixDarwin -- to declaratively customize MacOS.
+- [ ]🔐 Lanzaboot -- to securely boot the system.
+- [X]📁 Config file structure and modules with options.
 
 ## 📁 File structure
 
 - [❄️ flake.nix](flake.nix) configuration entry point
-- [🏡 home](home/default.nix) entry point for creating a home manager user
-    - [🧩 modules](home/modules/) home manager modules 
-    - [♻️ overlays](home/overlays) home manager overlays
-    - [👤 users](home/users) users configurations for home manager
-        - [🧩 modules](home/users/maxmur/modules/) home manager user modules
-- [📃 lib](lib/default.nix) helper functions for creating configurations
-- [🧩 modules](modules/default.nix) common modules for nixos/nixDarwin/home-manager
-- [🖥️ system](system/default.nix) entry point for creating a machine
-    - [🏎️ machine](system/machine) machines configurations
-        - [🚀 hostname](system/machine/pcbox/) starting the configuration of a specific machine
-            - [🧩 modules](system/machine/pcbox/modules) machine modules
-                - [💾 hardware](system/machine/pcbox/modules/hardware) machine hardware modules
-    - [🧩 modules](system/modules) common modules for machines
-    - [♻️ overlays](system/overlays) common overlays for machines
-- [📄 templates](templates/default.nix) templates for creating configuration parts
+- [1][👤🏡 Users & Homes](homes/) entry point for creating a home manager user
+    - [🧩 modules](modules/home/) home manager modules 
+- [♻️ overlays](overlays/) all overlays
+- [📃 lib](lib/) helper functions for creating configurations
+- [🖥️💾 systems + hw](systems/) machine (host) configs incl. hardware
+    - [🧩 modules](modules/nixos/) machine modules
+- [📄 templates](templates/) templates
 
 ## 🖼️ Desktop preview
-
-The images below may not represent the final system. Some parts may differ.
 
 ### ⚡ Hyprland
 
@@ -79,12 +69,12 @@ The images below may not represent the final system. Some parts may differ.
 
  - OS - [**`NixOS`**](https://nixos.org/)
  - WM - [**`Hyprland`**](https://hyprland.org/) or [**`SwayFX`**](https://github.com/WillPower3309/swayfx)
- - Theme - [**`Nord`**](https://github.com/nordtheme/nord)
- - Wallpapers - [**`Grey wave`**](assets/grey_gradient.png)
+ - Theme - [**`N/A`**]()
+ - Wallpapers - [**`N/A`**]()
  - Editor - [**`Neovim`**](https://neovim.io/)
  - Bar - [**`Waybar`**](https://github.com/Alexays/Waybar)
- - Terminal - [**`Foot`**](https://codeberg.org/dnkl/foot)
- - Shell - [**`Fish`**](https://fishshell.com/)
+ - Terminal - [**`Windows Terminal`**](https://)
+ - Shell - [**`Zsh`**](https://)
  - Promt - [**`Starship`**](https://starship.rs/)
  - Filemanager - [**`Yazi`**](https://github.com/sxyazi/yazi)
 
