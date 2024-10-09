@@ -15,6 +15,9 @@ in {
       enable = true;
       name = config.snowfallorg.user.name;
     };
+    ai = {
+      aider = enabled;
+    };
 
     cli = {
       home-manager = enabled;

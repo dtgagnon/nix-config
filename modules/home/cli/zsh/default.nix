@@ -90,6 +90,7 @@ in {
       };
       initExtra = ''
         eval "$(zoxide init zsh)"
+        eval "$(direnv hook zsh)"
       '';
     };
 

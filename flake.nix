@@ -2,9 +2,11 @@
   description = "My Nix flake";
 
   inputs = {
+    ## packages
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
+    ## configuration
     snowfall-lib.url = "github:snowfallorg/lib";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -16,15 +18,25 @@
     nixos-wsl.url = "github:nix-community/nixos-wsl";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
+    ## security
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    ## config deployments
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
-    
+
+    ## Utilities
     comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-ld.url = "github:nix-community/nix-ld";
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
+    ## miscellaneous
     cowsay.url = "github:snowfallorg/cowsay";
   };
 
@@ -54,12 +66,14 @@
     
 
     systems.modules.nixos = with inputs; [
-      # home-manager.nixosModules.home-manager
+      home-manager.nixosModules.home-manager
       nix-index-database.nixosModules.nix-index
+      sops-nix.nixosModules.sops
     ];
 
     systems.hosts.DGPC-WSL.modules = with inputs; [
       nixos-wsl.nixosModules.default
+      nix-ld.nixosModules.nix-ld
     ];
 
     homes.modules = with inputs; [ 
