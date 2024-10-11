@@ -69,7 +69,7 @@
     };
     
     overlays = with inputs; [
-      neovim.overlays.default
+      nixvim.overlays.default
     ];
 
     systems.modules.nixos = with inputs; [
@@ -85,7 +85,6 @@
 
     homes.modules = with inputs; [ 
       nix-index-database.hmModules.nix-index
-      nixvim.homeModules.nixvim
     ];
 
     templates = {
