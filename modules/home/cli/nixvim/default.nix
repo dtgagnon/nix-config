@@ -74,10 +74,10 @@ in
         MANPAGER = "less";
         EDITOR = "nvim";
       };
+    };
 
-      xdg.configFile = {
-        "dashboard-nvim/.keep".text = "";
-      };
+    xdg.configFile = {
+      "dashboard-nvim/.keep".text = "";
     };
   };
 }
