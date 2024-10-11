@@ -22,7 +22,7 @@ in {
     cli = {
       home-manager = enabled;
       zsh = enabled;
-      nixvim = enabled;
+      neovim = enabled;
       zoxide = enabled;
       eza = enabled;
       fzf = enabled;

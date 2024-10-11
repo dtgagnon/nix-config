@@ -69,7 +69,7 @@
     };
     
     overlays = with inputs; [
-      nixvim.overlays.default
+      neovim.overlays.default
     ];
 
     systems.modules.nixos = with inputs; [

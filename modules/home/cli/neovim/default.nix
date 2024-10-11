@@ -8,10 +8,10 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.cli.nixvim;
+  cfg = config.${namespace}.cli.neovim;
 in
 {
-  options.${namespace}.cli.nixvim = {
+  options.${namespace}.cli.neovim = {
     enable = mkBoolOpt false "Enable custom neovim config'd with nixvim";
   };
 
@@ -19,7 +19,7 @@ in
     home = {
       packages = with pkgs; [
         less
-        spirenix.nixvim
+        spirenix.neovim
       ];
     # programs.neovim = {
     #   enable = true;
