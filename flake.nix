@@ -26,7 +26,7 @@
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
 
-    ## Utilities
+    ## utilities
     comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -35,6 +35,10 @@
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    ## applications
+    nixvim.url = "github:dtgagnon/nixvim/main";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
     ## miscellaneous
     cowsay.url = "github:snowfallorg/cowsay";
@@ -64,6 +68,9 @@
       permittedInsecurePackages = [  ];
     };
     
+    overlays = with inputs; [
+      neovim.overlays.default
+    ];
 
     systems.modules.nixos = with inputs; [
       home-manager.nixosModules.home-manager
@@ -78,6 +85,7 @@
 
     homes.modules = with inputs; [ 
       nix-index-database.hmModules.nix-index
+      nixvim.homeModules.nixvim
     ];
 
     templates = {

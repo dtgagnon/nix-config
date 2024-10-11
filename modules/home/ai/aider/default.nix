@@ -16,7 +16,6 @@ in
   };
   
   config = mkIf cfg.enable {
-    snowfallorg.users.${cfg.name}.home.config.packages = [ pkgs.aider-chat ];
-    programs.neovim.plugins = [ pkgs.vimPlugins.aider-nvm ];
+    home.packages = [ pkgs.aider-chat ];
   };
 }
