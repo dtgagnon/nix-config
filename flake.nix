@@ -37,8 +37,8 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications
-    nixvim.url = "github:dtgagnon/nixvim/main";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    neovim.url = "github:dtgagnon/nixvim/main";
+    neovim.inputs.nixpkgs.follows = "nixpkgs";
 
     ## miscellaneous
     cowsay.url = "github:snowfallorg/cowsay";
