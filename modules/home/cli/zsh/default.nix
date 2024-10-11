@@ -1,4 +1,4 @@
-{ 
+{
   lib,
   config,
   pkgs,
@@ -29,7 +29,7 @@ in {
         expireDuplicatesFirst = true;
         ignoreAllDups = true;
       };
-      
+
       plugins = [
         {
           name = "zsh-nix-shell";
@@ -84,9 +84,12 @@ in {
         svi = "sudo vi";
         h = "history";
         c = "clear";
-      
+
         # Edit Configs
         cfgflk = "sudo vi /etc/nixos/flake.nix";
+
+				# Application aliases
+				vi = "vim";
       };
       initExtra = ''
         eval "$(zoxide init zsh)"
@@ -107,5 +110,3 @@ in {
   };
 
 }
-
-
