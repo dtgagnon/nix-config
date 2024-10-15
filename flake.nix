@@ -45,53 +45,57 @@
   };
 
   outputs = inputs:
-  let
-    lib = inputs.snowfall-lib.mkLib {
+    let
+      lib = inputs.snowfall-lib.mkLib {
+        inherit inputs;
+        src = ./.;
+        snowfall = {
+          meta = {
+            name = "spirenix";
+            title = "SpireNix Namespace";
+          };
+          namespace = "spirenix";
+        };
+      };
+    in
+
+    lib.mkFlake {
       inherit inputs;
       src = ./.;
-      snowfall = {
-        meta = {
-          name = "spirenix";
-          title = "SpireNix Namespace";
-        };
-        namespace = "spirenix";
+
+      channels-config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [ ];
+      };
+
+      overlays = with inputs; [
+        neovim.overlays.default
+      ];
+
+      systems.modules.nixos = with inputs; [
+        home-manager.nixosModules.home-manager
+        nix-index-database.nixosModules.nix-index
+        sops-nix.nixosModules.sops
+      ];
+
+      systems.hosts.DGPC-WSL.modules = with inputs; [
+        nixos-wsl.nixosModules.default
+        nix-ld.nixosModules.nix-ld
+      ];
+
+      homes.modules = with inputs; [
+        nix-index-database.hmModules.nix-index
+      ];
+
+      deploy = lib.mkDeploy { inherit (inputs) self; };
+
+      outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
+
+      templates = {
+        empty.description = "A Nix Flake using snowfall-lib";
+        sysMod.description = "template for NixOS system modules.";
+        homeMod.description = "template for home-manager modules.";
+        homeUser.description = "A template for setting up home-manager users.";
       };
     };
-  in 
-
-  lib.mkFlake {
-    inherit inputs;
-    src = ./.;
-
-    channels-config = {
-      allowUnfree = true;
-      permittedInsecurePackages = [  ];
-    };
-    
-    overlays = with inputs; [
-      neovim.overlays.default
-    ];
-
-    systems.modules.nixos = with inputs; [
-      home-manager.nixosModules.home-manager
-      nix-index-database.nixosModules.nix-index
-      sops-nix.nixosModules.sops
-    ];
-
-    systems.hosts.DGPC-WSL.modules = with inputs; [
-      nixos-wsl.nixosModules.default
-      nix-ld.nixosModules.nix-ld
-    ];
-
-    homes.modules = with inputs; [ 
-      nix-index-database.hmModules.nix-index
-    ];
-
-    templates = {
-      empty.description = "A Nix Flake using snowfall-lib";
-      sysMod.description = "template for NixOS system modules.";
-      homeMod.description = "template for home-manager modules.";
-      homeUser.description = "A template for setting up home-manager users.";
-    };
-  };
 }
