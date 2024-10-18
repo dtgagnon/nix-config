@@ -70,7 +70,7 @@
 
       overlays = with inputs; [
         neovim.overlays.default
-      ];
+			];
 
       systems.modules.nixos = with inputs; [
         home-manager.nixosModules.home-manager
@@ -93,9 +93,10 @@
 
       templates = {
         empty.description = "A Nix Flake using snowfall-lib";
+				devFlake.description = "snowfall-lib dev-env flake template";
         sysMod.description = "template for NixOS system modules.";
         homeMod.description = "template for home-manager modules.";
         homeUser.description = "A template for setting up home-manager users.";
       };
-    };
+    } // { self = inputs.self; };
 }
