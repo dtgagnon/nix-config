@@ -59,44 +59,45 @@
       };
     in
 
-    lib.mkFlake {
-      inherit inputs;
-      src = ./.;
+    lib.mkFlake
+      {
+        inherit inputs;
+        src = ./.;
 
-      channels-config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [ ];
-      };
+        channels-config = {
+          allowUnfree = true;
+          permittedInsecurePackages = [ ];
+        };
 
-      overlays = with inputs; [
-        neovim.overlays.default
-			];
+        overlays = with inputs; [
+          neovim.overlays.default
+        ];
 
-      systems.modules.nixos = with inputs; [
-        home-manager.nixosModules.home-manager
-        nix-index-database.nixosModules.nix-index
-        sops-nix.nixosModules.sops
-      ];
+        systems.modules.nixos = with inputs; [
+          home-manager.nixosModules.home-manager
+          nix-index-database.nixosModules.nix-index
+          sops-nix.nixosModules.sops
+        ];
 
-      systems.hosts.DGPC-WSL.modules = with inputs; [
-        nixos-wsl.nixosModules.default
-        nix-ld.nixosModules.nix-ld
-      ];
+        systems.hosts.DGPC-WSL.modules = with inputs; [
+          nixos-wsl.nixosModules.default
+          nix-ld.nixosModules.nix-ld
+        ];
 
-      homes.modules = with inputs; [
-        nix-index-database.hmModules.nix-index
-      ];
+        homes.modules = with inputs; [
+          nix-index-database.hmModules.nix-index
+        ];
 
-      deploy = lib.mkDeploy { inherit (inputs) self; };
+        deploy = lib.mkDeploy { inherit (inputs) self; };
 
-      outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
+        outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
 
-      templates = {
-        empty.description = "A Nix Flake using snowfall-lib";
-				devFlake.description = "snowfall-lib dev-env flake template";
-        sysMod.description = "template for NixOS system modules.";
-        homeMod.description = "template for home-manager modules.";
-        homeUser.description = "A template for setting up home-manager users.";
-      };
-    } // { self = inputs.self; };
+        templates = {
+          empty.description = "A Nix Flake using snowfall-lib";
+          aiderProj.description = "dev-env w/ aider flake template";
+          sysMod.description = "template for NixOS system modules.";
+          homeMod.description = "template for home-manager modules.";
+          homeUser.description = "A template for setting up home-manager users.";
+        };
+      } // { self = inputs.self; };
 }
