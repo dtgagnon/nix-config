@@ -1,5 +1,4 @@
-{
-  lib
+{ lib
 , config
 , namespace
 , ...
@@ -16,8 +15,9 @@ in
 
   config = mkIf cfg.enable {
     programs.eza = {
-			enable = true;
-			icons = true;
-		};
+      enable = true;
+      icons = "auto";
+      git = true;
+    };
   };
 }

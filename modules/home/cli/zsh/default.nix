@@ -12,7 +12,6 @@ let
 in {
   options.${namespace}.cli.zsh.enable = mkBoolOpt false "Enables zsh shell";
 
-
   config = mkIf cfg.enable {
     programs.zsh = {
       enable = true;
@@ -113,6 +112,7 @@ in {
         };
       };
     };
+		programs.eza.enableZshIntegration = true;
   };
 
 }
