@@ -1,16 +1,16 @@
-{
-  options
-, config
-, lib
+{ lib
 , pkgs
+, config
 , namespace
 , ...
 }:
-with lib;
-with lib.${namespace};
-let cfg = config.${namespace}.tools.general;
-in {
-  options.${namespace}.tools.general = with types; {
+let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.tools.general;
+in
+{
+  options.${namespace}.tools.general = {
     enable = mkBoolOpt false "Whether or not to enable common cli utilities.";
   };
 

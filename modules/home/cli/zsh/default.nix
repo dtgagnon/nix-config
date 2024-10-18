@@ -43,40 +43,46 @@ in {
         }
       ];
 
-      zsh-abbr.abbreviations = {
-        code = "codium";
+      zsh-abbr = {
+				enable = true;
+				abbreviations = {
+					code = "codium";
 
-        #git
-        ga = "git add";
-        gaa = "git add --all .";
-        gb = "git branch";
-        gbd = "git branch -D";
-        gcm = "git checkout main";
-        gco = "git checkout";
-        gcob = "git checkout -b";
-        gd = "git diff";
-        gdc = "git diff --cached";
-        gds = "git diff --staged";
-        gl = "git log";
-        gm = "git commit -m";
-        gma = "git commit --amend";
-        gman = "git commit --amend --no-edit";
-        gp = "git push";
-        gpf = "git push --force";
-        gph = "git push origin HEAD";
-        gphu = "git push origin HEAD -u";
-        gpm = "git pull origin main";
-        gpuh = "git push upstream HEAD";
-        gpt = "git push --tags";
-        gs = "git status";
-      };
+					#git
+					ga = "git add";
+					gaa = "git add --all .";
+					gb = "git branch";
+					gbd = "git branch -D";
+					gcm = "git checkout main";
+					gco = "git checkout";
+					gcob = "git checkout -b";
+					gd = "git diff";
+					gdc = "git diff --cached";
+					gds = "git diff --staged";
+					gl = "git log";
+					gm = "git commit -m";
+					gma = "git commit --amend";
+					gman = "git commit --amend --no-edit";
+					gp = "git push";
+					gpf = "git push --force";
+					gph = "git push origin HEAD";
+					gphu = "git push origin HEAD -u";
+					gpm = "git pull origin main";
+					gpuh = "git push upstream HEAD";
+					gpt = "git push --tags";
+					gs = "git status";
+				};
+			};
 
       shellAliases = {
         # Build System
-        update = "/run/wrappers/bin/sudo nixos-rebuild switch";
+        update = "sudo nixos-rebuild switch";
         nixdev = "nix develop --command zsh";
 
         # Navigate Shell
+				"..." = "z ../../";
+				"...." = "z ../../../";
+				"....." = "z ../../../..";
         ls = "eza";
         la = "eza -a";
         ll = "eza -la";
