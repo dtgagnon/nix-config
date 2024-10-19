@@ -1,6 +1,6 @@
 _: _final: prev:
 let
-  version = "0.57.0";
+  version = "0.59.0";
 in
 {
   aider-chat = prev.aider-chat.overrideAttrs {
@@ -11,7 +11,7 @@ in
       owner = "paul-gauthier";
       repo = "aider";
       rev = "refs/tags/v${version}";
-      hash = "sha256-ErDepSju8B4GochHKxL03aUfOLAiNfTaXBAllAZ144M=";
+      hash = "sha256-20LicYj1j5gGzhF+SxPUKu858nHZgwDF1JxXeHRtYe0=";
     };
 
     # buildInputs = with prev; [

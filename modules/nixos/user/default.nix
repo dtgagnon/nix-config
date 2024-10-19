@@ -1,5 +1,4 @@
-{
-  options
+{ options
 , config
 , pkgs
 , lib
@@ -26,22 +25,6 @@ in {
     programs.zsh = {
       enable = true;
     };
-
-    # sn.home = {
-    #   extraOptions = {
-    #     programs.starship = {
-    #       enable = true;
-    #       settings = {
-    #         character = {
-    #           success_symbol = "[➜](bold green)";
-    #           error_symbol = "[✗](bold red) ";
-    #           vicmd_symbol = "[](bold blue) ";
-    #         };
-    #       };
-    #     };
-    #   };
-    # };
-
 
     users.users.${cfg.name} = {
       inherit (cfg) name initialPassword;

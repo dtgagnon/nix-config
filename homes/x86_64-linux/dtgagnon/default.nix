@@ -1,5 +1,4 @@
-{
-  lib
+{ lib
 , pkgs
 , config
 , osConfig ? { }
@@ -9,14 +8,17 @@
 }:
 let
   inherit (lib.${namespace}) enabled;
-in {
+in
+{
   spirenix = {
     user = {
       enable = true;
       name = config.snowfallorg.user.name;
+      fullName = "Derek Gagnon";
+      email = "gagnon.derek@gmail.com";
     };
     ai = {
-      aider = enabled;
+      # aider = enabled;
     };
 
     cli = {
