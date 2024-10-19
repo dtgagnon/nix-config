@@ -30,6 +30,9 @@
     comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-ld.url = "github:nix-community/nix-ld";
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -73,6 +76,7 @@
         systems.modules.nixos = with inputs; [
           home-manager.nixosModules.home-manager
           sops-nix.nixosModules.sops
+					nix-ld.nixosModules.nix-ld
           nix-index-database.nixosModules.nix-index
         ];
 

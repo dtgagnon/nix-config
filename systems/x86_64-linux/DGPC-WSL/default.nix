@@ -1,12 +1,11 @@
 {
   lib
-, channel
 , namespace
 , ...
 }:
 let
   inherit (lib.${namespace}) enabled;
-in 
+in
 {
   imports = [ ./hardware.nix ];
 

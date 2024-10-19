@@ -1,14 +1,13 @@
-{
-  config
+{ config
 , lib
 , namespace
 , ...
 }:
-let 
+let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) enabled mkBoolOpt;
   cfg = config.${namespace}.suites.common;
-in 
+in
 {
   options.${namespace}.suites.common = {
     enable = mkBoolOpt false "Whether or not to enable common configuration.";
@@ -20,6 +19,7 @@ in
 
       tools = {
         general = enabled;
+        nix-ld = enabled;
       };
 
       security = {
