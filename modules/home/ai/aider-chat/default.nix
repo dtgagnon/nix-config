@@ -7,10 +7,10 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.ai.aider;
+  cfg = config.${namespace}.ai.aider-chat;
 in
 {
-  options.${namespace}.ai.aider = {
+  options.${namespace}.ai.aider-chat = {
     enable = mkBoolOpt false "Enable aider terminal chat";
   };
 

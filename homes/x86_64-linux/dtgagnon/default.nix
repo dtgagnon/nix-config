@@ -18,7 +18,7 @@ in
       email = "gagnon.derek@gmail.com";
     };
     ai = {
-      aider = enabled;
+      aider-chat = enabled;
     };
 
     cli = {
