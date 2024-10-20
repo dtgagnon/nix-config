@@ -15,6 +15,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ spirenix.aider-chat ];
+    home.packages = with pkgs; [ aider-chat ];
   };
 }

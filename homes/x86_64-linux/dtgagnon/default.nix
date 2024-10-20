@@ -17,9 +17,9 @@ in
       fullName = "Derek Gagnon";
       email = "gagnon.derek@gmail.com";
     };
-    # ai = {
-      # aider = enabled;
-    # };
+    ai = {
+      aider = enabled;
+    };
 
     cli = {
       home-manager = enabled;
