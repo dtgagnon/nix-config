@@ -16,7 +16,7 @@ in
   config = mkIf cfg.enable {
     programs.eza = {
       enable = true;
-      icons = "auto";
+      icons = "always";
       git = true;
     };
   };
