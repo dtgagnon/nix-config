@@ -1,7 +1,7 @@
 { channels, ... }: _final: prev:
 {
   aider-chat = prev.aider-chat.overrideAttrs (oldAttrs: rec {
-    python3 = oldAttrs.python3.override {
+    python3 = prev.python311.override {
       packageOverrides = self: super:
         let
           baseOverrides = oldAttrs.python3.packageOverrides self super;
