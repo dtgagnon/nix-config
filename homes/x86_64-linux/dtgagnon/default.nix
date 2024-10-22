@@ -7,7 +7,7 @@
 , ...
 }:
 let
-  inherit (lib.${namespace}) enabled disabled;
+  inherit (lib.${namespace}) enabled;
 in
 {
   spirenix = {
@@ -17,9 +17,9 @@ in
       fullName = "Derek Gagnon";
       email = "gagnon.derek@gmail.com";
     };
-    ai = {
-      aider-chat = disabled;
-    };
+    # ai = {
+    #   aider-chat = disabled;
+    # };
 
     cli = {
       home-manager = enabled;
