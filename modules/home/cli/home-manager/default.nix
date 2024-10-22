@@ -1,9 +1,8 @@
-{
-  lib,
-  options,
-  config,
-  namespace,
-  ...
+{ lib
+, options
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -12,10 +11,10 @@ let
 in
 {
   options.${namespace}.cli.home-manager = {
-    enable = mkBoolOpt true "home-manager";
+    enable = mkBoolOpt false "home-manager";
   };
 
   config = mkIf cfg.enable {
-    programs.home-manager.enable = true; 
+    programs.home-manager.enable = true;
   };
 }
