@@ -597,11 +597,11 @@
         "stable": "stable"
       },
       "locked": {
-        "lastModified": 1729735894,
-        "narHash": "sha256-MgIs0lvPz5ggHT0BqqioHAUxLQb8OzrKY8cQhsBROFE=",
+        "lastModified": 1729738189,
+        "narHash": "sha256-wGBLosXmKVznGzSbwPRcd1nyqrQGee/hUhEydNys3Nc=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "23bba77d4f226154eb913cc5db53835f4ad468ec",
+        "rev": "1a047de9d4424d9e73ba7b403ee3bd3be649fa5d",
         "type": "github"
       },
       "original": {
