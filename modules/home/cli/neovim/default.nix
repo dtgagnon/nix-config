@@ -1,21 +1,33 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.cli.neovim;
 in
 {
   options.${namespace}.cli.neovim = {
     enable = mkBoolOpt false "Enable custom neovim config'd with nixvim";
+    #
+    # theme = mkOpt types.enum "nord" "Choose the neovim theme." [
+    #   "everforest"
+    #   "nord"
+    # ];
+    #
+    # ai-assisstant = mkOpt types.enum "none" "Choose the neovim compatible ai assisstant." [
+    #   "copilot"
+    #   "aider-chat"
+    # ];
   };
 
   config = mkIf cfg.enable {
+    # theme = "nord";
+    # ai-assisstant = "none";
+
     home = {
       packages = with pkgs; [
         less
@@ -24,7 +36,7 @@ in
       sessionVariables = {
         PAGER = "less";
         MANPAGER = "less";
-				# NPM_CONFIG_PREFIX = "$HOME/.config/.npm-global";
+        # NPM_CONFIG_PREFIX = "$HOME/.config/.npm-global";
         EDITOR = "nvim";
       };
     };

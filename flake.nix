@@ -6,6 +6,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    masterpkgs.url = "github:nixos/nixpkgs/master";
 
     ## configuration
     snowfall-lib.url = "github:snowfallorg/lib";
