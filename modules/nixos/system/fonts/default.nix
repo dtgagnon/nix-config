@@ -6,13 +6,14 @@
   namespace,
   ...
 }:
-with lib;
-with lib.${namespace};
-let cfg = config.${namespace}.system.fonts;
+let
+	inherit (lib) mkIf types;
+	inherit (lib.${namespace}) mkOpt mkBoolOpt;
+	cfg = config.${namespace}.system.fonts;
 in {
-  options.${namespace}.system.fonts = with types; {
+  options.${namespace}.system.fonts = {
     enable = mkBoolOpt false "Whether or not to manage fonts.";
-    fonts = mkOpt (listOf package) [ ] "Custom font packages to install.";
+    fonts = mkOpt (types.listOf types.package) [ ] "Custom font packages to install.";
   };
 
   config = mkIf cfg.enable {
