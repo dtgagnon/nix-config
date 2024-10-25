@@ -8,7 +8,7 @@
 }:
 let
   inherit (lib) mkIf optionalString types foldl;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.services.openssh;
 
   user = config.users.users.${config.${namespace}.user.name};
