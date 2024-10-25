@@ -17,13 +17,12 @@ in
     spirenix = {
       nix = enabled;
 
-      tools = {
-        general = enabled;
-        nix-ld = enabled;
-      };
-
       security = {
         sudo = enabled;
+      };
+
+      services = {
+        openssh = enabled;
       };
 
       system = {
@@ -31,6 +30,11 @@ in
         locale = enabled;
         time = enabled;
         xkb = enabled;
+      };
+
+      tools = {
+        general = enabled;
+        nix-ld = enabled;
       };
     };
   };

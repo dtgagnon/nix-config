@@ -3,9 +3,9 @@
 
   inputs = {
     ## packages
+    stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     masterpkgs.url = "github:nixos/nixpkgs/master";
 
     ## configuration
@@ -22,11 +22,11 @@
 
     ## security
     sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs.follows = "stablepkgs";
 
     ## config deployments
     deploy-rs.url = "github:serokell/deploy-rs";
-    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+    deploy-rs.inputs.nixpkgs.follows = "stablepkgs";
 
     ## utilities
     comma.url = "github:nix-community/comma";
