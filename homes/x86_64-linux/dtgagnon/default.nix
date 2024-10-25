@@ -25,7 +25,10 @@ in
     cli = {
       home-manager = enabled;
       zsh = enabled;
-      neovim = enabled;
+      neovim = {
+        enable = true;
+        theme = "everforest";
+      };
       zoxide = enabled;
       eza = enabled;
       fzf = enabled;

@@ -64,7 +64,7 @@
       "inputs": {
         "flake-compat": "flake-compat_4",
         "nixpkgs": [
-          "nixpkgs"
+          "stablepkgs"
         ],
         "utils": "utils_2"
       },
@@ -613,11 +613,11 @@
         "stable": "stable"
       },
       "locked": {
-        "lastModified": 1729804436,
-        "narHash": "sha256-HU2Yj5LrTnCDfkqdAdcAeMX9OEts0bydPO+JRfqmCQo=",
+        "lastModified": 1729877437,
+        "narHash": "sha256-AiGI8w+/36sh5Tg8/bNjSTdYD/NhIuPhNE9lvnPJ5Jk=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "f253f7565e5bca688671494d6fcde31628ef9459",
+        "rev": "33afeece6c59cacecb7c919eae70b21fd5ed44df",
         "type": "github"
       },
       "original": {
@@ -960,7 +960,7 @@
     "sops-nix": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "stablepkgs"
         ],
         "nixpkgs-stable": "nixpkgs-stable_2"
       },

@@ -1,6 +1,7 @@
 { lib
 , pkgs
 , config
+, nvimTheme
 , namespace
 , ...
 }:
@@ -13,11 +14,11 @@ in
   options.${namespace}.cli.neovim = {
     enable = mkBoolOpt false "Enable custom neovim config'd with nixvim";
     #
-    # theme = mkOpt types.enum "nord" "Choose the neovim theme." [
-    #   "everforest"
-    #   "nord"
-    # ];
-    #
+    theme = mkOpt types.enum "everforest" "Choose the neovim theme." [
+      "everforest"
+      "nord"
+    ];
+
     # ai-assisstant = mkOpt types.enum "none" "Choose the neovim compatible ai assisstant." [
     #   "copilot"
     #   "aider-chat"
@@ -25,8 +26,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    # theme = "nord";
     # ai-assisstant = "none";
+
+    ${nvimTheme} = cfg.theme;
 
     home = {
       packages = with pkgs; [
