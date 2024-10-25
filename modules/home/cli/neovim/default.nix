@@ -15,8 +15,18 @@ in
     enable = mkBoolOpt false "Enable custom neovim config'd with nixvim";
     #
     theme = mkOpt types.enum "everforest" "Choose the neovim theme." [
+			"aquarium"
+			"decay"
+			"edge-dark"
+			"everblush"
       "everforest"
+			"gruvbox"
+			"jellybeans"
+			"mountain"
       "nord"
+			"oxo-carbon"
+			"paradise"
+			"tokyonight"
     ];
 
     # ai-assisstant = mkOpt types.enum "none" "Choose the neovim compatible ai assisstant." [
