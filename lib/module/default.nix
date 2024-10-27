@@ -2,7 +2,7 @@
 
 let
   inherit (lib) types mkOption;
-in 
+in
 rec {
   ## Create a NixOS module option.
   ## lib.mkOpt nixpkgs.lib.types.str "My default" "Description of my option."

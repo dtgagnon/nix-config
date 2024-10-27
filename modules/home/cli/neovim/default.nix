@@ -8,41 +8,36 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.cli.neovim;
+
+  availableThemes = types.enum [
+    "aquarium"
+    "decay"
+    "edge-dark"
+    "everblush"
+    "everforest"
+    "gruvbox"
+    "jellybeans"
+    "mountain"
+    "nord"
+    "oxo-carbon"
+    "paradise"
+    "tokyonight"
+  ];
 in
 {
   options.${namespace}.cli.neovim = {
     enable = mkBoolOpt false "Enable custom neovim config'd with nixvim";
-    #
-    nvimTheme = mkOpt types.enum "everforest" "Choose the neovim theme" [
-      "aquarium"
-      "decay"
-      "edge-dark"
-      "everblush"
-      "everforest"
-      "gruvbox"
-      "jellybeans"
-      "mountain"
-      "nord"
-      "oxo-carbon"
-      "paradise"
-      "tokyonight"
-    ];
-
-    # ai-assisstant = mkOpt types.enum "none" "Choose the neovim compatible ai assisstant." [
-    #   "copilot"
-    #   "aider-chat"
-    # ];
+    theme = mkOpt availableThemes "everforest" "Choose the neovim theme"; ## types default description
   };
 
   config = mkIf cfg.enable {
-    # ai-assisstant = "none";
-
     home = {
       packages = with pkgs; [
         less
         spirenix.neovim
       ];
       sessionVariables = {
+        NVIM_THEME = cfg.theme;
         PAGER = "less";
         MANPAGER = "less";
         # NPM_CONFIG_PREFIX = "$HOME/.config/.npm-global";

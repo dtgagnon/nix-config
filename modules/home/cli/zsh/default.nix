@@ -45,8 +45,6 @@ in {
       zsh-abbr = {
 				enable = true;
 				abbreviations = {
-					code = "codium";
-
 					#git
 					ga = "git add";
 					gaa = "git add --all .";
