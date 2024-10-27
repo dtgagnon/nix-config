@@ -2,11 +2,11 @@
   description = "Development environment flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    stablePkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    unstablePkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     snowfall-lib.url = "github:snowfallorg/lib";
-    snowfall-lib.inputs.nixpkgs.follows = "stablePkgs";
+    snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs:
