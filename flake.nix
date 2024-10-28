@@ -84,6 +84,7 @@
 
         homes.modules = with inputs; [
           nix-index-database.hmModules.nix-index
+          neovim.homeModules.default
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };

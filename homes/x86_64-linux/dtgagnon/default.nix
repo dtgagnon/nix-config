@@ -1,9 +1,11 @@
 { lib
 , pkgs
+, inputs
 , config
 , osConfig ? { }
 , format ? "unknown"
 , namespace
+, spirenix-nvim
 , ...
 }:
 let
@@ -25,10 +27,7 @@ in
     cli = {
       home-manager = enabled;
       zsh = enabled;
-      neovim = {
-        enable = true;
-        theme = "everforest";
-      };
+
       zoxide = enabled;
       eza = enabled;
       fzf = enabled;
@@ -39,5 +38,9 @@ in
       git = enabled;
       direnv = enabled;
     };
+  };
+  inputs.neovim.config.spirenix-nvim.nixvim = {
+    enable = true;
+    themeName = "paradise";
   };
 }

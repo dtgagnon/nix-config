@@ -8,9 +8,9 @@ in
 {
   imports = [ ./hardware.nix ];
 
-	snowfallorg.users.dtgagnon = {
-		admin = true;
-	};
+  snowfallorg.users.dtgagnon = {
+    admin = true;
+  };
 
   networking.hostName = "DGPC-WSL";
 

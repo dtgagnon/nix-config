@@ -689,7 +689,7 @@
         "flake-compat": "flake-compat_8",
         "flake-utils": "flake-utils_5",
         "nixpkgs": [
-          "nixpkgs"
+          "stablepkgs"
         ]
       },
       "locked": {

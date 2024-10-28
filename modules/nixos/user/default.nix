@@ -6,10 +6,11 @@
 , ...
 }:
 let
-	inherit (lib) types;
-	inherit (lib.${namespace}) mkOpt mkBoolOpt;
-	cfg = config.${namespace}.user;
-in {
+  inherit (lib) types;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt;
+  cfg = config.${namespace}.user;
+in
+{
   options.${namespace}.user = with types; {
     name = mkOpt str "dtgagnon" "The name to use for the user account.";
     fullName = mkOpt str "Derek Gagnon" "The full name of the user.";
