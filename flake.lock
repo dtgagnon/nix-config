@@ -613,11 +613,11 @@
         "stable": "stable"
       },
       "locked": {
-        "lastModified": 1729878432,
-        "narHash": "sha256-oXBANgtniUGLBfUdes21/Ty+Zbipi2JThscB1VNLT3k=",
+        "lastModified": 1730149648,
+        "narHash": "sha256-pcWBpRi28BVgyujN4mrkTxyOwqHLXi6yeGPOf14XmFA=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "6158681015c2845d8a285af44d01f86d2511f4f9",
+        "rev": "c927c0383cf7c1f8fb4a349447f23a351055a711",
         "type": "github"
       },
       "original": {
@@ -828,7 +828,7 @@
         "gitignore": "gitignore_2",
         "nixpkgs": [
           "neovim",
-          "nixpkgs"
+          "stable"
         ],
         "nixpkgs-stable": "nixpkgs-stable"
       },
@@ -918,7 +918,7 @@
         "flake-utils-plus": "flake-utils-plus_3",
         "nixpkgs": [
           "neovim",
-          "nixpkgs"
+          "stable"
         ]
       },
       "locked": {
