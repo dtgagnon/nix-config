@@ -1,12 +1,10 @@
 { lib
 , pkgs
-, inputs
 , config
 , namespace
 , ...
 }:
 let
-	myNixvim = import inputs.neovim.config;
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.neovim;
