@@ -18,7 +18,7 @@ in
     home = {
       packages = with pkgs; [
         less
-        spirenix.neovim
+        spirenix-nvim.neovim
       ];
       sessionVariables = {
         PAGER = "less";
