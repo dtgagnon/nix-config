@@ -5,9 +5,10 @@
 , namespace
 , ...
 }:
-with lib;
-with lib.${namespace};
-let cfg = config.${namespace}.user;
+let
+	inherit (lib) types;
+	inherit (lib.${namespace}) mkOpt mkBoolOpt;
+	cfg = config.${namespace}.user;
 in {
   options.${namespace}.user = with types; {
     name = mkOpt str "dtgagnon" "The name to use for the user account.";

@@ -18,7 +18,7 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     nixos-wsl.url = "github:nix-community/nixos-wsl";
-    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-wsl.inputs.nixpkgs.follows = "stablepkgs";
 
     ## security
     sops-nix.url = "github:Mic92/sops-nix";
