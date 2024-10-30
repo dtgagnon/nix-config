@@ -9,11 +9,11 @@ mkShell {
   ];
 
   buildNativeInputs = with pkgs; [
-    ## List packages needed to build the application.
+    ## Build-time packages. List packages needed to build the application.
   ];
 
   buildInputs = with pkgs; [
-    ## List packages needed to run the built application.
+    ## Run/build-time packages. List packages needed to run the built application.
   ];
 
   shellHook = ''
