@@ -1,0 +1,39 @@
+# Ignore DS_Store files created by Mac OS
+**/.DS_Store
+
+# Ignore node_modules created by npm or yarn
+**/node_modules/
+
+**/.venv/
+
+# Ignore .log files
+*.log
+
+# Ignore build/ folder created after build
+build/
+
+# Ignore .env files as it often contains sensitive information
+**/.env
+**/.env.development
+
+# Ignore .git directory
+.git/
+
+# Ignore images, video, audio if they're unnecessary
+**/*.jpg
+**/*.png
+**/*.gif
+**/*.svg
+**/*.mp4
+**/*.mp3
+**/*.glb
+
+# Ignore package-lock.json created by npm
+package-lock.json
+yarn.json
+
+# Ignore yarn-error.log file created by yarn
+yarn-error.log
+
+# Ignore .next folder created by Next.js
+.next/
