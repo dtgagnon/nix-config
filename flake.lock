@@ -613,11 +613,11 @@
         "stable": "stable"
       },
       "locked": {
-        "lastModified": 1730247299,
-        "narHash": "sha256-VduQFJcx1HiNv7p2b68n+fNguUYHH4O96y4Ez9xUjqE=",
+        "lastModified": 1730247606,
+        "narHash": "sha256-UAUfjwSsOdEVIGr7r2uJAVnEBkzEiNWpIG2CHgLpNac=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "edb442007efa4e9fac5e567dd5f4615a91c91b6b",
+        "rev": "e845192a5d8513a973dc697ddb21c3a8f5a0259f",
         "type": "github"
       },
       "original": {
