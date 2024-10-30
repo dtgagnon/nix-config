@@ -65,26 +65,28 @@ in
   config = mkIf cfg.enable {
     services.openssh = {
       enable = true;
-
-      settings = {
-        PermitRootLogin = if format == "install-iso" then "yes" else "no";
-        PasswordAuthentication = false;
-      };
-
-      extraConfig = ''
-        StreamLocalBindUnlink yes
-      '';
-
       ports = [
         22
         cfg.port
       ];
+
+      settings = {
+        PermitRootLogin = if format == "install-iso" then "yes" else "no";
+        PasswordAuthentication = false;
+        StreamLocalBindUnlink = "yes";
+      };
+
+      networking.firewall.allowedTCPPorts = [ cfg.port ];
+
+      # hostKeys = [
+      #   {
+      #     path = "${lib.optionalString hasOptinPersistence "/persist"}/etc/ssh/ssh_host_ed25519_key";
+      #     type = "ed25519";
+      #   }
+      # ];
     };
 
     programs.ssh.extraConfig = ''
-      # Host *
-      #   HostKeyAlgorithms +ssh-rsa
-
       ${optionalString cfg.manage-other-hosts other-hosts-config}
     '';
 
