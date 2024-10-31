@@ -76,8 +76,6 @@ in
         StreamLocalBindUnlink = "yes";
       };
 
-      networking.firewall.allowedTCPPorts = [ cfg.port ];
-
       # hostKeys = [
       #   {
       #     path = "${lib.optionalString hasOptinPersistence "/persist"}/etc/ssh/ssh_host_ed25519_key";
@@ -100,5 +98,8 @@ in
         { }
         (builtins.attrNames other-hosts);
     };
+
+    networking.firewall.allowedTCPPorts = [ cfg.port ];
+
   };
 }

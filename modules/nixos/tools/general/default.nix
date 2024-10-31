@@ -18,13 +18,25 @@ in
     # sn.home.configFile."wgetrc".text = "";
 
     environment.systemPackages = with pkgs; [
+      ## Text Utilities
+      ripgrep
+      jq
+
+      ## Process Utilities
       killall
+
+      ## Files
       unzip
       file
-      jq
-      clac
+
+      ## Network Utilities
       wget
+
+      ## Editor Utilities
       glow
+
+      ## Misc Utilities
+      clac
     ];
   };
 }
