@@ -1,4 +1,4 @@
 .sops.yaml
-secrets/
+secrets.yaml
 modules/home/tools/ssh
 .aider*
