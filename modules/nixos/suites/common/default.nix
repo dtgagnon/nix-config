@@ -19,6 +19,7 @@ in
 
       security = {
         sudo = enabled;
+        sops-nix = enabled;
       };
 
       services = {

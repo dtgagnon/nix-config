@@ -1,7 +1,5 @@
-{
-  lib
+{ lib
 , config
-, pkgs
 , namespace
 , ...
 }:
@@ -11,8 +9,9 @@ let
   inherit (lib.${namespace}) mkOpt enabled;
   cfg = config.${namespace}.tools.git;
   user = config.${namespace}.user;
-in {
-  
+in
+{
+
   options.${namespace}.tools.git = {
     enable = mkEnableOption "Git";
     userName = mkOpt types.str user.name "The name to configure git with.";
@@ -22,14 +21,26 @@ in {
   };
 
   config = mkIf cfg.enable {
+
+    #TODO: Not sure how to reference the access-token inside my secrets file.
+    # sops.secrets = {
+    # 	"github" = {
+    # 		owner = config.users.users.dtgagnon.name;
+    # 		inherit (config.users.users.dtgagnon) group;
+    # 	};
+    # };
+
     programs.git = {
       enable = true;
       inherit (cfg) userName userEmail;
       lfs = enabled;
+
+      #TODO: Look into signing, what is this, should I set it up for myself? What's the value?
       # signing = {
       #   key = cfg.signingKey;
       #   inherit (cfg) signByDefault;
       # };
+
       extraConfig = {
         init.defaultBranch = "main";
         pull.rebase = true;

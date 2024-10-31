@@ -18,9 +18,6 @@ in
     suites = {
       common = enabled;
     };
-    services = {
-      openssh = enabled;
-    };
   };
 
   system.stateVersion = "24.05";
