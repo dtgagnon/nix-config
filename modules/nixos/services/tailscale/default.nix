@@ -9,7 +9,7 @@ let
   cfg = config.${namespace}.services.tailscale;
 in
 {
-  options.services.tailscale = {
+  options.${namespace}.services.tailscale = {
     enable = mkBoolOpt false "Enable tailscale";
     authKeyDir = mkOpt types.str "" "Authentication key to authorize this node on the tailnet";
     hostname = mkOpt types.str config.networking.hostName "Hostname for this tailnet node";
