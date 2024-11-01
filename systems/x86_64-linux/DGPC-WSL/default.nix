@@ -18,6 +18,11 @@ in
     suites = {
       common = enabled;
     };
+		services.tailscale = {
+			enable = true;
+			authKeyDir = "/run/secrets/tailscale-authKey";
+			hostname = "DGPC-WSL";
+		};
   };
 
   system.stateVersion = "24.05";

@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , namespace
 , ...
@@ -21,36 +20,6 @@ in
       enable = true;
       extraSetFlags = [ "--ssh" ];
       authKeyFile = cfg.authKeyDir;
-    };
-
-    # Define the tailscaled systemd service.
-    systemd.services.tailscaled = {
-      description = "Tailscale Daemon";
-      after = [ "network.target" ];
-      wants = [ "network.target" ];
-      serviceConfig = {
-        Type = "notify";
-        ExecStart = "${pkgs.tailscale}/bin/tailscaled";
-        Restart = "on-failure";
-        RestartSec = 5;
-      };
-      wantedBy = [ "multi-user.target" ];
-    };
-
-    # Run tailscale up after the service starts.
-    systemd.services.tailscale-up = {
-      description = "Tailscale Up Script";
-      after = [ "tailscaled.service" ];
-      wants = [ "tailscaled.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = ''
-          ${pkgs.tailscale}/bin/tailscale up \
-            --authkey=${config.services.tailscale.authKey} \
-            --hostname=${config.services.tailscale.hostname}
-        '';
-      };
-      wantedBy = [ "multi-user.target" ];
     };
   };
 }
