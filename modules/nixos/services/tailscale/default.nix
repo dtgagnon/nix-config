@@ -6,7 +6,7 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.services.tailscale;
+  cfg = config.${namespace}.services.tailscale;
 in
 {
   options.services.tailscale = {
