@@ -33,7 +33,8 @@ in
       # NOTE: Secrets will be output to /run/secrets (e.g. /run/secrets/dtgagnon-password)
       # Secrets required for user creation are handled in respective ./users/<username>.nix files because they will be output to /run/secrets-for-users and only when the user is assigned to a host.
       secrets = {
-        github.access-token = { };
+        "github/access-token" = { };
+        "tailscale-authKey" = { };
       };
     };
   };
