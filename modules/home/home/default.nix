@@ -11,8 +11,8 @@
 let
   inherit (lib) mkAliasDefinitions mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace};
-in 
+  cfg = config.${namespace}.home;
+in
 {
   options.${namespace}.home = {
     enable = mkBoolOpt true "Enable Home on NixOS";
@@ -26,7 +26,7 @@ in
       home.stateVersion = osConfig.system.stateVersion;
       home.file = mkAliasDefinitions options.${namespace}.home.file;
       xdg.enable = true;
-      xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
+      xdg.configFile = mkAliasDefinitions cfg.configFile;
     };
   };
 }

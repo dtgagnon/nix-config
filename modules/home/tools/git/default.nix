@@ -16,7 +16,7 @@ in
     enable = mkEnableOption "Git";
     userName = mkOpt types.str user.name "The name to configure git with.";
     userEmail = mkOpt types.str user.email "The email to configure git with.";
-    signingKey = mkOpt types.str "${config.${namespace}.user.home}/.ssh/dtgagnon-ssh.pub" "The key ID to sign commits with.";
+    signingKey = mkOpt types.str "/home/dtgagnon/.ssh/dtgagnon-ssh.pub" "The key ID to sign commits with.";
     signByDefault = mkOpt types.bool true "Whether to sign commits by default.";
   };
 
@@ -46,6 +46,13 @@ in
         core = {
           whitespace = "trailing-space,space-before-tab";
         };
+        url = {
+          "ssh://git@github.com".insteadOf = "https://github.com";
+          "ssh://git@gitlab.com".insteadOf = "https://gitlab.com";
+        };
+        commit.gpgsign = true;
+        gpg.format = "ssh";
+        user.signing.key = "${cfg.signingKey}";
       };
     };
   };
