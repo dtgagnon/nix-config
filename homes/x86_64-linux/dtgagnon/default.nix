@@ -12,7 +12,7 @@ in
   spirenix = {
     user = {
       enable = true;
-      name = config.snowfallorg.user.name;
+      name = "dtgagnon";
       fullName = "Derek Gagnon";
       email = "gagnon.derek@gmail.com";
     };
