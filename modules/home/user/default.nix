@@ -19,7 +19,7 @@ let
     if cfg.name == null then null
     else if is-darwin then "/Users/${cfg.name}"
     else "/home/${cfg.name}";
-in 
+in
 {
   options.${namespace}.user = {
     enable = mkBoolOpt true "Whether to configure the user account.";
@@ -27,7 +27,6 @@ in
     name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "dtgagnon") "The user account.";
     fullName = mkOpt types.str "Derek Gagnon" "The full name of the user.";
     email = mkOpt types.str "gagnon.derek@gmail.com" "The email of the user.";
-
     home = mkOpt (types.nullOr types.str) home-directory "The user's home directory.";
   };
 
