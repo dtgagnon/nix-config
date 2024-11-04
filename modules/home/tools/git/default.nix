@@ -23,7 +23,7 @@ in
   config = mkIf cfg.enable {
 
     #TODO: Not sure how to reference the access-token inside my secrets file.
-    # sops.secrets.github.access-token = {
+    # sops.secrets."github/access-token" = {
     #			mode = "400";
     # 		owner = config.users.users.dtgagnon.name;
     # 		inherit (config.users.users.dtgagnon) group;

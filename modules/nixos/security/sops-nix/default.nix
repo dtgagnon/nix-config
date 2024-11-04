@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.sops ];
+    # environment.systemPackages = [ pkgs.sops ];
 
     sops = {
       defaultSopsFile = ../../../../secrets.yaml;
