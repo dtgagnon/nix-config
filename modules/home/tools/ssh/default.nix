@@ -28,7 +28,7 @@ in
           user = "git";
           forwardAgent = true;
           identitiesOnly = true;
-          identityFile = "$HOME/.ssh/dtgagnon-ssh";
+          identityFile = "~/.ssh/dtgagnon-ssh";
         };
       };
     };
