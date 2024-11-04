@@ -16,11 +16,21 @@ in
   config = mkIf cfg.enable {
     programs.ssh = {
       enable = true;
-      addKeysToAgent = "ask";
+      addKeysToAgent = "yes";
       extraConfig = ''
         Host *
           HostKeyAlgorithms +ssh-ed25519
       '';
+    };
+
+    matchBlocks = {
+      "git" = {
+        host = "github.com gitlab.com";
+        user = "git";
+        forwardAgent = true;
+        identitiesOnly = true;
+        identityFile = "$HOME/.ssh/dtgagnon-ssh";
+      };
     };
 
     home.file = {
