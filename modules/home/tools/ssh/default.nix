@@ -21,15 +21,15 @@ in
         Host *
           HostKeyAlgorithms +ssh-ed25519
       '';
-    };
 
-    matchBlocks = {
-      "git" = {
-        host = "github.com gitlab.com";
-        user = "git";
-        forwardAgent = true;
-        identitiesOnly = true;
-        identityFile = "$HOME/.ssh/dtgagnon-ssh";
+      matchBlocks = {
+        "git" = {
+          host = "github.com gitlab.com";
+          user = "git";
+          forwardAgent = true;
+          identitiesOnly = true;
+          identityFile = "$HOME/.ssh/dtgagnon-ssh";
+        };
       };
     };
 
