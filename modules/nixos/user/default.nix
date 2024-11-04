@@ -28,6 +28,7 @@ in
       group = "users";
       extraGroups = cfg.extraGroups;
       isNormalUser = true; # If false, the user is treated as a 'system user'.
+			shell = pkgs.zsh;
     } // cfg.extraOptions;
 
     # User security
@@ -37,6 +38,5 @@ in
 
     # Configure default shell for all users
     programs.zsh.enable = true;
-    users.users.${cfg.name}.shell = pkgs.zsh;
   };
 }
