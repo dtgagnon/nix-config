@@ -33,7 +33,9 @@ in
       # NOTE: Secrets will be output to /run/secrets (e.g. /run/secrets/dtgagnon-password)
       # Secrets required for user creation are handled in respective ./users/<username>.nix files because they will be output to /run/secrets-for-users and only when the user is assigned to a host.
       secrets = {
-        "ssh-keys/dtgagnon" = { };
+        "ssh-keys/dtgagnon" = {
+          path = "/home/dtgagnon/.ssh/dtgagnon-ssh";
+        };
         "tailscale-authKey" = { };
         openai_api = { };
         anthropic_api = { };
