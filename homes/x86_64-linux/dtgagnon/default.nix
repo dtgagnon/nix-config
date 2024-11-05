@@ -22,7 +22,6 @@ in
     };
 
     cli = {
-      home-manager = enabled;
       zsh = enabled;
       neovim = enabled;
       zoxide = enabled;
@@ -30,10 +29,14 @@ in
       fzf = enabled;
     };
 
+    home = enabled;
+
     tools = {
       comma = enabled;
       git = enabled;
       direnv = enabled;
     };
   };
+
+	home.stateVersion = "24.05";
 }

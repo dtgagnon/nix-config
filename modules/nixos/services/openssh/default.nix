@@ -11,7 +11,7 @@ let
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.services.openssh;
 
-  user = config.users.users.${config.${namespace}.user.name};
+  user = config.${namespace}.user.name;
   user-id = builtins.toString user.uid;
 
   # TODO: This is a hold-over from an earlier Snowfall Lib version which used the specialArg `name` to provide the host name.

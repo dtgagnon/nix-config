@@ -96,7 +96,6 @@
           aiderProj.description = "dev-env w/ aider flake template";
           sysMod.description = "template for NixOS system modules.";
           homeMod.description = "template for home-manager modules.";
-          homeUser.description = "A template for setting up home-manager users.";
         };
       } // { self = inputs.self; };
 }

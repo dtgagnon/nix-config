@@ -16,7 +16,7 @@ in
     enable = mkEnableOption "Git";
     userName = mkOpt types.str user.name "The name to configure git with.";
     userEmail = mkOpt types.str user.email "The email to configure git with.";
-    signingKey = mkOpt types.str "/home/dtgagnon/.ssh/dtgagnon-ssh.pub" "The key ID to sign commits with.";
+    signingKey = mkOpt types.str "/home/dtgagnon/.ssh/dtgagnon-key.pub" "The key ID to sign commits with.";
     signByDefault = mkOpt types.bool true "Whether to sign commits by default.";
   };
 
@@ -45,6 +45,17 @@ in
         commit.gpgsign = true;
         gpg.format = "ssh";
         user.signing.key = "${cfg.signingKey}";
+      };
+    };
+    programs.ssh = {
+      matchBlocks = {
+        "git" = {
+          host = "github.com gitlab.com";
+          user = "git";
+          forwardAgent = true;
+          identitiesOnly = true;
+          identityFile = "~/.ssh/dtgagnon-key";
+        };
       };
     };
   };

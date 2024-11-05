@@ -8,6 +8,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops-nix;
+  # username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.security.sops-nix = {
@@ -33,10 +34,15 @@ in
       # NOTE: Secrets will be output to /run/secrets (e.g. /run/secrets/dtgagnon-password)
       # Secrets required for user creation are handled in respective ./users/<username>.nix files because they will be output to /run/secrets-for-users and only when the user is assigned to a host.
       secrets = {
-        "ssh-keys/dtgagnon" = {
-          path = "/home/dtgagnon/.ssh/dtgagnon-ssh";
+        "ssh-keys/dtgagnon-key" = {
+          owner = "dtgagnon";
+          path = "/home/dtgagnon/.ssh/dtgagnon-key";
         };
-        "tailscale-authKey" = { };
+        "ssh-keys/dtgagnon-key.pub" = {
+          owner = "dtgagnon";
+          path = "/home/dtgagnon/.ssh/dtgagnon-key.pub";
+        };
+        tailscale-authKey = { };
         openai_api = { };
         anthropic_api = { };
       };

@@ -1,15 +1,18 @@
 { lib
+, host
+, config
 , namespace
 , ...
 }:
 let
   inherit (lib.${namespace}) enabled;
+  makeAdmin = if "${config.${namespace}.user.name}" == "dtgagnon" || "admin" || "root" then true else false;
 in
 {
   imports = [ ./hardware.nix ];
 
-  snowfallorg.users.dtgagnon = {
-    admin = true;
+  snowfallorg.users.${config.spirenix.user.name} = {
+    admin = makeAdmin;
   };
 
   networking.hostName = "DGPC-WSL";
@@ -18,11 +21,11 @@ in
     suites = {
       common = enabled;
     };
-		services.tailscale = {
-			enable = true;
-			authKeyDir = "/run/secrets/tailscale-authKey";
-			hostname = "DGPC-WSL";
-		};
+    services.tailscale = {
+      enable = true;
+      authKeyDir = "/run/secrets/tailscale-authKey";
+      hostname = host;
+    };
   };
 
   system.stateVersion = "24.05";

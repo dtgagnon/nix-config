@@ -1,44 +1,34 @@
-### Module defining how the home-manager module will operate on a system level. I don't think this needs to be enabled.
-
-{
-  lib
+# Under the impression that this module solely providers configurable options to system level modules which want to 'contact' home-manager options, and that this module need not be enabled in the system config.
+{ lib
 , config
 , options
 , namespace
 , ...
 }:
 let
-  inherit (lib) mkAliasDefinitions mkIf types;
-  inherit (lib.${namespace}) mkOpt mkBoolOpt;
+  inherit (lib) mkIf mkAliasDefinitions types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.home;
-in 
+in
 {
   options.${namespace}.home = {
-    enable = mkBoolOpt true "Enable Home on NixOS";
-    configFile = mkOpt types.attrs { } 
-      "A set of files to be managed by home-manager's xdg.configFile";
-    extraOptions = 
-      mkOpt types.attrs { } "Options to pass directly to home-manager.";
-    file = 
-      mkOpt types.attrs { } "A set of files to be managed by home-manager's `home.file`.";
+    enable = mkBoolOpt false "Enable home-manager";
+    file = mkOpt types.attrs { } "A set of files to be managed by home-manager's `home.file`.";
+    configFile = mkOpt types.attrs { } "A set of files to be managed by home-manager's `xdg.configFile`.";
+    extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
   };
 
   config = mkIf cfg.enable {
-    home-manager = {
-      useUserPackages = true;
-      useGlobalPkgs = true;
-    };
-
-    # Configures the home-manager user section.
-    snowfallorg.users.${config.${namespace}.user.name}.home.config =
-      config.${namespace}.home.extraOptions;
+    home-manager.useGlobalPkgs = true;
 
     ${namespace}.home.extraOptions = {
       home.stateVersion = config.system.stateVersion;
       home.file = mkAliasDefinitions options.${namespace}.home.file;
-
       xdg.enable = true;
-      xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
+      xdg.configFile = mkAliasDefinitions cfg.configFile;
     };
+
+    snowfallorg.users.${config.${namespace}.user.name}.home.config = cfg.extraOptions;
+
   };
 }

@@ -19,18 +19,8 @@ in
       addKeysToAgent = "yes";
       extraConfig = ''
         Host *
-          HostKeyAlgorithms +ssh-ed25519
+          HostKeyAlgorithms ssh-ed25519
       '';
-
-      matchBlocks = {
-        "git" = {
-          host = "github.com gitlab.com";
-          user = "git";
-          forwardAgent = true;
-          identitiesOnly = true;
-          identityFile = "~/.ssh/dtgagnon-ssh";
-        };
-      };
     };
 
     home.file = {

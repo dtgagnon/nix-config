@@ -1,16 +1,18 @@
-{
-  lib,
-  config,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.zsh;
-in {
-  options.${namespace}.cli.zsh.enable = mkBoolOpt false "Enables zsh shell";
+in
+{
+  options.${namespace}.cli.zsh = {
+    enable = mkBoolOpt false "Enables zsh shell";
+  };
 
   config = mkIf cfg.enable {
     programs.zsh = {
@@ -43,56 +45,55 @@ in {
       ];
 
       zsh-abbr = {
-				enable = true;
-				abbreviations = {
-					#git
-					ga = "git add";
-					gaa = "git add --all .";
-					gb = "git branch";
-					gbd = "git branch -D";
-					gcm = "git checkout main";
-					gco = "git checkout";
-					gcob = "git checkout -b";
-					gd = "git diff";
-					gdc = "git diff --cached";
-					gds = "git diff --staged";
-					gl = "git log";
-					gm = "git commit -m";
-					gma = "git commit --amend";
-					gman = "git commit --amend --no-edit";
-					gp = "git push";
-					gpf = "git push --force";
-					gph = "git push origin HEAD";
-					gphu = "git push origin HEAD -u";
-					gpm = "git pull origin main";
-					gpuh = "git push upstream HEAD";
-					gpt = "git push --tags";
-					gs = "git status";
-				};
-			};
+        enable = true;
+        abbreviations = {
+          #git
+          ga = "git add";
+          gaa = "git add --all .";
+          gb = "git branch";
+          gbd = "git branch -D";
+          gcm = "git checkout main";
+          gco = "git checkout";
+          gcob = "git checkout -b";
+          gd = "git diff";
+          gdc = "git diff --cached";
+          gds = "git diff --staged";
+          gl = "git log";
+          gm = "git commit -m";
+          gma = "git commit --amend";
+          gman = "git commit --amend --no-edit";
+          gp = "git push";
+          gpf = "git push --force";
+          gph = "git push origin HEAD";
+          gphu = "git push origin HEAD -u";
+          gpm = "git pull origin main";
+          gpuh = "git push upstream HEAD";
+          gpt = "git push --tags";
+          gs = "git status";
+        };
+      };
 
       shellAliases = {
         # Build System
-        update = "sudo nixos-rebuild switch";
+        update = "nixos-rebuild switch --use-remote-sudo";
+        flakeup = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command zsh";
 
         # Navigate Shell
-				"..." = "z ../../";
-				"...." = "z ../../../";
-				"....." = "z ../../../..";
+        "..." = "z ../../";
+        "...." = "z ../../../";
+        "....." = "z ../../../..";
         ls = "eza";
         la = "eza -a";
         ll = "eza -la";
         tr = "eza -Ta -L 3";
-        svi = "sudo vi";
+        trl = "eza -Ta -L";
+        svi = "sudo nvim";
         h = "history";
         c = "clear";
 
-        # Edit Configs
-        cfgflk = "sudo vi /etc/nixos/flake.nix";
-
-				# Application aliases
-				vi = "vim";
+        # Application aliases
+        vi = "vim";
       };
       initExtra = ''
         eval "$(zoxide init zsh)"
@@ -110,7 +111,7 @@ in {
         };
       };
     };
-		programs.eza.enableZshIntegration = true;
+    programs.eza.enableZshIntegration = true;
   };
 
 }

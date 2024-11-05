@@ -1,15 +1,14 @@
-{
-  options,
-  config,
-  pkgs,
-  lib,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
-let cfg = config.${namespace}.security.sudo;
-in {
+let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.security.sudo;
+in
+{
   options.${namespace}.security.sudo = {
     enable = mkBoolOpt true "Whether or not to enable sudo.";
   };
@@ -29,6 +28,7 @@ in {
       }];
       extraConfig = ''
         Defaults env_keep += "*"
+				Defaults env_keep -= "HOME"
       '';
     };
   };
