@@ -31,6 +31,10 @@ in
 
     home = enabled;
 
+    security = {
+      sops = enabled;
+    };
+
     tools = {
       comma = enabled;
       git = enabled;
@@ -38,5 +42,5 @@ in
     };
   };
 
-	home.stateVersion = "24.05";
+  home.stateVersion = "24.05";
 }
