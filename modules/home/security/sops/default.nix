@@ -18,15 +18,15 @@ in
 
   config = mkIf cfg.enable {
     sops = {
+      defaultSopsFile = "${secretsPath}/secrets.yaml";
+      validateSopsFiles = false;
+
       age.keyFile = "/home/${user}/.config/sops/age/keys.txt";
-    };
 
-    defaultSopsFile = "${secretsPath}/secrets.yaml";
-    validateSopsFiles = false;
-
-    secrets = {
-      "ssh-keys/${user}-key".path = "/home/${user}/.ssh/${user}-key";
-      "ssh-keys/${user}-key.pub".path = "/home/${user}/.ssh/${user}-key.pub";
+      secrets = {
+        "ssh-keys/${user}-key".path = "/home/${user}/.ssh/${user}-key";
+        "ssh-keys/${user}-key.pub".path = "/home/${user}/.ssh/${user}-key.pub";
+      };
     };
   };
 }
