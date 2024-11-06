@@ -1,4 +1,5 @@
 { lib
+, inputs
 , config
 , namespace
 , ...
@@ -8,6 +9,7 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops;
   user = config.${namespace}.user.name;
+  secretsPath = builtins.toString inputs.secrets;
 in
 {
   options.${namespace}.security.sops = {
@@ -19,12 +21,12 @@ in
       age.keyFile = "/home/${user}/.config/sops/age/keys.txt";
     };
 
-    defaultSopsFile = ../../../../secrets.yaml;
+    defaultSopsFile = "${secretsPath}/secrets.yaml";
     validateSopsFiles = false;
 
     secrets = {
-      "ssh-keys/dtgagnon-key".path = "/home/${user}/.ssh/${user}-key";
-      "ssh-keys/dtgagnon-key.pub".path = "/home/${user}/.ssh/${user}-key.pub";
+      "ssh-keys/${user}-key".path = "/home/${user}/.ssh/${user}-key";
+      "ssh-keys/${user}-key.pub".path = "/home/${user}/.ssh/${user}-key.pub";
     };
   };
 }

@@ -1,5 +1,6 @@
 { lib
 , pkgs
+, inputs
 , config
 , namespace
 , ...
@@ -8,6 +9,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops-nix;
+  secretsPath = builtins.toString inputs.secrets;
   # username = config.${namespace}.user.name;
 in
 {
@@ -19,7 +21,7 @@ in
     environment.systemPackages = [ pkgs.sops ];
 
     sops = {
-      defaultSopsFile = ../../../../secrets.yaml;
+      defaultSopsFile = "${secretsPath}/secrets.yaml";
       validateSopsFiles = false;
 
       age = {
