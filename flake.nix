@@ -1,5 +1,5 @@
 {
-  description = "My Nix flake";
+  description = "SPIRE FLAKE";
 
   inputs = {
     ## packages
@@ -8,7 +8,7 @@
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
 
-    ## configuration
+    ## configuration frameworks
     snowfall-lib.url = "github:snowfallorg/lib";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
