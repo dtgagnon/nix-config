@@ -23,6 +23,10 @@
     ## security
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "stablepkgs";
+    secrets = {
+      url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git?ref=main&shallow=1";
+      flake = false;
+    };
 
     ## config deployments
     deploy-rs.url = "github:serokell/deploy-rs";
@@ -83,7 +87,7 @@
         ];
 
         homes.modules = with inputs; [
-					sops-nix.homeManagerModules.sops
+          sops-nix.homeManagerModules.sops
           nix-index-database.hmModules.nix-index
         ];
 
@@ -93,7 +97,7 @@
 
         templates = {
           empty.description = "A Nix Flake using snowfall-lib";
-					tmpDevShell.description = "A placeholder for a dev environment flake structure";
+          tmpDevShell.description = "A placeholder for a dev environment flake structure";
           aiderProj.description = "dev-env w/ aider flake template";
           sysMod.description = "template for NixOS system modules.";
           homeMod.description = "template for home-manager modules.";
