@@ -31,9 +31,9 @@ in
 
     home = enabled;
 
-    # security = {
-    #   sops = enabled;
-    # };
+    security = {
+      sops = enabled;
+    };
 
     tools = {
       comma = enabled;
