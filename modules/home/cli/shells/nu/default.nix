@@ -17,13 +17,13 @@ in
     programs.nushell = {
       enable = true;
 
-      extraEnv = ''
-        				mkdir ~/.cache/starship
-        				starship init nu | save -f ~/.cache/starship/init.nu
-        			'';
-      extraConfig = ''
-        				use ~/.cache/starship/init.nu
-        			'';
+      # extraEnv = ''
+      #   				mkdir ~/.cache/starship
+      #   				starship init nu | save -f ~/.cache/starship/init.nu
+      #   			'';
+      # extraConfig = ''
+      #   				use ~/.cache/starship/init.nu
+      #   			'';
 
       # nu-abbr = {
       #   abbreviations = {
@@ -63,9 +63,8 @@ in
         "..." = "z ../../";
         "...." = "z ../../../";
         "....." = "z ../../../..";
-        ls = "eza";
         la = "eza -a";
-        ll = "eza -la";
+        l = "eza -la";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
         svi = "sudo nvim";
