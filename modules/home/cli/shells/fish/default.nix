@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , namespace
 , ...
@@ -17,10 +16,6 @@ in
   config = mkIf cfg.enable {
     programs.fish = {
       enable = true;
-
-			# extraConfig = ''
-			# 	starship init fish | source
-			# 	'';
 
       preferAbbrs = true;
       shellAbbrs = {
@@ -86,14 +81,14 @@ in
           vicmd_symbol = "[](bold blue) ";
         };
       };
-			enableFishIntegration = true;
+      enableFishIntegration = true;
     };
-		programs.dircolors.enableFishIntegration = true;
-		programs.direnv.enableFishIntegration = true;
+    programs.dircolors.enableFishIntegration = true;
+    programs.direnv.enableFishIntegration = true;
     programs.eza.enableFishIntegration = true;
-		programs.fzf.enableFishIntegration = true;
-		programs.nix-index.enableFishIntegration = true;
-		programs.zoxide.enableFishIntegration = true;
+    programs.fzf.enableFishIntegration = true;
+    programs.nix-index.enableFishIntegration = true;
+    programs.zoxide.enableFishIntegration = true;
   };
 
 }
