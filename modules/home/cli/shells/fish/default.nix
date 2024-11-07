@@ -75,10 +75,6 @@ in
         # Application aliases
         vi = "vim";
       };
-      initExtra = ''
-        eval "$(zoxide init fish)"
-        eval "$(direnv hook fish)"
-      '';
     };
 
     programs.starship = {
