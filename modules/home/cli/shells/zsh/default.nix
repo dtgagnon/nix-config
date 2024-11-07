@@ -7,10 +7,10 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.cli.zsh;
+  cfg = config.${namespace}.cli.shells.zsh;
 in
 {
-  options.${namespace}.cli.zsh = {
+  options.${namespace}.cli.shells.zsh = {
     enable = mkBoolOpt false "Enables zsh shell";
   };
 
