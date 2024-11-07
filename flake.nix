@@ -23,10 +23,10 @@
     ## security
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "stablepkgs";
-    # secrets = {
-    #   url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git?ref=main";
-    #   flake = false;
-    # };
+    secrets = {
+      url = "git+ssh://git@github.com/dtgagnon/nix-secrets";
+      flake = false;
+    };
 
     ## config deployments
     deploy-rs.url = "github:serokell/deploy-rs";

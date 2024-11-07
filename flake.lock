@@ -858,10 +858,24 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
+        "secrets": "secrets",
         "snowfall-lib": "snowfall-lib_4",
         "sops-nix": "sops-nix",
         "stablepkgs": "stablepkgs",
         "unstable": "unstable"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1730950309,
+        "narHash": "sha256-PidtBbQL8/TOCMvVVYFwQ9yBXKABFN64BvXrWxbyBrw=",
+        "path": "/home/dtgagnon/nix-config/nix-secrets",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/dtgagnon/nix-config/nix-secrets",
+        "type": "path"
       }
     },
     "snowfall-lib": {

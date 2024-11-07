@@ -1,5 +1,5 @@
 { lib
-# , inputs
+, inputs
 , config
 , namespace
 , ...
@@ -9,7 +9,7 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops;
   user = config.${namespace}.user.name;
-  secretsPath = ../../../../../nix-secrets; /* builtins.toString inputs.secrets */
+  secretsPath = builtins.toString inputs.secrets;
 in
 {
   options.${namespace}.security.sops = {
