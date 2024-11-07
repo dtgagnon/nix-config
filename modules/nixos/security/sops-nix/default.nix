@@ -9,7 +9,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops-nix;
-  secretsPath = builtins.toString inputs.secrets;
+  secretsPath = builtins.toString inputs.my-secrets;
   # username = config.${namespace}.user.name;
 in
 {

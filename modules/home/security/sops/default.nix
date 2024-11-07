@@ -9,7 +9,7 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops;
   user = config.${namespace}.user.name;
-  secretsPath = builtins.toString inputs.secrets;
+  secretsPath = builtins.toString inputs.my-secrets;
 in
 {
   options.${namespace}.security.sops = {
