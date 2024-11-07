@@ -46,6 +46,7 @@ in
 
         settings = {
           experimental-features = "nix-command flakes";
+					allowed-uris = [ "ssh://git@github.com" ];
           http-connections = 50;
           warn-dirty = false;
           log-lines = 50;
