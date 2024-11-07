@@ -88,7 +88,7 @@ in
       enableNushellIntegration = true;
     };
 
-    programs.eza.enableNushellIntegration = true;
+    # programs.eza.enableNushellIntegration = true;
     programs.zoxide.enableNushellIntegration = true;
     programs.direnv.enableNushellIntegration = true;
   };
