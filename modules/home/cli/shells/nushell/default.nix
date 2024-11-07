@@ -47,16 +47,17 @@ in
 
       shellAliases = {
         # Build System
-        update = "nixos-rebuild switch --use-remote-sudo";
-        flakeup = "nix flake update --use-remote-sudo";
+        rebuild = "nixos-rebuild switch --use-remote-sudo";
+        update = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command nushell";
 
         # Navigate Shell
         "..." = "z ../../";
         "...." = "z ../../../";
         "....." = "z ../../../..";
+        ll = "ls -la";
         la = "eza -a";
-        # l = "eza -la";
+        l = "eza -la";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
         svi = "sudo nvim";
