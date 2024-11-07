@@ -22,7 +22,11 @@ in
     };
 
     cli = {
-      zsh = enabled;
+      shells = {
+        fish = enabled;
+        nushell = enabled;
+        zsh = enabled;
+      };
       neovim = enabled;
       zoxide = enabled;
       eza = enabled;
