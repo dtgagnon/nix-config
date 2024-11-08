@@ -17,6 +17,10 @@ in
     programs.nushell = {
       enable = true;
 
+			extraConfig = ''
+				show_banner: false
+			'';
+
       # nu-abbr = {
       #   abbreviations = {
       #     #git
