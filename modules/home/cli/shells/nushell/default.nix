@@ -62,7 +62,7 @@ in
       # };
 
       shellAliases = {
-        # Build System
+        # Flake Stuff
         rebuild = "nixos-rebuild switch --use-remote-sudo";
         update = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command nushell";
@@ -72,18 +72,18 @@ in
         "...." = "z ../../../";
         "....." = "z ../../../..";
         l = "ls";
-        ls = "ls -a";
+        la = "ls -a";
         ll = "ls -la";
-        la = "eza -a";
-        lsa = "eza -la";
+        ea = "eza -a";
+        ela = "eza -la";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
-        svi = "sudo nvim";
         h = "history";
         c = "clear";
 
         # Application aliases
         vi = "vim";
+				svi = "sudo nvim";
       };
     };
 
