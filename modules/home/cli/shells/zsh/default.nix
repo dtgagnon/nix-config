@@ -75,8 +75,8 @@ in
 
       shellAliases = {
         # Build System
-        update = "nixos-rebuild switch --use-remote-sudo";
-        flakeup = "nix flake update --use-remote-sudo";
+        rebuild = "nixos-rebuild switch --use-remote-sudo";
+        update = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command zsh";
 
         # Navigate Shell
