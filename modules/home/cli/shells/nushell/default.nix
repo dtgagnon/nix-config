@@ -18,7 +18,9 @@ in
       enable = true;
 
 			extraConfig = ''
-				show_banner: false
+				$env.config = {
+					show_banner: false,
+				}
 			'';
 
       # nu-abbr = {
