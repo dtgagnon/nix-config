@@ -17,11 +17,21 @@ in
     programs.nushell = {
       enable = true;
 
-			extraConfig = ''
-				$env.config = {
-					show_banner: false,
-				}
-			'';
+      extraConfig = ''
+        				$env.config = {
+        					edit_mode: "vi"
+        					render_right_prompt_on_last_line: true
+        					highlight_resolved_externals: true
+        					color_config: {
+        						shape_external: { fg: "cyan" }
+        						shape_external_resolved: { fg: "blue" }
+        						shape_internal: { fg: "green" }
+        						shape_unknown: { fg: "red" }
+        					}
+
+        					show_banner: false,
+        				}
+        			'';
 
       # nu-abbr = {
       #   abbreviations = {
@@ -62,10 +72,10 @@ in
         "...." = "z ../../../";
         "....." = "z ../../../..";
         l = "ls";
-				ls = "ls -a";
+        ls = "ls -a";
         ll = "ls -la";
         la = "eza -a";
-				lsa = "eza -la";
+        lsa = "eza -la";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
         svi = "sudo nvim";
