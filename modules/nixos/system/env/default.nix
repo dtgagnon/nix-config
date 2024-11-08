@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) concatStringsSep mapAttrs mapAttrsToList mkOption types;
   cfg = config.${namespace}.system.env;
 in
 {
@@ -28,6 +28,6 @@ in
       LESSHISTFILE = "$XDG_CACHE_HOME/less.history";
       WGETRC = "$XDG_CONFIG_HOME/wgetrc";
     };
-    extraInit = with types; concatStringsSep "\n" (mapAttrsToList (n: v: ''export ${n}="${v}"'') cfg);
+    extraInit = concatStringsSep "\n" (mapAttrsToList (n: v: ''export ${n}="${v}"'') cfg);
   };
 }
