@@ -57,6 +57,7 @@ in
         "....." = "z ../../../..";
         ll = "ls -la";
         l = "ls -a";
+				lsa = "eza -la";
         la = "eza -a";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
