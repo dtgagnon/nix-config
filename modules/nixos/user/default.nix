@@ -37,6 +37,6 @@ in
     users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
 
     # Configure default shell for all users
-    programs.nushell.enable = true;
+    programs.zsh.enable = true;
   };
 }
