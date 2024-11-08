@@ -56,8 +56,8 @@ in
         "...." = "z ../../../";
         "....." = "z ../../../..";
         ll = "ls -la";
+        l = "ls -a";
         la = "eza -a";
-        l = "eza -la";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
         svi = "sudo nvim";
