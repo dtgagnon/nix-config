@@ -4,12 +4,12 @@
 , ...
 }:
 let
-  inherit (lib) concatStringsSep mapAttrs mapAttrsToList mkOption types;
+  inherit (lib) concatMapStringsSep concatStringsSep isList mapAttrs mapAttrsToList mkOption toString types;
   cfg = config.${namespace}.system.env;
 in
 {
-  options.${namespace}.system.env = with types; mkOption {
-    type = attrsOf (oneOf [ str path (listOf (either str path)) ]);
+  options.${namespace}.system.env = mkOption {
+    type = with types; attrsOf (oneOf [ str path (listOf (either str path)) ]);
     apply = mapAttrs (n: v: if isList v then concatMapStringsSep ":" (x: toString x) v else (toString v));
     default = { };
     description = "Set environment variables for systems";
