@@ -61,10 +61,11 @@ in
         "..." = "z ../../";
         "...." = "z ../../../";
         "....." = "z ../../../..";
+        l = "ls";
+				ls = "ls -a";
         ll = "ls -la";
-        l = "ls -a";
-				lsa = "eza -la";
         la = "eza -a";
+				lsa = "eza -la";
         tr = "eza -Ta -L 3";
         trl = "eza -Ta -L";
         svi = "sudo nvim";
