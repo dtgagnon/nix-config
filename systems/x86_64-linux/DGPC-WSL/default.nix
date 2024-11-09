@@ -20,11 +20,7 @@ in
   spirenix = {
     suites = {
       common = enabled;
-    };
-    services.tailscale = {
-      enable = true;
-      authKeyDir = "/run/secrets/tailscale-authKey";
-      hostname = host;
+      networking = enabled;
     };
     virtualisation = {
       podman = enabled;

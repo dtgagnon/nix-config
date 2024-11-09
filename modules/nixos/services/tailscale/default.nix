@@ -1,4 +1,5 @@
 { lib
+, host
 , config
 , namespace
 , ...
@@ -25,8 +26,10 @@ in
 
     services.tailscale = {
       enable = true;
+      hostname = host;
       extraSetFlags = [ "--ssh" ];
       authKeyFile = cfg.authKeyDir;
+      authKeyDir = "/run/secrets/tailscale-authKey";
     };
   };
 }
