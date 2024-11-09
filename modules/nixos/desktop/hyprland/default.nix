@@ -63,7 +63,7 @@ in
 
     programs.dconf = enabled;
 
-    plusultra = {
+    spirenix = {
       system.xkb.enable = true;
       desktop.addons = {
         gtk = enabled;
