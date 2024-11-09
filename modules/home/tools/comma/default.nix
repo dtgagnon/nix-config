@@ -1,16 +1,15 @@
-{ config
-, lib
+{ lib
 , pkgs
-, options
+, config
 , namespace
-, ... 
+, ...
 }:
 
-let 
+let
   inherit (lib) mkIf;
-  inherit (lib.${namespace}) enabled mkBoolOpt; 
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.tools.comma;
-in 
+in
 {
   options.${namespace}.tools.comma = {
     enable = mkBoolOpt false "Whether or not to enable comma.";
@@ -19,9 +18,21 @@ in
   config = mkIf cfg.enable {
     # Enables `command-not-found` integrations.
     # programs.command-not-found = enabled;
-    programs.nix-index = enabled;
+    # programs.nix-index = enabled;
+    spirenix.home = {
+      packages = with pkgs; [
+        comma
+        spirenix.nix-update-index
+      ];
+      configFile = {
+        "wgetrc".text = "";
+      };
+      extraOptions = {
+        programs.nix-index.enable = true;
+      };
+    };
 
     # Enables `comma` and uses the `nix-index-database` to provide package information.
-    programs.nix-index-database.comma.enable = true;
+    # programs.nix-index-database.comma.enable = true;
   };
 }
