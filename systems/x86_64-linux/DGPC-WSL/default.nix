@@ -26,6 +26,11 @@ in
       authKeyDir = "/run/secrets/tailscale-authKey";
       hostname = host;
     };
+		virtualization = {
+			podman = enabled;
+			kvm = enabled;
+			looking-glass = enabled;
+		};
   };
 
   system.stateVersion = "24.05";
