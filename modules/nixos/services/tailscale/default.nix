@@ -23,7 +23,7 @@ in
 
     services.tailscale = {
       enable = true;
-      extraSetFlags = [ "--ssh" ];
+      extraSetFlags = [ "--ssh" "--accept-routes" ];
       # authKeyFile = cfg.authKeyDir;
       authKeyFile = "/run/secrets/tailscale-authKey";
     };
