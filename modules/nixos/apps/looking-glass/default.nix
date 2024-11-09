@@ -7,11 +7,11 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.apps.looking-glass;
+  cfg = config.${namespace}.apps.looking-glass-client;
   user = config.${namespace}.user;
 in
 {
-  options.${namespace}.apps.looking-glass = {
+  options.${namespace}.apps.looking-glass-client = {
     enable = mkBoolOpt false "Whether or not to enable the Looking Glass client.";
   };
 

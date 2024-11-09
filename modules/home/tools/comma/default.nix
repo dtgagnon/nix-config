@@ -19,11 +19,11 @@ in
     # Enables `command-not-found` integrations.
     # programs.command-not-found = enabled;
     # programs.nix-index = enabled;
+		home.packages = with pkgs; [
+			comma
+			spirenix.nix-update-index
+		];
     spirenix.home = {
-      packages = with pkgs; [
-        comma
-        spirenix.nix-update-index
-      ];
       configFile = {
         "wgetrc".text = "";
       };

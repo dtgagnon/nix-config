@@ -6,13 +6,13 @@
 }:
 let
   inherit (lib) mkIf concatStringsSep length listOf optionalString types;
-  inherit (lib.${namespace}) mkBoolOpt enabled;
-  cfg = config.${namespace}.virtualization.kvm;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
+  cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
 in
 {
-  options.${namespace}.virtualization.kvm = with types; {
-    enable = mkBoolOpt false "Enable KVM virtualization";
+  options.${namespace}.virtualisation.kvm = with types; {
+    enable = mkBoolOpt false "Enable KVM virtualisation";
     vfioIds = mkOpt (listOf str) [ ] "The hardware IDs to pass through to the VM";
     platform = mkOpt (enum [ "amd" "intel" ]) "intel" "The CPU platform of the host machine";
     # Use `machinectl` and then `machinectl status <name>` to get the unit "*.scope" of the VM
@@ -47,7 +47,7 @@ in
 
     environment.systemPackages = [ pkgs.virt-manager ];
 
-    virtualization = {
+    virtualisation = {
       libvirtd = {
         enable = true;
         extraConfig = ''
