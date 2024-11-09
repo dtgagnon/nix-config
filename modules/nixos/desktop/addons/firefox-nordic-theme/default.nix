@@ -16,7 +16,7 @@ in
 
   config = mkIf cfg.enable {
     spirenix.apps.firefox = {
-      extraConfig = builtins.readFile "${pkgs.plusultra.firefox-nordic-theme}/configuration/user.js";
+      extraConfig = builtins.readFile "${pkgs.spirenix.firefox-nordic-theme}/configuration/user.js";
       userChrome = ''
         @import "${pkgs.spirenix.firefox-nordic-theme}/userChrome.css";
       '';

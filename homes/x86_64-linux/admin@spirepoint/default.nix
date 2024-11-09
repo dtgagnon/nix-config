@@ -17,6 +17,10 @@ in
       email = "gagnon.derek@gmail.com";
     };
 
+    apps = {
+      terminals.wezterm = enabled;
+    };
+
     ai = {
       aider-chat = enabled;
     };

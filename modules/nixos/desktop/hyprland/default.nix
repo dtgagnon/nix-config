@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkEnableOption mkOption mkMerge types optional;
+  inherit (lib) mkIf mkEnableOption mkMerge types optional;
   inherit (lib.${namespace}) colors enabled mkOpt;
   cfg = config.${namespace}.desktop.hyprland;
 
@@ -26,11 +26,11 @@ let
   '';
 in
 {
-  options.${namespace}.desktop.hyprland = {
+  options.${namespace}.desktop.hyprland = with types; {
     enable = mkEnableOption "Enable Hyprland desktop environment";
-    package = mkOpt types.package pkgs.hyprland "The Hyprland package to use.";
-    wallpaper = mkOpt types.oneOf [ types.package types.path types.str ] pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
-    settings = mkOpt types.attrs { } "Extra Hyprland settings to apply.";
+    package = mkOpt package pkgs.hyprland "The Hyprland package to use.";
+    wallpaper = mkOpt (oneOf [ package path str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
+    settings = mkOpt attrs { } "Extra Hyprland settings to apply.";
   };
 
   config = mkIf cfg.enable {
