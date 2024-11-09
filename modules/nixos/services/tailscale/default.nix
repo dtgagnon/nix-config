@@ -1,5 +1,4 @@
 { lib
-, host
 , config
 , namespace
 , ...
@@ -12,12 +11,10 @@ in
 {
   options.${namespace}.services.tailscale = {
     enable = mkBoolOpt false "Enable tailscale";
-    authKeyDir = mkOpt types.str "cat ${config.sops.secrets."tailscale-authKey".path}" "Authentication key to authorize this node on the tailnet";
-    hostname = mkOpt types.str config.networking.hostName "Hostname for this tailnet node";
+    authKeyDir = mkOpt types.str "" "Authentication key to authorize this node on the tailnet";
   };
 
   config = mkIf cfg.enable {
-
     sops.secrets = {
       "tailscale-authKey" = {
         owner = config.${namespace}.user.name;
@@ -26,10 +23,9 @@ in
 
     services.tailscale = {
       enable = true;
-      hostname = host;
       extraSetFlags = [ "--ssh" ];
-      authKeyFile = cfg.authKeyDir;
-      authKeyDir = "/run/secrets/tailscale-authKey";
+      # authKeyFile = cfg.authKeyDir;
+      authKeyFile = "/run/secrets/tailscale-authKey";
     };
   };
 }
