@@ -1,25 +1,23 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
 in
 {
-  options.${namespace}.desktop.addons.waybar = with types; {
+  options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Whether to enable Waybar in the desktop environment.";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ waybar ];
+    environment.systemPackages = [ pkgs.waybar ];
 
-    plusultra.home.configFile."waybar/config".source = ./config;
-    plusultra.home.configFile."waybar/style.css".source = ./style.css;
+    spirenix.home.configFile."waybar/config".source = ./config;
+    spirenix.home.configFile."waybar/style.css".source = ./style.css;
   };
 }

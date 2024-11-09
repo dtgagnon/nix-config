@@ -1,20 +1,18 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.term;
 in
 {
-  options.${namespace}.desktop.addons.term = with types; {
+  options.${namespace}.desktop.addons.term = {
     enable = mkBoolOpt false "Whether to enable the gnome file manager.";
-    pkg = mkOpt package pkgs.foot "The terminal to install.";
+    pkg = mkOpt types.package pkgs.foot "The terminal to install.";
   };
 
   config = mkIf cfg.enable { environment.systemPackages = [ cfg.pkg ]; };

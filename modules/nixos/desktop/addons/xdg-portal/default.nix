@@ -1,31 +1,27 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.xdg-portal;
 in
 {
-  options.${namespace}.desktop.addons.xdg-portal = with types; {
+  options.${namespace}.desktop.addons.xdg-portal = {
     enable = mkBoolOpt false "Whether or not to add support for xdg portal.";
   };
 
   config = mkIf cfg.enable {
-    xdg = {
-      portal = {
-        enable = true;
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-wlr
-          xdg-desktop-portal-gtk
-        ];
-        gtkUsePortal = true;
-      };
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+      gtkUsePortal = true;
     };
   };
 }

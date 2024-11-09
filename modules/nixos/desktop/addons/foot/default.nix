@@ -1,27 +1,25 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.foot;
 in
 {
-  options.${namespace}.desktop.addons.foot = with types; {
+  options.${namespace}.desktop.addons.foot = {
     enable = mkBoolOpt false "Whether to enable the gnome file manager.";
   };
 
   config = mkIf cfg.enable {
-    plusultra.desktop.addons.term = {
+    spirenix.desktop.addons.term = {
       enable = true;
       pkg = pkgs.foot;
     };
 
-    plusultra.home.configFile."foot/foot.ini".source = ./foot.ini;
+    spirenix.home.configFile."foot/foot.ini".source = ./foot.ini;
   };
 }

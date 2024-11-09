@@ -23,20 +23,19 @@ configuration {
     transparency: "background";
 
     background-color: #282a36BA;
-   
+
     // Add dummy widgets on top and bottom so the sizing
-    // nicely centers hdum, independent of resolution. 
+    // nicely centers hdum, independent of resolution.
     children: [ dummy1, hdum, dummy2 ];
 }
 
 #hdum {
     orientation: horizontal;
     // Add dummy widgets on left and right so the sizing
-    // nicely centers mainbox, independent of resolution. 
+    // nicely centers mainbox, independent of resolution.
     children: [ dummy3, mainbox, dummy4 ];
 }
 
 #element selected {
     text-color: #caa9fa;
 }
-

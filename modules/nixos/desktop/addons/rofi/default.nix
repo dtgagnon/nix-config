@@ -1,24 +1,22 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.rofi;
 in
 {
-  options.${namespace}.desktop.addons.rofi = with types; {
+  options.${namespace}.desktop.addons.rofi = {
     enable = mkBoolOpt false "Whether to enable Rofi in the desktop environment.";
   };
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ rofi ];
 
-    plusultra.home.configFile."rofi/config.rasi".source = ./config.rasi;
+    spirenix.home.configFile."rofi/config.rasi".source = ./config.rasi;
   };
 }

@@ -1,25 +1,24 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.kanshi;
+
   user = config.${namespace}.user;
   home = config.users.users.${user.name}.home;
 in
 {
-  options.${namespace}.desktop.addons.kanshi = with types; {
+  options.${namespace}.desktop.addons.kanshi = {
     enable = mkBoolOpt false "Whether to enable Kanshi in the desktop environment.";
   };
 
   config = mkIf cfg.enable {
-    plusultra.home.configFile."kanshi/config".source = ./config;
+    spirenix.home.configFile."kanshi/config".source = ./config;
 
     environment.systemPackages = with pkgs; [ kanshi ];
 

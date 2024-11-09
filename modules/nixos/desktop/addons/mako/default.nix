@@ -1,18 +1,16 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.mako;
 in
 {
-  options.${namespace}.desktop.addons.mako = with types; {
+  options.${namespace}.desktop.addons.mako = {
     enable = mkBoolOpt false "Whether to enable Mako in Sway.";
   };
 
@@ -49,6 +47,6 @@ in
       };
     };
 
-    plusultra.home.configFile."mako/config".source = ./config;
+    spirenix.home.configFile."mako/config".source = ./config;
   };
 }

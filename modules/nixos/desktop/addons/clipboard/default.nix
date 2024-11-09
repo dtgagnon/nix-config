@@ -1,19 +1,18 @@
-{
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.clipboard;
-
-  inherit (lib) mkIf mkEnableOption mkOption;
 in
 {
   options.${namespace}.desktop.addons.clipboard = {
-    enable = mkEnableOption "Clipboard";
+    enable = mkBoolOpt false "Clipboard";
   };
 
-  config = mkIf cfg.enable { environment.systemPackages = with pkgs; [ wl-clipboard ]; };
+  config = mkIf cfg.enable { environment.systemPackages = [ pkgs.wl-clipboard ]; };
 }

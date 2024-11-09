@@ -1,24 +1,22 @@
-{
-  options,
-  config,
-  lib,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
-with lib;
-with lib.${namespace};
 let
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.keyring;
 in
 {
-  options.${namespace}.desktop.addons.keyring = with types; {
+  options.${namespace}.desktop.addons.keyring = {
     enable = mkBoolOpt false "Whether to enable the gnome keyring.";
   };
 
   config = mkIf cfg.enable {
     services.gnome.gnome-keyring.enable = true;
 
-    environment.systemPackages = with pkgs; [ gnome.seahorse ];
+    environment.systemPackages = [ pkgs.gnome.seahorse ];
   };
 }
