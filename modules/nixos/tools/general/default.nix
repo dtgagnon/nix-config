@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    # sn.home.configFile."wgetrc".text = "";
+    # spirenix.home.configFile."wgetrc".text = "";
 
     environment.systemPackages = with pkgs; [
       ## Text Utilities

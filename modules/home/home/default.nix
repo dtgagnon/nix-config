@@ -22,10 +22,10 @@ in
     programs.home-manager.enable = true;
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    # spirenix.home.extraOptions = {
-    #     home.file = mkAliasDefinitions options.${namespace}.home.file;
-    #     xdg.enable = true;
-    #     xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
-    #   };
+    spirenix.home.extraOptions = {
+      home.file = mkAliasDefinitions options.${namespace}.home.file;
+      xdg.enable = true;
+      xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
+    };
   };
 }

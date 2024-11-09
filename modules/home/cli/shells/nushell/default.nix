@@ -16,7 +16,9 @@ in
   config = mkIf cfg.enable {
     programs.nushell = {
       enable = true;
-
+      # extraEnv = ''
+      #   	let WGETRC = "$XDG_CONFIG_HOME/wgetrc"
+      # '';
       extraConfig = ''
         				$env.config = {
         					edit_mode: "vi"
@@ -83,7 +85,7 @@ in
 
         # Application aliases
         vi = "vim";
-				svi = "sudo nvim";
+        svi = "sudo nvim";
       };
     };
 
