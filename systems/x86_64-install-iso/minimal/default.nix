@@ -19,19 +19,14 @@ in
   spirenix = {
     nix = enabled;
 
-    apps.wezterm = enabled; #need to make sys module?
-
-    cli = {
-      neovim = enabled; #need to make sys module?
-    };
+    # apps.wezterm = enabled; #need to make sys module?
 
     tools = {
       general = enabled;
-      http = enabled; #check what this module is for in jake h config
     };
 
     hardware = {
-      networking = enabled; #need to make module
+      networking = enabled;
     };
 
     services = {
@@ -43,6 +38,8 @@ in
       sops-nix = enabled;
       sudo = enabled;
     };
+
+    suites.networking = enabled;
 
     system = {
       boot = enabled; #need to make module

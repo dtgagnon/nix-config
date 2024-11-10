@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
@@ -14,6 +15,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      wget
+      curl
+    ];
+
     spirenix = {
       services = {
         tailscale = enabled;
