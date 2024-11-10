@@ -1,5 +1,4 @@
 { lib
-, host
 , config
 , namespace
 , ...
@@ -22,6 +21,9 @@ in
       common = enabled;
       networking = enabled;
     };
+
+    hardware.networking = enabled;
+
     virtualisation = {
       podman = enabled;
       kvm = enabled;
