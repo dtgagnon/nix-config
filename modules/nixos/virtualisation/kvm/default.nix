@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf concatStringsSep length listOf optionalString types;
+  inherit (lib) mkIf concatStringsSep length optionalString types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
