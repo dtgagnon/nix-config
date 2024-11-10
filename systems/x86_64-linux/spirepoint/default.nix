@@ -8,7 +8,7 @@ let
   makeAdmin = if "${config.${namespace}.user.name}" == "dtgagnon" || "admin" || "root" then true else false;
 in
 {
-  # imports = [ ./hardware.nix ];
+  imports = [ ./hardware.nix ];
 
   snowfallorg.users.${config.spirenix.user.name} = {
     admin = makeAdmin;
