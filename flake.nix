@@ -29,6 +29,9 @@
     };
 
     ## config deployments
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "unstable";
+
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "stablepkgs";
 
@@ -77,8 +80,8 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          home-manager.nixosModules.home-manager
           sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
         ];
 
