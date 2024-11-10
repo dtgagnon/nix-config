@@ -91,7 +91,6 @@
 
         homes.modules = with inputs; [
           sops-nix.homeManagerModules.sops
-          nix-index-database.hmModules.nix-index
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };
