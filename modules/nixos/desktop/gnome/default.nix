@@ -20,11 +20,10 @@ in
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
     };
-    environment.gnome.excludePackages = (with pkgs; [
+    environment.gnome.excludePackages = with pkgs; [
       gnome-photos
       gnome-tour
       gnome-text-editor
-    ]) ++ (with pkgs.gnome; [
       cheese # webcam tool
       gnome-music
       # gnome-terminal
@@ -43,6 +42,6 @@ in
       gnome-weather
       gnome-contacts
       simple-scan
-    ]);
+    ];
   };
 }
