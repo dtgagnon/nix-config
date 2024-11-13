@@ -9,45 +9,22 @@ let
   makeAdmin = if "${config.${namespace}.user.name}" == "dtgagnon" || "admin" || "root" then true else false;
 in
 {
-  snowfallorg.users.${config.spirenix.user.name} = {
-    admin = makeAdmin;
-  };
+  snowfallorg.users.${config.spirenix.user.name}.admin = makeAdmin;
+
   # `install-iso` adds wireless support that
   # is incompatible with networkmanager.
   networking.wireless.enable = mkForce false;
 
   spirenix = {
     nix = enabled;
-
-    # apps.wezterm = enabled; #need to make sys module?
-    apps = {
-      firefox = enabled;
-    };
-
-    desktop = {
-      gnome = enabled;
-    };
-
-    tools = {
-      general = enabled;
-    };
-
-    hardware = {
-      networking = enabled;
-    };
-
-    services = {
-      openssh = enabled;
-    };
-
+    desktop.gnome = enabled;
+    hardware.networking = enabled;
+    services.openssh = enabled;
     security = {
       age = enabled;
       sops-nix = enabled;
       sudo = enabled;
     };
-
-    suites.networking = enabled;
-
     system = {
       boot = enabled; #need to make module
       fonts = enabled;
@@ -55,7 +32,5 @@ in
       time = enabled;
       xkb = enabled;
     };
-
-    virtualisation.podman = enabled;
   };
 }
