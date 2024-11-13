@@ -86,7 +86,7 @@
 
         systems.modules.nixos = with inputs; [
           sops-nix.nixosModules.sops
-          disko.nixosModules.default
+          # disko.nixosModules.default
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
         ];
