@@ -15,8 +15,8 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # disko.url = "github:nix-community/disko";
-    # disko.inputs.nixpkgs.follows = "stablepkgs";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "stablepkgs";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
@@ -35,7 +35,8 @@
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
-    # nixos-anywhere.url = "github:nix-community/nixos-anywhere";
+    nixos-anywhere.url = "github:nix-community/nixos-anywhere";
+    nixos-anywhere.inputs.nixpkgs.follows = "unstable";
 
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "stablepkgs";
@@ -86,7 +87,7 @@
 
         systems.modules.nixos = with inputs; [
           sops-nix.nixosModules.sops
-          # disko.nixosModules.default
+          disko.nixosModules.default
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
         ];
