@@ -95,6 +95,9 @@
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
         ];
+        # systems.hosts.spirepoint.modules = with inputs; [
+        #   # nixos-hardware.nixosModules.SOMETHINGHERE
+        # ];
 
         homes.modules = with inputs; [
           sops-nix.homeManagerModules.sops
