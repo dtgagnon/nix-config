@@ -25,6 +25,7 @@ in
     };
     variables = {
       # To make some programs "XDG" compliant:
+      EDITOR = "nvim";
       LESSHISTFILE = "$HOME/.cache/less.history";
       WGETRC = "$HOME/.config/wgetrc";
     };

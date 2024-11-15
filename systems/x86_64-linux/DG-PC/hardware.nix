@@ -7,7 +7,6 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     common-cpu-intel
     common-gpu-nvidia
-    # common-gpu-nvidia-pascal ##this must not be the correct way to point to the pascal specific configurations on nixos-hardware
     common-pc
     common-pc-ssd
   ];
