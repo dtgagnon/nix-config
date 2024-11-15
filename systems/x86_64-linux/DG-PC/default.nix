@@ -22,6 +22,9 @@ in
       common = enabled;
       networking = enabled;
     };
+    system = {
+      boot = enabled;
+    };
     virtualisation = {
       podman = enabled;
       kvm = enabled;
