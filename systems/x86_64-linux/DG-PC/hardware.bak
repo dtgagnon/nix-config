@@ -63,6 +63,8 @@ in
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     firmware = with pkgs; [ linux-firmware ];
 
+    nvidia.open = true;
+
     bluetooth.enable = true;
 
     logitech.wireless = {
