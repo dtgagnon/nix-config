@@ -6,10 +6,10 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.hardware.disko;
+  cfg = config.${namespace}.system.disko;
 in
 {
-  options.${namespace}.hardware.disko = {
+  options.${namespace}.system.disko = {
     enable = mkBoolOpt false "Use disko to format system disks";
     device = mkOpt types.str "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_1TB_S5GXNX1T331237Z" "Declare the path or other identifier for the target disk to be operated on";
   };
@@ -50,12 +50,6 @@ in
         				btrfs subvolume create /btrfs_tmp/root
         				umount /btrfs_tmp
         			'';
-    };
-
-    fileSystems = {
-      "/persist" = {
-        neededForBoot = true;
-      };
     };
 
     disko.devices = {

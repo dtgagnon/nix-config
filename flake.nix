@@ -15,6 +15,9 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    impermanence.url = "github:nix-community/impermanence";
+    impermanence.inputs.nixpkgs.follows = "stablepkgs";
+
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "stablepkgs";
 
@@ -86,18 +89,16 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          sops-nix.nixosModules.sops
           disko.nixosModules.default
           home-manager.nixosModules.home-manager
+          impermanence.nixosModules.impermanence
           nix-index-database.nixosModules.nix-index
+          sops-nix.nixosModules.sops
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
         ];
-        # systems.hosts.spirepoint.modules = with inputs; [
-        #   # nixos-hardware.nixosModules.SOMETHINGHERE
-        # ];
 
         homes.modules = with inputs; [
           sops-nix.homeManagerModules.sops
