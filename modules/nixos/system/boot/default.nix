@@ -18,7 +18,7 @@ in
     boot.loader.systemd-boot.enable = true;
     boot.loader.systemd-boot.configurationLimit = 10;
     boot.loader.systemd-boot.editor = false;
-    boot.efi.canTouchEfiVariables = true;
+    boot.loader.efi.canTouchEfiVariables = true;
 
     # Kernel config
     boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];

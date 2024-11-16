@@ -22,7 +22,7 @@ in
       networking = enabled;
     };
 
-    hardware.networking = enabled;
+    system.networking = enabled;
 
     virtualisation = {
       podman = enabled;

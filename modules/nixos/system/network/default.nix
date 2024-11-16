@@ -19,8 +19,8 @@ in
     
     networking = {
       firewall.enable = true;
-      firewall.allowedTCPPorts = [ ... ];
-      firewall.allowedUDPPorts = [ ... ];
+      firewall.allowedTCPPorts = [ ];
+      firewall.allowedUDPPorts = [ ];
 
       hosts = {
         "127.0.0.1" = [ "local.test" ] ++ (cfg.hosts."127.0.0.1" or [ ]);
