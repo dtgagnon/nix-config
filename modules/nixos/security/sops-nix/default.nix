@@ -36,14 +36,14 @@ in
       # NOTE: Secrets will be output to /run/secrets (e.g. /run/secrets/dtgagnon-password)
       # Secrets required for user creation are handled in respective ./users/<username>.nix files because they will be output to /run/secrets-for-users and only when the user is assigned to a host.
       secrets = {
-        "ssh-keys/dtgagnon-key" = {
-          owner = "dtgagnon";
-          path = "/home/dtgagnon/.ssh/dtgagnon-key";
-        };
-        "ssh-keys/dtgagnon-key.pub" = {
-          owner = "dtgagnon";
-          path = "/home/dtgagnon/.ssh/dtgagnon-key.pub";
-        };
+#        "ssh-keys/dtgagnon-key" = {
+#          owner = "dtgagnon";
+#          path = "/persist/home/dtgagnon/.ssh/dtgagnon-key";
+#        };
+#        "ssh-keys/dtgagnon-key.pub" = {
+#          owner = "dtgagnon";
+#          path = "/persist/home/dtgagnon/.ssh/dtgagnon-key.pub";
+#        };
         tailscale-authKey = { };
         openai_api = { };
         anthropic_api = { };

@@ -7,6 +7,7 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
+  user = config.${namespace}.user.name;
 in
 {
   options.${namespace}.system.impermanence = {
@@ -37,7 +38,7 @@ in
         { file = "/var/keys/secret_file"; parentDirectory = { mode = "0700"; }; }
       ] ++ cfg.extraSysFiles;
 
-      users.dtgagnon = {
+      users.${user} = {
         directories = [
           "proj"
           "Documents"
