@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , host
 , config
 , namespace
@@ -16,6 +17,8 @@ in
   };
 
   networking.hostName = host;
+
+	environment.systemPackages = with pkgs; [ firefox];
 
   services.pipewire = { enable = true; pulse.enable = true; };
 
