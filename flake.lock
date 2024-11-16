@@ -707,13 +707,13 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1731735803,
-        "narHash": "sha256-IihC9WN7ByMj0qLVhrIrHp6JKK11cy7+bmlvAersysw=",
-        "path": "/persist/home/dtgagnon/nix-config/nix-secrets",
+        "lastModified": 1731768823,
+        "narHash": "sha256-CA6eeYXy4MD3xi9F5U1gOO+33bkowBTd71p0I9jwxpI=",
+        "path": "/home/dtgagnon/nix-config/nix-secrets",
         "type": "path"
       },
       "original": {
-        "path": "/persist/home/dtgagnon/nix-config/nix-secrets",
+        "path": "/home/dtgagnon/nix-config/nix-secrets",
         "type": "path"
       }
     },

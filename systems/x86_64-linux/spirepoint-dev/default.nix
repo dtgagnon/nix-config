@@ -17,9 +17,7 @@ in
   networking.hostName = "spirepoint-dev";
 
   spirenix = {
-    hardware = {
-      networking = enabled;
-    };
+    system.network = enabled;
     suites = {
       common = enabled;
       networking = enabled;
