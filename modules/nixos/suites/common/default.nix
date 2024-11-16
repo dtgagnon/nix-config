@@ -15,6 +15,8 @@ in
 
   config = mkIf cfg.enable {
     spirenix = {
+      desktop.gnome = enabled;
+
       nix = enabled;
 
       security = {
@@ -27,8 +29,10 @@ in
       };
 
       system = {
+        boot = enabled;
         fonts = enabled;
         locale = enabled;
+        network = enabled;
         time = enabled;
         xkb = enabled;
       };

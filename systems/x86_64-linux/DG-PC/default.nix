@@ -17,14 +17,19 @@ in
 
   networking.hostName = host;
 
+  services.pipewire = { enable = true; pulse.enable = true; };
+
   spirenix = {
     suites = {
       common = enabled;
       networking = enabled;
     };
+
     system = {
-      boot = enabled;
+      disko = { enable = true; device = "/dev/nvme0n1"; };
+      impermanence = enabled;
     };
+
     virtualisation = {
       podman = enabled;
       kvm = enabled;

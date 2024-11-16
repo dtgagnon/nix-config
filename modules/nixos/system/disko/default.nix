@@ -11,120 +11,74 @@ in
 {
   options.${namespace}.system.disko = {
     enable = mkBoolOpt false "Use disko to format system disks";
-    device = mkOpt types.str "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_1TB_S5GXNX1T331237Z" "Declare the path or other identifier for the target disk to be operated on";
+    device = mkOpt types.str "/dev/nvme0n1" "Declare the path or other identifier for the target disk to be operated on";
   };
 
   config = mkIf cfg.enable {
-    # For impermanence
-    boot.initrd.systemd.services.rollback = {
-      description = "Rollback BTRFS root subvolume to a pristine state";
-      unitConfig.DefaultDependencies = "no";
-      serviceConfig.Type = "oneshot";
-      wantedBy = [ "initrd.target" ];
-      after = [ "systemd-cryptsetup@crypted.service" ];
-      before = [ "sysroot.mount" ];
-
-      script = ''
-        				vgchange -ay pool
-        				mkdir -p /btrfs_tmp
-        				mount /dev/pool/root /btrfs_tmp
-
-        				if [[ -e /btrfs_tmp/root ]]; then
-        						mkdir -p /btrfs_tmp/old_roots
-        						timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-        						mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-        				fi
-
-        				delete_subvolume_recursively() {
-        						IFS=$'\n'
-        						for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-        								delete_subvolume_recursively "/btrfs_tmp/$i"
-        						done
-        						btrfs subvolume delete "$1"
-        				}
-
-        				for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-        						delete_subvolume_recursively "$i"
-        				done
-
-        				btrfs subvolume create /btrfs_tmp/root
-        				umount /btrfs_tmp
-        			'';
-    };
-
     disko.devices = {
       disk = {
         main = {
           type = "disk";
           device = cfg.device;
 
-          content = {
-            type = "gpt";
+	      content = {
+		type = "gpt";
+		partitions = {
+		  boot = {
+		    name = "boot";
+		    size = "1M";
+		    type = "EF02";
+		  };
+		  esp = {
+		    name = "ESP";
+		    size = "512M";
+		    type = "EF00";
+		    content = {
+		      type = "filesystem";
+		      format = "vfat";
+		      mountpoint = "/boot";
+		    };
+		  };
+		  root = {
+		    name = "root";
+		    size = "100%";
+		    content = {
+		      type = "lvm_pv";
+		      vg = "root_vg";
+		    };
+		  };
+		};
+	      };
+	    };
+	    lvm_vg = {
+	      root_vg = {
+		type = "lvm_vg";
+		lvs = {
+		  root = {
+		    size = "100%FREE";
+		    content = {
+		      type = "btrfs";
+		      extraArgs = ["-f"];
 
-            partitions = {
-              esp = {
-                size = "5G";
-                type = "EF00";
+		      subvolumes = {
+			"/root" = {
+			  mountpoint = "/";
+			};
 
-                content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  mountpoint = "/boot";
+			"/persist" = {
+			  mountOptions = ["subvol=persist" "noatime"];
+			  mountpoint = "/persist";
+			};
 
-                  mountOptions = [ "defaults" "umask=0077" ];
-                };
-              };
-
-              luks = {
-                size = "100%";
-
-                content = {
-                  type = "luks";
-                  name = "crypted";
-
-                  content = {
-                    type = "lvm_pv";
-                    vg = "pool";
-                  };
-                };
-              };
-            };
-          };
-        };
-      };
-
-      lvm_vg = {
-        pool = {
-          type = "lvm_vg";
-
-          lvs = {
-            root = {
-              size = "100%FREE";
-
-              content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ];
-
-                subvolumes = {
-                  "/root" = {
-                    mountpoint = "/";
-                  };
-
-                  "/persist" = {
-                    mountpoint = "/persist";
-                    mountOptions = [ "compress=zstd" "subvol=persist" "noatime" ];
-                  };
-
-                  "/nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [ "compress=zstd" "subvol=nix" "noatime" ];
-                  };
-                };
-              };
-            };
-          };
-        };
-      };
-    };
-  };
+			"/nix" = {
+			  mountOptions = ["subvol=nix" "noatime"];
+			  mountpoint = "/nix";
+			};
+		      };
+		    };
+		  };
+		};
+	      };
+	    };
+	  };
 }
