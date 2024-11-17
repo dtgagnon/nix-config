@@ -5,14 +5,9 @@
 }:
 let
   inherit (lib.${namespace}) enabled;
-  makeAdmin = if "${config.${namespace}.user.name}" == "dtgagnon" || "admin" || "root" then true else false;
 in
 {
   imports = [ ./hardware.nix ];
-
-  snowfallorg.users.${config.spirenix.user.name} = {
-    admin = makeAdmin;
-  };
 
   networking.hostName = "spirepoint-dev";
 

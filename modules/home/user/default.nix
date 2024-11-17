@@ -23,9 +23,8 @@ in
 {
   options.${namespace}.user = {
     enable = mkBoolOpt true "Whether to configure the user account.";
-
-    name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "dtgagnon") "The user account.";
-    fullName = mkOpt types.str "Derek Gagnon" "The full name of the user.";
+    name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "admin") "The user account.";
+    fullName = mkOpt types.str "" "The full name of the user.";
     email = mkOpt types.str "gagnon.derek@gmail.com" "The email of the user.";
     home = mkOpt (types.nullOr types.str) home-directory "The user's home directory.";
   };
