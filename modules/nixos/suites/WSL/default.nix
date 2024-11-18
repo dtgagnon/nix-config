@@ -6,17 +6,15 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) enabled mkBoolOpt;
-  cfg = config.${namespace}.suites.common;
+  cfg = config.${namespace}.suites.WSL;
 in
 {
-  options.${namespace}.suites.common = {
-    enable = mkBoolOpt false "Whether or not to enable common configuration.";
+  options.${namespace}.suites.WSL = {
+    enable = mkBoolOpt false "Whether or not to enable a common WSL configuration";
   };
 
   config = mkIf cfg.enable {
     spirenix = {
-      desktop.gnome = enabled;
-
       nix = enabled;
 
       security = {
@@ -29,7 +27,6 @@ in
       };
 
       system = {
-        boot = enabled;
         fonts = enabled;
         locale = enabled;
         network = enabled;

@@ -24,7 +24,6 @@ in
         PAGER = "less";
         MANPAGER = "less";
         NPM_CONFIG_PREFIX = "$HOME/.config/.npm-global";
-        EDITOR = "nvim";
       };
     };
     xdg.configFile = {

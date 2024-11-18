@@ -15,8 +15,10 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # disko.url = "github:nix-community/disko";
-    # disko.inputs.nixpkgs.follows = "stablepkgs";
+    impermanence.url = "github:nix-community/impermanence";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "stablepkgs";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
@@ -27,15 +29,14 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "stablepkgs";
     nix-secrets = {
-      url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git";
+      url = "/home/dtgagnon/nix-config/nix-secrets";
+#      url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git";
       flake = false;
     };
 
     ## deployment utilities
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
-
-    # nixos-anywhere.url = "github:nix-community/nixos-anywhere";
 
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "stablepkgs";
@@ -85,18 +86,15 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          sops-nix.nixosModules.sops
-          # disko.nixosModules.default
+          disko.nixosModules.default
           home-manager.nixosModules.home-manager
+          impermanence.nixosModules.impermanence
           nix-index-database.nixosModules.nix-index
+          sops-nix.nixosModules.sops
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
-        ];
-
-        homes.modules = with inputs; [
-          sops-nix.homeManagerModules.sops
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };

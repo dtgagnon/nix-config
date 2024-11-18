@@ -6,12 +6,8 @@
 let
   inherit (lib) mkForce;
   inherit (lib.${namespace}) enabled;
-  makeAdmin = if "${config.${namespace}.user.name}" == "dtgagnon" || "admin" || "root" then true else false;
 in
 {
-  snowfallorg.users.${config.spirenix.user.name} = {
-    admin = makeAdmin;
-  };
   # `install-iso` adds wireless support that
   # is incompatible with networkmanager.
   networking.wireless.enable = mkForce false;

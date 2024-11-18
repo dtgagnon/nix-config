@@ -112,6 +112,6 @@ in
       };
     };
     programs.eza.enableZshIntegration = true;
+    home.sessionVariables.EDITOR = "nvim";
   };
-
 }

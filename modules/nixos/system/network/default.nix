@@ -6,10 +6,10 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.hardware.networking;
+  cfg = config.${namespace}.system.network;
 in
 {
-  options.${namespace}.hardware.networking = {
+  options.${namespace}.system.network = {
     enable = mkBoolOpt false "Whether or not to enable networking support";
     hosts = mkOpt types.attrs { } "An attribute set to merge with `networking.hosts`";
   };
@@ -18,10 +18,15 @@ in
     spirenix.user.extraGroups = [ "networkmanager" ];
 
     networking = {
-      hosts = {
-        "127.0.0.1" = [ "local.test" ] ++ (cfg.hosts."127.0.0.1" or [ ]);
-      } // cfg.hosts;
+      firewall.enable = true;
+      firewall.allowedTCPPorts = [ ];
+      firewall.allowedUDPPorts = [ ];
 
+      # hosts = {
+      #   "127.0.0.1" = [ "local.test" ] ++ (cfg.hosts."127.0.0.1" or [ ]);
+      # } // cfg.hosts;
+
+      # useDHCP = lib.mkDefault true;
       networkmanager = {
         enable = true;
         dhcp = "internal";

@@ -3,7 +3,6 @@
   inputs,
   snowfall-inputs,
 }:
-
 rec {
   ## Override a package's metadata
   ##

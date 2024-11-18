@@ -17,7 +17,7 @@ in
     programs.nushell = {
       enable = true;
       # extraEnv = ''
-      #   	let WGETRC = "$XDG_CONFIG_HOME/wgetrc"
+      #   	let EDITOR = "nvim"
       # '';
       extraConfig = ''
         				$env.config = {

@@ -11,9 +11,8 @@ in
 {
   spirenix = {
     user = {
-      enable = true;
-      name = "dtgagnon";
-      fullName = "Derek Gagnon";
+      name = "admin";
+      fullName = "";
       email = "gagnon.derek@gmail.com";
     };
 

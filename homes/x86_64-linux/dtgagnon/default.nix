@@ -11,8 +11,6 @@ in
 {
   spirenix = {
     user = {
-      enable = true;
-      name = "dtgagnon";
       fullName = "Derek Gagnon";
       email = "gagnon.derek@gmail.com";
     };
@@ -34,10 +32,6 @@ in
     };
 
     home = enabled;
-
-    security = {
-      sops = enabled;
-    };
 
     tools = {
       comma = enabled;
