@@ -17,7 +17,7 @@ in
     # initialPassword = mkOpt str "password" "The initial password for the user account.";
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
     extraOptions = mkOpt attrs { } "Extra options passed to `users.users.<name>`";
-    shell = mkOpt pkgs nushell "The user's default shell";
+    shell = mkOpt package pkgs.nushell "The user's default shell";
     prompt-init = mkBoolOpt true "Whether or not to show an initial message when opening a new shell";
 
     mkAdmin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel automatically";

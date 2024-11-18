@@ -14,7 +14,7 @@ in
 
   spirenix = {
     suites = {
-      common = enabled;
+      WSL = enabled;
       networking = enabled;
     };
     virtualisation = {
