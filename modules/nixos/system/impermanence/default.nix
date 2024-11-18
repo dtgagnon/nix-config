@@ -20,7 +20,7 @@ in
 
   config = mkIf cfg.enable {
     fileSystems."/persist".neededForBoot = true;
-    environment.persistence."/persist/system" = {
+    environment.persistence."/persist" = {
       hideMounts = true;
       directories = [
         "/etc/nixos"

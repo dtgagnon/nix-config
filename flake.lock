@@ -707,8 +707,8 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1731768823,
-        "narHash": "sha256-CA6eeYXy4MD3xi9F5U1gOO+33bkowBTd71p0I9jwxpI=",
+        "lastModified": 1731954586,
+        "narHash": "sha256-+xfoW4Qehd4df5wPEfKpfGZqAVCsg72Hhp4gQN10Rb8=",
         "path": "/home/dtgagnon/nix-config/nix-secrets",
         "type": "path"
       },
