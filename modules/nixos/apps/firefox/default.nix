@@ -28,6 +28,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = pkgs.firefox;
     spirenix.desktop.addons.firefox-nordic-theme = enabled;
 
     services.gnome.gnome-browser-connector.enable = config.${namespace}.desktop.gnome.enable;
