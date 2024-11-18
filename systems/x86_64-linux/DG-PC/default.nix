@@ -1,7 +1,5 @@
 { lib
-, pkgs
 , host
-, config
 , namespace
 , ...
 }:
@@ -12,8 +10,6 @@ in
   imports = [ ./hardware.nix ];
 
   networking.hostName = host;
-
-  services.pipewire = { enable = true; pulse.enable = true; };
 
   spirenix = {
     suites = {
