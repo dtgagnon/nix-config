@@ -707,14 +707,17 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1731954586,
-        "narHash": "sha256-+xfoW4Qehd4df5wPEfKpfGZqAVCsg72Hhp4gQN10Rb8=",
-        "path": "/home/dtgagnon/nix-config/nix-secrets",
-        "type": "path"
+        "lastModified": 1731954580,
+        "narHash": "sha256-vc3w9TeuhNZODqlNbTbL5ZeMDgZpa3ouINv0picrs7U=",
+        "ref": "refs/heads/main",
+        "rev": "4ff8b487b026a1105239e37809838f240d9ff86c",
+        "revCount": 9,
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
       "original": {
-        "path": "/home/dtgagnon/nix-config/nix-secrets",
-        "type": "path"
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       }
     },
     "nixlib": {
