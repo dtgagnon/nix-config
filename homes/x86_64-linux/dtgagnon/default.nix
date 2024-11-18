@@ -33,10 +33,6 @@ in
 
     home = enabled;
 
-    security = {
-      sops = enabled;
-    };
-
     tools = {
       comma = enabled;
       git = enabled;

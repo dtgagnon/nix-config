@@ -13,7 +13,7 @@ let
 in
 {
   options.${namespace}.security.sops = {
-    enable = mkBoolOpt true "Enable sops for home-manager users";
+    enable = mkBoolOpt false "Enable sops for home-manager users";
   };
 
   config = mkIf cfg.enable {
@@ -23,10 +23,10 @@ in
 
       age.keyFile = "/persist/home/${user}/.config/sops/age/keys.txt";
 
-      secrets = {
-        "ssh-keys/${user}-key".path = "/persist/home/${user}/.ssh/${user}-key";
-        "ssh-keys/${user}-key.pub".path = "/persist/home/${user}/.ssh/${user}-key.pub";
-      };
+#      secrets = {
+#        "ssh-keys/${user}-key".path = "/persist/home/${user}/.ssh/${user}-key";
+#        "ssh-keys/${user}-key.pub".path = "/persist/home/${user}/.ssh/${user}-key.pub";
+#      };
     };
   };
 }

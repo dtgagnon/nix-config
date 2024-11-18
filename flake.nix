@@ -97,10 +97,6 @@
           nixos-wsl.nixosModules.default
         ];
 
-        homes.modules = with inputs; [
-          sops-nix.homeManagerModules.sops
-        ];
-
         deploy = lib.mkDeploy { inherit (inputs) self; };
 
         outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
