@@ -26,7 +26,7 @@ in
   config = {
     users.users.${cfg.name} = {
       hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
-      home = "/persist/home/${cfg.name}";
+      home = "/home/${cfg.name}";
       group = "users";
       extraGroups = cfg.extraGroups;
       isNormalUser = true; # If false, the user is treated as a 'system user'.
