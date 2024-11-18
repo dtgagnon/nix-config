@@ -19,7 +19,11 @@ in
     };
 
     desktop.gnome = enabled;
-    hardware.audio = enabled;
+
+    hardware = {
+      audio = enabled;
+      nvidia = enabled;
+    };
 
     nix = enabled;
 

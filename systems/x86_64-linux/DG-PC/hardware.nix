@@ -13,16 +13,9 @@ in
 
   #other hardware
   hardware = {
- #   enableAllFirmware = true;
+    #   enableAllFirmware = true;
     enableRedistributableFirmware = true;
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-    nvidia = {
-      open = lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
-      powerManagement.enable = false;
-      nvidiaSettings = true;
-    };
-    graphics.enable = true;
 
     bluetooth.enable = true;
 
