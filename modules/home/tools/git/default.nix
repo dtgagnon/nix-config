@@ -54,7 +54,7 @@ in
           user = "git";
           forwardAgent = true;
           identitiesOnly = true;
-          identityFile = "$HOME/.ssh/${user.name}-key";
+          identityFile = "~/.ssh/${user.name}-key";
         };
       };
     };
