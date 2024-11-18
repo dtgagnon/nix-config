@@ -44,9 +44,10 @@ in
           "Documents"
           "Pictures"
           "Downloads"
-          ".ssh"
-          ".local/share/direnv"
           ".config"
+          ".local"
+          ".local/share/direnv"
+          ".ssh"
           "nix-config"
         ] ++ cfg.extraHomeDirs;
         files = [
