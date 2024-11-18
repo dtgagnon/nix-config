@@ -1,4 +1,5 @@
 { lib
+, host
 , config
 , namespace
 , ...
@@ -65,7 +66,7 @@ in
 
       shellAliases = {
         # Flake Stuff
-        rebuild = "nixos-rebuild switch --use-remote-sudo";
+        rebuild = "nixos-rebuild switch --use-remote-sudo --flake .#${host}";
         update = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command nushell";
 
