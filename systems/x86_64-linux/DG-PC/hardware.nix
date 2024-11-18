@@ -5,7 +5,6 @@ in
 {
   imports = with nixos-hardware.nixosModules; [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ./common/gpu/nvidia/ada-lovelace/
     common-cpu-intel
     common-gpu-nvidia-nonprime
     common-pc
