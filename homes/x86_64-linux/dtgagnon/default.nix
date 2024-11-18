@@ -6,7 +6,7 @@
 , ...
 }:
 let
-  inherit (lib.${namespace}) enabled;
+  inherit (lib.${namespace}) enabled disabled;
 in
 {
   spirenix = {
@@ -23,7 +23,7 @@ in
       shells = {
         fish = enabled;
         nushell = enabled;
-        zsh = enabled;
+        zsh = disabled;
       };
       neovim = enabled;
       zoxide = enabled;
