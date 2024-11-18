@@ -25,7 +25,7 @@ in
 
   config = {
     users.users.${cfg.name} = {
-      hashedPasswordFile = config.sops.secrets."${cfg.name}-password.path";
+      hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
       home = "/persist/home/${cfg.name}";
       group = "users";
       extraGroups = cfg.extraGroups;
