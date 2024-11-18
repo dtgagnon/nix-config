@@ -19,6 +19,8 @@ in
       aider-chat = enabled;
     };
 
+		apps.terminals.wezterm = enabled;
+
     cli = {
       shells = {
         fish = enabled;
