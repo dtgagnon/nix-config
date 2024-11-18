@@ -12,14 +12,40 @@ in
   networking.hostName = host;
 
   spirenix = {
-    suites = {
-      common = enabled;
-      networking = enabled;
+    suites.networking = enabled;
+
+    apps = {
+      firefox = enabled;
+    };
+
+    desktop.gnome = enabled;
+    hardware.audio = enabled;
+
+    nix = enabled;
+
+    security = {
+      sudo = enabled;
+      sops-nix = enabled;
+    };
+
+    services = {
+      openssh = enabled;
     };
 
     system = {
+      boot = enabled;
+      fonts = enabled;
+      locale = enabled;
+      network = enabled;
+      time = enabled;
+      xkb = enabled;
       disko = { enable = true; device = "/dev/nvme0n1"; };
       impermanence = enabled;
+    };
+
+    tools = {
+      general = enabled;
+      nix-ld = enabled;
     };
 
     virtualisation = {
