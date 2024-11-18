@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.hardware.audio = {
     enable = mkBoolOpt true "Enable typical audio configuration";
-    extraPackage = mkOpt (types.listOf types.package) [ ] "A list of additional audio related packages";
+    extraPackages = mkOpt (types.listOf types.package) [ ] "A list of additional audio related packages";
   };
 
   config = mkIf cfg.enable {
