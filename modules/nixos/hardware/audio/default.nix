@@ -5,13 +5,14 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf mkForce types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.audio;
 in
 {
   options.${namespace}.hardware.audio = {
     enable = mkBoolOpt true "Enable typical audio configuration";
+    extraPackage = mkOpt (types.listOf types.package) [ ] "A list of additional audio related packages";
   };
 
   config = mkIf cfg.enable {
