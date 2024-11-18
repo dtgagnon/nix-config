@@ -10,7 +10,7 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops-nix;
   secretsPath = builtins.toString inputs.nix-secrets;
-  # username = config.${namespace}.user.name;
+  username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.security.sops-nix = {
@@ -36,13 +36,13 @@ in
       # NOTE: Secrets will be output to /run/secrets (e.g. /run/secrets/dtgagnon-password)
       # Secrets required for user creation are handled in respective ./users/<username>.nix files because they will be output to /run/secrets-for-users and only when the user is assigned to a host.
       secrets = {
-        "ssh-keys/${cfg.name}-key" = {
-          owner = "${cfg.name}";
-          path = "/persist/home/${cfg.name}/.ssh/${cfg.name}-key";
+        "ssh-keys/${username}-key" = {
+          owner = "${username}";
+          path = "/persist/home/${username}/.ssh/${username}-key";
         };
-        "ssh-keys/${cfg.name}-key.pub" = {
-          owner = "${cfg.name}";
-          path = "/persist/home/${cfg.name}/.ssh/${cfg.name}-key.pub";
+        "ssh-keys/${username}-key.pub" = {
+          owner = "${username}";
+          path = "/persist/home/${username}/.ssh/${username}-key.pub";
         };
         tailscale-authKey = { };
         openai_api = { };

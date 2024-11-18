@@ -8,7 +8,6 @@ let
   inherit (lib) types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt homesUserName;
   cfg = config.${namespace}.user;
-  userSecret = "${cfg.name}-password";
 in
 {
   options.${namespace}.user = with types; {
@@ -26,7 +25,7 @@ in
 
   config = {
     users.users.${cfg.name} = {
-      hashedPasswordFile = config.sops.secrets.${userSecret}.path;
+      hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
       password = "n!xos";
       home = "/home/${cfg.name}";
       group = "users";
@@ -39,7 +38,7 @@ in
 
     # User security
     ## Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
-    sops.secrets.userSecret.neededForUsers = true;
+    sops.secrets."${cfg.name}-password".neededForUsers = true;
     users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
   };
 
