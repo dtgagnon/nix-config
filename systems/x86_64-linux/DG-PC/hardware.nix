@@ -5,8 +5,9 @@ in
 {
   imports = with nixos-hardware.nixosModules; [
     (modulesPath + "/installer/scan/not-detected.nix")
+    ./common/gpu/nvidia/ada-lovelace/
     common-cpu-intel
-    common-gpu-nvidia
+    common-gpu-nvidia-nonprime
     common-pc
     common-pc-ssd
   ];
@@ -18,9 +19,7 @@ in
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     nvidia = {
-      open = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      modesetting.enable = true;
+      open = lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
       powerManagement.enable = false;
       nvidiaSettings = true;
     };
@@ -33,5 +32,4 @@ in
       enableGraphical = true;
     };
   };
-  services.xserver.videoDrivers = [ "nvidia" ];
 }
