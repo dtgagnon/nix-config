@@ -110,7 +110,7 @@ in
     networking.firewall.allowedTCPPorts = [ cfg.port ];
 
     security.pam.sshAgentAuth = {
-      enabled = true;
+      enable = true;
       authorizedKeysFiles = [ "/etc/ssh/authorized_keys.d/%u" ];
     };
   };
