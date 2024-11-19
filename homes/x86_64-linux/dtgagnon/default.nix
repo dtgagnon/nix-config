@@ -37,6 +37,10 @@ in
       fzf = enabled;
     };
 
+    desktop = {
+      stylix = enabled;
+    };
+
     home = enabled;
 
     tools = {
