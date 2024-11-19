@@ -45,6 +45,8 @@ in
           "Pictures"
           "Downloads"
           ".config"
+          ".mozilla"
+          ".codeium"
           ".local"
           ".local/share/direnv"
           ".ssh"
