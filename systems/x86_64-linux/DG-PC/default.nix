@@ -14,10 +14,6 @@ in
   spirenix = {
     suites.networking = enabled;
 
-    apps = {
-      firefox = enabled;
-    };
-
     desktop.gnome = enabled;
 
     hardware = {

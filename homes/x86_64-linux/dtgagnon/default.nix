@@ -1,7 +1,7 @@
 { lib
-, config
-, osConfig ? { }
-, format ? "unknown"
+  # , config
+  # , osConfig ? { }
+  # , format ? "unknown"
 , namespace
 , ...
 }:
@@ -19,7 +19,10 @@ in
       aider-chat = enabled;
     };
 
-		apps.terminals.wezterm = enabled;
+    apps = {
+      firefox = enabled;
+      terminals.wezterm = enabled;
+    };
 
     cli = {
       shells = {

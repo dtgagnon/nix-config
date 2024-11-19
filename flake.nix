@@ -52,6 +52,9 @@
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
+    ## desktop
+    stylix.url = "github:danth/stylix";
+
     ## miscellaneous
     cowsay.url = "github:snowfallorg/cowsay";
   };
@@ -86,11 +89,12 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          disko.nixosModules.default
-          home-manager.nixosModules.home-manager
-          impermanence.nixosModules.impermanence
-          nix-index-database.nixosModules.nix-index
+          stylix.nixosModules.stylix
           sops-nix.nixosModules.sops
+          disko.nixosModules.default
+          impermanence.nixosModules.impermanence
+          home-manager.nixosModules.home-manager
+          nix-index-database.nixosModules.nix-index
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
