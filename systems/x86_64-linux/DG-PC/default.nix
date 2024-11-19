@@ -45,6 +45,7 @@ in
 
     tools = {
       general = enabled;
+			monitoring = enabled;
       nix-ld = enabled;
     };
 

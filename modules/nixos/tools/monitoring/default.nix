@@ -11,7 +11,7 @@ let
 in
 {
   options.${namespace}.tools.monitoring = {
-    enable = mkBoolOpt "Enable monitoring utilities";
+    enable = mkBoolOpt false "Enable monitoring utilities";
   };
 
   config = mkIf cfg.enable {
