@@ -6,15 +6,15 @@
 }:
 let
   inherit (lib) types;
-  inherit (lib.${namespace}) mkOpt mkBoolOpt homesUserName;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
 in
 {
   options.${namespace}.user = with types; {
     name = mkOpt str "dtgagnon" "The name to use for the user account";
+    password = mkOpt str "n!xos" "The default password for the user account if sops fails to import";
     fullName = mkOpt str "" "The full name of the user";
     email = mkOpt str "" "The email of the user";
-    # initialPassword = mkOpt str "password" "The initial password for the user account.";
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
     extraOptions = mkOpt attrs { } "Extra options passed to `users.users.<name>`";
     shell = mkOpt package pkgs.nushell "The user's default shell";
@@ -25,13 +25,12 @@ in
 
   config = {
     users.users.${cfg.name} = {
+      inherit (cfg) password shell;
       hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
-      password = "n!xos";
       home = "/home/${cfg.name}";
       group = "users";
       extraGroups = cfg.extraGroups;
       isNormalUser = true; # If false, the user is treated as a 'system user'.
-      inherit (cfg) shell;
     } // cfg.extraOptions;
 
     snowfallorg.users.${cfg.name}.admin = cfg.mkAdmin;
