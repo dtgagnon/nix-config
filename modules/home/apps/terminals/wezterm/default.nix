@@ -17,10 +17,39 @@ in
   };
 
   config = mkIf cfg.enable {
+
     programs.wezterm = {
       enable = true;
 
       colorSchemes = {
+        kanagawa_custom = {
+          ansi = [
+            "#090618"
+            "#c34043"
+            "#76946a"
+            "#c0a36e"
+            "#7e9cd8"
+            "#957fb8"
+            "#6a9589"
+            "#dcd7ba"
+          ];
+          brights = [
+            "#727169"
+            "#e82424"
+            "#98bb6c"
+            "#e6c384"
+            "#7fb4ca"
+            "#938aa9"
+            "#7aa89f"
+            "#c8c093"
+          ];
+          cursor_bg = "#dcd7ba";
+          cursor_border = "#dcd7ba";
+          cursor_fg = "#1f1f28";
+          foreground = "#dcd7ba";
+          background = "#000000";
+        };
+
         exampleTheme = {
           ansi = [
             "#222222"
@@ -52,28 +81,11 @@ in
         };
       };
 
-      extraConfig = ''
-        				function get_appearance()
-        					if wezterm.gui then
-        						return wezterm.gui.get_appearance()
-        					end
-        					return "Dark"
-        				end
-
-        				function scheme_for_appearance(appearance)
-        					if appearance:find 'Dark' then
-        						return themes.Dark or ""
-        					else
-        						return themes.Light or ""
-        					end
-        				end
-
-                local wezterm = require "wezterm"
-                  if ${cfg.font} != ""
-                  then wezterm.font(${cfg.font})
-                  else ""
-
-                return config
+      extraConfig = builtins.readFile ./wezterm.lua
+        #NOTE: temp fix for rendering failures on nixpkgs master branch:
+        + ''
+        	front_end = "WebGpu",
+        	enable_wayland = false,
       '';
     };
     home.sessionVariables.TERMINAL = "wezterm";

@@ -86,7 +86,7 @@
         };
 
         overlays = with inputs; [
-          neovim.overlays.default
+          # neovim.overlays.default
         ];
 
         systems.modules.nixos = with inputs; [
