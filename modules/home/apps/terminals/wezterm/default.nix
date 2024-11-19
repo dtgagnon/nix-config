@@ -82,12 +82,7 @@ in
       };
 
       extraConfig = builtins.readFile ./wezterm.lua
-        #NOTE: temp fix for rendering failures on nixpkgs master branch:
-        + ''
-        	front_end = "WebGpu",
-        	enable_wayland = false,
-      '';
-    };
+
     home.sessionVariables.TERMINAL = "wezterm";
   };
 }

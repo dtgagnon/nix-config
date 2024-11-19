@@ -2,6 +2,7 @@ local wezterm = require("wezterm")
 local sessionizer = require("sessionizer")
 
 return {
+	front_end = "WebGPU",
 	font = wezterm.font_with_fallback({
 		"IosevkaTerm Nerd Font",
 		"Atkinson Hyperlegible",
@@ -16,7 +17,7 @@ return {
 	enable_tab_bar = false,
 	webgpu_power_preference = "HighPerformance",
 	check_for_updates = false,
-	enable_wayland = true,
+	enable_wayland = false, --temporarily false until wezterm rendering is fixed
 	max_fps = 165,
 	anti_alias_custom_block_glyphs = true,
 	default_cursor_style = "SteadyBlock",
