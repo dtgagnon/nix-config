@@ -71,7 +71,6 @@ in
         electron-support = enabled;
         foot = enabled;
         clipboard = enabled;
-        firefox-nordic-theme = enabled;
         ags = {
           # bar = enabled;
         };
