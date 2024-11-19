@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.apps.terminals.wezterm = {
     enable = mkBoolOpt false "Enable wezterm terminal emulator";
-    font = mkOpt (types.nullOr types.str) null "Optionally declare the wezterm font";
+    font = mkOpt (types.str) "" "Optionally declare the wezterm font";
     extraConfig = mkOpt types.str "" "Additional lua for wezterm configuration";
   };
 
@@ -69,7 +69,7 @@ in
         				end
 
                 local wezterm = require "wezterm"
-                  if ${cfg.font} != null
+                  if ${cfg.font} != ""
                   then wezterm.font(${cfg.font})
                   else ""
 
