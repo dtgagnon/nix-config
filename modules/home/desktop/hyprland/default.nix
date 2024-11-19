@@ -53,8 +53,8 @@ in
             							border_size = 2
             							layout = dwindle
             							resize_on_border = true
-            							col.active_border = rgb(${config.stylix.base16Scheme.base08}) rgb(${config.stylix.base16Scheme.base0C}) 45deg
-            							col.inactive_border = rgb(${config.stylix.base16Scheme.base01})
+            							col.active_border = rgb(${config.${namespace}.desktop.stylix.base16Scheme.base08}) rgb(${config.${namespace}.desktop.stylix.base16Scheme.base0C}) 45deg
+            							col.inactive_border = rgb(${config.${namespace}.desktop.stylix.base16Scheme.base01})
             						}
             						input {
             							kb_layout = us
@@ -125,12 +125,12 @@ in
             							pseudotile = true
             							preserve_split = true
             						}
-            						bind = ${modifier},Return,exec,${TERMINAL}
+            						bind = ${modifier},Return,exec,$TERMINAL
             						bind = ${modifier}SHIFT,Return,exec,rofi-launcher
             						bind = ${modifier}SHIFT,W,exec,web-search
             						bind = ${modifier}ALT,W,exec,wallsetter
             						bind = ${modifier}SHIFT,N,exec,swaync-client -rs
-            						bind = ${modifier},W,exec,${BROWSER}
+            						bind = ${modifier},W,exec,$BROWSER
             						bind = ${modifier},E,exec,emopicker9000
             						bind = ${modifier},S,exec,screenshootin
             						bind = ${modifier},D,exec,discord
