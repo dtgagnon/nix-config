@@ -88,9 +88,9 @@ in
       ${optionalString cfg.manage-other-hosts other-hosts-config}
     '';
 
-    "${namespace}".user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
+    spirenix.user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
 
-    "${namespace}".home.extraOptions = {
+    spirenix.home.extraOptions = {
       programs.nushell.shellAliases = foldl
         (
           aliases: system: aliases // { "ssh-${system}" = "ssh ${system} -t tmux a"; }
