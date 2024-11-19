@@ -1,21 +1,20 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
-  # inherit (lib.${namespace}) put_function_here;
-  cfg = config.${namespace}.nixosmodule.directory; ## update to module directory
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.nixosmodule.directory;
+  #NOTE: update module directory ^ ^ ^   ^ ^ ^ ^
 in
 {
-  options.${namespace}.nixosmodule.directory = { ## update to module directory
-    enable = mkEnableOption "Enable XXXXX module";
+  options.${namespace}.nixosmodule.directory = {
+    #NOTE: update module path ^ ^   ^ ^ ^ ^
+    enable = mkBoolOpt "Enable XXXXX module";
   };
 
-  config = mkIf cfg.enable {
-    
-  };
+  config = mkIf cfg.enable { };
 }

@@ -1,21 +1,20 @@
-{
-  lib,
-  config,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
-
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.homemodule.directory;
+  #NOTE: update module directory ^ ^ ^  ^ ^ ^ ^
 in
 {
   options.${namespace}.homemodule.directory = {
-    enable = mkEnableOption "Enable XXXXX module";
+    #NOTE: update module path ^ ^  ^ ^ ^ ^
+    enable = mkBoolOpt "Enable XXXXX module";
   };
 
-  config = mkIf cfg.enable {
-
-  };
+  config = mkIf cfg.enable { };
 }
