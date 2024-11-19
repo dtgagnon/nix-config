@@ -21,10 +21,6 @@ in
   config = mkIf cfg.enable {
     programs.home-manager.enable = true;
 
-    home.sessionVariables = {
-      BROWSER = "firefox";
-    };
-
     ${namespace}.home.extraOptions = {
       home.file = mkAliasDefinitions options.${namespace}.home.file;
       xdg.enable = true;
