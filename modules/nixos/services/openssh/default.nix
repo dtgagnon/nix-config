@@ -7,8 +7,8 @@
 , ...
 }:
 let
-  inherit (lib) mkIf optionalString types foldl hasOptinPersistence;
-  inherit (lib.${namespace}) mkOpt mkBoolOpt;
+  inherit (lib) mkIf optionalString types foldl;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt hasOptinPersistence;
   cfg = config.${namespace}.services.openssh;
 
   user = config.${namespace}.user.name;
@@ -17,8 +17,8 @@ let
   # TODO: This is a hold-over from old snowfall-lib rev using specialArg `name` to provide hostname. Can be moved to just `host` once the `name` uses are identified.
   name = host;
 
-  # this is a user's public ssh key
-  default-key = "${config.sops.secrets."ssh-keys/dtgagnon-key.pub"}";
+  # this is a default user's public ssh key
+  default-key = '' config.sops.secrets."ssh-keys/dtgagnon-key.pub" '';
 
   # Collects the information about the other hosts
   other-hosts = lib.filterAttrs
