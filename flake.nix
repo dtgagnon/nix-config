@@ -54,6 +54,7 @@
 
     ## desktop
     stylix.url = "github:danth/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     ## miscellaneous
     cowsay.url = "github:snowfallorg/cowsay";

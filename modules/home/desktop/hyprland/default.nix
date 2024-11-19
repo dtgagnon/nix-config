@@ -7,12 +7,6 @@ let
   inherit (lib) mkIf types concatStrings;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.hyprland;
-  # inherit (import ../hosts/${host}/variables.nix)
-  #   browser
-  #   terminal
-  #   extraMonitorSettings
-  #   keyboardLayout
-  #   ;
 in
 {
   options.${namespace}.desktop.hyprland = {
