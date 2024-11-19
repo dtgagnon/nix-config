@@ -38,13 +38,13 @@ in
   config = mkIf cfg.enable {
     programs.wezterm = {
       enable = true;
-      package = mkIf pkgs.stdenv.isLinux (
-        let
-          term = ''${pkgs.wezterm}/bin/wezterm "$@"'';
-          aliases = map (n: pkgs.writeShellScriptBin n term) cfg.alias;
-        in
-        [ pkgs.wezterm ] ++ aliases
-      );
+      # package = mkIf pkgs.stdenv.isLinux (
+      #   let
+      #     term = ''${pkgs.wezterm}/bin/wezterm "$@"'';
+      #     aliases = map (n: pkgs.writeShellScriptBin n term) cfg.alias;
+      #   in
+      #   [ pkgs.wezterm ] ++ aliases
+      # );
       # colorSchemes = {
       #   myCoolTheme = {
       #     ansi = [
