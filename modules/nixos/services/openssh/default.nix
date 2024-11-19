@@ -1,5 +1,5 @@
-{ config
-, lib
+{ lib
+, config
 , host ? ""
 , format ? ""
 , inputs ? { }
@@ -7,17 +7,18 @@
 , ...
 }:
 let
-  inherit (lib) mkIf optionalString types foldl;
+  inherit (lib) mkIf optionalString types foldl hasOptinPersistence;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.services.openssh;
 
   user = config.${namespace}.user.name;
   user-id = builtins.toString user.uid;
 
-  # TODO: This is a hold-over from an earlier Snowfall Lib version which used the specialArg `name` to provide the host name.
+  # TODO: This is a hold-over from old snowfall-lib rev using specialArg `name` to provide hostname. Can be moved to just `host` once the `name` uses are identified.
   name = host;
 
-  default-key = " n/a ";
+  # this is a user's public ssh key
+  default-key = config.sops.secrets."ssh-keys/dtgagnon-key.pub";
 
   # Collects the information about the other hosts
   other-hosts = lib.filterAttrs
@@ -35,7 +36,7 @@ let
         remote-user-name = remote.config.${namespace}.user.name;
         remote-user-id = builtins.toString remote.config.users.users.${remote-user-name}.uid;
 
-        #TODO: identify if there is an alternative to gnupg/gpg agents for age based keys.
+        #NOTE: Don't need to use forward-gpg for age keys, but will need to refer to them statically somehow. I'm using age keys only so far.
         forward-gpg =
           optionalString (config.programs.gnupg.agent.enable && remote.config.programs.gnupg.agent.enable)
             ''
@@ -54,12 +55,11 @@ let
     (builtins.attrNames other-hosts);
 in
 {
-  options.${namespace}.services.openssh = with types; {
+  options.${namespace}.services.openssh = {
     enable = mkBoolOpt false "Whether or not to configure OpenSSH support.";
-    authorizedKeys = mkOpt (listOf str) [ default-key ] "The public keys to apply.";
-    port = mkOpt port 22022 "The port to listen on (in addition to 22).";
-    manage-other-hosts =
-      mkOpt bool true "Whether or not to add other host configurations to SSH config.";
+    authorizedKeys = mkOpt (types.listOf types.str) [ default-key ] "The public keys to apply.";
+    port = mkOpt types.port 22022 "The port to listen on (in addition to 22).";
+    manage-other-hosts = mkBoolOpt true "Whether or not to add other host configurations to SSH config.";
   };
 
   config = mkIf cfg.enable {
@@ -76,21 +76,27 @@ in
         StreamLocalBindUnlink = "yes";
       };
 
-      # hostKeys = [
-      #   {
-      #     path = "${lib.optionalString hasOptinPersistence "/persist"}/etc/ssh/ssh_host_ed25519_key";
-      #     type = "ed25519";
-      #   }
-      # ];
+      hostKeys = [
+        {
+          path = "${lib.optionalString hasOptinPersistence "/persist"}/etc/ssh/ssh_host_ed25519_key";
+          type = "ed25519";
+        }
+      ];
     };
 
     programs.ssh.extraConfig = ''
       ${optionalString cfg.manage-other-hosts other-hosts-config}
     '';
 
-    spirenix.user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
+    ${namespace}.user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
 
-    spirenix.home.extraOptions = {
+    ${namespace}.home.extraOptions = {
+      programs.nushell.shellAliases = foldl
+        (
+          aliases: system: aliases // { "ssh-${system}" = "ssh ${system} -t tmux a"; }
+        )
+        { }
+        (builtins.attrNames other-hosts);
       programs.zsh.shellAliases = foldl
         (
           aliases: system: aliases // { "ssh-${system}" = "ssh ${system} -t tmux a"; }
