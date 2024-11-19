@@ -29,7 +29,6 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "stablepkgs";
     nix-secrets = {
-      # url = "/home/dtgagnon/nix-config/nix-secrets";
       url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git";
       flake = false;
     };
@@ -86,7 +85,7 @@
         };
 
         overlays = with inputs; [
-          # neovim.overlays.default
+          neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
         ];
 
         systems.modules.nixos = with inputs; [
