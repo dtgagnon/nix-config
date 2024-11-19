@@ -68,14 +68,10 @@ in
         					end
         				end
 
-        				config.color_scheme = scheme_for_appearance(get_appearance())
-
                 local wezterm = require "wezterm"
-                ${
-                  if cfg.font != null
-                  then ''config.font = wezterm.font("${cfg.font}")''
+                  if ${cfg.font} != null
+                  then wezterm.font(${cfg.font})
                   else ""
-                }
 
                 return config
       '';
