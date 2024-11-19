@@ -22,6 +22,7 @@ in
     apps = {
       firefox = enabled;
       terminals.wezterm = enabled;
+      windsurf = enabled;
     };
 
     cli = {

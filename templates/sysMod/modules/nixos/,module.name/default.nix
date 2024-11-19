@@ -13,7 +13,7 @@ in
 {
   options.${namespace}.nixosmodule.directory = {
     #NOTE: update module path ^ ^   ^ ^ ^ ^
-    enable = mkBoolOpt "Enable XXXXX module";
+    enable = mkBoolOpt false "Enable XXXXX module";
   };
 
   config = mkIf cfg.enable { };
