@@ -40,7 +40,6 @@ in
     desktop = {
       stylix = {
         enable = true;
-        themeSource = "image";
       };
     };
 
