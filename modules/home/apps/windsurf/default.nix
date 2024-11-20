@@ -16,5 +16,10 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.spirenix.windsurf ];
+
+    ${namespace}.home.persistHomeDirs = [
+      ".windsurf"
+      ".codeium"
+    ];
   };
 }

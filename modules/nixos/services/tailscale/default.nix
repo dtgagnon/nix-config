@@ -11,7 +11,7 @@ in
 {
   options.${namespace}.services.tailscale = {
     enable = mkBoolOpt false "Enable tailscale";
-    authKeyDir = mkOpt types.str "" "Authentication key to authorize this node on the tailnet";
+    authKeyFile = mkOpt types.str "/run/secrets/tailscale-authKey" "Authentication key to authorize this node on the tailnet";
   };
 
   config = mkIf cfg.enable {
@@ -24,8 +24,7 @@ in
     services.tailscale = {
       enable = true;
       extraSetFlags = [ "--ssh" "--accept-routes" ];
-      # authKeyFile = cfg.authKeyDir;
-      authKeyFile = "/run/secrets/tailscale-authKey";
+      inherit (cfg) authKeyFile;
     };
   };
 }

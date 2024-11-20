@@ -34,6 +34,11 @@ in
         };
       };
     };
+
     home.sessionVariables.BROWSER = "firefox";
+
+    ${namespace}.home.persistHomeDirs = [
+      ".mozilla"
+    ];
   };
 }

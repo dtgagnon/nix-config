@@ -1,7 +1,7 @@
 { lib
-  # , config
-  # , osConfig ? { }
-  # , format ? "unknown"
+, config
+, osConfig ? { }
+, format ? "unknown"
 , namespace
 , ...
 }:

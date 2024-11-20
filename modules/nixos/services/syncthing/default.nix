@@ -8,6 +8,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.services.syncthing;
+  username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.services.syncthing = {
@@ -17,13 +18,15 @@ in
   config = mkIf cfg.enable {
     services.syncthing = {
       enable = true;
-      user = config.${namespace}.user.name;
-      dataDir = "/home/${config.${namespace}.user.name}";
+      user = "${username}";
+      dataDir = "/home/${username}";
+      configDir = "/home/${username}/.config/syncthing";
     };
 
-    # Add syncthing-specific persistence
-    ${namespace}.system.impermanence = {
-      extraSysDirs = [ "/var/lib/syncthing" ];
-      extraHomeDirs = [ ".config/syncthing"];
+    # Add syncthing system configuration to persist
+    ${namespace}.system.impermanence.extraHomeDirs = [
+      ".config/syncthing"
+      ".local/state/syncthing"
+    ];
   };
 }
