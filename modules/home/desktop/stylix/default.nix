@@ -24,7 +24,7 @@ in
       polarity = "either"; # "light" || "dark" || "either"
 
       image = if cfg.imageFilename != null then ../wallpapers/${cfg.imageFilename} else ../wallpapers/nix-wallpaper-gear.png;
-      base16Scheme = (mkIf cfg.imageFilename == null) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      ${lib.mkIf (cfg.imageFilename == null) "base16Scheme"} = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
       #   base01 = "";
