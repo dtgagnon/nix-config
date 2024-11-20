@@ -24,7 +24,7 @@ in
       polarity = "either"; # "light" || "dark" || "either"
 
       image = if cfg.imageFilename != null then ../wallpapers/${cfg.imageFilename} else ../wallpapers/nix-wallpaper-gear.png;
-      ${lib.mkIf (cfg.imageFilename == null) "base16Scheme"} = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      # base16Scheme = # see below for merged attr set 
       # base16Scheme = {
       #   base00 = "";
       #   base01 = "";
@@ -83,6 +83,7 @@ in
         })
         { }
         cfg.excludedTargets;
+    } // lib.mkIf (cfg.imageFilename == null) { base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml"; };
     };
   };
 }
