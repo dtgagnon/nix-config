@@ -85,6 +85,7 @@ in
         c = "clear";
 
         # Application aliases
+        wsf = "windsurf";
         vi = "vim";
         svi = "sudo nvim";
       };
@@ -105,5 +106,7 @@ in
     # programs.eza.enableNushellIntegration = true;
     programs.zoxide.enableNushellIntegration = true;
     programs.direnv.enableNushellIntegration = true;
+
+    home.sessionVariables.SHELL = "nushell";
   };
 }
