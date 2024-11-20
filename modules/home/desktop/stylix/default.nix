@@ -83,7 +83,6 @@ in
         })
         { }
         cfg.excludedTargets;
-    } // lib.mkIf (cfg.imageFilename == null) { base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml"; };
-    };
+    } // mkIf (cfg.imageFilename == null) { base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml"; };
   };
 }
