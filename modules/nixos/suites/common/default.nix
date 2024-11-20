@@ -17,7 +17,9 @@ in
     spirenix = {
       desktop.gnome = enabled;
 
-      hardware.audio = enabled;
+      hardware = {
+        audio = enabled;
+      };
 
       nix = enabled;
 

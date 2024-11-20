@@ -19,6 +19,11 @@ in
       stylix = enabled;
     };
 
+    hardware = {
+      audio = enabled;
+      nvidia = enabled;
+    };
+
     security = {
       sudo = enabled;
       sops-nix = enabled;
