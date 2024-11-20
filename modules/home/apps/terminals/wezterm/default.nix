@@ -81,7 +81,7 @@ in
         };
       };
 
-      extraConfig = builtins.readFile ./wezterm.lua
+      extraConfig = builtins.readFile ./wezterm.lua;
 
     home.sessionVariables.TERMINAL = "wezterm";
   };
