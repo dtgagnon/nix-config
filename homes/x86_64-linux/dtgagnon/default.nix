@@ -38,7 +38,10 @@ in
     };
 
     desktop = {
-      stylix = enabled;
+      stylix = {
+        enable = true;
+        themeSource = "image";
+      };
     };
 
     home = enabled;
