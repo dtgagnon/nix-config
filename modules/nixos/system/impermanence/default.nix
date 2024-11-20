@@ -47,6 +47,7 @@ in
           ".config"
           ".mozilla"
           ".codeium"
+          ".windsurf"
           ".local"
           ".local/share/direnv"
           ".ssh"
