@@ -32,7 +32,7 @@ in
 
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    home.persistence."/persist/home" = {
+    home.persistence."/persist/home/${config.${namespace}.user.name}" = {
       directories = [
         "Documents"
         "Downloads"
@@ -46,6 +46,7 @@ in
       files = [
         ".screenrc" 
       ] ++ cfg.persistHomeFiles;
+      allowOther = true;
     };
   };
 }

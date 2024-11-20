@@ -63,42 +63,42 @@ in
     #NOTE: ^ ^ ^ The above is necessary for home-manager impermanence module to function
 
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
-    systemd.services."persist-home-create-root-paths" =
-    let
-        persistentHomesRoot = "/persist";
-        listOfCommands = l.mapAttrsToList
-            (_: user:
-            let
-                userHome = l.escapeShellArg (persistentHomesRoot + user.home);
-            in ''
-                if [[ ! -d ${userHome} ]]; then
-                    echo "Persistent home root folder '${userHome}' not found, creating..."
-                    mkdir -p --mode=${user.homeMode} ${userHome}
-                    chown ${user.name}:${user.group} ${userHome}
-                fi
-            '')
-            (l.filterAttrs (_: user: user.createHome == true) config.users.users);
+    # systemd.services."persist-home-create-root-paths" =
+    # let
+    #     persistentHomesRoot = "/persist";
+    #     listOfCommands = l.mapAttrsToList
+    #         (_: user:
+    #         let
+    #             userHome = l.escapeShellArg (persistentHomesRoot + user.home);
+    #         in ''
+    #             if [[ ! -d ${userHome} ]]; then
+    #                 echo "Persistent home root folder '${userHome}' not found, creating..."
+    #                 mkdir -p --mode=${user.homeMode} ${userHome}
+    #                 chown ${user.name}:${user.group} ${userHome}
+    #             fi
+    #         '')
+    #         (l.filterAttrs (_: user: user.createHome == true) config.users.users);
 
-        stringOfCommands = l.concatLines listOfCommands;
-    in {
-        script = stringOfCommands;
-        unitConfig = {
-            Description = "Ensure users' home folders exist in the persistent filesystem";
-            PartOf = [ "local-fs.target" ];
-            # The folder creation should happen after the persistent home path is mounted.
-            After = [ "persist-home.mount" ];
-        };
+    #     stringOfCommands = l.concatLines listOfCommands;
+    # in {
+    #     script = stringOfCommands;
+    #     unitConfig = {
+    #         Description = "Ensure users' home folders exist in the persistent filesystem";
+    #         PartOf = [ "local-fs.target" ];
+    #         # The folder creation should happen after the persistent home path is mounted.
+    #         After = [ "persist-home.mount" ];
+    #     };
 
-        serviceConfig = {
-            Type = "oneshot";
-            StandardOutput = "journal";
-            StandardError = "journal";
-        };
+    #     serviceConfig = {
+    #         Type = "oneshot";
+    #         StandardOutput = "journal";
+    #         StandardError = "journal";
+    #     };
 
-        # [Install]
-        wantedBy = [ "local-fs.target" ];
+    #     # [Install]
+    #     wantedBy = [ "local-fs.target" ];
 
-    };
+    # };
 
     # boot.initrd.systemd.services.rollback = {
     #   description = "Rollback BTRFS root subvolume to a pristine state";

@@ -39,6 +39,7 @@ in
 
     ${namespace}.home.persistHomeDirs = [
       ".mozilla"
+      ".cache/mozilla"
     ];
   };
 }
