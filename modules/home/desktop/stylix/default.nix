@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    themeSource = mkOpt types.str "base16Scheme" "Designate the source of the theme. 'image' = wallpaper sourced; 'base16Scheme' = pre- or custom-defined color scheme ";
+    themeSource = mkOpt types.str "image" "Designate the source of the theme. 'image' = wallpaper sourced; 'base16Scheme' = pre- or custom-defined color scheme ";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
