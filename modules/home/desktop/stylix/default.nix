@@ -24,7 +24,7 @@ in
       polarity = "dark"; # "light" || "dark" || "either"
 
       image = mkIf (cfg.themeSource == "image") "~/.config/wallpaper/nix-wallpaper-gear.png";
-      base16Scheme = mkIf (cfg.themeSource == "base16Scheme") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      # base16Scheme = mkIf (cfg.themeSource == "base16Scheme") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
       #   base01 = "";
