@@ -40,18 +40,20 @@ in
 
       users.${user} = {
         directories = [
+          "nix-config"
           "proj"
           "Documents"
-          "Pictures"
           "Downloads"
-          ".config"
+          "Music"
+          "Pictures"
+          "Videos"
           # ".windsurf"
           # ".codeium"
           # ".mozilla"
+          ".config"
           ".local"
           ".local/share/direnv"
           ".ssh"
-          "nix-config"
         ] ++ cfg.extraHomeDirs;
         files = [
           ".screenrc"

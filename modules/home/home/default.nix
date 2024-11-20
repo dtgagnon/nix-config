@@ -44,7 +44,7 @@ in
         ".local"
       ] ++ cfg.persistHomeDirs;
       files = [
-        ".screenrc" 
+        ".screenrc"
       ] ++ cfg.persistHomeFiles;
       allowOther = true;
     };

@@ -43,7 +43,10 @@ in
       };
     };
 
-    home = enabled;
+    home = {
+      enable = true;
+      persistHomeDirs = [ "proj" ];
+    };
 
     tools = {
       comma = enabled;
