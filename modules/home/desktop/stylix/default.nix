@@ -21,7 +21,7 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      polarity = "dark"; # "light" || "dark" || "either"
+      polarity = "either"; # "light" || "dark" || "either"
 
       image = /home/dtgagnon/.config/wallpaper/nix-wallpaper-gear.png;
       # base16Scheme = (mkIf cfg.themeSource == "base16") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
