@@ -40,6 +40,7 @@ in
     desktop = {
       stylix = {
         enable = true;
+        imageFilename = "nix-wallpaper-gear.png";
       };
     };
 
