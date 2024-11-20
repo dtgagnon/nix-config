@@ -12,7 +12,6 @@ in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    imageFilename = mkOpt (types.nullOr types.str) null "Designate the file name of the source image";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
@@ -23,8 +22,8 @@ in
       enable = true;
       polarity = "either"; # "light" || "dark" || "either"
 
-      image = if cfg.imageFilename != null then ../wallpapers/${cfg.imageFilename} else ../wallpapers/nix-wallpaper-gear.png;
-      base16Scheme = (mkIf cfg.imageFilename == null) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      image = ../../../home/desktop/wallpapers/nix-wallpaper-gear.png;
+      # base16Scheme = (mkIf cfg.themeSource == "base16") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
       #   base01 = "";
@@ -77,12 +76,12 @@ in
         popups = 1.0;
       };
 
-      targets = foldl'
-        (acc: target: acc // {
-          ${target}.enable = false;
-        })
-        { }
-        cfg.excludedTargets;
+      # targets = foldl'
+      #   (acc: target: acc // {
+      #     ${target}.enable = false;
+      #   })
+      #   { }
+      #   cfg.excludedTargets;
     };
   };
 }

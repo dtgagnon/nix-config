@@ -14,14 +14,10 @@ in
   spirenix = {
     suites.networking = enabled;
 
-    desktop.gnome = enabled;
-
-    hardware = {
-      audio = enabled;
-      nvidia = enabled;
+    desktop = {
+      gnome = enabled;
+      stylix = enabled;
     };
-
-    nix = enabled;
 
     security = {
       sudo = enabled;
