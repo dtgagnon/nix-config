@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    themeSource = mkOpt types.str "image" "Designate the source of the theme. 'image' = wallpaper sourced; 'base16Scheme' = pre- or custom-defined color scheme ";
+    # themeSource = mkOpt types.str "image" "Designate the source of the theme. 'image' = wallpaper sourced; 'base16Scheme' = pre- or custom-defined color scheme ";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
@@ -23,8 +23,8 @@ in
       enable = true;
       polarity = "dark"; # "light" || "dark" || "either"
 
-      image = mkIf (cfg.themeSource == "image") "/home/${config.${namespace}.user.name}/.config/wallpaper/nix-wallpaper-gear.png";
-      # base16Scheme = mkIf (cfg.themeSource == "base16Scheme") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      image = "/home/${config.${namespace}.user.name}/.config/wallpaper/nix-wallpaper-gear.png";
+      # base16Scheme = (mkIf cfg.themeSource == "base16") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
       #   base01 = "";
