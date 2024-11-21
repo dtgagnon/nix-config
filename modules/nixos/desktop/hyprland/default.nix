@@ -23,12 +23,12 @@ in
     environment.systemPackages = with pkgs; [
       spirenix.wallpapers
       libinput
-      volumectl
+      # volumectl
       playerctl
       brightnessctl
       glib
       gtk3.out
-      gnome.gnome-control-center
+      gnome-control-center
       ags
       libdbusmenu-gtk3
     ];
