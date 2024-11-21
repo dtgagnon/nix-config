@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
 in
@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     programs.waybar = {
       enable = true;
-      style = ./style.css;
+      style = mkDefault ./style.css;
     };
 
     spirenix.home.configFile."waybar/config".source = ./config;

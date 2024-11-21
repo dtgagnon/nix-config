@@ -5,13 +5,13 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.rofi;
 in
 {
   options.${namespace}.desktop.addons.rofi = {
-    enable = mkBoolOpt false "Whether to enable Rofi in the desktop environment.";
+    enable = mkBoolOpt false "Whether to enable rofi in the desktop environment.";
   };
 
   config = mkIf cfg.enable {
@@ -21,7 +21,11 @@ in
         rofi-calc
         rofi-emoji
       ];
-      extraConfig = {
+      theme = mkDefault (
+      let
+        inherit (config.lib.formats.rasi) mkLiteral;
+      in
+      {
         configuration = {
           fullscreen = false;
           show-icons = false;
@@ -29,28 +33,28 @@ in
         };
 
         "*" = {
-          background-color = "transparent";
-          text-color = "white";
+          background-color = mkLiteral "transparent";
+          text-color = mkLiteral "white";
           spacing = 30;
         };
 
         window = {
-          font = "Nerd Font Hack 18";
+          font = mkLiteral "Nerd Font Hack 18";
           fullscreen = true;
-          transparency = "background";
-          background-color = "#282a36BA";
-          children = [ "dummy1" "hdum" "dummy2" ];
+          transparency = mkLiteral "background";
+          background-color = mkLiteral "#282a36BA";
+          children = map mkLiteral [ "dummy1" "hdum" "dummy2" ];
         };
 
         hdum = {
-          orientation = "horizontal";
-          children = [ "dummy3" "mainbox" "dummy4" ];
+          orientation = mkLiteral "horizontal";
+          children = map mkLiteral [ "dummy3" "mainbox" "dummy4" ];
         };
 
         "element selected" = {
-          text-color = "#caa9fa";
+          text-color = mkLiteral "#caa9fa";
         };
-      };
+      });
     };
   };
 }
