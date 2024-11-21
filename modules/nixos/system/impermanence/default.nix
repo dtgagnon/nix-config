@@ -41,7 +41,6 @@ in
       users.${user} = {
         directories = [
           "nix-config"
-          "proj"
           "Documents"
           "Downloads"
           "Music"
