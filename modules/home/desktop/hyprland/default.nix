@@ -1,6 +1,8 @@
 { lib
 , pkgs
 , config
+, inputs
+, system
 , namespace
 , ...
 }:
@@ -12,6 +14,7 @@ in
 {
   options.${namespace}.desktop.hyprland = {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
+    wallpaper = mkOpt (types.oneOf [ types.package types.path types.str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
     extraMonitorSettings = mkOpt types.str "" "Additional monitor configurations";
   };
 
@@ -57,7 +60,7 @@ in
     systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
     wayland.windowManager.hyprland = {
       enable = true;
-      package = inputs.hyprland.packages.${hyprland};
+      package = inputs.hyprland.packages.${system}.hyprland;
       systemd.variables = [ "--all" ];
 
       plugins = with inputs.hyprland-plugins.packages.${pkgs}; [
@@ -384,84 +387,93 @@ in
             $accent = $lavender
             $accentAlpha = $mauveAlpha
             $font = JetBrainsMono Nerd Font
-          } ];
+          }
+        ];
 
-      # GENERAL
-      general {
-        disable_loading_bar = true
-        hide_cursor = true
+        # GENERAL
+        general {
+          disable_loading_bar = true
+          hide_cursor = true
+        }
+
+        # BACKGROUND
+        background {
+          monitor =
+          path = ~/Pictures/wallpapers/others/cat-leaves.png
+          color = $base
+          blur_passes = 0
+        }
+
+        # TIME
+        label {
+          monitor =
+          text = cmd[update:30000] echo "<b><big> $(date +"%R") </big></b>"
+          color = $text
+          font_size = 110
+          font_family = $font
+          shadow_passes = 3
+          shadow_size = 3
+
+          position = 0, -100
+          halign = center
+          valign = top
+        }
+
+        # DATE
+        label {
+          monitor =
+          text = cmd[update:43200000] echo "$(date +"%A, %d %B %Y")"
+          color = $text
+          font_size = 18
+          font_family = $font
+          position = 0, -300
+          halign = center
+          valign = top
+        }
+
+        # USER AVATAR
+
+        image {
+          monitor =
+          path = ~/Pictures/pp/pp.png
+          size = 125
+          border_color = $accent
+
+          position = 0, -450
+          halign = center
+          valign = center
+        }
+
+        # INPUT FIELD
+        input-field {
+          monitor =
+          size = 300, 60
+          outline_thickness = 4
+          dots_size = 0.2
+          dots_spacing = 0.4
+          dots_center = true
+          outer_color = $accent
+          inner_color = $surface0
+          font_color = $text
+          fade_on_empty = false
+          placeholder_text = <span foreground="##$textAlpha"><i>󰌾  Logged in as </i><span foreground="##$accentAlpha">$USER</span></span>
+          hide_input = false
+          check_color = $accent
+          fail_color = $red
+          fail_text = <i>$FAIL <b>($ATTEMPTS)</b></i>
+          capslock_color = $yellow
+          position = 0, -100
+          halign = center
+          valign = center
+        };
+      };
+
+      services.hyprpaper = {
+        enable = true;
+        settings = {
+          wallpaper = ", ${cfg.wallpaper}";
+        };
       }
-
-      # BACKGROUND
-      background {
-        monitor =
-        path = ~/Pictures/wallpapers/others/cat-leaves.png
-        color = $base
-        blur_passes = 0
-      }
-
-      # TIME
-      label {
-        monitor =
-        text = cmd[update:30000] echo "<b><big> $(date +"%R") </big></b>"
-        color = $text
-        font_size = 110
-        font_family = $font
-        shadow_passes = 3
-        shadow_size = 3
-
-        position = 0, -100
-        halign = center
-        valign = top
-      }
-
-      # DATE
-      label {
-        monitor =
-        text = cmd[update:43200000] echo "$(date +"%A, %d %B %Y")"
-        color = $text
-        font_size = 18
-        font_family = $font
-        position = 0, -300
-        halign = center
-        valign = top
-      }
-
-      # USER AVATAR
-
-      image {
-        monitor =
-        path = ~/Pictures/pp/pp.png
-        size = 125
-        border_color = $accent
-
-        position = 0, -450
-        halign = center
-        valign = center
-      }
-
-      # INPUT FIELD
-      input-field {
-        monitor =
-        size = 300, 60
-        outline_thickness = 4
-        dots_size = 0.2
-        dots_spacing = 0.4
-        dots_center = true
-        outer_color = $accent
-        inner_color = $surface0
-        font_color = $text
-        fade_on_empty = false
-        placeholder_text = <span foreground="##$textAlpha"><i>󰌾  Logged in as </i><span foreground="##$accentAlpha">$USER</span></span>
-        hide_input = false
-        check_color = $accent
-        fail_color = $red
-        fail_text = <i>$FAIL <b>($ATTEMPTS)</b></i>
-        capslock_color = $yellow
-        position = 0, -100
-        halign = center
-        valign = center
-      }
-    '';
+    };
   };
 }

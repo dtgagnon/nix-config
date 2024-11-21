@@ -2,6 +2,7 @@
 , pkgs
 , config
 , inputs
+, system
 , namespace
 , ...
 }:
@@ -13,7 +14,7 @@ in
 {
   options.${namespace}.desktop.hyprland = let inherit (types) package oneOf path str attrs; in {
     enable = mkBoolOpt false "Enable Hyprland desktop environment";
-    package = mkOpt package inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland "The Hyprland package to use.";
+    package = mkOpt package inputs.hyprland.packages.${system}.hyprland "The Hyprland package to use.";
     wallpaper = mkOpt (oneOf [ package path str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
     settings = mkOpt attrs { } "Extra Hyprland settings to apply.";
   };
@@ -21,8 +22,11 @@ in
   config = mkIf cfg.enable {
     programs.hyprland = {
       enable = true;
-      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+      inherit (cfg) package;
+      portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
     };
+    programs.hyprlock.enable = true;
+    services.hyprpaper.enable = true;
 
     # environment.systemPackages = with pkgs; [
     #   spirenix.wallpapers
