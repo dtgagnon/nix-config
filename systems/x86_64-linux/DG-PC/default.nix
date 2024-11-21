@@ -16,6 +16,7 @@ in
 
     desktop = {
       gnome = enabled;
+			hyprland = enabled;
       stylix = enabled;
     };
 
