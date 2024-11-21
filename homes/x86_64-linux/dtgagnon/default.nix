@@ -38,7 +38,7 @@ in
     };
 
     desktop = {
-			hyprland = enabled;
+      hyprland = enabled;
       stylix = {
         enable = true;
         imageFilename = "nix-wallpaper-gear.png";

@@ -20,30 +20,30 @@ in
   config = mkIf cfg.enable {
     programs.hyprland.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      spirenix.wallpapers
-      libinput
-      # volumectl
-      playerctl
-      brightnessctl
-      glib
-      gtk3.out
-      gnome-control-center
-      ags
-      libdbusmenu-gtk3
-    ];
-
-    environment.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
-
-    # security.pam.services.hyprlock = { };
-
-    services.greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command = "${lib.getExe pkgs.greetd.tuigreet} --cmd Hyprland";
-        };
-      };
-    };
+    # environment.systemPackages = with pkgs; [
+    #   spirenix.wallpapers
+    #   libinput
+    #   # volumectl
+    #   playerctl
+    #   brightnessctl
+    #   glib
+    #   gtk3.out
+    #   gnome-control-center
+    #   ags
+    #   libdbusmenu-gtk3
+    # ];
+    #
+    # environment.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
+    #
+    # # security.pam.services.hyprlock = { };
+    #
+    # services.greetd = {
+    #   enable = true;
+    #   settings = {
+    #     default_session = {
+    #       command = "${lib.getExe pkgs.greetd.tuigreet} --cmd Hyprland";
+    #     };
+    #   };
+    # };
   };
 }
