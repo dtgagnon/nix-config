@@ -8,7 +8,7 @@ let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.stylix;
-  wallpaperPath = ./../../../../packages/wallpapers/wallpapers;
+  wallpaperPath = "${pkgs.spirenix.wallpapers}/share/wallpapers";
 in
 {
   options.${namespace}.desktop.stylix = {
@@ -23,7 +23,7 @@ in
       enable = true;
       polarity = "dark"; # "light" || "dark" || "either"
 
-      image = wallpaperPath/nix-wallpaper-gear.png;
+      image = "${wallpaperPath}/nix-wallpaper-gear.png";
       # base16Scheme = (mkIf cfg.themeSource == "base16") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
