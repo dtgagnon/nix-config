@@ -21,6 +21,7 @@ in
     programs.hyprland.enable = true;
 
     environment.systemPackages = with pkgs; [
+      spirenix.wallpapers
       libinput
       volumectl
       playerctl

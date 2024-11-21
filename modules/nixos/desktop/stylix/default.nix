@@ -22,7 +22,7 @@ in
       enable = true;
       polarity = "either"; # "light" || "dark" || "either"
 
-      image = ../../../home/desktop/wallpapers/nix-wallpaper-gear.png;
+      image = ../../../../packages/wallpapers/wallpapers/nix-wallpaper-gear.png;
       # base16Scheme = (mkIf cfg.themeSource == "base16") "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
