@@ -24,7 +24,7 @@ in
       enable = true;
       polarity = "either"; # "light" || "dark" || "either"
 
-      image = if cfg.imageFilename != null then "${wallpaperPath}"/"${cfg.imageFilename}" else "${wallpaperPath}"/nix-wallpaper-gear.png;
+      image = if cfg.imageFilename != null then wallpaperPath/${cfg.imageFilename} else wallpaperPath/nix-wallpaper-gear.png;
       # base16Scheme = # see below for merged attr set 
       # base16Scheme = {
       #   base00 = "";
