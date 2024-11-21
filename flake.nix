@@ -4,8 +4,7 @@
   inputs = {
     ## packages
     stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
 
     ## configuration frameworks
@@ -38,7 +37,7 @@
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
     deploy-rs.url = "github:serokell/deploy-rs";
-    deploy-rs.inputs.nixpkgs.follows = "stablepkgs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
 
     ## utilities
     comma.url = "github:nix-community/comma";
@@ -55,7 +54,7 @@
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "unstable";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.nixpkgs.follows = "hyprland";
 
@@ -63,7 +62,6 @@
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     ## miscellaneous
-    cowsay.url = "github:snowfallorg/cowsay";
   };
 
   outputs = inputs:
