@@ -15,9 +15,11 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.waybar ];
+    programs.waybar = {
+      enable = true;
+      style = ./style.css;
+    };
 
     spirenix.home.configFile."waybar/config".source = ./config;
-    spirenix.home.configFile."waybar/style.css".source = ./style.css;
   };
 }

@@ -19,8 +19,7 @@ in
 
   config = mkIf cfg.enable {
     spirenix.home.configFile."kanshi/config".source = ./config;
-
-    environment.systemPackages = with pkgs; [ kanshi ];
+    services.kanshi.enable = true;
 
     # configuring kanshi
     systemd.user.services.kanshi = {

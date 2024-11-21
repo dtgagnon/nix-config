@@ -26,7 +26,6 @@ in
       portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
     };
     programs.hyprlock.enable = true;
-    services.hyprpaper.enable = true;
 
     # environment.systemPackages = with pkgs; [
     #   spirenix.wallpapers

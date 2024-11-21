@@ -26,7 +26,7 @@ in
 
   config = mkIf cfg.enable {
     spirenix = {
-      desktop.hyprland.settings = {
+      desktop.hyprland.extraConfig = {
         exec-once = [ "${getExe cfg.package} --config ${bar}/config.js" ];
       };
     };

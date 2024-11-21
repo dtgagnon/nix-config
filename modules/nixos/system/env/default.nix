@@ -25,7 +25,6 @@ in
     };
     variables = {
       # To make some programs "XDG" compliant:
-      WALLPAPER_DIR = "${pkgs.spirenix.wallpapers}/share/wallpapers}";
       EDITOR = "nvim";
       SHELL = "nushell";
       TERMINAL = "wezterm";
