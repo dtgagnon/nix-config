@@ -280,7 +280,6 @@ in
 
           # clipboard manager
           "$mainMod, V, exec, cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
-        };
 
         # mouse binding
         bindm = [
