@@ -53,6 +53,6 @@ in
 
       extraConfig = builtins.readFile ./wezterm.lua;
     };
-    home.sessionVariables.TERMINAL = "wezterm";
+    home.sessionVariables."env.TERMINAL" = "wezterm";
   };
 }

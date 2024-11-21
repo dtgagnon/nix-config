@@ -37,7 +37,7 @@ in
 
     home.sessionVariables.BROWSER = "firefox";
 
-    ${namespace}.home.persistHomeDirs = [
+    spirenix.home.persistHomeDirs = [
       ".mozilla"
       ".cache/mozilla"
     ];

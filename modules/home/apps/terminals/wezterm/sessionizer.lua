@@ -4,7 +4,7 @@ local act = wezterm.action
 local M = {}
 
 local fd = "fd"
-local rootPath = "/home/smj/Projects"
+local rootPath = "/home/dtgagnon"
 
 M.toggle = function(window, pane)
 	local projects = {}

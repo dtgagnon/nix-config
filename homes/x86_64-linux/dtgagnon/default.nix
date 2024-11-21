@@ -16,7 +16,7 @@ in
     };
 
     ai = {
-      aider-chat = enabled;
+      aider-chat = disabled;
     };
 
     apps = {
@@ -26,19 +26,20 @@ in
     };
 
     cli = {
-      shells = {
-        fish = enabled;
-        nushell = enabled;
-        zsh = disabled;
-      };
-      neovim = enabled;
-      zoxide = enabled;
       eza = enabled;
+      fastfetch = enabled;
       fzf = enabled;
+      neovim = enabled;
+      shells.nushell = enabled;
+      zoxide = enabled;
     };
 
     desktop = {
-      hyprland = enabled;
+      hyprland = {
+        enable = true;
+        addons = [ "rofi" "waybar" ];
+        plugins = [ ];
+      };
       stylix = {
         enable = true;
         imageFilename = "nord-rainbow-dark-nix-ultrawide.png";

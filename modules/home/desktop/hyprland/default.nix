@@ -12,10 +12,11 @@ let
   cfg = config.${namespace}.desktop.hyprland;
 in
 {
-  options.${namespace}.desktop.hyprland = {
+  options.${namespace}.desktop.hyprland = let inherit (types) oneOf package path str listOf; in {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
-    wallpaper = mkOpt (types.oneOf [ types.package types.path types.str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
-    extraMonitorSettings = mkOpt types.str "" "Additional monitor configurations";
+    plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable"; 
+    addons = mkOpt (listOf str) [ ] "List of spirenix hyprland addons to enable";
+    extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
   };
 
   config = mkIf cfg.enable {
@@ -65,7 +66,11 @@ in
 
       plugins = with inputs.hyprland-plugins.packages.${pkgs}; [
         # list of hyprland packages from hyprland-plugins repo
-      ];
+      ] ++ cfg.plugins;
+
+      spirenix.desktop.addons = {
+        wallpapers = enabled;
+      } // { lib.genAttrs cfg.addons (name: enabled); };
 
       settings = {
         # autostart
@@ -284,7 +289,7 @@ in
 
           # clipboard manager
           "$mainMod, V, exec, cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
-        ];
+        };
 
         # mouse binding
         bindm = [
