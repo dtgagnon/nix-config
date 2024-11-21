@@ -8,7 +8,7 @@ let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.stylix;
-  wallpaperPath = ../../../../packages/wallpapers/wallpapers;
+  wallpaperPath = ./../../../../packages/wallpapers/wallpapers;
 in
 {
   options.${namespace}.desktop.stylix = {
