@@ -43,7 +43,6 @@ in
     };
 
     home.packages = with pkgs; [
-      hyprlock
       hyprpicker
       # swww
       swaybg
@@ -362,22 +361,27 @@ in
     };
 
     #hyprlock config
-    xdg.configFile."hypr/hyprlock.conf".text = ''
-      $red = rgb(f38ba8)
-      $yellow = rgb(f9e2af)
-      $lavender = rgb(b4befe)
+		programs.hyprlock = {
+			enable = true;
+			settings = {
+        colors = [
+          {
+            $red = rgb(f38ba8)
+            $yellow = rgb(f9e2af)
+            $lavender = rgb(b4befe)
 
-      $mauve = rgb(cba6f7)
-      $mauveAlpha = cba6f7
+            $mauve = rgb(cba6f7)
+            $mauveAlpha = cba6f7
 
-      $base = rgb(1e1e2e)
-      $surface0 = rgb(313244)
-      $text = rgb(cdd6f4)
-      $textAlpha = cdd6f4
+            $base = rgb(1e1e2e)
+            $surface0 = rgb(313244)
+            $text = rgb(cdd6f4)
+            $textAlpha = cdd6f4
 
-      $accent = $lavender
-      $accentAlpha = $mauveAlpha
-      $font = JetBrainsMono Nerd Font
+            $accent = $lavender
+            $accentAlpha = $mauveAlpha
+            $font = JetBrainsMono Nerd Font
+          } ];
 
       # GENERAL
       general {

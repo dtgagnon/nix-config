@@ -41,7 +41,7 @@ in
       hyprland = enabled;
       stylix = {
         enable = true;
-        imageFilename = "nix-wallpaper-gear.png";
+        imageFilename = "nord-rainbow-dark-nix-ultrawide.png";
       };
     };
 

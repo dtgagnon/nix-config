@@ -25,9 +25,8 @@ in
 
       image = if cfg.imageFilename != null 
         then "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.imageFilename}"
-        else "${pkgs.spirenix.wallpapers}/share/wallpapers/nix-wallpaper-gear.png";
-      # base16Scheme = # see below for merged attr set 
-      # base16Scheme = {
+        else "${pkgs.spirenix.wallpapers}/share/wallpapers/nord-rainbow-dark-nix-ultrawide.png";
+      # base16Scheme = { #NOTE: see below for merged attr set 
       #   base00 = "";
       #   base01 = "";
       #   base02 = "";
