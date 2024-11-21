@@ -1,13 +1,12 @@
-{
-  pkgs,
-  lib,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   images = builtins.attrNames (builtins.readDir ./wallpapers);
-  mkWallpaper =
-    name: src:
+  mkWallpaper = name: src:
     let
       fileName = builtins.baseNameOf src;
       pkg = pkgs.stdenvNoCC.mkDerivation {
@@ -43,7 +42,7 @@ let
   '') wallpapers;
 in
 pkgs.stdenvNoCC.mkDerivation {
-  name = "plusultra-wallpapers";
+  name = "spirenix-wallpapers";
   src = ./wallpapers;
 
   installPhase = ''
@@ -57,8 +56,8 @@ pkgs.stdenvNoCC.mkDerivation {
   } // wallpapers;
 
   meta = with lib; {
-    description = "Some good wallpapers!";
+    description = "My wallpapers";
     license = licenses.asl20;
-    maintainers = with maintainers; [ jakehamilton ];
+    maintainers = with maintainers; [ dtgagnon ];
   };
 }
