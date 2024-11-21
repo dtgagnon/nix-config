@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types;
+  inherit (lib) mkForce mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.hyprland;
 in
@@ -49,7 +49,6 @@ in
       swaybg
       glib
       grim
-      inputs.hypr-contrib.packages.${pkgs.system}.grimblast
       slurp
       wl-clip-persist
       wf-recorder
@@ -97,8 +96,8 @@ in
           gaps_in = 0;
           gaps_out = 0;
           border_size = 2;
-          "col.active_border" = lib.mkForce "rgb(cba6f7) rgb(94e2d5) 45deg";
-          "col.inactive_border" = "0x00000000";
+          "col.active_border" = mkForce "rgb(cba6f7) rgb(94e2d5) 45deg";
+          "col.inactive_border" = mkForce "0x00000000";
           border_part_of_window = false;
           no_border_on_floating = false;
         };
@@ -280,6 +279,7 @@ in
 
           # clipboard manager
           "$mainMod, V, exec, cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
+        ];
 
         # mouse binding
         bindm = [
