@@ -1,9 +1,10 @@
-{ lib
-, config
-, options
-, namespace
-, osConfig ? { }
-, ...
+{
+  lib,
+  config,
+  options,
+  namespace,
+  osConfig ? { },
+  ...
 }:
 let
   inherit (lib) mkIf mkAliasDefinitions types;
@@ -14,11 +15,17 @@ in
   options.${namespace}.home = {
     enable = mkBoolOpt false "Enable home-manager";
     file = mkOpt types.attrs { } "A set of files to be managed by home-manager's `home.file`.";
-    configFile = mkOpt types.attrs { } "A set of files to be managed by home-manager's `xdg.configFile`.";
+    configFile =
+      mkOpt types.attrs { }
+        "A set of files to be managed by home-manager's `xdg.configFile`.";
     extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
 
-    persistHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
-    persistHomeFiles = mkOpt (types.listOf types.str) [ ] "Declare additional user home files to persist";
+    persistHomeDirs =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare additional user home directories to persist";
+    persistHomeFiles =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable {
@@ -32,7 +39,7 @@ in
 
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    home.persistence."/persist/home/${config.${namespace}.user.name}" = {
+    home.persistence."/persist/${config.${namespace}.user.name}" = {
       directories = [
         "Documents"
         "Downloads"
@@ -41,6 +48,7 @@ in
         "Videos"
         # ".ssh"
         ".config"
+        ".cache"
         ".local"
       ] ++ cfg.persistHomeDirs;
       files = [

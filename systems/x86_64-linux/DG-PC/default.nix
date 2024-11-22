@@ -1,7 +1,8 @@
-{ lib
-, host
-, namespace
-, ...
+{
+  lib,
+  host,
+  namespace,
+  ...
 }:
 let
   inherit (lib.${namespace}) enabled;
@@ -15,8 +16,8 @@ in
     suites.networking = enabled;
 
     desktop = {
-      # gnome = enabled;
-      hyprland = enabled;
+      gnome = enabled;
+      # hyprland = enabled;
       stylix = enabled;
     };
 
@@ -41,7 +42,10 @@ in
       network = enabled;
       time = enabled;
       xkb = enabled;
-      disko = { enable = true; device = "/dev/nvme0n1"; };
+      disko = {
+        enable = true;
+        device = "/dev/nvme0n1";
+      };
       impermanence = enabled;
     };
 

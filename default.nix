@@ -1,9 +1,10 @@
-{ lib
-, config
-, osConfig ? { }
-, format ? "unknown"
-, namespace
-, ...
+{
+  lib,
+  config,
+  osConfig ? { },
+  format ? "unknown",
+  namespace,
+  ...
 }:
 let
   inherit (lib.${namespace}) enabled disabled;
@@ -11,18 +12,12 @@ in
 {
   spirenix = {
     user = {
-      fullName = "Derek Gagnon";
-      email = "gagnon.derek@gmail.com";
-    };
-
-    ai = {
-      aider-chat = disabled;
+      fullName = "Gina";
     };
 
     apps = {
       firefox = enabled;
       terminals.wezterm = enabled;
-      windsurf = enabled;
     };
 
     cli = {
@@ -48,7 +43,7 @@ in
 
     home = {
       enable = true;
-      persistHomeDirs = [ "proj" ];
+      persistHomeDirs = [ "sims-saves-test" ];
     };
 
     tools = {
