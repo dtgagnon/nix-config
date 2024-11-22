@@ -14,7 +14,8 @@ let
     ;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
-  user = config.users.users.${config.snowfallorg.user.name};
+  username = config.${namespace}.user.name;
+  user = config.users.users.${username};
 in
 {
   options.${namespace}.system.impermanence = {
