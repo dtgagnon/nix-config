@@ -19,7 +19,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    home-manager.useGlobalPkgs = true;
+    home-manager = {
+      useGlobalPkgs = true;
+      backupFileExtension = "backup";
+    };
 
     ${namespace}.home.extraOptions = {
       home.stateVersion = config.system.stateVersion;
