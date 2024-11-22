@@ -1,20 +1,25 @@
-{ lib
-, config
-, namespace
-, ...
+{
+  lib,
+  config,
+  namespace,
+  ...
 }:
 let
-  inherit (lib) mkIf types optionalString concatLines attrValues;
+  inherit (lib) mkIf types optionalString concatLines attrValues ;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
-  user = config.${namespace}.user;
+  user = config.users.users.${config.${namespace}.user.name};
 in
 {
   options.${namespace}.system.impermanence = {
     enable = mkBoolOpt false "Enable impermanence";
-    extraSysDirs = mkOpt (types.listOf types.str) [ ] "Declare additional system directories to persist";
+    extraSysDirs =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare additional system directories to persist";
     extraSysFiles = mkOpt (types.listOf types.str) [ ] "Declare additional system files to persist";
-    extraHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
+    extraHomeDirs =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare additional user home directories to persist";
     extraHomeFiles = mkOpt (types.listOf types.str) [ ] "Declare additional user home files to persist";
   };
 
@@ -31,11 +36,21 @@ in
         "/var/lib/sops-nix"
         "/var/lib/systemd/coredump"
         "/etc/NetworkManager/system-connections"
-        { directory = "/var/lib/colord"; user = "colord"; group = "colord"; mode = "u=rwx,g=rx,o="; }
+        {
+          directory = "/var/lib/colord";
+          user = "colord";
+          group = "colord";
+          mode = "u=rwx,g=rx,o=";
+        }
       ] ++ cfg.extraSysDirs;
       files = [
         "/etc/machine-id"
-        { file = "/var/keys/secret_file"; parentDirectory = { mode = "0700"; }; }
+        {
+          file = "/var/keys/secret_file";
+          parentDirectory = {
+            mode = "0700";
+          };
+        }
       ] ++ cfg.extraSysFiles;
 
       users.${user.name} = {
@@ -63,15 +78,16 @@ in
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
     system.activationScripts.persistent-dirs.text =
       let
-        mkHomePersist = user: optionalString user.createHome ''
-          				mkdir -p /persist/${user.home}
-          				chown ${user.name}:${user.group} /persist/${user.home}
-          				chmod ${user.homeMode} /persist/${user.home}
-          			'';
+        mkHomePersist =
+          user:
+          optionalString user.createHome ''
+            mkdir -p /persist/${user.home}
+            chown ${user.name}:${user.group} /persist/${user.home}
+            chmod ${user.homeMode} /persist/${user.home}
+          '';
         users = attrValues config.users.users;
       in
       concatLines (map mkHomePersist users);
-
 
     programs.fuse.userAllowOther = true;
     #NOTE: ^ ^ ^ The above is necessary for home-manager impermanence module to function
@@ -125,28 +141,28 @@ in
 
     # Disk wiping script for impermanence
     boot.initrd.postDeviceCommands = lib.mkAfter ''
-      			mkdir /btrfs_tmp
-      			mount /dev/root_vg/root /btrfs_tmp
-      			if [[ -e /btrfs_tmp/root ]]; then
-      				mkdir -p /btrfs_tmp/old_roots
-      				timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-      				mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-      			fi
+      mkdir /btrfs_tmp
+      mount /dev/root_vg/root /btrfs_tmp
+      if [[ -e /btrfs_tmp/root ]]; then
+      	mkdir -p /btrfs_tmp/old_roots
+      	timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+      	mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+      fi
 
-      			delete_subvolume_recursively() {
-      				IFS=$'\n'
-      				for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-      					delete_subvolume_recursively "/btrfs_tmp/$i"
-      				done
-      				btrfs subvolume delete "$1"
-      			}
+      delete_subvolume_recursively() {
+      	IFS=$'\n'
+      	for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+      		delete_subvolume_recursively "/btrfs_tmp/$i"
+      	done
+      	btrfs subvolume delete "$1"
+      }
 
-      			for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-      				delete_subvolume_recursively "$i"
-      			done
+      for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+      	delete_subvolume_recursively "$i"
+      done
 
-      			btrfs subvolume create /btrfs_tmp/root
-      			umount /btrfs_tmp
-      		'';
+      btrfs subvolume create /btrfs_tmp/root
+      umount /btrfs_tmp
+    '';
   };
 }
