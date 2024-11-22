@@ -12,13 +12,13 @@ in
 {
   options.${namespace}.user = with types; {
     name = mkOpt str "dtgagnon" "The name to use for the user account";
-    password = mkOpt str "n!xos" "The default password for the user account if sops fails to import";
+    initialPassword = mkOpt str "n!xos" "The default password for the user account if sops fails to import";
     fullName = mkOpt str "" "The full name of the user";
     email = mkOpt str "" "The email of the user";
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
     extraOptions = mkOpt attrs { } "Extra options passed to `users.users.<name>`";
     shell = mkOpt package pkgs.nushell "The user's default shell";
-    prompt-init = mkBoolOpt true "Whether or not to show an initial message when opening a new shell";
+    prompt-init = mkBoolOpt false "Whether or not to show an initial message when opening a new shell";
 
     mkAdmin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
   };

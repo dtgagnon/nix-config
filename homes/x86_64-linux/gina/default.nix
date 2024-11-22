@@ -42,7 +42,7 @@ in
 
     home = {
       enable = true;
-      persistHomeDirs = [ "sims-saves-test-dir" ];
+      persistHomeDirs = [ "gina-homes-test-dir" ];
     };
 
     tools = {

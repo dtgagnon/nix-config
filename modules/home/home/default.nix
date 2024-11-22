@@ -41,6 +41,7 @@ in
 
     home.persistence."/persist/${config.${namespace}.user.name}" = {
       directories = [
+        "testMcTestTest"
         "Documents"
         "Downloads"
         "Music"

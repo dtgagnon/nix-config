@@ -48,7 +48,7 @@ in
 
     home = {
       enable = true;
-      persistHomeDirs = [ "proj" ];
+      persistHomeDirs = [ "proj" "derek-homes-test" ];
     };
 
     tools = {
