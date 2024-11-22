@@ -1,8 +1,8 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -23,8 +23,8 @@ in
       configDir = "/home/${username}/.config/syncthing";
     };
 
-    # Add syncthing system configuration to persist
-    ${namespace}.system.impermanence.extraHomeDirs = [
+    # Add syncthing system configuration to user's home persistence
+    snowfallorg.users.${config.${namespace}.user.name}.home.config.${namespace}.home.persistHomeDirs = [
       ".config/syncthing"
       ".local/state/syncthing"
     ];
