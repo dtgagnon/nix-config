@@ -17,7 +17,7 @@ in
     extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
   };
 
-  config = mkIf cfg.enable {
+  config = {
     home-manager = {
       useGlobalPkgs = true;
       backupFileExtension = "backup";
