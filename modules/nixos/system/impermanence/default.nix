@@ -4,10 +4,10 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types;
+  inherit (lib) mkIf types optionalString concatLines attrValues;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
-  user = config.${namespace}.user.name;
+  user = config.${namespace}.user;
 in
 {
   options.${namespace}.system.impermanence = {
@@ -38,7 +38,7 @@ in
         { file = "/var/keys/secret_file"; parentDirectory = { mode = "0700"; }; }
       ] ++ cfg.extraSysFiles;
 
-      users.${user} = {
+      users.${user.name} = {
         directories = [
           "nix-config"
           "Documents"
@@ -60,25 +60,39 @@ in
       };
     };
 
+    #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
+    system.activationScripts.persistent-dirs.text =
+      let
+        mkHomePersist = user: optionalString user.createHome ''
+          				mkdir -p /persist/${user.home}
+          				chown ${user.name}:${user.group} /persist/${user.home}
+          				chmod ${user.homeMode} /persist/${user.home}
+          			'';
+        users = attrValues config.users.users;
+      in
+      concatLines (map mkHomePersist users);
+
+
     programs.fuse.userAllowOther = true;
     #NOTE: ^ ^ ^ The above is necessary for home-manager impermanence module to function
 
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
     # systemd.services."persist-home-create-root-paths" =
-    # let
+    #   let
     #     persistentHomesRoot = "/persist";
     #     listOfCommands = l.mapAttrsToList
-    #         (_: user:
+    #       (_: user:
     #         let
-    #             userHome = l.escapeShellArg (persistentHomesRoot + user.home);
-    #         in ''
-    #             if [[ ! -d ${userHome} ]]; then
-    #                 echo "Persistent home root folder '${userHome}' not found, creating..."
-    #                 mkdir -p --mode=${user.homeMode} ${userHome}
-    #                 chown ${user.name}:${user.group} ${userHome}
-    #             fi
+    #           userHome = l.escapeShellArg (persistentHomesRoot + user.home);
+    #         in
+    #         ''
+    #           if [[ ! -d ${userHome} ]]; then
+    #               echo "Persistent home root folder '${userHome}' not found, creating..."
+    #               mkdir -p --mode=${user.homeMode} ${userHome}
+    #               chown ${user.name}:${user.group} ${userHome}
+    #           fi
     #         '')
-    #         (l.filterAttrs (_: user: user.createHome == true) config.users.users);
+    #       (l.filterAttrs (_: user: user.createHome == true) config.users.users);
 
     #     stringOfCommands = l.concatLines listOfCommands;
     # in {
