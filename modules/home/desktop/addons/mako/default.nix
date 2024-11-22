@@ -47,6 +47,6 @@ in
       };
     };
 
-    spirenix.home.configFile."mako/config".source = ./config;
+    xdg.configFile."mako/config".source = ./config;
   };
 }

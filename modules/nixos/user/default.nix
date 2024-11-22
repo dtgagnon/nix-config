@@ -20,7 +20,7 @@ in
     shell = mkOpt package pkgs.nushell "The user's default shell";
     prompt-init = mkBoolOpt true "Whether or not to show an initial message when opening a new shell";
 
-    mkAdmin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel automatically";
+    mkAdmin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
   };
 
   config = {

@@ -15,7 +15,7 @@ in
   options.${namespace}.desktop.hyprland = let inherit (types) oneOf package path str listOf; in {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
     # wallpaper = mkOpt (oneOf [ package path str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
-    plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable"; 
+    plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable";
     addons = mkOpt (listOf str) [ ] "List of spirenix hyprland addons to enable";
 
     extraConfig = mkOpt str "" "Additional hyprland configuration";
@@ -23,8 +23,6 @@ in
   };
 
   config = mkIf cfg.enable {
-
-    
     home.sessionVariables = {
       NIXOS_OZONE_WL = "1";
       __GL_GSYNC_ALLOWED = "0";
@@ -65,7 +63,7 @@ in
 
     systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
 
-    spirenix.home.configFile."hypr/hyprland.conf".source = ./hyprland.conf;
+    xdg.configFile."hypr/hyprland.conf".source = ./hyprland.conf;
     wayland.windowManager.hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${system}.hyprland;
@@ -76,13 +74,17 @@ in
       ] ++ cfg.plugins;
 
       extraConfig = ''
-      ${cfg.extraConfig}
+        ${cfg.extraConfig}
       '';
     };
 
     spirenix.desktop.addons = {
       hyprlock = enabled;
-      # wallpapers = enabled;
+			kanshi = enabled;
+			waybar = enabled;
+      wallpapers = enabled;
+			xdg-portal = enabled;
     } // genAttrs cfg.addons (name: enabled);
+
   };
 }

@@ -18,12 +18,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.home.configFile."kanshi/config".source = ./config;
+    xdg.configFile."kanshi/config".source = ./config;
     services.kanshi.enable = true;
 
     # configuring kanshi
     systemd.user.services.kanshi = {
-      description = "Kanshi output autoconfig ";
+      description = "Kanshi output autoconfig";
       wantedBy = [ "graphical-session.target" ];
       partOf = [ "graphical-session.target" ];
       environment = {

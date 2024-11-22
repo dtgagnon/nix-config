@@ -51,8 +51,11 @@ in
         };
       };
 
-      extraConfig = builtins.readFile ./wezterm.lua;
+      # extraConfig = builtins.readFile ./wezterm.lua;
     };
+    xdg.configFile."wezterm/wezterm.lua".source = ./wezterm.lua;
+    xdg.configFile."wezterm/sessionizer.lua".source = ./sessionizer.lua;
+
     home.sessionVariables."env.TERMINAL" = "wezterm";
   };
 }

@@ -20,6 +20,6 @@ in
       style = mkDefault ./style.css;
     };
 
-    spirenix.home.configFile."waybar/config".source = ./config;
+    xdg.configFile."waybar/config".source = ./config;
   };
 }

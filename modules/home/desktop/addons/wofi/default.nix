@@ -26,8 +26,6 @@ in
 
     # config -> .config/wofi/config
     # css -> .config/wofi/style.css
-    # colors -> $XDG_CACHE_HOME/wal/colors
-    # spirenix.home.configFile."foot/foot.ini".source = ./foot.ini;
     # spirenix.home.configFile."wofi/config".source = ./config;
     # spirenix.home.configFile."wofi/style.css".source = ./style.css;
   };

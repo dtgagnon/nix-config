@@ -5,6 +5,7 @@
 , ...
 }:
 let
+  inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.wallpapers;
 
@@ -15,7 +16,7 @@ in
     enable = mkBoolOpt false "Whether or not to add wallpapers to ~/Pictures/wallpapers.";
   };
 
-  config = {
+  config = mkIf cfg.enable {
     spirenix.home.file = lib.foldl
       (
         acc: name:
