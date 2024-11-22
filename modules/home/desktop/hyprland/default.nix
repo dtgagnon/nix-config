@@ -80,7 +80,6 @@ in
 
     spirenix.desktop.addons = {
       hyprlock = enabled;
-			kanshi = enabled;
 			waybar = enabled;
       wallpapers = enabled;
 			xdg-portal = enabled;

@@ -23,12 +23,10 @@ in
 
     # configuring kanshi
     systemd.user.services.kanshi = {
-      description = "Kanshi output autoconfig";
-      wantedBy = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
-      environment = {
-        XDG_CONFIG_HOME = "${home}/.config";
-      };
+      description = "Kanshi output autoconfig ";
+      wantedBy = [ " graphical-session.target " ];
+      partOf = [ " graphical-session.target " ];
+      environment = { XDG_CONFIG_HOME = "${home}/.config"; };
       serviceConfig = {
         ExecCondition = ''
           ${pkgs.bash}/bin/bash -c '[ -n "$WAYLAND_DISPLAY" ]'
