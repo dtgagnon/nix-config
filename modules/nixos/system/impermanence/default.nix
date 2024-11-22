@@ -14,8 +14,7 @@ let
     ;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
-  username = config.${namespace}.user.name;
-  user = config.users.users.${username};
+  user = config.home-manager.users.${config.${namespace}.user.name}.${namespace}.user;
 in
 {
   options.${namespace}.system.impermanence = {
