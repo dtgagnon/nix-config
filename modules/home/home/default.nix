@@ -39,7 +39,7 @@ in
 
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    home.persistence."/persist/${config.${namespace}.user.name}" = {
+    home.persistence."/persist/home/${config.${namespace}.user.name}" = {
       directories = [
         "testMcTestTest"
         "Documents"
