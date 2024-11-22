@@ -5,10 +5,16 @@
   ...
 }:
 let
-  inherit (lib) mkIf types optionalString concatLines attrValues ;
+  inherit (lib)
+    mkIf
+    types
+    optionalString
+    concatLines
+    attrValues
+    ;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
-  user = config.users.users.${config.${namespace}.user.name};
+  user = config.users.users.${config.snowfallorg.user.name};
 in
 {
   options.${namespace}.system.impermanence = {
