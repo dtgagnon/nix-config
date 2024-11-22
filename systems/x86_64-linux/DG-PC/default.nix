@@ -16,7 +16,7 @@ in
 
     desktop = {
       # gnome = enabled;
-			hyprland = enabled;
+      hyprland = enabled;
       stylix = enabled;
     };
 
@@ -47,7 +47,7 @@ in
 
     tools = {
       general = enabled;
-			monitoring = enabled;
+      monitoring = enabled;
       nix-ld = enabled;
     };
 

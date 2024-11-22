@@ -7,12 +7,11 @@
 }:
 let
   inherit (lib) mkIf mkAliasDefinitions types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib.${namespace}) mkOpt;
   cfg = config.${namespace}.home;
 in
 {
   options.${namespace}.home = {
-    enable = mkBoolOpt false "Enable home-manager";
     file = mkOpt types.attrs { } "A set of files to be managed by home-manager's `home.file`.";
     configFile = mkOpt types.attrs { } "A set of files to be managed by home-manager's `xdg.configFile`.";
     extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
