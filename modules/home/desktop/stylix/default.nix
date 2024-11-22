@@ -23,10 +23,10 @@ in
       enable = true;
       polarity = "either"; # "light" || "dark" || "either"
 
-      image = if cfg.imageFilename != null 
+      image = if cfg.imageFilename != null
         then "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.imageFilename}"
         else "${pkgs.spirenix.wallpapers}/share/wallpapers/nord-rainbow-dark-nix-ultrawide.png";
-      # base16Scheme = { #NOTE: see below for merged attr set 
+      # base16Scheme = { #NOTE: see below for merged attr set
       #   base00 = "";
       #   base01 = "";
       #   base02 = "";

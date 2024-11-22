@@ -55,7 +55,7 @@ in
           ".ssh"
         ] ++ cfg.extraHomeDirs;
         files = [
-          ".screenrc"
+          # common user files to persist
         ] ++ cfg.extraHomeFiles;
       };
     };

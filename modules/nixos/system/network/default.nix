@@ -22,9 +22,9 @@ in
       firewall.allowedTCPPorts = [ ];
       firewall.allowedUDPPorts = [ ];
 
-      # hosts = {
-      #   "127.0.0.1" = [ "local.test" ] ++ (cfg.hosts."127.0.0.1" or [ ]);
-      # } // cfg.hosts;
+      hosts = {
+        "127.0.0.1" = [ "local.test" ] ++ (cfg.hosts."127.0.0.1" or [ ]);
+      } // cfg.hosts;
 
       # useDHCP = lib.mkDefault true;
       networkmanager = {
