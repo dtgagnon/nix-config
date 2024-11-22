@@ -59,26 +59,26 @@ in
         }
       ] ++ cfg.extraSysFiles;
 
-      users.${user.name} = {
-        directories = [
-          "nix-config"
-          # "Documents"
-          # "Downloads"
-          # "Music"
-          # "Pictures"
-          # "Videos"
-          # ".windsurf"
-          # ".codeium"
-          # ".mozilla"
-          # ".config"
-          # ".local"
-          ".local/share/direnv"
-          ".ssh"
-        ] ++ cfg.extraHomeDirs;
-        files = [
-          # common user files to persist
-        ] ++ cfg.extraHomeFiles;
-      };
+      # users.${user.name} = {
+      #   directories = [
+      #     "nix-config"
+      #     # "Documents"
+      #     # "Downloads"
+      #     # "Music"
+      #     # "Pictures"
+      #     # "Videos"
+      #     # ".windsurf"
+      #     # ".codeium"
+      #     # ".mozilla"
+      #     # ".config"
+      #     # ".local"
+      #     ".local/share/direnv"
+      #     ".ssh"
+      #   ] ++ cfg.extraHomeDirs;
+      #   files = [
+      #     # common user files to persist
+      #   ] ++ cfg.extraHomeFiles;
+      # };
     };
 
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
