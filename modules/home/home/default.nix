@@ -34,13 +34,12 @@ in
 
     home.persistence."/persist/home/${config.${namespace}.user.name}" = {
       directories = [
-				"test-dir"
         "Documents"
         "Downloads"
         "Music"
         "Pictures"
         "Videos"
-        ".ssh"
+        # ".ssh"
         ".config"
         ".local"
       ] ++ cfg.persistHomeDirs;

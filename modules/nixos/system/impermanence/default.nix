@@ -41,16 +41,16 @@ in
       users.${user.name} = {
         directories = [
           "nix-config"
-          "Documents"
-          "Downloads"
-          "Music"
-          "Pictures"
-          "Videos"
+          # "Documents"
+          # "Downloads"
+          # "Music"
+          # "Pictures"
+          # "Videos"
           # ".windsurf"
           # ".codeium"
           # ".mozilla"
-          ".config"
-          ".local"
+          # ".config"
+          # ".local"
           ".local/share/direnv"
           ".ssh"
         ] ++ cfg.extraHomeDirs;
@@ -79,7 +79,7 @@ in
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
     # systemd.services."persist-home-create-root-paths" =
     #   let
-    #     persistentHomesRoot = "/persist";
+    #     persistentHomesRoot = "/persist/home";
     #     listOfCommands = l.mapAttrsToList
     #       (_: user:
     #         let
