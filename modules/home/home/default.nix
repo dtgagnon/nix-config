@@ -22,7 +22,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    programs.home-manager.enable = true;
+    programs.home-manager = {
+			enable = true;
+			backupFileExtension = "backup";
+		};
 
     ${namespace}.home.extraOptions = {
       home.file = mkAliasDefinitions options.${namespace}.home.file;
