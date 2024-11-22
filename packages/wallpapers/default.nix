@@ -25,21 +25,26 @@ let
     in
     pkg;
   names = builtins.map (lib.snowfall.path.get-file-name-without-extension) images;
-  wallpapers = lib.foldl (
-    acc: image:
-    let
-      # fileName = builtins.baseNameOf image;
-      # lib.getFileName is a helper to get the basename of
-      # the file and then take the name before the file extension.
-      # eg. mywallpaper.png -> mywallpaper
-      name = lib.snowfall.path.get-file-name-without-extension image;
-    in
-    acc // { "${name}" = mkWallpaper name (./wallpapers + "/${image}"); }
-  ) { } images;
+  wallpapers = lib.foldl
+    (
+      acc: image:
+        let
+          # fileName = builtins.baseNameOf image;
+          # lib.getFileName is a helper to get the basename of
+          # the file and then take the name before the file extension.
+          # eg. mywallpaper.png -> mywallpaper
+          name = lib.snowfall.path.get-file-name-without-extension image;
+        in
+        acc // { "${name}" = mkWallpaper name (./wallpapers + "/${image}"); }
+    )
+    { }
+    images;
   installTarget = "$out/share/wallpapers";
-  installWallpapers = builtins.mapAttrs (name: wallpaper: ''
-    cp ${wallpaper} ${installTarget}/${wallpaper.fileName}
-  '') wallpapers;
+  installWallpapers = builtins.mapAttrs
+    (name: wallpaper: ''
+      cp ${wallpaper} ${installTarget}/${wallpaper.fileName}
+    '')
+    wallpapers;
 in
 pkgs.stdenvNoCC.mkDerivation {
   name = "spirenix-wallpapers";
