@@ -25,7 +25,7 @@ in
 
   config = {
     users.users.${cfg.name} = {
-      inherit (cfg) password shell;
+      inherit (cfg) initialPassword shell;
       hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
       home = "/home/${cfg.name}";
       group = "users";
