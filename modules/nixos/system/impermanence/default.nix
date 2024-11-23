@@ -19,20 +19,17 @@ in
 {
   options.${namespace}.system.impermanence = {
     enable = mkBoolOpt false "Enable impermanence";
-    extraSysDirs =
-      mkOpt (types.listOf types.str) [ ]
-        "Declare additional system directories to persist";
+    extraSysDirs = mkOpt (types.listOf types.str) [ ] "Declare additional system directories to persist";
     extraSysFiles = mkOpt (types.listOf types.str) [ ] "Declare additional system files to persist";
-    extraHomeDirs =
-      mkOpt (types.listOf types.str) [ ]
-        "Declare additional user home directories to persist";
-    extraHomeFiles = mkOpt (types.listOf types.str) [ ] "Declare additional user home files to persist";
+    extraHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
+    extraHomeFiles = mkOpt (types.listOf types.str) ([ ] ++ spirenix.home.extraOptions.persistHomeFiles) "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable {
+    programs.fuse.userAllowOther = true;
     fileSystems."/persist".neededForBoot = true;
     environment.persistence."/persist" = {
-      hideMounts = true;
+      hideMounts = false;
       directories = [
         "/etc/nixos"
         "/etc/ssh"
@@ -51,51 +48,46 @@ in
       ] ++ cfg.extraSysDirs;
       files = [
         "/etc/machine-id"
-        {
-          file = "/var/keys/secret_file";
-          parentDirectory = {
-            mode = "0700";
-          };
-        }
+        { file = "/var/keys/secret_file"; parentDirectory = { mode = "0700"; }; }
       ] ++ cfg.extraSysFiles;
 
-      # users.${user.name} = {
-      #   directories = [
-      #     "nix-config"
-      #     # "Documents"
-      #     # "Downloads"
-      #     # "Music"
-      #     # "Pictures"
-      #     # "Videos"
-      #     # ".windsurf"
-      #     # ".codeium"
-      #     # ".mozilla"
-      #     # ".config"
-      #     # ".local"
-      #     ".local/share/direnv"
-      #     ".ssh"
-      #   ] ++ cfg.extraHomeDirs;
-      #   files = [
-      #     # common user files to persist
-      #   ] ++ cfg.extraHomeFiles;
-      # };
+      users.${user.name} = {
+        directories = [
+          "nix-config"
+          "Documents"
+          "Downloads"
+          "Music"
+          "Pictures"
+          "Videos"
+          ".windsurf"
+          ".codeium"
+          ".mozilla"
+          ".config"
+          ".local"
+          ".local/share/direnv"
+          ".ssh"
+        ] ++ config.spirenix.home.extraOptions.persistHomeDirs;
+        files = [
+          # common user files to persist
+        ] ++ cfg.extraHomeFiles;
+      };
     };
 
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints
-    system.activationScripts.persistent-dirs.text =
-      let
-        mkHomePersist =
-          user:
-          optionalString user.createHome ''
-            mkdir -p /persist/${user.home}
-            chown ${user.name}:${user.group} /persist/${user.home}
-            chmod ${user.homeMode} /persist/${user.home}
-          '';
-        users = attrValues config.users.users;
-      in
-      concatLines (map mkHomePersist users);
+    # system.activationScripts.persistent-dirs.text =
+    #   let
+    #     mkHomePersist =
+    #       user:
+    #       optionalString user.createHome ''
+    #         mkdir -p /persist/${user.home}
+    #         chown ${user.name}:${user.group} /persist/${user.home}
+    #         chmod ${user.homeMode} /persist/${user.home}
+    #       '';
+    #     users = attrValues config.users.users;
+    #   in
+    #   concatLines (map mkHomePersist users);
 
-    programs.fuse.userAllowOther = true;
+
     #NOTE: ^ ^ ^ The above is necessary for home-manager impermanence module to function
 
     #NOTE: v v v The below systemd script is needed to create root paths for users' home directories, due to home-manager permissions contraints

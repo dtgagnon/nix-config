@@ -18,7 +18,7 @@ in
     configFile =
       mkOpt types.attrs { }
         "A set of files to be managed by home-manager's `xdg.configFile`.";
-    extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
+    # extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
 
     persistHomeDirs =
       mkOpt (types.listOf types.str) [ ]
@@ -31,31 +31,33 @@ in
   config = mkIf cfg.enable {
     programs.home-manager.enable = true;
 
-    ${namespace}.home.extraOptions = {
-      home.file = mkAliasDefinitions options.${namespace}.home.file;
-      xdg.enable = true;
-      xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
-    };
+    # ${namespace}.home.extraOptions = {
+    #   home.file = mkAliasDefinitions options.${namespace}.home.file;
+    #   xdg.enable = true;
+    #   xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
+    # };
 
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    home.persistence."/persist/home/${config.${namespace}.user.name}" = {
-      directories = [
-        "testMcTestTest"
-        "Documents"
-        "Downloads"
-        "Music"
-        "Pictures"
-        "Videos"
-        # ".ssh"
-        ".config"
-        ".cache"
-        ".local"
-      ] ++ cfg.persistHomeDirs;
-      files = [
-        ".screenrc"
-      ] ++ cfg.persistHomeFiles;
-      allowOther = true;
-    };
+    spirenix.home.extraOptions.persistHomeDirs = cfg.persistHomeDirs;
+
+    # home.persistence."/persist/home/${config.spirenix.user.name}" = {
+    #   directories = [
+    #     "Documents"
+    #     "Downloads"
+    #     "Music"
+    #     "Pictures"
+    #     "Videos"
+    #     ".ssh"
+    #     ".config"
+    #     ".cache"
+    #     ".local"
+    #     "nix-config"
+    #   ] ++ cfg.persistHomeDirs;
+    #   files = [
+    #     ".screenrc"
+    #   ] ++ cfg.persistHomeFiles;
+    #   allowOther = true;
+    # };
   };
 }

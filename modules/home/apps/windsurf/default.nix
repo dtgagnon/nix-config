@@ -18,7 +18,7 @@ in
     home.packages = [ pkgs.spirenix.windsurf ];
 
     spirenix.home.persistHomeDirs = [
-			".config/Windsurf"
+      ".config/Windsurf"
       ".windsurf"
       ".codeium"
     ];
