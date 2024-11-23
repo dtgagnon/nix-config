@@ -39,7 +39,7 @@ in
 
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    spirenix.home.extraOptions.persistHomeDirs = cfg.persistHomeDirs;
+    ${namespace}.home.extraOptions.persistHomeDirs = cfg.persistHomeDirs;
 
     # home.persistence."/persist/home/${config.spirenix.user.name}" = {
     #   directories = [
