@@ -31,7 +31,7 @@ in
   config = mkIf cfg.enable {
     programs.home-manager.enable = true;
 
-    ${namespace}.home.extraOptions = {
+    spirenix.home.extraOptions = {
       home.file = mkAliasDefinitions options.${namespace}.home.file;
       xdg.enable = true;
       xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
@@ -39,7 +39,7 @@ in
 
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    ${namespace}.home.extraOptions.persistHomeDirs = cfg.persistHomeDirs;
+    spirenix.home.extraOptions.persistHomeDirs = cfg.persistHomeDirs;
 
     # home.persistence."/persist/home/${config.spirenix.user.name}" = {
     #   directories = [
