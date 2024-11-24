@@ -50,6 +50,7 @@ in
     };
 
     tools = {
+      comma = enabled;
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;

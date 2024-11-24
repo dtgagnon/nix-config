@@ -43,7 +43,6 @@ in
     };
 
     tools = {
-      comma = enabled;
       git = enabled;
       direnv = enabled;
     };

@@ -17,7 +17,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.home.file = lib.foldl
+    home.file = lib.foldl
       (
         acc: name:
           let
