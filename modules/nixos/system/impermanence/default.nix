@@ -66,10 +66,11 @@ in
           ".local"
           ".local/share/direnv"
           ".ssh"
-        ] ++ config.spirenix.home.extraOptions.persistHomeDirs ++ cfg.extraHomeDirs;
+        ] ++ snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeDirs ++ cfg.extraHomeDirs;
         files = [
           # common user files to persist
-        ] ++ config.spirenix.home.extraOptions.persistHomeFiles ++ cfg.extraHomeFiles;
+        ];
+	# ++ config.spirenix.home.extraOptions.persistHomeFiles ++ cfg.extraHomeFiles;
       };
     };
 
