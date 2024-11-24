@@ -21,8 +21,8 @@ in
     enable = mkBoolOpt false "Enable impermanence";
     extraSysDirs = mkOpt (types.listOf types.str) [ ] "Declare additional system directories to persist";
     extraSysFiles = mkOpt (types.listOf types.str) [ ] "Declare additional system files to persist";
-    extraHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
-    extraHomeFiles = mkOpt (types.listOf types.str) [ ] "Declare additional user home files to persist";
+    extraHomeDirs = mkOpt (types.listOf types.str) config.snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeDirs "Declare additional user home directories to persist";
+    extraHomeFiles = mkOpt (types.listOf types.str) config.snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeFiles "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable {
@@ -66,11 +66,11 @@ in
           ".local"
           ".local/share/direnv"
           ".ssh"
-        ] ++ snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeDirs ++ cfg.extraHomeDirs;
+        ] ++ cfg.extraHomeDirs;
         files = [
           # common user files to persist
         ];
-	# ++ config.spirenix.home.extraOptions.persistHomeFiles ++ cfg.extraHomeFiles;
+	++ cfg.extraHomeFiles;
       };
     };
 

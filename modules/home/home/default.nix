@@ -14,11 +14,6 @@ in
 {
   options.${namespace}.home = {
     enable = mkBoolOpt false "Enable home-manager";
-    file = mkOpt types.attrs { } "A set of files to be managed by home-manager's `home.file`.";
-    configFile =
-      mkOpt types.attrs { }
-        "A set of files to be managed by home-manager's `xdg.configFile`.";
-    extraOptions = mkOpt types.attrs { } "Options to pass directly to home-manager.";
 
     persistHomeDirs =
       mkOpt (types.listOf types.str) [ ]
@@ -30,16 +25,12 @@ in
 
   config = mkIf cfg.enable {
     programs.home-manager.enable = true;
-
-    spirenix.home.extraOptions = {
-      home.file = mkAliasDefinitions options.${namespace}.home.file;
-      xdg.enable = true;
-      xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
-    };
-
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    snowfallorg.users.${config.${namespace}.user.name}.home.config.${namespace}.home.persistHomeDirs = cfg.persistHomeDirs;
+    spirenix.home = {
+      persistHomeDirs = cfg.persistHomeDirs;
+      persistHomeFiles = cfg.persistHomeFiles;
+    };
 
     # home.persistence."/persist/home/${config.spirenix.user.name}" = {
     #   directories = [

@@ -23,11 +23,11 @@ in
       backupFileExtension = "backup";
     };
 
-    ${namespace}.home.extraOptions = {
+    spirenix.home.extraOptions = {
       home.stateVersion = config.system.stateVersion;
       home.file = mkAliasDefinitions options.${namespace}.home.file;
       xdg.enable = true;
-      xdg.configFile = mkAliasDefinitions cfg.configFile;
+      xdg.configFile = mkAliasDefinitions options.${namespace}.home.configFile;
     };
 
     snowfallorg.users.${config.${namespace}.user.name}.home.config = cfg.extraOptions;
