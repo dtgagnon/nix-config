@@ -46,7 +46,6 @@ in
         enable = true;
         device = "/dev/nvme0n1";
       };
-      impermanence = enabled;
     };
 
     tools = {
@@ -55,6 +54,8 @@ in
       monitoring = enabled;
       nix-ld = enabled;
     };
+
+    # topology.self.hardware.info = "DG-PC";
 
     virtualisation = {
       podman = enabled;
