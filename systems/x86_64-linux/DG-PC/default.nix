@@ -46,6 +46,7 @@ in
         enable = true;
         device = "/dev/nvme0n1";
       };
+      impermanence = enabled;
     };
 
     tools = {

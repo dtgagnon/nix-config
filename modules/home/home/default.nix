@@ -27,11 +27,6 @@ in
     programs.home-manager.enable = true;
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
-    spirenix.user.extraOptions = {
-      persistHomeDirs = [ "dir1" "dir2" "testdir3" ];
-      persistHomeFiles = cfg.persistHomeFiles;
-    };
-
     # home.persistence."/persist/home/${config.spirenix.user.name}" = {
     #   directories = [
     #     "Documents"
