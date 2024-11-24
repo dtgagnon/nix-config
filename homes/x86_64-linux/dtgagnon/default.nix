@@ -46,11 +46,6 @@ in
       };
     };
 
-    home = {
-      enable = true;
-      persistHomeDirs = [ "proj" "derek-homes-test" ];
-    };
-
     tools = {
       git = enabled;
       direnv = enabled;
