@@ -1,32 +1,49 @@
 {
-  lib
-, config
-, pkgs
-, namespace
-, osConfig ? { }
-, ...
+  lib,
+  config,
+  pkgs,
+  namespace,
+  osConfig ? { },
+  ...
 }:
 
 let
-  inherit (lib) types mkIf mkDefault mkMerge;
+  inherit (lib)
+    types
+    mkIf
+    mkDefault
+    mkMerge
+    ;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
 
-  is-linux = pkgs.stdenv.isLinux; ## Line isn't used because if it's linux, it's just using the final else statement.
+  is-linux = pkgs.stdenv.isLinux; # # Line isn't used because if it's linux, it's just using the final else statement.
   is-darwin = pkgs.stdenv.isDarwin;
 
   home-directory =
-    if cfg.name == null then null
-    else if is-darwin then "/Users/${cfg.name}"
-    else "/home/${cfg.name}";
+    if cfg.name == null then
+      null
+    else if is-darwin then
+      "/Users/${cfg.name}"
+    else
+      "/home/${cfg.name}";
 in
 {
   options.${namespace}.user = {
     enable = mkBoolOpt true "Whether to configure the user account.";
+
     name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "admin") "The user account.";
+    home = mkOpt (types.nullOr types.str) home-directory "The user's home directory.";
+
     fullName = mkOpt types.str "" "The full name of the user.";
     email = mkOpt types.str "" "The email of the user.";
-    home = mkOpt (types.nullOr types.str) home-directory "The user's home directory.";
+
+    persistHomeDirs =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare additional user home directories to persist";
+    persistHomeFiles =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -42,10 +59,31 @@ in
         }
       ];
 
+      programs.home-manager.enable = true;
       home = {
         username = mkDefault cfg.name;
         homeDirectory = mkDefault cfg.home;
+        stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
+        # persistence."/persist/home/${cfg.name}" = {
+        #   directories = [
+        #     "Documents"
+        #     "Downloads"
+        #     "Music"
+        #     "Pictures"
+        #     "Videos"
+        #     ".ssh"
+        #     ".config"
+        #     ".cache"
+        #     ".local"
+        #     "nix-config"
+        #   ] ++ cfg.persistHomeDirs;
+        #   files = [
+        #     ".screenrc"
+        #   ] ++ cfg.persistHomeFiles;
+        #   allowOther = true;
+        # };
       };
     }
   ]);
+
 }
