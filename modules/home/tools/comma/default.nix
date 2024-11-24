@@ -18,21 +18,15 @@ in
   config = mkIf cfg.enable {
     # Enables `command-not-found` integrations.
     # programs.command-not-found = enabled;
-    # programs.nix-index = enabled;
-		home.packages = with pkgs; [
-			comma
-			spirenix.nix-update-index
-		];
-    spirenix.home = {
-      configFile = {
-        "wgetrc".text = "";
-      };
-      extraOptions = {
-        programs.nix-index.enable = true;
-      };
-    };
+    programs.nix-index.enable = true;
+    home.packages = with pkgs; [
+      comma
+      spirenix.nix-update-index
+    ];
+
+    spirenix.home.configFile."wgetrc".text = "";
 
     # Enables `comma` and uses the `nix-index-database` to provide package information.
-    # programs.nix-index-database.comma.enable = true;
+    programs.nix-index-database.comma.enable = true;
   };
 }
