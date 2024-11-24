@@ -107,7 +107,7 @@
         ];
 
         homes.modules = with inputs; [
-          impermanence.homeManagerModules.impermanence
+          # impermanence.homeManagerModules.impermanence
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };

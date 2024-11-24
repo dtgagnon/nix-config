@@ -28,7 +28,7 @@ in
     home.stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
 
     spirenix.home = {
-      persistHomeDirs = cfg.persistHomeDirs;
+      persistHomeDirs = [ "dir1" "dir2" "testdir3" ];
       persistHomeFiles = cfg.persistHomeFiles;
     };
 
