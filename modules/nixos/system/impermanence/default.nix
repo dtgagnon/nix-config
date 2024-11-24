@@ -69,8 +69,7 @@ in
         ] ++ cfg.extraHomeDirs;
         files = [
           # common user files to persist
-        ];
-	++ cfg.extraHomeFiles;
+        ] ++ cfg.extraHomeFiles;
       };
     };
 
