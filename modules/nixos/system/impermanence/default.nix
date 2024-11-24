@@ -21,11 +21,13 @@ in
     enable = mkBoolOpt false "Enable impermanence";
     extraSysDirs = mkOpt (types.listOf types.str) [ ] "Declare additional system directories to persist";
     extraSysFiles = mkOpt (types.listOf types.str) [ ] "Declare additional system files to persist";
-    extraHomeDirs = mkOpt (types.listOf types.str) config.snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeDirs "Declare additional user home directories to persist";
-    extraHomeFiles = mkOpt (types.listOf types.str) config.snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeFiles "Declare additional user home files to persist";
+    extraHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
+    extraHomeFiles = mkOpt (types.listOf types.str) [ ] "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable {
+    snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeDirs = [ "test" "strings" ];
+    snowfallorg.users.${user.name}.home.config.${namespace}.home.persistHomeFiles = [ "strings" "to" "test" ];
     programs.fuse.userAllowOther = true;
     fileSystems."/persist".neededForBoot = true;
     environment.persistence."/persist" = {

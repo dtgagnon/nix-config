@@ -46,6 +46,9 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-topology.url = "github:oddlama/nix-topology";
+    nix-topology.inputs.nixpkgs.follows = "nixpkgs";
+
     ## applications
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
@@ -91,15 +94,17 @@
 
         overlays = with inputs; [
           neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
+	  nix-topology.overlays.default
         ];
 
         systems.modules.nixos = with inputs; [
           stylix.nixosModules.stylix
           sops-nix.nixosModules.sops
-          disko.nixosModules.default
+          disko.nixosModules.disko
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
+	  nix-topology.nixosModules.default
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
@@ -113,6 +118,17 @@
         deploy = lib.mkDeploy { inherit (inputs) self; };
 
         outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
+
+	topology =  with inputs; let 
+	  host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
+	in 
+	  import nix-topology { 
+	    inherit (host) pkgs;
+	    modules = [ 
+	      (import ./topology { inherit (host) config; })
+	      { inherit (self) nixosConfigurations; }
+	    ];
+	  };
 
         templates = {
           empty.description = "A Nix Flake using snowfall-lib";

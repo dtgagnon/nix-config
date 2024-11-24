@@ -21,8 +21,6 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      polarity = "either"; # "light" || "dark" || "either"
-
       image = if cfg.imageFilename != null
         then "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.imageFilename}"
         else "${pkgs.spirenix.wallpapers}/share/wallpapers/nord-rainbow-dark-nix-ultrawide.png";
@@ -44,11 +42,6 @@ in
       #   base0E = "";
       #   base0F = "";
       # };
-
-      cursor = {
-        package = pkgs.bibata-cursors;
-        name = "Bibata-Modern_Ice";
-      };
 
       fonts = {
         monospace = {
