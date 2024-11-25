@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkDefault mkIf;
   inherit (lib.${namespace}) enabled mkBoolOpt;
   cfg = config.${namespace}.suites.common;
 in
@@ -22,8 +22,6 @@ in
 
       hardware = {
         audio = enabled;
-        storage.boot = enabled;
-        storage.partitioning.enable = mkDefault true;
         keyboard = enabled;
       };
 

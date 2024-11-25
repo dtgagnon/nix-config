@@ -64,24 +64,6 @@ in
         username = mkDefault cfg.name;
         homeDirectory = mkDefault cfg.home;
         stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");
-        # persistence."/persist/home/${cfg.name}" = {
-        #   directories = [
-        #     "Documents"
-        #     "Downloads"
-        #     "Music"
-        #     "Pictures"
-        #     "Videos"
-        #     ".ssh"
-        #     ".config"
-        #     ".cache"
-        #     ".local"
-        #     "nix-config"
-        #   ] ++ cfg.persistHomeDirs;
-        #   files = [
-        #     ".screenrc"
-        #   ] ++ cfg.persistHomeFiles;
-        #   allowOther = true;
-        # };
       };
     }
   ]);

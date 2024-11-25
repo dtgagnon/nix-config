@@ -41,24 +41,26 @@ in
       group = "users";
     } // cfg.extraOptions;
 
-    # User security
-    snowfallorg.users.${cfg.name}.admin = cfg.mkAdmin;
-    ## Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
-    sops.secrets."${cfg.name}-password".neededForUsers = true;
-    users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
-
-    # system level home-manager stuff + sys->home passthrough
+    # System level home-manager stuff + sys->home passthrough
     home-manager = {
       useGlobalPkgs = true;
       backupFileExtension = "backup";
     };
-    spirenix.user.home.extraOptions = {
-      home.stateVersion = config.system.stateVersion;
-      home.file = mkAliasDefinitions options.${namespace}.user.home.file;
-      xdg.enable = true;
-      xdg.configFile = mkAliasDefinitions options.${namespace}.user.home.configFile;
-    };
-    snowfallorg.users.${cfg.name}.home.config = cfg.home.extraOptions;
+    snowfallorg.users.${cfg.name} = {
+      home.config = {
+        home.stateVersion = config.system.stateVersion;
+        home.file = mkAliasDefinitions options.${namespace}.user.home.file;
+        xdg.enable = true;
+        xdg.configFile = mkAliasDefinitions options.${namespace}.user.home.configFile;
+      } // cfg.home.extraOptions;
 
+      # User security
+      admin = cfg.mkAdmin;
+    };
+
+    # User security
+    ## Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
+    sops.secrets."${cfg.name}-password".neededForUsers = true;
+    users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
   };
 }

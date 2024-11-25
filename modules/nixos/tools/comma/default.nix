@@ -20,7 +20,7 @@ in
       spirenix.nix-update-index
     ];
 
-    spirenix.home = {
+    spirenix.user.home = {
       configFile."wgetrc".text = "";
       extraOptions = {
         programs.nix-index.enable = true;

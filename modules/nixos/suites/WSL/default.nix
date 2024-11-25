@@ -26,14 +26,6 @@ in
         openssh = enabled;
       };
 
-      system = {
-        fonts = enabled;
-        locale = enabled;
-        network = enabled;
-        time = enabled;
-        xkb = enabled;
-      };
-
       tools = {
         general = enabled;
         nix-ld = enabled;

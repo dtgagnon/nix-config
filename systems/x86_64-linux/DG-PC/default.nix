@@ -27,8 +27,11 @@ in
       keyboard = enabled; # xkb stuff
       nvidia = enabled;
       storage = {
-        device = "/dev/nvme0n1";
-        boot.preset = "desktop";
+        boot.enable = true;
+        disko = {
+          enable = true;
+          device = "/dev/nvme0n1";
+        };
       };
     };
 

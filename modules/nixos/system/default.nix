@@ -4,7 +4,7 @@
   namespace,
   ...
 }: let
-  inherit (lib) mkIf types;
+  inherit (lib) mkDefault mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   inherit (lib) concatMapStringsSep concatStringsSep isList mapAttrs mapAttrsToList;
 
@@ -91,7 +91,7 @@ in {
     };
 
     console = mkIf cfg.locale.enable {
-      keyMap = cfg.locale.keyMap;
+      keyMap = mkDefault cfg.locale.keyMap;
     };
 
     # Environment configuration

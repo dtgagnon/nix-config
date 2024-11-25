@@ -16,7 +16,7 @@ in
   };
 
   config = {
-    spirenix.home.file = lib.foldl
+    spirenix.user.home.file = lib.foldl
       (
         acc: name:
           let
