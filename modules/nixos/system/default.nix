@@ -43,6 +43,8 @@ in {
         EDITOR = "nvim";
         SHELL = "nushell";
         TERMINAL = "wezterm";
+        LESSHISTFILE = "$HOME/.cache/less.history";
+        WGETRC = "$HOME/.config/wgetrc";
       } "System-wide environment variables.";
       sessionVariables = mkOpt (types.attrsOf types.str) {
         XDG_CACHE_HOME = "$HOME/.cache";

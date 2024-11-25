@@ -7,11 +7,11 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.system.xkb;
+  cfg = config.${namespace}.hardware.keyboard;
 in
 {
-  options.${namespace}.system.xkb = {
-    enable = mkBoolOpt false "Whether or not to configure xkb.";
+  options.${namespace}.hardware.keyboard = {
+    enable = mkBoolOpt false "Whether or not to configure keyboard settings.";
   };
 
   config = mkIf cfg.enable {
