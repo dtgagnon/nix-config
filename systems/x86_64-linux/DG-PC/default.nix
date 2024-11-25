@@ -42,7 +42,6 @@ in
     };
 
     system = enabled;{
-      fonts = enabled;
       impermanence = enabled;
     };
 

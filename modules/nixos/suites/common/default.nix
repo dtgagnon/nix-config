@@ -15,10 +15,16 @@ in
 
   config = mkIf cfg.enable {
     spirenix = {
-      desktop.gnome = enabled;
+      desktop = {
+        gnome = enabled;
+        fonts = enabled;
+      };
 
       hardware = {
         audio = enabled;
+        storage.boot = enabled;
+        storage.partitioning.enable = mkDefault true;
+        keyboard = enabled;
       };
 
       nix = enabled;
@@ -32,14 +38,7 @@ in
         openssh = enabled;
       };
 
-      system = {
-        boot = enabled;
-        fonts = enabled;
-        locale = enabled;
-        network = enabled;
-        time = enabled;
-        xkb = enabled;
-      };
+      system = enabled;
 
       tools = {
         general = enabled;
