@@ -14,7 +14,7 @@ in {
   ];
 
   options.${namespace}.hardware.storage = {
-    enable = mkBoolOpt false "Whether to enable storage configuration";
+    enable = mkBoolOpt true "Whether to enable storage configuration";
   };
 
   config = mkIf cfg.enable {

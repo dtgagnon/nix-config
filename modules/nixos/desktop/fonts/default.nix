@@ -9,9 +9,9 @@
 let
 	inherit (lib) mkIf types;
 	inherit (lib.${namespace}) mkOpt mkBoolOpt;
-	cfg = config.${namespace}.system.fonts;
+	cfg = config.${namespace}.desktop.fonts;
 in {
-  options.${namespace}.system.fonts = {
+  options.${namespace}.desktop.fonts = {
     enable = mkBoolOpt false "Whether or not to manage fonts.";
     fonts = mkOpt (types.listOf types.package) [ ] "Custom font packages to install.";
   };

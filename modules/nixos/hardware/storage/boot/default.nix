@@ -14,7 +14,7 @@ in {
   ];
 
   options.${namespace}.hardware.storage.boot = {
-    enable = mkBoolOpt false "Whether to enable boot configuration";
+    enable = mkBoolOpt true "Whether to enable boot configuration";
     
     preset = mkOpt (types.enum ["desktop" "server" "minimal"]) "desktop" 
       "Preset configuration to use";

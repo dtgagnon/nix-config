@@ -17,13 +17,19 @@ in
 
     desktop = {
       gnome = enabled;
+      fonts = enabled;
       # hyprland = enabled;
       stylix = enabled;
     };
 
     hardware = {
       audio = enabled;
+      keyboard = enabled; # xkb stuff
       nvidia = enabled;
+      storage = {
+        device = "/dev/nvme0n1";
+        boot.preset = "desktop";
+      };
     };
 
     security = {
@@ -35,17 +41,8 @@ in
       openssh = enabled;
     };
 
-    system = {
-      boot = enabled;
+    system = enabled;{
       fonts = enabled;
-      locale = enabled;
-      network = enabled;
-      time = enabled;
-      xkb = enabled;
-      disko = {
-        enable = true;
-        device = "/dev/nvme0n1";
-      };
       impermanence = enabled;
     };
 

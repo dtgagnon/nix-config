@@ -11,7 +11,7 @@
   cfg = config.${namespace}.system;
 in {
   options.${namespace}.system = {
-    enable = mkBoolOpt false "Whether to enable system configuration.";
+    enable = mkBoolOpt true "Whether to enable system configuration.";
 
     # Network configuration
     network = {
