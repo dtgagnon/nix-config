@@ -36,7 +36,7 @@ in
       XCURSOR_THEME = cfg.cursor.name;
     };
 
-    spirenix.home.extraOptions = {
+    spirenix.user.home.extraOptions = {
       gtk = {
         enable = true;
 

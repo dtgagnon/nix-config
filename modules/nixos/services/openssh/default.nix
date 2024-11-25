@@ -92,7 +92,7 @@ in
 
     spirenix.user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
 
-    spirenix.home.extraOptions = {
+    spirenix.user.home.extraOptions = {
       programs.nushell.shellAliases = foldl
         (
           aliases: system: aliases // { "ssh-${system}" = "ssh ${system} -t tmux a"; }

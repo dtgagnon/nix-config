@@ -14,7 +14,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.home.configFile."electron-flags.conf".source = ./electron-flags.conf;
+    spirenix.user.home.configFile."electron-flags.conf".source = ./electron-flags.conf;
 
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";

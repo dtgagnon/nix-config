@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.podman-compose ];
 
-    spirenix.home.extraOptions = {
+    spirenix.user.home.extraOptions = {
       home.shellAliases = {
         "docker-compose" = "podman-compose";
       };

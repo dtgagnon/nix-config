@@ -17,10 +17,10 @@ in
   config = mkIf cfg.enable {
     home.packages = [ pkgs.spirenix.windsurf ];
 
-    spirenix.home.persistHomeDirs = [
-      ".config/Windsurf"
-      ".windsurf"
-      ".codeium"
+    spirenix.user.home.persistHomeDirs = [
+      ".config/Windsurf"  # Future XDG config location
+      ".windsurf"         # Current data directory
+      ".codeium"          # Codeium data directory
     ];
   };
 }

@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.waybar ];
 
-    spirenix.home.configFile."waybar/config".source = ./config;
-    spirenix.home.configFile."waybar/style.css".source = ./style.css;
+    spirenix.user.home.configFile."waybar/config".source = ./config;
+    spirenix.user.home.configFile."waybar/style.css".source = ./style.css;
   };
 }

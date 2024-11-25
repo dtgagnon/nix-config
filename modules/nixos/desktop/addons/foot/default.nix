@@ -20,6 +20,6 @@ in
       pkg = pkgs.foot;
     };
 
-    spirenix.home.configFile."foot/foot.ini".source = ./foot.ini;
+    spirenix.user.home.configFile."foot/foot.ini".source = ./foot.ini;
   };
 }

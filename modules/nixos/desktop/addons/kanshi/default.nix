@@ -18,7 +18,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.home.configFile."kanshi/config".source = ./config;
+    spirenix.user.home.configFile."kanshi/config".source = ./config;
 
     environment.systemPackages = with pkgs; [ kanshi ];
 

@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ swappy ];
 
-    spirenix.home.configFile."swappy/config".source = ./config;
-    spirenix.home.file."Pictures/screenshots/.keep".text = "";
+    spirenix.user.home.configFile."swappy/config".source = ./config;
+    spirenix.user.home.file."Pictures/screenshots/.keep".text = "";
   };
 }
