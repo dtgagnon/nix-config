@@ -41,7 +41,8 @@ in
       openssh = enabled;
     };
 
-    system = enabled;{
+    system = {
+      enable = true;
       impermanence = enabled;
     };
 
