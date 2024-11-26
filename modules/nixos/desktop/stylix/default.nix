@@ -17,6 +17,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.spirenix.wallpapers ];
 
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {

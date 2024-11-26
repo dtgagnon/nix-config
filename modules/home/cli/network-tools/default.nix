@@ -12,7 +12,7 @@ let
 in
 {
   options.${namespace}.cli.network-tools = {
-    enable = mkBoolOpt "network tools";
+    enable = mkBoolOpt false "network tools";
   };
 
   config = mkIf cfg.enable {
