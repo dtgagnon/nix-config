@@ -24,7 +24,8 @@ in
       inherit (cfg) package;
       portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
     };
-    spirenix.desktop.addons.xdg-portal = enabled;
+
+    spirenix.desktop.addons.xdg-portal.enable = true;
 
     # programs.hyprlock.enable = true;
 

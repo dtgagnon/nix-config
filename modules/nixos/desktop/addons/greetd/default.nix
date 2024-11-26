@@ -17,8 +17,8 @@ in
   config = mkIf cfg.enable {
     services.greetd = {
       enable = true;
-      settings = {
-        default_session = rec {
+      settings = rec {
+        default_session = {
           command = "${lib.getExe pkgs.greetd.tuigreet} --time --cmd Hyprland";
           user = "greeter";
         };
