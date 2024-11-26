@@ -103,9 +103,10 @@ in
       enableNushellIntegration = true;
     };
 
-    # programs.eza.enableNushellIntegration = true;
-    programs.zoxide.enableNushellIntegration = true;
-    programs.direnv.enableNushellIntegration = true;
+    programs.eza.enableNushellIntegration = mkIf config.${namespace}.cli.eza.enable true;
+    programs.zoxide.enableNushellIntegration = mkIf config.${namespace}.cli.zoxide.enable true;
+    programs.direnv.enableNushellIntegration = mkIf config.${namespace}.cli.direnv.enable true;
+    programs.fzf.enableNushellIntegration = mkIf config.${namespace}.cli.fzf.enable true;
 
     home.sessionVariables.SHELL = "nushell";
   };
