@@ -111,7 +111,6 @@ in
       # reloadConfig = true;
       systemdIntegration = true;
       systemd.variables = [ "--all" ];
-      recommendedEnvironment = true;
       xwayland.enable = true;
 
       plugins =
