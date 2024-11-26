@@ -1,8 +1,7 @@
 {
   lib,
-  config,
   pkgs,
-  format ? "unknown",
+  config,
   namespace,
   ...
 }:
