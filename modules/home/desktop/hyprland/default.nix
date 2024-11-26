@@ -1,10 +1,11 @@
-{ lib
-, pkgs
-, config
-, inputs
-, system
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  system,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkForce mkIf types genAttrs;
@@ -17,10 +18,8 @@ in
   let inherit (types) oneOf package path str listOf;
   in {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
-    # wallpaper = mkOpt (oneOf [ package path str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
     plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable";
-    addons = mkOpt (listOf str) [ ] "List of spirenix hyprland addons to enable";
-
+    addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
     extraConfig = mkOpt str "" "Additional hyprland configuration";
     extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
   };
@@ -28,7 +27,7 @@ in
   config = mkIf cfg.enable {
     spirenix.desktop.addons = {
       hyprlock = enabled;
-			waybar = enabled;
+      waybar = enabled;
       wallpapers = enabled;
     } // genAttrs cfg.addons (name: enabled);
     
@@ -37,48 +36,64 @@ in
       volumectl
       playerctl
       brightnessctl
+      
       # desktop env
       ags
       libdbusmenu-gtk3
       gnome-control-center
+      
       # core dependencies
       libinput
       glib
       gtk3.out
       wayland
+      
       # wayland tools
       hyprpicker
       swww
-      swaybg
+      
+      # screenshots
       grim
-      grimblast
       slurp
+      
+      # clipboard
+      wl-clipboard
+      cliphist
       wl-clip-persist
-      wf-recorder
-    ];
+      
+      # utils
+      libnotify
+      poweralertd
+      
+      # theming
+      qt5ct
+      qt6ct
+      
+      # cursors
+      bibata-cursors
+      nordzy-cursor-theme
+    ] ++ cfg.plugins;
 
     home.sessionVariables = {
-      # User-specific application settings
-      ANKI_WAYLAND = "1";
-      MOZ_ENABLE_WAYLAND = "1";
-      _JAVA_AWT_WM_NONEREPARENTING = "1";
+      XDG_CURRENT_DESKTOP = "Hyprland";
+      XDG_SESSION_TYPE = "wayland";
+      XDG_SESSION_DESKTOP = "Hyprland";
       
-      # Graphics and display settings
-      __GL_GSYNC_ALLOWED = "0";
-      __GL_VRR_ALLOWED = "0";
-      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-      QT_QPA_PLATFORM = "xcb";
-      
-      # User interface preferences
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+      QT_QPA_PLATFORM = "wayland;xcb";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
       QT_QPA_PLATFORMTHEME = "qt5ct";
-      QT_STYLE_OVERRIDE = "kvantum";
-      GTK_THEME = "Dracula";
-      DISABLE_QT5_COMPAT = "0";
       
-      # User-specific paths and settings
-      SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
-      DIRENV_LOG_FORMAT = "";
+      GDK_BACKEND = "wayland,x11";
+      SDL_VIDEODRIVER = "wayland";
+      CLUTTER_BACKEND = "wayland";
+      
+      MOZ_ENABLE_WAYLAND = 1;
+      NIXOS_OZONE_WL = 1;
+      _JAVA_AWT_WM_NONREPARENTING = 1;
+      
+      XCURSOR_SIZE = 22;
+      XCURSOR_THEME = "Nordzy-cursors";
     };
 
     systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
@@ -102,8 +117,5 @@ in
         ${cfg.extraConfig}
       '';
     };
-
-
-
   };
 }
