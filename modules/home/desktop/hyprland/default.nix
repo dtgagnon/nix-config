@@ -37,7 +37,7 @@ in
       with pkgs;
       [
         # media
-        volumectl
+        pamixer
         playerctl
         brightnessctl
 
