@@ -7,9 +7,9 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.tools.bottom;
+  cfg = config.${namespace}.cli.bottom;
 in {
-  options.${namespace}.tools.bottom = {
+  options.${namespace}.cli.bottom = {
     enable = mkBoolOpt false "Whether or not to enable bottom system monitor";
   };
 

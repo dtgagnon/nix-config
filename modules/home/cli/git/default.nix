@@ -8,12 +8,12 @@
 let
   inherit (lib) types mkEnableOption mkIf;
   inherit (lib.${namespace}) mkOpt enabled;
-  cfg = config.${namespace}.tools.git;
+  cfg = config.${namespace}.cli.git;
   user = config.${namespace}.user;
 in
 {
 
-  options.${namespace}.tools.git = {
+  options.${namespace}.cli.git = {
     enable = mkEnableOption "Git";
     userName = mkOpt types.str user.name "The name to configure git with.";
     userEmail = mkOpt types.str user.email "The email to configure git with.";

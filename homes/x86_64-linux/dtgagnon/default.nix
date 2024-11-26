@@ -26,12 +26,18 @@ in
     };
 
     cli = {
+      bottom = enabled;
       direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
       fzf = enabled;
+      git = enabled;
+      kubeshark = enabled;
       neovim = enabled;
       shells.nushell = enabled;
+      ssh = enabled;
+      termshark = enabled;
+      tshark = enabled;
       zoxide = enabled;
     };
 
@@ -45,10 +51,6 @@ in
         enable = true;
         imageFilename = "nord-rainbow-dark-nix-ultrawide.png";
       };
-    };
-
-    tools = {
-      git = enabled;
     };
   };
 

@@ -6,10 +6,10 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.tools.ssh;
+  cfg = config.${namespace}.cli.ssh;
 in
 {
-  options.${namespace}.tools.ssh = {
+  options.${namespace}.cli.ssh = {
     enable = mkBoolOpt true "Enable ssh";
   };
 
