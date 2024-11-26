@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   namespace,
   ...
 }:
@@ -11,13 +12,13 @@ let
   cfg = config.${namespace}.desktop.stylix;
 in
 {
+  imports = inputs.stylix.homeManagerModules.stylix;
+
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaper = mkOpt (types.str
     ) "nord-rainbow-dark-nix-ultrawide" "Designate the name of the source image";
-    excludedTargets =
-      mkOpt (types.listOf types.str) [ ]
-        "Declare a list of targets to exclude from Stylix theming";
+    excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
   config = mkIf cfg.enable {
