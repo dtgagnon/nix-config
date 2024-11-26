@@ -77,10 +77,10 @@ in
         l = "ls";
         la = "ls -a";
         ll = "ls -la";
-        ea = "eza -a";
-        ela = "eza -la";
-        tr = "eza -Ta -L 3";
-        trl = "eza -Ta -L";
+        ea = "eza -a --icons";
+        ela = "eza -la --icons --git";
+        tr = "eza -Ta -L 3 --icons --git";
+        trl = "eza -Ta -L --icons --git";
         h = "history";
         c = "clear";
 
