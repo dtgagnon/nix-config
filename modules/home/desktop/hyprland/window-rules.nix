@@ -20,7 +20,7 @@ in {
         unity = {class = ["Unity"];};
         audacious = {class = ["audacious"];};
         neovide = {class = ["neovide"];};
-        
+
         # System utilities
         floatingKitty = {title = ["^(float_kitty)$"];};
         udiskie = {class = ["udiskie"];};
@@ -30,12 +30,12 @@ in {
         soundwire = {class = ["^(SoundWireServer)$"];};
         sameboy = {class = ["^(.sameboy-wrapped)$"];};
         zenity = {class = ["^(zenity)$"];};
-        
+
         # Firefox
         firefoxVideo = {class = ["firefox"];};
         firefoxPip = {title = ["^(Picture-in-Picture)$"];};
         firefoxSharing = {title = ["^(Firefox — Sharing Indicator)$"];};
-        
+
         # System dialogs
         fileProgress = {class = ["^(file_progress)$"];};
         confirm = {class = ["^(confirm)$"];};
@@ -48,10 +48,10 @@ in {
         branchDialog = {title = ["^(branchdialog)$"];};
         confirmReplace = {title = ["^(Confirm to replace files)$"];};
         fileOp = {title = ["^(File Operation Progress)$"];};
-        
+
         # XWayland bridge
         xwaylandBridge = {class = ["^(xwaylandvideobridge)$"];};
-        
+
         # Password manager
         bitwarden = {title = [".*Bitwarden.*"];};
       in
@@ -63,17 +63,17 @@ in {
           (map (rule ["opacity 1.0 override 1.0 override"]) [aseprite unity])
           (map (rule ["float" "workspace 8 silent"]) [audacious])
           (map (rule ["tile"]) [neovide])
-          
+
           # System utilities
           (map (rule ["float" "center" "size 950 600"]) [floatingKitty])
           (map (rule ["float"]) [udiskie transmission volumeControl pavucontrol soundwire sameboy])
           (map (rule ["float" "center" "size 850 500"]) [zenity])
-          
+
           # Firefox rules
           (map (rule ["idleinhibit fullscreen"]) [firefoxVideo])
           (map (rule ["float" "pin" "opacity 1.0 override 1.0 override"]) [firefoxPip])
           (map (rule ["float" "move 0 0"]) [firefoxSharing])
-          
+
           # System dialogs
           (map (rule ["float"]) [
             fileProgress
@@ -88,7 +88,7 @@ in {
             confirmReplace
             fileOp
           ])
-          
+
           # XWayland bridge
           (map (rule [
             "opacity 0.0 override"
@@ -97,7 +97,7 @@ in {
             "maxsize 1 1"
             "noblur"
           ]) [xwaylandBridge])
-          
+
           # Password manager
           (map (rule ["float"]) [bitwarden])
         ];
@@ -162,4 +162,5 @@ in {
     #   windowrulev2 = noblur,class:^(xwaylandvideobridge)$
     # '';
   };
+	};
 }

@@ -1,9 +1,10 @@
-{ lib
-, config
-, osConfig ? { }
-, format ? "unknown"
-, namespace
-, ...
+{
+  lib,
+  config,
+  osConfig ? { },
+  format ? "unknown",
+  namespace,
+  ...
 }:
 let
   inherit (lib.${namespace}) enabled disabled;
@@ -21,7 +22,10 @@ in
 
     apps = {
       firefox = enabled;
-      terminals = { kitty = enabled; wezterm = enabled; };
+      terminals = {
+        kitty = enabled;
+        wezterm = enabled;
+      };
       windsurf = enabled;
     };
 
@@ -40,15 +44,19 @@ in
     };
 
     desktop = {
-      # hyprland = {
-      #   enable = true;
-      #   addons = [ "rofi" "waybar" ];
-      #   plugins = [ ];
-      # };
-      stylix = {
+      hyprland = {
         enable = true;
-        wallpaper = "nord-rainbow-dark-nix-ultrawide";
+        addons = [
+          "rofi"
+          "waybar"
+        ];
+        plugins = [ ];
       };
+
+      # stylix = {
+      #   enable = true;
+      #   wallpaper = "nord-rainbow-dark-nix-ultrawide";
+      # };
     };
   };
 
