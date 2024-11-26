@@ -21,7 +21,7 @@ in
 
     apps = {
       firefox = enabled;
-      terminals.wezterm = enabled;
+      terminals = { kitty = enabled; wezterm = enabled; };
       windsurf = enabled;
     };
 
