@@ -26,6 +26,7 @@ in
     };
 
     cli = {
+      direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
       fzf = enabled;
@@ -48,7 +49,6 @@ in
 
     tools = {
       git = enabled;
-      direnv = enabled;
     };
   };
 
