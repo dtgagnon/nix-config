@@ -20,5 +20,12 @@ in {
       # Default keybindings and settings are quite good
       # Add custom settings here if needed
     };
+    home.packages = with pkgs; [
+      imagemagick
+      ffmpegthumbnailer
+      fontpreview
+      unar
+      poppler
+    ];
   };
 }
