@@ -17,7 +17,7 @@ let
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
 
-  is-linux = pkgs.stdenv.isLinux; # # Line isn't used because if it's linux, it's just using the final else statement.
+  # is-linux = pkgs.stdenv.isLinux; # Line isn't used because if it's linux, it's just using the final else statement.
   is-darwin = pkgs.stdenv.isDarwin;
 
   home-directory =
@@ -35,8 +35,8 @@ in
     name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "admin") "The user account.";
     home = mkOpt (types.nullOr types.str) home-directory "The user's home directory.";
 
-    fullName = mkOpt types.str "" "The full name of the user.";
-    email = mkOpt types.str "" "The email of the user.";
+    fullName = mkOpt types.str "${cfg.name}" "The full name of the user.";
+    email = mkOpt types.str "${cfg.name}@email.com" "The email of the user.";
 
     persistHomeDirs =
       mkOpt (types.listOf types.str) [ ]
