@@ -8,7 +8,6 @@ let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.stylix;
-  wallpaperPath = "${pkgs.spirenix.wallpapers}/share/wallpapers";
 in
 {
   options.${namespace}.desktop.stylix = {
@@ -17,14 +16,17 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.spirenix.wallpapers ];
+    environment.systemPackages = [
+      pkgs.spirenix.wallpapers
+      pkgs.bibata-cursors
+    ];
 
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
       polarity = "either"; # "light" || "dark" || "either"
 
-      image = "${wallpaperPath}/nord-rainbow-dark-nix-ultrawide.png";
+      image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";

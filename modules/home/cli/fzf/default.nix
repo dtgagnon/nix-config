@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkForce mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.fzf;
 in {

@@ -47,7 +47,7 @@ in
       # };
       stylix = {
         enable = true;
-        imageFilename = "nord-rainbow-dark-nix-ultrawide.png";
+        wallpaper = "nord-rainbow-dark-nix-ultrawide";
       };
     };
   };

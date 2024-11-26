@@ -8,11 +8,12 @@ let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.stylix;
+  wpPkg = pkgs.spirenix.wallpapers;
 in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    imageFilename = mkOpt (types.nullOr types.str) null "Designate the file name of the source image";
+    wallpaper = mkOpt (types.nullOr types.str) null "Designate the name of the source image";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
@@ -20,9 +21,10 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      image = if cfg.imageFilename != null
-        then "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.imageFilename}"
-        else "${pkgs.spirenix.wallpapers}/share/wallpapers/nord-rainbow-dark-nix-ultrawide.png";
+      image = (if cfg.wallpaper == null
+        then pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide # default
+        else pkgs.spirenix.wallpapers.${cfg.wallpaper});
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = { #NOTE: see below for merged attr set
       #   base00 = "";
       #   base01 = "";
@@ -76,6 +78,6 @@ in
         })
         { }
         cfg.excludedTargets;
-    } // mkIf (cfg.imageFilename == null) { base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml"; };
+    }; 
   };
 }
