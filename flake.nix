@@ -63,7 +63,7 @@
     hyprland-plugins.inputs.nixpkgs.follows = "hyprland";
 
     stylix.url = "github:danth/stylix";
-    stylix.inputs.nixpkgs.follows = "masterpkgs";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     ## miscellaneous
   };
