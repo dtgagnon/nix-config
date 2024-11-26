@@ -63,7 +63,7 @@
     hyprland-plugins.inputs.nixpkgs.follows = "hyprland";
 
     stylix.url = "github:danth/stylix";
-    stylix.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.inputs.nixpkgs.follows = "masterpkgs";
 
     ## miscellaneous
   };
@@ -100,7 +100,7 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          (stylix.nixosModules.stylix)
+          stylix.nixosModules.stylix
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           impermanence.nixosModules.impermanence
