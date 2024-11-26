@@ -1850,7 +1850,7 @@
         "gnome-shell": "gnome-shell",
         "home-manager": "home-manager_3",
         "nixpkgs": [
-          "masterpkgs"
+          "nixpkgs"
         ],
         "systems": "systems_10",
         "tinted-foot": "tinted-foot",

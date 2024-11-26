@@ -28,26 +28,6 @@ in
 
       image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
 
-      # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-      # base16Scheme = {
-      #   base00 = "";
-      #   base01 = "";
-      #   base02 = "";
-      #   base03 = "";
-      #   base04 = "";
-      #   base05 = "";
-      #   base06 = "";
-      #   base07 = "";
-      #   base08 = "";
-      #   base09 = "";
-      #   base0A = "";
-      #   base0B = "";
-      #   base0C = "";
-      #   base0D = "";
-      #   base0E = "";
-      #   base0F = "";
-      # };
-
       cursor = {
         package = pkgs.bibata-cursors;
         name = "Bibata-Modern_Ice";
@@ -72,13 +52,6 @@ in
           desktop = 10;
           popups = 10;
         };
-      };
-
-      opacity = {
-        applications = 1.0;
-        terminal = 1.0;
-        desktop = 1.0;
-        popups = 1.0;
       };
     };
   };
