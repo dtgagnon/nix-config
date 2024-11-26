@@ -12,8 +12,8 @@ in
 {
   options.${namespace}.desktop.addons.term = {
     enable = mkBoolOpt false "Whether to enable the gnome file manager.";
-    pkg = mkOpt types.package pkgs.foot "The terminal to install.";
+    pkg = mkOpt types.package pkgs.kitty "The terminal to install.";
   };
 
-  config = mkIf cfg.enable { environment.systemPackages = [ cfg.pkg ]; };
+  config = mkIf cfg.enable { home.packages = [ cfg.pkg ]; };
 }

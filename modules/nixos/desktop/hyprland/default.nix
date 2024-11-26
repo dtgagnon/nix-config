@@ -26,26 +26,21 @@ in
     };
 
     spirenix.desktop.addons = {
-      wallpapers = enabled;
+      electron-support = enabled;
+      greetd = enabled;
       xdg-portal = enabled;
     };
 
-    # programs.hyprlock.enable = true;
-
-    environment.systemPackages = with pkgs; [
-    #   libinput
-    #   # volumectl
-    #   playerctl
-      brightnessctl
-    #   glib
-    #   gtk3.out
-    #   gnome-control-center
-    #   ags
-    #   libdbusmenu-gtk3
-    ];
-    
-    environment.sessionVariables."NIXOS_OZONE_WL" = "1";
-    
-    # # security.pam.services.hyprlock = { };
+    environment.sessionVariables = {
+      "XDG_SESSION_TYPE" = "wayland";
+      "WLR_BACKEND" = "vulkan";
+      "WLR_RENDERER" = "vulkan";
+      "WLR_NO_HARDWARE_CURSORS" = "1";
+      "WLR_DRM_NO_ATOMIC" = "1";
+      "GDK_BACKEND" = "wayland";
+      "SDL_VIDEODRIVER" = "wayland";
+      "CLUTTER_BACKEND" = "wayland";
+      "NIXOS_OZONE_WL" = "1";
+    };
   };
 }

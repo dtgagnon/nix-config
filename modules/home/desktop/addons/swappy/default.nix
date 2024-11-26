@@ -15,9 +15,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ swappy ];
+    home.packages = [ pkgs.swappy ];
 
-    spirenix.user.home.configFile."swappy/config".source = ./config;
-    spirenix.user.home.file."Pictures/screenshots/.keep".text = "";
+    xdg.configFile."swappy/config".text = ''
+      [Default]
+      save_dir=$HOME/Pictures/screenshots
+      save_filename_format=%Y%m%d-%H%M%S.png
+    '';
+    home.file."Pictures/screenshots/.keep".text = "";
   };
 }

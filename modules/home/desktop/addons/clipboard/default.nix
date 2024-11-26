@@ -14,5 +14,7 @@ in
     enable = mkBoolOpt false "Clipboard";
   };
 
-  config = mkIf cfg.enable { environment.systemPackages = [ pkgs.wl-clipboard ]; };
+  config = mkIf cfg.enable { 
+    home.packages = [ pkgs.wl-clipboard ];
+  };
 }

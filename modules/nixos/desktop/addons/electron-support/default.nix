@@ -14,7 +14,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.user.home.configFile."electron-flags.conf".source = ./electron-flags.conf;
+    spirenix.user.home.configFile."electron-flags.conf".text = ''
+      --enable-features=UseOzonePlatform
+      --ozone-platform=wayland
+    '';
 
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
