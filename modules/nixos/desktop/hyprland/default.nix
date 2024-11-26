@@ -15,7 +15,6 @@ in
   options.${namespace}.desktop.hyprland = let inherit (types) package oneOf path str attrs; in {
     enable = mkBoolOpt false "Enable Hyprland desktop environment";
     package = mkOpt package inputs.hyprland.packages.${system}.hyprland "The Hyprland package to use.";
-    wallpaper = mkOpt (oneOf [ package path str ]) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
     settings = mkOpt attrs { } "Extra Hyprland settings to apply.";
   };
 
@@ -25,32 +24,24 @@ in
       inherit (cfg) package;
       portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
     };
-    programs.hyprlock.enable = true;
+    spirenix.desktop.addons.xdg-portal = enabled;
 
-    # environment.systemPackages = with pkgs; [
-    #   spirenix.wallpapers
+    # programs.hyprlock.enable = true;
+
+    environment.systemPackages = with pkgs; [
     #   libinput
     #   # volumectl
     #   playerctl
-    #   brightnessctl
+      brightnessctl
     #   glib
     #   gtk3.out
     #   gnome-control-center
     #   ags
     #   libdbusmenu-gtk3
-    # ];
-    #
-    # environment.sessionVariables.WLR_NO_HARDWARE_CURSORS = "1";
-    #
+    ];
+    
+    environment.sessionVariables."NIXOS_OZONE_WL" = "1";
+    
     # # security.pam.services.hyprlock = { };
-    #
-    # services.greetd = {
-    #   enable = true;
-    #   settings = {
-    #     default_session = {
-    #       command = "${lib.getExe pkgs.greetd.tuigreet} --cmd Hyprland";
-    #     };
-    #   };
-    # };
   };
 }

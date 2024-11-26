@@ -15,13 +15,17 @@ in
   };
 
   config = mkIf cfg.enable {
-    xdg.portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk
-      ];
-      gtkUsePortal = true;
+    xdg = {
+      autostart.enable = true;
+      portal = {
+        enable = true;
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-hyprland
+          xdg-desktop-portal-wlr
+          xdg-desktop-portal-gtk
+        ];
+        gtkUsePortal = true;
+      };
     };
   };
 }
