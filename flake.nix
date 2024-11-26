@@ -100,7 +100,7 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          stylix.nixosModules.stylix
+          (stylix.nixosModules.stylix)
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           impermanence.nixosModules.impermanence

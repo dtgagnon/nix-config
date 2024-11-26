@@ -27,7 +27,7 @@ in
       enable = true;
       image = pkgs.spirenix.wallpapers.${cfg.wallpaper};
 
-      # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       #   base00 = "";
       #   base01 = "";
       #   base02 = "";
