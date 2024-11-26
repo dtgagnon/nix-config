@@ -35,24 +35,8 @@ in {
     # Environment configuration
     environment = {
       enable = mkBoolOpt true "Whether to enable environment configuration.";
-      variables = mkOpt (types.attrsOf (types.oneOf [
-        types.str
-        types.path
-        (types.listOf (types.either types.str types.path))
-      ])) {
-        EDITOR = "nvim";
-        SHELL = "nushell";
-        TERMINAL = "wezterm";
-        LESSHISTFILE = "$HOME/.cache/less.history";
-        WGETRC = "$HOME/.config/wgetrc";
-      } "System-wide environment variables.";
-      sessionVariables = mkOpt (types.attrsOf types.str) {
-        XDG_CACHE_HOME = "$HOME/.cache";
-        XDG_CONFIG_HOME = "$HOME/.config";
-        XDG_DATA_HOME = "$HOME/.local/share";
-        XDG_BIN_HOME = "$HOME/.local/bin";
-        XDG_DESKTOP_DIR = "$HOME";
-      } "Session-specific environment variables.";
+      variables = mkOpt (types.attrsOf (types.oneOf [ types.str types.path (types.listOf (types.either types.str types.path)) ])) { } "System-wide environment variables.";
+      sessionVariables = mkOpt (types.attrsOf types.str) { } "Session-specific environment variables.";
     };
   };
 
@@ -96,8 +80,20 @@ in {
 
     # Environment configuration
     environment = mkIf cfg.environment.enable {
-      variables = cfg.environment.variables;
-      sessionVariables = cfg.environment.sessionVariables;
+      variables = {
+        EDITOR = "nvim";
+        SHELL = "nushell";
+        TERMINAL = "wezterm";
+        LESSHISTFILE = "$HOME/.cache/less.history";
+        WGETRC = "$HOME/.config/wgetrc";
+      } // cfg.environment.variables;
+      sessionVariables = {
+        XDG_CACHE_HOME = "$HOME/.cache";
+        XDG_CONFIG_HOME = "$HOME/.config";
+        XDG_DATA_HOME = "$HOME/.local/share";
+        XDG_BIN_HOME = "$HOME/.local/bin";
+        XDG_DESKTOP_DIR = "$HOME";
+       } // cfg.environment.sessionVariables;
       extraInit = concatStringsSep "\n" (mapAttrsToList 
         (n: v: ''export ${n}="${if isList v then concatMapStringsSep ":" toString v else toString v}"'') 
         cfg.environment.variables
