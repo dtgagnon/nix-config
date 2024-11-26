@@ -8,6 +8,9 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.shells.nushell;
+
+  # Helper function to create conditional Nushell integrations
+  mkNushellIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
 in
 {
   options.${namespace}.cli.shells.nushell = {
@@ -103,10 +106,17 @@ in
       enableNushellIntegration = true;
     };
 
-    programs.eza.enableNushellIntegration = mkIf config.${namespace}.cli.eza.enable true;
-    programs.zoxide.enableNushellIntegration = mkIf config.${namespace}.cli.zoxide.enable true;
-    programs.direnv.enableNushellIntegration = mkIf config.${namespace}.cli.direnv.enable true;
-    programs.fzf.enableNushellIntegration = mkIf config.${namespace}.cli.fzf.enable true;
+    programs = {
+      atuin.enableNushellIntegration = mkNushellIntegration "atuin";
+      broot.enableNushellIntegration = mkNushellIntegration "broot";
+      carapace.enableNushellIntegration = mkNushellIntegration "carapace";
+      direnv.enableNushellIntegration = mkNushellIntegration "direnv";
+      eza.enableNushellIntegration = mkNushellIntegration "eza";
+      fzf.enableNushellIntegration = mkNushellIntegration "fzf";
+      thefuck.enableNushellIntegration = mkNushellIntegration "thefuck";
+      yazi.enableNushellIntegration = mkNushellIntegration "yazi";
+      zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";
+    };
 
     home.sessionVariables.SHELL = "nushell";
   };
