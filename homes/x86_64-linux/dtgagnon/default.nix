@@ -32,12 +32,10 @@ in
       fastfetch = enabled;
       fzf = enabled;
       git = enabled;
-      kubeshark = enabled;
       neovim = enabled;
+      network-tools = enabled;
       shells.nushell = enabled;
       ssh = enabled;
-      termshark = enabled;
-      tshark = enabled;
       zoxide = enabled;
     };
 
