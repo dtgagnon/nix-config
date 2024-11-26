@@ -44,6 +44,7 @@ in
     };
 
     desktop = {
+      stylix = enabled;
       hyprland = {
         enable = true;
         addons = [
@@ -52,11 +53,6 @@ in
         ];
         plugins = [ ];
       };
-
-      # stylix = {
-      #   enable = true;
-      #   wallpaper = "nord-rainbow-dark-nix-ultrawide";
-      # };
     };
   };
 
