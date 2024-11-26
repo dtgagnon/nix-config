@@ -8,7 +8,7 @@
 }:
 let
   inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib.${namespace}) enabled mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.hyprland;
 in
 {
@@ -25,7 +25,10 @@ in
       portalPackage = inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
     };
 
-    spirenix.desktop.addons.xdg-portal.enable = true;
+    spirenix.desktop.addons = {
+      wallpapers = enabled;
+      xdg-portal = enabled;
+    };
 
     # programs.hyprlock.enable = true;
 
