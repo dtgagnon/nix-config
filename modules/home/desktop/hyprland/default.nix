@@ -70,7 +70,7 @@ in
         poweralertd
 
         # theming
-        qt5ct
+        libsForQt5.qt5ct
         qt6ct
 
         # cursors

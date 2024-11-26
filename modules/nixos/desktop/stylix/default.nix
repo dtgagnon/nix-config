@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types foldl';
@@ -12,7 +13,9 @@ in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
+    excludedTargets =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare a list of targets to exclude from Stylix theming";
   };
 
   config = mkIf cfg.enable {
@@ -27,7 +30,7 @@ in
       polarity = "either"; # "light" || "dark" || "either"
 
       image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
       # base16Scheme = {
       #   base00 = "";
       #   base01 = "";
@@ -80,12 +83,13 @@ in
         popups = 1.0;
       };
 
-      targets = foldl'
-        (acc: target: acc // {
+      targets = foldl' (
+        acc: target:
+        acc
+        // {
           ${target}.enable = false;
-        })
-        { }
-        cfg.excludedTargets;
+        }
+      ) { } cfg.excludedTargets;
     };
   };
 }

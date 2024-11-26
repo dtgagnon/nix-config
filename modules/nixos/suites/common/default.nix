@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) mkDefault mkIf;
+  inherit (lib) mkIf;
   inherit (lib.${namespace}) enabled mkBoolOpt;
   cfg = config.${namespace}.suites.common;
 in

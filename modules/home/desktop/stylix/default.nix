@@ -1,31 +1,36 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types foldl';
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
   cfg = config.${namespace}.desktop.stylix;
-  wpPkg = pkgs.spirenix.wallpapers;
 in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaper = mkOpt (types.nullOr types.str) null "Designate the name of the source image";
-    excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
+    excludedTargets =
+      mkOpt (types.listOf types.str) [ ]
+        "Declare a list of targets to exclude from Stylix theming";
   };
 
   config = mkIf cfg.enable {
+    spirenix.desktop.addons.wallpapers = enabled;
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      image = (if cfg.wallpaper == null
-        then pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide # default
-        else pkgs.spirenix.wallpapers.${cfg.wallpaper});
+      image = (
+        if cfg.wallpaper == null then
+          pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide # default
+        else
+          pkgs.spirenix.wallpapers.${cfg.wallpaper}
+      );
       base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-      # base16Scheme = { #NOTE: see below for merged attr set
       #   base00 = "";
       #   base01 = "";
       #   base02 = "";
@@ -72,12 +77,13 @@ in
         popups = 1.0;
       };
 
-      targets = foldl'
-        (acc: target: acc // {
+      targets = foldl' (
+        acc: target:
+        acc
+        // {
           ${target}.enable = false;
-        })
-        { }
-        cfg.excludedTargets;
-    }; 
+        }
+      ) { } cfg.excludedTargets;
+    };
   };
 }
