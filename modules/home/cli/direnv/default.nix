@@ -1,15 +1,16 @@
-{ config
-, lib
-, namespace
-, ...
+{
+  lib,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt enabled;
-  cfg = config.${namespace}.tools.direnv;
+  cfg = config.${namespace}.cli.direnv;
 in
 {
-  options.${namespace}.tools.direnv = {
+  options.${namespace}.cli.direnv = {
     enable = mkBoolOpt false "Whether or not to enable direnv.";
   };
 

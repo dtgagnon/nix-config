@@ -112,7 +112,6 @@ in
       carapace.enableNushellIntegration = mkNushellIntegration "carapace";
       direnv.enableNushellIntegration = mkNushellIntegration "direnv";
       eza.enableNushellIntegration = mkNushellIntegration "eza";
-      fzf.enableNushellIntegration = mkNushellIntegration "fzf";
       thefuck.enableNushellIntegration = mkNushellIntegration "thefuck";
       yazi.enableNushellIntegration = mkNushellIntegration "yazi";
       zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";
