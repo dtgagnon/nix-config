@@ -12,17 +12,18 @@ in
   options.${namespace}.desktop.addons.wlsunset = {
     enable = mkBoolOpt false "Whether to enable wlsunset.";
     
-    latitude = mkOpt types.str "45.5" "Your latitude for accurate sun times.";
-    longitude = mkOpt types.str "-73.6" "Your longitude for accurate sun times.";
+    latitude = mkOpt types.float 42.3 "Your current latitude, between -90.0 and 90.0";
+    longitude = mkOpt types.float -83.0 "Your current longitude, between -180.0 and 180.0";
     
     temperature = {
-      day = mkOpt types.int 6500 "Color temperature during the day (in Kelvin).";
-      night = mkOpt types.int 3500 "Color temperature during the night (in Kelvin).";
+      day = mkOpt types.int 6500 "Colour temperature to use during the day, in Kelvin (K)";
+      night = mkOpt types.int 4500 "Colour temperature to use during the night, in Kelvin (K)";
     };
 
-    gamma = mkOpt types.str "1.0" "Gamma correction value.";
+    gamma = mkOpt types.float 1.0 "Gamma value to use";
     
-    duration = mkOpt types.int 900 "Transition duration in seconds.";
+    sunrise = mkOpt (types.nullOr types.str) null "The time when the sun rises (in 24 hour format)";
+    sunset = mkOpt (types.nullOr types.str) null "The time when the sun sets (in 24 hour format)";
   };
 
   config = mkIf cfg.enable {
@@ -35,7 +36,8 @@ in
         night = cfg.temperature.night;
       };
       gamma = cfg.gamma;
-      duration = cfg.duration;
+      sunrise = cfg.sunrise;
+      sunset = cfg.sunset;
     };
   };
 }

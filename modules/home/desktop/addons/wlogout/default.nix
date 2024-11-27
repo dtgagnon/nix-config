@@ -14,7 +14,7 @@ in {
   config = mkIf cfg.enable {
     programs.wlogout = {
       enable = true;
-      style = builtins.readFile ./style.css;
+      style = builtins.readFile ./styles.css;
       layout = [
         {
           label = "lock";
