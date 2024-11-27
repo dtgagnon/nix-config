@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf concatStringsSep getExe;
@@ -17,14 +18,14 @@ in
   config = mkIf cfg.enable {
     services.greetd = {
       enable = true;
-      settings = rec {
+      settings = {
         default_session = {
           command = concatStringsSep " " [
             "${getExe pkgs.greetd.tuigreet}"
             "--remember"
             "--remember-user-session"
             "--user-menu"
-            ''--power-shutdown systemctl poweroff"''
+            ''--power-shutdown "systemctl poweroff"''
             ''--power-reboot "systemctl reboot"''
             "--asterisks"
             "--time"
