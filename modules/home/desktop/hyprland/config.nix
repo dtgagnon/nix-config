@@ -114,10 +114,7 @@ in {
         };
       };
 
-      monitor = [
-        "eDP-1,preferred,auto,1"  # Built-in display
-        ",preferred,auto,1"       # Any other display
-      ];
+      monitor = ",preferred,auto,auto";
 
       xwayland.force_zero_scaling = true;
     };

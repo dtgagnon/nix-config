@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types;
@@ -13,8 +14,8 @@ in
   options.${namespace}.desktop.addons.gtk = with types; {
     enable = mkBoolOpt false "Whether to customize GTK and apply themes.";
     theme = {
-      name = mkOpt str "Nordic-darker" "The name of the GTK theme to apply.";
-      pkg = mkOpt package pkgs.nordic "The package to use for the theme.";
+      name = mkOpt str "gruvbox-dark-medium" "The name of the GTK theme to apply.";
+      pkg = mkOpt package pkgs.gruvbox-dark-medium "The package to use for the theme.";
     };
     cursor = {
       name = mkOpt str "Bibata-Modern-Ice" "The name of the cursor theme to apply.";
@@ -27,33 +28,32 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [
+    home.packages = [
       cfg.icon.pkg
       cfg.cursor.pkg
+      cfg.theme.pkg
     ];
 
-    environment.sessionVariables = {
+    home.sessionVariables = {
       XCURSOR_THEME = cfg.cursor.name;
     };
 
-    spirenix.user.home.extraOptions = {
-      gtk = {
-        enable = true;
+    gtk = {
+      enable = true;
 
-        theme = {
-          name = cfg.theme.name;
-          package = cfg.theme.pkg;
-        };
+      theme = {
+        name = cfg.theme.name;
+        package = cfg.theme.pkg;
+      };
 
-        cursorTheme = {
-          name = cfg.cursor.name;
-          package = cfg.cursor.pkg;
-        };
+      cursorTheme = {
+        name = cfg.cursor.name;
+        package = cfg.cursor.pkg;
+      };
 
-        iconTheme = {
-          name = cfg.icon.name;
-          package = cfg.icon.pkg;
-        };
+      iconTheme = {
+        name = cfg.icon.name;
+        package = cfg.icon.pkg;
       };
     };
   };

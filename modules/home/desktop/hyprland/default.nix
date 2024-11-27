@@ -108,16 +108,15 @@ in
       QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
       QT_QPA_PLATFORMTHEME = "qt5ct";
 
-      GDK_BACKEND = "wayland,x11";
-      SDL_VIDEODRIVER = "wayland";
-      CLUTTER_BACKEND = "wayland";
+      # GDK_BACKEND = "wayland,x11";
+      # SDL_VIDEODRIVER = "wayland";
+      # CLUTTER_BACKEND = "wayland";
 
-      MOZ_ENABLE_WAYLAND = 1;
-      NIXOS_OZONE_WL = 1;
-      _JAVA_AWT_WM_NONREPARENTING = 1;
+      # MOZ_ENABLE_WAYLAND = 1;
+      # _JAVA_AWT_WM_NONREPARENTING = 1;
 
-      XCURSOR_SIZE = 22;
-      XCURSOR_THEME = "Nordzy-cursors";
+      # XCURSOR_SIZE = 22;
+      # XCURSOR_THEME = "Nordzy-cursors";
     };
 
     systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
