@@ -1,14 +1,17 @@
 {
-  config,
   lib,
   pkgs,
+  config,
+  namespace,
   ...
 }:
-with lib; let
-  cfg = config.desktops.addons.wlogout;
+let
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.desktop.addons.wlogout;
 in {
-  options.desktops.addons.wlogout = {
-    enable = mkEnableOption "Enable wlogout screen for managing sessions.";
+  options.${namespace}.desktop.addons.wlogout = {
+    enable = mkBoolOpt false "Enable wlogout screen for managing sessions.";
   };
 
   config = mkIf cfg.enable {

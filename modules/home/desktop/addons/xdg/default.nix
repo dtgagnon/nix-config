@@ -1,13 +1,15 @@
 {
-  config,
   lib,
+  config,
+  namespace,
   ...
 }:
-with lib;
-with lib.nixicle; let
-  cfg = config.desktops.addons.xdg;
+let
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  cfg = config.${namespace}.desktop.addons.xdg;
 in {
-  options.desktops.addons.xdg = with types; {
+  options.${namespace}.desktop.addons.xdg = {
     enable = mkBoolOpt false "manage xdg config";
   };
 

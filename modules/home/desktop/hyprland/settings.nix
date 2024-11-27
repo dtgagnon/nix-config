@@ -2,25 +2,18 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkOpt mkBoolOpt;
-  cfg = config.${namespace}.desktop.hyprland;
+  inherit (lib) mkIf types;
+  cfg = config.spirenix.desktop.hyprland;
 
   inherit (config.lib.stylix) colors;
 in
 { 
-  options.${namespace}.desktop.hyprland = {
-    extraConfig = mkOpt str "" "Additional hyprland configuration";
-    extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
-  };
-
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
-      config = {
+      settings = {
         input = {
           kb_layout = "us";
           touchpad = {

@@ -1,10 +1,11 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.pyprland;
 in
@@ -15,7 +16,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.pyprland.enable = true;
     home.packages = [ pkgs.pyprland ];
 
     xdg.configFile."hypr/pyprland.toml".text = ''

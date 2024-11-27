@@ -1,10 +1,11 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.qt;
 in

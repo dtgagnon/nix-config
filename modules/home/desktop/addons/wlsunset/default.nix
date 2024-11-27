@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.wlsunset;
 in
@@ -12,8 +12,8 @@ in
   options.${namespace}.desktop.addons.wlsunset = {
     enable = mkBoolOpt false "Whether to enable wlsunset.";
     
-    latitude = mkOpt types.float 42.3 "Your current latitude, between -90.0 and 90.0";
-    longitude = mkOpt types.float -83.0 "Your current longitude, between -180.0 and 180.0";
+    latitude = mkOpt types.int 42 "Your current latitude, between -90.0 and 90.0";
+    longitude = mkOpt types.int (-83) "Your current longitude, between -180.0 and 180.0";
     
     temperature = {
       day = mkOpt types.int 6500 "Colour temperature to use during the day, in Kelvin (K)";

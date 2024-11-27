@@ -23,6 +23,9 @@ in
       plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable";
       addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
       extraConfig = mkOpt str "" "Additional hyprland configuration";
+      extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
+      primaryModifier = mkOpt str "SUPER" "The primary modifier key.";
+      execOnceExtras = mkOpt (listOf str) [ ] "List of commands to execute once";
     };
 
   config = mkIf cfg.enable {
@@ -40,6 +43,8 @@ in
         ]
         ++ cfg.plugins;
     };
+
+    xdg.configFile."hypr".recursive = true;
 
     spirenix.desktop.addons = {
       hyprlock = enabled;

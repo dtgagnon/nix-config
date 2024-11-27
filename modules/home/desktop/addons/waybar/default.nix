@@ -1,14 +1,17 @@
 {
-  config,
   lib,
   pkgs,
+  config,
+  namespace,
   ...
 }:
-with lib; let
-  cfg = config.desktops.addons.waybar;
+let 
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.desktop.addons.waybar;
 in {
-  options.desktops.addons.waybar = {
-    enable = mkEnableOption "Enable waybar";
+  options.${namespace}.desktop.addons.waybar = {
+    enable = mkBoolOpt false "Enable waybar";
   };
 
   config = mkIf cfg.enable {

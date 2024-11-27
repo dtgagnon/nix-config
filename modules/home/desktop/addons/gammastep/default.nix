@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.gammastep;
 in

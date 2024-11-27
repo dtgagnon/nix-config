@@ -2,11 +2,10 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }: let
   inherit (lib) mkIf;
-  cfg = config.${namespace}.desktop.hyprland;
+  cfg = config.spirenix.desktop.hyprland;
 in {
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraConfig = ''

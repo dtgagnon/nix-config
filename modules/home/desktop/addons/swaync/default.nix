@@ -4,15 +4,13 @@
 , ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.swaync;
 in
 {
   options.${namespace}.desktop.addons.swaync = {
     enable = mkBoolOpt false "Whether to enable swaync notification center.";
-    
-    systemd = mkBoolOpt true "Whether to enable systemd integration.";
     
     settings = mkOpt types.attrs {
       positionX = "right";
@@ -38,7 +36,6 @@ in
   config = mkIf cfg.enable {
     services.swaync = {
       enable = true;
-      systemd = cfg.systemd;
       settings = cfg.settings;
       style = builtins.readFile ./swaync.css + cfg.extraCSS;
     };
