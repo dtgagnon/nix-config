@@ -29,7 +29,8 @@ in
             "--power-reboot /run/current-system/systemd/bin/systemctl reboot"
             "--asterisks"
             "--time"
-            "--cmd Hyprland"
+            # Commenting out auto-start of Hyprland to allow manual session selection
+            # "--cmd Hyprland"
           ];
           user = "greeter";
         };
