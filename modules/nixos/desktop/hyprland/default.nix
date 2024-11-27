@@ -15,7 +15,7 @@ in
   options.${namespace}.desktop.hyprland = {
     enable = mkBoolOpt false "Enable Hyprland desktop environment";
     package =
-      mkOpt types.package inputs.hyprland.packages.${system}.hyprland
+      mkOpt types.package null
         "The Hyprland package to use.";
     settings = mkOpt types.attrs { } "Extra Hyprland settings to apply.";
   };

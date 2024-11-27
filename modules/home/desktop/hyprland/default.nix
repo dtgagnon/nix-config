@@ -27,6 +27,25 @@ in
     };
 
   config = mkIf cfg.enable {
+    wayland.windowManager.hyprland = {
+      enable = true;
+      package = inputs.hyprland.packages.${system}.hyprland;
+      systemd.enable = true;
+      systemd.variables = [ "--all" ];
+      xwayland.enable = true;
+
+      plugins =
+        with inputs.hyprland-plugins.packages.${pkgs};
+        [
+          # list of hyprland packages from hyprland-plugins repo
+        ]
+        ++ cfg.plugins;
+
+      extraConfig = ''
+        ${cfg.extraConfig}
+      '';
+    };
+
     spirenix.desktop.addons = {
       hyprlock = enabled;
       waybar = enabled;
@@ -104,25 +123,5 @@ in
     systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
 
     # xdg.configFile."hypr/hyprland.conf".source = ./hyprland.conf;
-    wayland.windowManager.hyprland = {
-      enable = true;
-      package = inputs.hyprland.packages.${system}.hyprland;
-
-      # reloadConfig = true;
-      systemd.enable = true;
-      systemd.variables = [ "--all" ];
-      xwayland.enable = true;
-
-      plugins =
-        with inputs.hyprland-plugins.packages.${pkgs};
-        [
-          # list of hyprland packages from hyprland-plugins repo
-        ]
-        ++ cfg.plugins;
-
-      extraConfig = ''
-        ${cfg.extraConfig}
-      '';
-    };
   };
 }
