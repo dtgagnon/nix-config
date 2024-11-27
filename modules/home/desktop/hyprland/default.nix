@@ -23,7 +23,6 @@ in
       plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable";
       addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
       extraConfig = mkOpt str "" "Additional hyprland configuration";
-      extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
     };
 
   config = mkIf cfg.enable {
@@ -31,8 +30,8 @@ in
       enable = true;
       package = inputs.hyprland.packages.${system}.hyprland;
       systemd.enable = true;
-      systemd.variables = [ "--all" ];
       xwayland.enable = true;
+      extraConfig = cfg.extraConfig;
 
       plugins =
         with inputs.hyprland-plugins.packages.${pkgs};
@@ -40,15 +39,20 @@ in
           # list of hyprland packages from hyprland-plugins repo
         ]
         ++ cfg.plugins;
-
-      extraConfig = ''
-        ${cfg.extraConfig}
-      '';
     };
 
     spirenix.desktop.addons = {
       hyprlock = enabled;
+      hypridle = enabled;
+      hyprpaper = enabled;
+      pyprland = enabled;
+
+      gtk = enabled;
+      rofi = enabled;
+      term = enabled;
       waybar = enabled;
+      wlogout = enabled;
+      wlsunset = enabled;
       wallpapers = enabled;
     } // genAttrs cfg.addons (name: enabled);
 
