@@ -45,7 +45,7 @@ in
           disable_autoreload = true;
         };
 
-        source = ["${config.xdg.configFile}/hypr/monitors.conf"];
+        source = ["~/.config/hypr/monitors.conf"];
 
         exec_once =
           [

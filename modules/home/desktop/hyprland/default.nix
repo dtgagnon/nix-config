@@ -11,6 +11,8 @@ let
   inherit (lib) mkIf types genAttrs;
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
   cfg = config.${namespace}.desktop.hyprland;
+
+  hyprPlugs = inputs.hyprland-plugins.packages.${pkgs};
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
@@ -20,7 +22,7 @@ in
     in
     {
       enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
-      plugins = mkOpt (listOf package) [ ] "Additional hyprland plugins to enable";
+      plugins = mkOpt (listOf package) (with hyprPlugs; [ ]) "Additional hyprland plugins to enable";
       addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
       extraConfig = mkOpt str "" "Additional hyprland configuration";
       extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
@@ -37,7 +39,7 @@ in
       extraConfig = cfg.extraConfig;
 
       plugins =
-        with inputs.hyprland-plugins.packages.${pkgs};
+        with hyprPlugs;
         [
           # list of hyprland packages from hyprland-plugins repo
         ]
