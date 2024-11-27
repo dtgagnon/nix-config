@@ -21,12 +21,11 @@ in
         default_session = {
           command = concatStringsSep " " [
             "${getExe pkgs.greetd.tuigreet}"
-            "--sessions /run/current-system/sw/share/wayland-sessions/:/run/current-system/sw/share/xsession/"
             "--remember"
             "--remember-user-session"
             "--user-menu"
-            "--power-shutdown /run/current-system/systemd/bin/systemctl poweroff"
-            "--power-reboot /run/current-system/systemd/bin/systemctl reboot"
+            ''--power-shutdown systemctl poweroff"''
+            ''--power-reboot "systemctl reboot"''
             "--asterisks"
             "--time"
             # Commenting out auto-start of Hyprland to allow manual session selection
@@ -34,7 +33,10 @@ in
           ];
           user = "greeter";
         };
-        initial_session = default_session;
+        initial_session = {
+          command = "--cmd Hyprland";
+          user = "dtgagnon";
+        };
       };
       vt = 2;
     };

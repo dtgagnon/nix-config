@@ -16,7 +16,7 @@ in
     suites.networking = enabled;
 
     desktop = {
-      gnome = disabled;
+      gnome = enabled;
       fonts = enabled;
       hyprland = enabled;
       stylix = enabled;
