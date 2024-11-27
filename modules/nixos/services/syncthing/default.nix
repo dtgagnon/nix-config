@@ -24,9 +24,9 @@ in
     };
 
     # Add syncthing system configuration to user's home persistence
-    snowfallorg.users.${config.${namespace}.user.name}.home.config.${namespace}.home.persistHomeDirs = [
-      ".config/syncthing"
-      ".local/state/syncthing"
-    ];
+    # snowfallorg.users.${config.${namespace}.user.name}.home.config.${namespace}.user.home.persistHomeDirs = [
+    #   ".config/syncthing"
+    #   ".local/state/syncthing"
+    # ];
   };
 }
