@@ -33,6 +33,7 @@ in
       directories = [
         "/etc/nixos"
         "/etc/ssh"
+        "/etc/greetd"
         "/var/log"
         "/var/lib/bluetooth"
         "/var/lib/nixos"
