@@ -109,7 +109,7 @@ in
       package = inputs.hyprland.packages.${system}.hyprland;
 
       # reloadConfig = true;
-      systemdIntegration = true;
+      systemd.enable = true;
       systemd.variables = [ "--all" ];
       xwayland.enable = true;
 
