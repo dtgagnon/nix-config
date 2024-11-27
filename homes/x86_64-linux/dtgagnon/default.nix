@@ -44,7 +44,6 @@ in
     };
 
     desktop = {
-      gnome = enabled;
       stylix = enabled;
       hyprland = {
         enable = true;
