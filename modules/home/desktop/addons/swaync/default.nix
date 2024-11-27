@@ -17,25 +17,22 @@ in
     settings = mkOpt types.attrs {
       positionX = "right";
       positionY = "top";
-      control-center-margin-top = 10;
-      control-center-margin-bottom = 10;
-      control-center-margin-right = 10;
+      layer = "overlay";
+      control-center-layer = "top";
+      layer-shell = true;
+      cssPriority = "application";
+      control-center-margin-top = 0;
+      control-center-margin-bottom = 0;
+      control-center-margin-right = 0;
+      control-center-margin-left = 0;
+      notification-2fa-action = true;
+      notification-inline-replies = false;
       notification-icon-size = 64;
       notification-body-image-height = 100;
       notification-body-image-width = 200;
-      timeout = 10;
-      timeout-low = 5;
-      timeout-critical = 0;
-      fit-to-screen = true;
-      control-center-width = 500;
-      keyboard-shortcuts = true;
-      image-visibility = "when-available";
-      transition-time = 200;
-      hide-on-clear = true;
-      hide-on-action = true;
     } "Swaync configuration options.";
     
-    style = mkOpt types.str "" "Custom CSS for styling swaync.";
+    extraCSS = mkOpt types.str "" "Custom CSS for styling swaync.";
   };
 
   config = mkIf cfg.enable {
@@ -43,7 +40,7 @@ in
       enable = true;
       systemd = cfg.systemd;
       settings = cfg.settings;
-      style = cfg.style;
+      style = builtins.readFile ./swaync.css + cfg.extraCSS;
     };
   };
 }

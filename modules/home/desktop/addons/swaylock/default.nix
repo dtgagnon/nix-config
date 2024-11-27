@@ -1,36 +1,67 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) mkIf types mkEnableOption;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.swaylock;
 in
 {
   options.${namespace}.desktop.addons.swaylock = {
     enable = mkBoolOpt false "Whether to enable swaylock.";
-    
-    daemonize = mkBoolOpt true "Whether to run as a daemon.";
-    
-    settings = mkOpt types.attrs {
-      color = "000000";
-      font = "monospace";
-      indicator-idle-visible = true;
-      indicator-radius = 100;
-      line-color = "ffffff";
-      show-failed-attempts = true;
-    } "Swaylock configuration options.";
+    blur = mkOpt (types.nullOr types.str) "7x5" "radius x times blur the image.";
+    vignette = mkOpt (types.nullOr types.str) "0.5x0.5" "base:factor apply vignette effect.";
+    binary = mkOpt (types.nullOr types.str) "${pkgs.swaylock-effects}/bin/swaylock" "Location of the binary to use for swaylock.";
   };
 
   config = mkIf cfg.enable {
     programs.swaylock = {
       enable = true;
       package = pkgs.swaylock-effects;
-      settings = cfg.settings;
+      settings = {
+        show-failed-attempts = true;
+        screenshots = true;
+        clock = true;
+
+        indicator = true;
+        indicator-radius = 350;
+        indicator-thickness = 5;
+
+        effect-blur = cfg.blur;
+        effect-vignette = cfg.vignette;
+        fade-in = 0.2;
+
+        font = "MonoLisa Nerd Font";
+      };
     };
 
-    security.pam.services.swaylock = {};
+    services.swayidle = {
+      enable = true;
+      systemdTarget = "hyprland-session.target";
+      events = [
+        {
+          event = "before-sleep";
+          command = "${cfg.binary} -fF";
+        }
+        {
+          event = "lock";
+          command = "${cfg.binary} -fF";
+        }
+      ];
+      timeouts = [
+        {
+          timeout = 600;
+          command = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl dispatch dpms off";
+          resumeCommand = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl dispatch dpms on";
+        }
+        {
+          timeout = 610;
+          command = "${pkgs.systemd}/bin/loginctl lock-session";
+        }
+      ];
+    };
   };
 }
