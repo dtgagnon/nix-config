@@ -22,6 +22,8 @@ in
 
     spirenix = {
       services = {
+        openssh = enabled;
+        syncthing = enabled;
         tailscale = enabled;
       };
     };
