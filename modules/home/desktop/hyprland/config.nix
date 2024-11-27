@@ -99,17 +99,8 @@ in {
 
       exec-once = [
         "systemctl --user import-environment &"
-        "hash dbus-update-activation-environment 2>/dev/null &"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
-        "nm-applet &"
-        "wl-clip-persist --clipboard both"
-        "swaybg -m fill -i $(find ~/Pictures/wallpapers/ -maxdepth 1 -type f) &"
-        "hyprctl setcursor Nordzy-cursors 22 &"
-        "poweralertd &"
         "waybar &"
-        "swaync &"
-        "wl-paste --watch cliphist store &"
-        "hyprlock"
       ];
 
       input = {
@@ -123,7 +114,10 @@ in {
         };
       };
 
-      monitor = ",preferred,auto,auto";
+      monitor = [
+        "eDP-1,preferred,auto,1"  # Built-in display
+        ",preferred,auto,1"       # Any other display
+      ];
 
       xwayland.force_zero_scaling = true;
     };
