@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf concatStringsSep getExe;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.greetd;
 in
@@ -20,7 +20,7 @@ in
       settings = rec {
         default_session = {
           command = concatStringsSep " " [
-            ${lib.getExe pkgs.greetd.tuigreet}
+            "${getExe pkgs.greetd.tuigreet}"
             "--sessions /run/current-system/sw/share/wayland-sessions/:/run/current-system/sw/share/xsession/"
             "--remember"
             "--remember-user-session"
