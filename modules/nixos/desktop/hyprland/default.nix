@@ -1,10 +1,10 @@
-{ lib
-, pkgs
-, config
-, inputs
-, system
-, namespace
-, ...
+{
+  lib,
+  config,
+  inputs,
+  system,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types;
@@ -12,10 +12,12 @@ let
   cfg = config.${namespace}.desktop.hyprland;
 in
 {
-  options.${namespace}.desktop.hyprland = let inherit (types) package oneOf path str attrs; in {
+  options.${namespace}.desktop.hyprland = {
     enable = mkBoolOpt false "Enable Hyprland desktop environment";
-    package = mkOpt package inputs.hyprland.packages.${system}.hyprland "The Hyprland package to use.";
-    settings = mkOpt attrs { } "Extra Hyprland settings to apply.";
+    package =
+      mkOpt types.package inputs.hyprland.packages.${system}.hyprland
+        "The Hyprland package to use.";
+    settings = mkOpt types.attrs { } "Extra Hyprland settings to apply.";
   };
 
   config = mkIf cfg.enable {
