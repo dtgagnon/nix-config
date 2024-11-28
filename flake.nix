@@ -66,7 +66,11 @@
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
-    ## miscellaneous
+    ## programming langs
+    astal.url = "github:Aylur/astal";
+    astal.inputs.nixpkgs.follows = "nixpkgs";
+    ags.url = "github:Aylur/ags";
+    ags.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs:
@@ -112,6 +116,10 @@
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
+        ];
+
+        homes.modules = with inputs; [
+          ags.homeManagerModules.default
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };

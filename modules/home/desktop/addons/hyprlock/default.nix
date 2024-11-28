@@ -25,7 +25,7 @@ in
         
         background = {
           monitor = "";
-          path = "${config.spirenix.desktop.stylix.image}";
+          path = "${pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide}";
         };
 
         label = [

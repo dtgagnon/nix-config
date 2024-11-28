@@ -45,8 +45,6 @@ in
           disable_autoreload = true;
         };
 
-        source = ["~/.config/hypr/monitors.conf"];
-
         exec_once =
           [
             "dbus-update-activation-environment --systemd --all"

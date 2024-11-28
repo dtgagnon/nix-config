@@ -46,8 +46,6 @@ in
         ++ cfg.plugins;
     };
 
-    xdg.configFile."hypr".recursive = true;
-
     spirenix.desktop.addons = {
       hyprlock = enabled;
       hypridle = enabled;
@@ -72,7 +70,6 @@ in
         brightnessctl
 
         # desktop env
-        ags
         libdbusmenu-gtk3
         gnome-control-center
 
