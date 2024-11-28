@@ -7,7 +7,7 @@
 let
   inherit (lib) mkIf mkDefault mkForce mkLiteral types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  inherit (config.stylix) colors;
+  inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.rofi;
 in
 {

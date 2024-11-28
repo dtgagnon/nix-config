@@ -18,10 +18,9 @@ in
   config = mkIf cfg.enable {
     services.hyprpaper = {
       enable = true;
-      settings = {
-        preload = [ cfg.wallpaper ];
-        wallpaper = ", ${cfg.wallpaper}";
-      };
+      # settings = {
+      #   wallpaper = ", ${cfg.wallpaper}";
+      # };
     };
   };
 }
