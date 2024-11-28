@@ -12,7 +12,7 @@ let
 in
 { 
   config = mkIf cfg.enable {
-    spirenix.desktop.hyprland.extraConfig = {
+    spirenix.desktop.hyprland.extraSettings = {
       input = {
         kb_layout = "us";
         touchpad = {

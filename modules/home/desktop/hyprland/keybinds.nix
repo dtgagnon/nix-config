@@ -47,7 +47,7 @@ let
   '';
 in {
   config = mkIf cfg.enable {
-    spirenix.desktop.hyprland.extraConfig = {
+    spirenix.desktop.hyprland.extraKeybinds = {
       "$mod" = "${cfg.primaryModifier}"
       bind = [
         "$mod, Return" = "exec, wezterm"

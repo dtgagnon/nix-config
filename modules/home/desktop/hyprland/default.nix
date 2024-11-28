@@ -15,20 +15,24 @@ let
   hyprPlugs = inputs.hyprland-plugins.packages.${pkgs};
 in
 {
-  # imports = lib.snowfall.fs.get-non-default-nix-files ./.;
-  imports = [ ./keybinds.nix ]
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
   options.${namespace}.desktop.hyprland =
     let
-      inherit (types) package str listOf;
+      inherit (types) attrs package str listOf;
     in
     {
       enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
       plugins = mkOpt (listOf package) (with hyprPlugs; [ ]) "Additional hyprland plugins to enable";
-      addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
-      extraConfig = mkOpt str "" "Additional hyprland configuration";
+      extraConfig = mkOpt str "" "Additional hyprland configuration in string format";
       extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
+
+      addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
       primaryModifier = mkOpt str "SUPER" "The primary modifier key.";
       execOnceExtras = mkOpt (listOf str) [ ] "List of commands to execute once";
+
+      extraKeybinds = mkOpt attrs { } "Additional keybinds to add to the Hyprland config";
+      extraSettings = mkOpt attrs { } "Additional settings to add to the Hyprland config";
+      extraWinRules = mkOpt attrs { } "Additional window rules to add to the Hyprland config";
     };
 
   config = mkIf cfg.enable {
@@ -38,6 +42,7 @@ in
       systemd.enable = true;
       xwayland.enable = true;
       inherit (cfg) extraConfig;
+      settings = cfg.extraSettings // cfg.extraKeybinds; # // cfg.extraWinRules; # WILL ADD LATER
 
       plugins =
         with hyprPlugs;
