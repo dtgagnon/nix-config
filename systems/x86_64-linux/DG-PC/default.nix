@@ -24,7 +24,7 @@ in
 
     hardware = {
       audio = enabled;
-      keyboard = enabled; # xkb stuff
+      # keyboard = enabled; # xkb stuff
       nvidia = enabled;
       storage = {
         boot.enable = true;

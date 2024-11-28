@@ -15,7 +15,8 @@ let
   hyprPlugs = inputs.hyprland-plugins.packages.${pkgs};
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  # imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = [ ./keybinds.nix ]
   options.${namespace}.desktop.hyprland =
     let
       inherit (types) package str listOf;
@@ -36,7 +37,7 @@ in
       package = inputs.hyprland.packages.${system}.hyprland;
       systemd.enable = true;
       xwayland.enable = true;
-      extraConfig = cfg.extraConfig;
+      inherit (cfg) extraConfig;
 
       plugins =
         with hyprPlugs;
@@ -52,7 +53,7 @@ in
       hyprpaper = enabled;
       pyprland = enabled;
 
-      gtk = enabled;
+      # gtk = enabled;
       rofi = enabled;
       term = enabled;
       waybar = enabled;
