@@ -48,7 +48,7 @@ let
 in {
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraKeybinds = {
-      "$mod" = "${cfg.primaryModifier}"
+      "$mod" = "${cfg.primaryModifier}";
       bind = [
         "$mod, Return" = "exec, wezterm"
         "$mod, B" = "exec, ${config.spirenix.desktop.addons.rofi.package}/bin/rofi -show drun -mode drun"
@@ -125,7 +125,7 @@ in {
         # Scratch Pad
         "$mod,u" = "togglespecialworkspace"
         "$modSHIFT,u" = "movetoworkspace,special"
-      ]
+      ];
       bindi = [
         ",XF86MonBrightnessUp" = "exec, ${pkgs.brightnessctl}/bin/brightnessctl +5%"
         ",XF86MonBrightnessDown" = "exec, ${pkgs.brightnessctl}/bin/brightnessctl -5% "
@@ -137,14 +137,14 @@ in {
         ",XF86AudioPrev" = "exec,playerctl previous"
         ",XF86AudioPlay" = "exec,playerctl play-pause"
         ",XF86AudioStop" = "exec,playerctl stop"
-      ]
-      bindl = [ ]
+      ];
+      bindl = [ ];
       binde = [
         "$modALT, h" = "resizeactive, -20 0"
         "$modALT, l" = "resizeactive, 20 0"
         "$modALT, k" = "resizeactive, 0 -20"
         "$modALT, j" = "resizeactive, 0 20"
-      ]
+      ];
     };
   };
 }
