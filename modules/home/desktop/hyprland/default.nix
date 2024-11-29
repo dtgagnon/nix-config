@@ -10,13 +10,13 @@
 let
   inherit (lib) mkIf types genAttrs;
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
-  cfg = config.${namespace}.desktop.hyprland;
+  cfg = config.spirenix.desktop.hyprland;
 
   hyprPlugs = inputs.hyprland-plugins.packages.${pkgs};
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
-  options.${namespace}.desktop.hyprland =
+  options.spirenix.desktop.hyprland =
     let
       inherit (types)
         anything
@@ -59,17 +59,7 @@ in
     };
 
     spirenix.desktop.addons = {
-      hyprlock = enabled;
-      hypridle = enabled;
-      hyprpaper = enabled;
-      pyprland = enabled;
-
-      # gtk = enabled;
       rofi = enabled;
-      term = enabled;
-      waybar = enabled;
-      wlogout = enabled;
-      wlsunset = enabled;
       wallpapers = enabled;
     } // genAttrs cfg.addons (name: enabled);
 
