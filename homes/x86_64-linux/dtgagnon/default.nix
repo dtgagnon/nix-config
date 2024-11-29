@@ -44,15 +44,8 @@ in
     };
 
     desktop = {
-      stylix = enabled;
-      hyprland = {
-        enable = true;
-        addons = [
-          "rofi"
-          "waybar"
-        ];
-        plugins = [ ];
-      };
+      stylix = disabled;
+      hyprland.enable = true;
     };
   };
 

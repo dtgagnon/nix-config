@@ -18,7 +18,13 @@ in
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
   options.${namespace}.desktop.hyprland =
     let
-      inherit (types) attrs package str listOf;
+      inherit (types)
+        anything
+        attrsOf
+        package
+        str
+        listOf
+        ;
     in
     {
       enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
@@ -30,9 +36,9 @@ in
       primaryModifier = mkOpt str "SUPER" "The primary modifier key.";
       execOnceExtras = mkOpt (listOf str) [ ] "List of commands to execute once";
 
-      extraKeybinds = mkOpt attrs { } "Additional keybinds to add to the Hyprland config";
-      extraSettings = mkOpt attrs { } "Additional settings to add to the Hyprland config";
-      extraWinRules = mkOpt attrs { } "Additional window rules to add to the Hyprland config";
+      extraKeybinds = mkOpt (attrsOf anything) { } "Additional keybinds to add to the Hyprland config";
+      extraSettings = mkOpt (attrsOf anything) { } "Additional settings to add to the Hyprland config";
+      extraWinRules = mkOpt (attrsOf anything) { } "Additional window rules to add to the Hyprland config";
     };
 
   config = mkIf cfg.enable {
