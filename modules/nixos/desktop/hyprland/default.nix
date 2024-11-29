@@ -26,6 +26,7 @@ in
 
     spirenix.desktop.addons = {
       greetd = enabled;
+      thunar = enabled;
     };
   };
 }

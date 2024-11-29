@@ -35,6 +35,7 @@ in
 
     spirenix.desktop.addons = {
       qt = enabled;
+      rofi = enabled;
     };
 
     home.packages = with pkgs; [
