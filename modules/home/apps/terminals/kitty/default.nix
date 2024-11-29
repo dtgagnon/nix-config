@@ -23,7 +23,7 @@ in {
       '';
 
       settings = {
-        shell = "nushell";
+        shell = "nu";
         window_padding_width = 10;
         scrollback_lines = 10000;
         show_hyperlink_targets = "no";
