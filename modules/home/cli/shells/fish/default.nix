@@ -84,7 +84,7 @@ in
       # enableFishIntegration = true;
     };
     programs.dircolors.enableFishIntegration = true;
-    programs.direnv.enableFishIntegration = true;
+    # programs.direnv.enableFishIntegration = true;
     programs.eza.enableFishIntegration = true;
     programs.fzf.enableFishIntegration = true;
     programs.nix-index.enableFishIntegration = true;
