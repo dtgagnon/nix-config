@@ -11,35 +11,17 @@ let
   inherit (lib) mkIf types genAttrs;
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
   cfg = config.spirenix.desktop.hyprland;
-
-  hyprPlugs = inputs.hyprland-plugins.packages.${pkgs};
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
-  options.spirenix.desktop.hyprland =
-    let
-      inherit (types)
-        anything
-        attrsOf
-        package
-        str
-        listOf
-        ;
-    in
-    {
-      enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
-      plugins = mkOpt (listOf package) (with hyprPlugs; [ ]) "Additional hyprland plugins to enable";
-      extraConfig = mkOpt str "" "Additional hyprland configuration in string format";
-      extraMonitorSettings = mkOpt str "" "Additional monitor configurations";
-
-      addons = mkOpt (listOf str) [ ] "List of desktop addons to enable";
-      primaryModifier = mkOpt str "SUPER" "The primary modifier key.";
-      execOnceExtras = mkOpt (listOf str) [ ] "List of commands to execute once";
-
-      extraKeybinds = mkOpt (attrsOf anything) { } "Additional keybinds to add to the Hyprland config";
-      extraSettings = mkOpt (attrsOf anything) { } "Additional settings to add to the Hyprland config";
-      extraWinRules = mkOpt (attrsOf anything) { } "Additional window rules to add to the Hyprland config";
-    };
+  
+  options.spirenix.desktop.hyprland = {
+    enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
+    extraConfig = mkOpt types.str "" "Additional hyprland configuration in string format";
+    primaryModifier = mkOpt types.str "SUPER" "The primary modifier key.";
+    extraKeybinds = mkOpt (types.attrsOf types.anything) { } "Additional keybinds to add to the Hyprland config";
+    extraSettings = mkOpt (types.attrsOf types.anything) { } "Additional settings to add to the Hyprland config";
+  };
 
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
@@ -48,76 +30,18 @@ in
       systemd.enable = true;
       xwayland.enable = true;
       inherit (cfg) extraConfig;
-      settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
-
-      plugins =
-        with hyprPlugs;
-        [
-          # list of hyprland packages from hyprland-plugins repo
-        ]
-        ++ cfg.plugins;
+      settings = cfg.extraSettings // cfg.extraKeybinds;
     };
-
-    spirenix.desktop.addons = {
-      rofi = enabled;
-      wallpapers = enabled;
-    } // genAttrs cfg.addons (name: enabled);
 
     home.packages = with pkgs; [
-        # media
-        pamixer
-        playerctl
-        brightnessctl
+      # core dependencies
+      libinput
+      glib
+      gtk3.out
+      wayland
 
-        # desktop env
-        libdbusmenu-gtk3
-        gnome-control-center
-
-        # core dependencies
-        libinput
-        glib
-        gtk3.out
-        wayland
-
-        # wayland tools
-        hyprpicker
-        swww
-
-        # screenshots
-        grim
-        slurp
-
-        # clipboard
-        wl-clipboard
-        cliphist
-        wl-clip-persist
-
-        # utils
-        libnotify
-        poweralertd
-
-        # theming
-        bibata-cursors
-        nordzy-cursor-theme
-
-        # cursors
-      ] ++ cfg.plugins;
-
-    home.sessionVariables = {
-      XDG_CURRENT_DESKTOP = "Hyprland";
-      XDG_SESSION_TYPE = "wayland";
-      XDG_SESSION_DESKTOP = "Hyprland";
-      # GDK_BACKEND = "wayland,x11";
-      # SDL_VIDEODRIVER = "wayland";
-      # CLUTTER_BACKEND = "wayland";
-
-      # MOZ_ENABLE_WAYLAND = 1;
-      # _JAVA_AWT_WM_NONREPARENTING = 1;
-
-      # XCURSOR_SIZE = 22;
-      # XCURSOR_THEME = "Nordzy-cursors";
-    };
-
-    systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
+      # wayland tools
+      wl-clipboard
+    ];
   };
 }
