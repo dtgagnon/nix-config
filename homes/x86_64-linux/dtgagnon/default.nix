@@ -38,7 +38,7 @@ in
       git = enabled;
       neovim = enabled;
       network-tools = enabled;
-      shells.nushell = enabled;
+      shells = { fish = enabled; nushell = enabled; };
       ssh = enabled;
       zoxide = enabled;
     };

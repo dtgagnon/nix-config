@@ -3,7 +3,7 @@ local sessionizer = require("sessionizer")
 
 return {
 	font = wezterm.font_with_fallback({
-		"IosevkaTerm Nerd Font",
+		"JetBrainsMono Nerd Font Mono",
 		"Atkinson Hyperlegible",
 	}),
 	font_size = 14.0,

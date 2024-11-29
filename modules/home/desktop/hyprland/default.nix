@@ -40,6 +40,10 @@ in
       gtk3.out
       wayland
 
+      # strongly recommended dependencies
+      qt5-wayland
+      qt6-wayland
+
       # wayland tools
       wl-clipboard
     ];
