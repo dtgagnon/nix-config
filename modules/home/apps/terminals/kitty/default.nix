@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   namespace,
   ...
@@ -14,7 +13,7 @@ in {
     enable = mkBoolOpt false "Whether to enable Kitty terminal.";
   };
 
-  config = lib.mkIf cfg.enable {
+  config = mkIf cfg.enable {
     programs.kitty = {
       enable = true;
 
