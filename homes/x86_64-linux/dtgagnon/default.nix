@@ -44,7 +44,6 @@ in
     };
 
     desktop = {
-      stylix = disabled;
       hyprland.enable = true;
     };
   };
