@@ -48,7 +48,7 @@ in
       systemd.enable = true;
       xwayland.enable = true;
       inherit (cfg) extraConfig;
-      settings = cfg.extraSettings // cfg.extraKeybinds; # // cfg.extraWinRules; # WILL ADD LATER
+      settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
 
       plugins =
         with hyprPlugs;
@@ -63,9 +63,7 @@ in
       wallpapers = enabled;
     } // genAttrs cfg.addons (name: enabled);
 
-    home.packages =
-      with pkgs;
-      [
+    home.packages = with pkgs; [
         # media
         pamixer
         playerctl
@@ -103,8 +101,7 @@ in
         nordzy-cursor-theme
 
         # cursors
-      ]
-      ++ cfg.plugins;
+      ] ++ cfg.plugins;
 
     home.sessionVariables = {
       XDG_CURRENT_DESKTOP = "Hyprland";
