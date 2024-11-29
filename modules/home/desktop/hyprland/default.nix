@@ -33,16 +33,16 @@ in
       settings = cfg.extraSettings // cfg.extraKeybinds;
     };
 
+    spirenix.desktop.addons = [
+      qt = enabled
+    ];
+
     home.packages = with pkgs; [
       # core dependencies
       libinput
       glib
       gtk3.out
       wayland
-
-      # strongly recommended dependencies
-      qt5-wayland
-      qt6-wayland
 
       # wayland tools
       wl-clipboard
