@@ -23,7 +23,6 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      # image = "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.wallpaperName}";
       image = pkgs.spirenix.wallpapers.${cfg.wallpaperName};
 
       # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
