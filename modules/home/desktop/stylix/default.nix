@@ -14,7 +14,7 @@ in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    wallpaper = mkOpt types.str "nord-rainbow-dark-nix-ultrawide" "Designate the name of the source image";
+    wallpaperName = mkOpt types.str "nord-rainbow-dark-nix-ultrawide" "Designate the name of the source image";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
@@ -23,7 +23,8 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      image = pkgs.spirenix.wallpapers.${cfg.wallpaper};
+      # image = "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.wallpaperName}";
+      image = pkgs.spirenix.wallpapers.${cfg.wallpaperName};
 
       # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
 

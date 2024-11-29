@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  system,
   namespace,
   ...
 }:
@@ -26,6 +27,7 @@ in
       enable = true;
       polarity = "either"; # "light" || "dark" || "either"
 
+      # image = "${pkgs.spirenix.wallpapers}/share/wallpapers/nord-rainbow-dark-nix-ultrawide";
       image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
 
       cursor = {
