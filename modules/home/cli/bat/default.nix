@@ -17,7 +17,7 @@ in {
     programs.bat = {
       enable = true;
       config = {
-        theme = "TwoDark";  # A popular theme that works well with most color schemes
+        # theme = "TwoDark";  # A popular theme that works well with most color schemes
         style = "numbers,changes,header";  # Show line numbers, Git changes and file headers
         pager = "less -FR";  # Use less as the pager with proper color support
       };
