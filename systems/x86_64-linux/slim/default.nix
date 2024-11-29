@@ -19,7 +19,6 @@ in
       gnome = disabled;
       fonts = enabled;
       hyprland = enabled;
-      stylix = enabled;
     };
 
     hardware = {
