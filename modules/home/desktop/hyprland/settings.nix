@@ -29,10 +29,6 @@ in {
         disable_hyprland_logo = true;
         disable_autoreload = true;
       };
-
-      exec_once = [
-        "dbus-update-activation-environment --systemd --all"
-      ];
     };
   };
 }
