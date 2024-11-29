@@ -30,7 +30,10 @@ in
     };
 
     cli = {
+      bat = enabled;
       bottom = enabled;
+      broot = enabled;
+      carapace = enabled;
       direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
@@ -40,6 +43,7 @@ in
       network-tools = enabled;
       shells = { fish = enabled; nushell = enabled; };
       ssh = enabled;
+      yazi = enabled;
       zoxide = enabled;
     };
 
