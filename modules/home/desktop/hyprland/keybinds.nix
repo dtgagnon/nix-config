@@ -6,11 +6,13 @@
 let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
-in {
+in
+{
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraKeybinds = {
       bind = [
         "${cfg.primaryModifier}, Return, exec, kitty"
+        "${cfg.primaryModifier}, P, exec, rofi"
         "${cfg.primaryModifier}, Q, killactive,"
         "${cfg.primaryModifier}, F, fullscreen, 0"
         "${cfg.primaryModifier}, Space, togglefloating,"

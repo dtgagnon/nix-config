@@ -14,7 +14,7 @@ let
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
-  
+
   options.spirenix.desktop.hyprland = {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
     extraConfig = mkOpt types.str "" "Additional hyprland configuration in string format";
@@ -36,6 +36,7 @@ in
     spirenix.desktop.addons = {
       qt = enabled;
       rofi = enabled;
+			waybar = enabled;
     };
 
     home.packages = with pkgs; [
