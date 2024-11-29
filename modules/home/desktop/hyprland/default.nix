@@ -33,9 +33,9 @@ in
       settings = cfg.extraSettings // cfg.extraKeybinds;
     };
 
-    spirenix.desktop.addons = [
-      qt = enabled
-    ];
+    spirenix.desktop.addons = {
+      qt = enabled;
+    };
 
     home.packages = with pkgs; [
       # core dependencies

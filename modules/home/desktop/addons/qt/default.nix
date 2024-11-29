@@ -30,9 +30,10 @@ in
       };
     };
 
-    home.packages = with pkgs; [
-      libsForQt5.qt5ct
+    home.packages = with pkgs.kdePackages; [
+      qt5compat
       qt6ct
+      qtwayland
     ];
 
     home.sessionVariables = {
