@@ -25,9 +25,11 @@ in
     };
 
     spirenix.desktop.addons = {
+      electron-support = enabled;
       greetd = enabled;
       keyring = enabled;
       thunar = enabled;
+      xdg-portal = enabled;
     };
   };
 }

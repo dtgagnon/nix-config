@@ -12,7 +12,7 @@ in
     spirenix.desktop.hyprland.extraKeybinds = {
       bind = [
         "${cfg.primaryModifier}, Return, exec, kitty"
-        "${cfg.primaryModifier}, P, exec, rofi"
+        "${cfg.primaryModifier}, P, exec, rofi -show drun"
         "${cfg.primaryModifier}, Q, killactive,"
         "${cfg.primaryModifier}, F, fullscreen, 0"
         "${cfg.primaryModifier}, Space, togglefloating,"

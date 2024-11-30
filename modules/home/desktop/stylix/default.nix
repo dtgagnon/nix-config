@@ -25,7 +25,7 @@ in
       enable = true;
       image = pkgs.spirenix.wallpapers.${cfg.wallpaperName};
 
-      # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
 
       fonts = {
         monospace = {
