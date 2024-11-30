@@ -26,6 +26,7 @@ in
 
     spirenix.desktop.addons = {
       greetd = enabled;
+      keyring = enabled;
       thunar = enabled;
     };
   };
