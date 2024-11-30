@@ -19,8 +19,12 @@ in
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
     extraConfig = mkOpt types.str "" "Additional hyprland configuration in string format";
     primaryModifier = mkOpt types.str "SUPER" "The primary modifier key.";
-    extraKeybinds = mkOpt (types.attrsOf types.anything) { } "Additional keybinds to add to the Hyprland config";
-    extraSettings = mkOpt (types.attrsOf types.anything) { } "Additional settings to add to the Hyprland config";
+    extraKeybinds =
+      mkOpt (types.attrsOf types.anything) { }
+        "Additional keybinds to add to the Hyprland config";
+    extraSettings =
+      mkOpt (types.attrsOf types.anything) { }
+        "Additional settings to add to the Hyprland config";
   };
 
   config = mkIf cfg.enable {
@@ -34,9 +38,10 @@ in
     };
 
     spirenix.desktop.addons = {
+      clipboard = enabled;
       qt = enabled;
       rofi = enabled;
-			waybar = enabled;
+      waybar = enabled;
     };
 
     home.packages = with pkgs; [
@@ -45,9 +50,6 @@ in
       glib
       gtk3.out
       wayland
-
-      # wayland tools
-      wl-clipboard
     ];
   };
 }

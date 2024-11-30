@@ -5,7 +5,7 @@
   namespace,
   ...
 }:
-let 
+let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
@@ -23,7 +23,7 @@ in {
     programs.waybar = {
       enable = true;
       systemd.enable = true;
-      style = builtins.readFile ./styles.css;
+      # style = builtins.readFile ./styles.css;
       settings = [
         {
           layer = "top";
