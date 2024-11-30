@@ -28,8 +28,8 @@ in
         gaps_in = 3;
         gaps_out = 5;
         border_size = 3;
-        active_border_color = "0xff${colors.base07}";
-        inactive_border_color = "0xff${colors.base02}";
+        "col.active_border" = "0xff${colors.base07}";
+        "col.inactive_border" = "0xff${colors.base02}";
       };
 
       decoration = {
