@@ -25,6 +25,7 @@ in
     extraSettings =
       mkOpt (types.attrsOf types.anything) { }
         "Additional settings to add to the Hyprland config";
+		extraWinRules = mkOpt (types.attrsOf types.anything) { } "Window rules for Hyprland";
   };
 
   config = mkIf cfg.enable {
@@ -34,7 +35,7 @@ in
       systemd.enable = true;
       xwayland.enable = true;
       inherit (cfg) extraConfig;
-      settings = cfg.extraSettings // cfg.extraKeybinds;
+      settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
     };
 
     spirenix.desktop.addons = {
