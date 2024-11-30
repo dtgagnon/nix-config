@@ -27,9 +27,9 @@
 
 - [X]❄️ Flakes -- for precise dependency management of the entire system.
 - [X]🏡 Home Manager -- to configure all used software for the user.
-- [ ]💽 Disko -- for declarative disk management: luks + lvm + btrfs.
-- [ ]⚠️ Impermanence -- to remove junk files and directories that are not specified in the config.
-- [ ]💈 Stylix -- to customize the theme for the entire system and the software you use.
+- [X]💽 Disko -- for declarative disk management: luks + lvm + btrfs.
+- [X]⚠️ Impermanence -- to remove junk files and directories that are not specified in the config.
+- [X]💈 Stylix -- to customize the theme for the entire system and the software you use.
 - [ ]🍎 NixDarwin -- to declaratively customize MacOS.
 - [ ]🔐 Lanzaboot -- to securely boot the system.
 - [X]📁 Config file structure and modules with options.
@@ -49,32 +49,18 @@
 
 ### ⚡ Hyprland
 
-![desktop0.png](assets/github/desktop0.png)
-
-![desktop1.png](assets/github/desktop1.png)
-
-![desktop2.png](assets/github/desktop2.png)
-
-![desktop3.png](assets/github/desktop3.png)
-
-### 💪 SwayFX
-
-![swayfx0.png](assets/github/swayfx/image0.png)
-
-![swayfx1.png](assets/github/swayfx/image1.png)
-
-![swayfx2.png](assets/github/swayfx/image2.png)
+![placeholder](assets/github/desktop0.png) 
 
 ## 📘 Software
 
  - OS - [**`NixOS`**](https://nixos.org/)
  - WM - [**`Hyprland`**](https://hyprland.org/) or [**`SwayFX`**](https://github.com/WillPower3309/swayfx)
- - Theme - [**`N/A`**]()
+ - Theme - [**`Gruvbox-medium-dark`**]()
  - Wallpapers - [**`N/A`**]()
  - Editor - [**`Neovim`**](https://neovim.io/)
  - Bar - [**`Waybar`**](https://github.com/Alexays/Waybar)
- - Terminal - [**`Windows Terminal`**](https://)
- - Shell - [**`Zsh`**](https://)
+ - Terminal - [**`Kitty`**](https://)
+ - Shell - [**`Nushell`**](https://)
  - Promt - [**`Starship`**](https://starship.rs/)
  - Filemanager - [**`Yazi`**](https://github.com/sxyazi/yazi)
 
@@ -82,10 +68,9 @@
 
 | Hostname | Board | CPU | RAM | GPU | OS | State |
 | --- | --- | --- | --- | --- | --- | --- |
-| pcbox | X299 AORUS Ultra Gaming Pro-CF | i7-7800X | 64GB | Sapphire AMD Radeon RX 7600 XT PULSE | NixOS | OK |
-| nbox | Asus ZenBook 2024 Oled | Ultra7 155h | 32GB | Integrated Intel Arc (?) | NixOS | OK |
-| rasp | Raspberry Pi 4 | Broadcom BCM2711 | 4GB | Broadcom VideoCore VI | NixOS | OK |
-| macbox | Mac Mini M1 | Apple Silicon M1 | 8GB | Apple M1 8-Core GPU | MacOS | ? |
+| Desktop | MSI Z790 TOMAHAWK WIFI | i7-13700K | 64GB | NVIDIA RTX 4090 | NixOS | OK |
+| Spirepoint | MSI Something | i7-somethingK | 16GB | NVIDIA GTX 1050 Ti | NixOS | OK |
+| Slim | Asus Zenbook 1st Gen | i5-something | 8GB | iGPU | NixOS | OK |
 
 ## ⌨️ Keyboard
 
@@ -109,37 +94,3 @@ I use corne split with a modified [miryoku](https://github.com/manna-harbour/mir
 ![layer-1.png](assets/keyboard/layer-1.png)
 
 </details>
-
-<details><summary>Layer 2 Nav</summary>
-
-![layer-2.png](assets/keyboard/layer-2.png)
-
-</details>
-
-<details><summary>Layer 3 Mouse</summary>
-
-![layer-3.png](assets/keyboard/layer-3.png)
-
-</details>
-
-<details><summary>Layer 4 Sym</summary>
-
-![layer-4.png](assets/keyboard/layer-4.png)
-
-</details>
-
-<details><summary>Layer 5 Num</summary>
-
-![layer-5.png](assets/keyboard/layer-5.png)
-
-</details>
-
-<details><summary>Layer 6 Fun</summary>
-
-![layer-6.png](assets/keyboard/layer-6.png)
-
-</details>
-
-## ❤️ Special thanks
-
-[TheMaxMur](https://github.com/TheMaxMur)
