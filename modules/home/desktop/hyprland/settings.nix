@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkDefault;
+  inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
 
   inherit (config.lib.stylix) colors;
@@ -28,8 +28,8 @@ in
         gaps_in = 3;
         gaps_out = 5;
         border_size = 3;
-        "col.active_border" = mkDefault "0xff${colors.base07}";
-        "col.inactive_border" = mkDefault "0xff${colors.base02}";
+        # "col.active_border" = "0xff${colors.base07}";
+        # "col.inactive_border" = "0xff${colors.base02}";
       };
 
       decoration = {
