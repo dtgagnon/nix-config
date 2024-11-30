@@ -12,16 +12,15 @@ in
 {
   options.${namespace}.desktop.addons.hyprpaper = {
     enable = mkBoolOpt false "Whether to enable Hyprpaper in the desktop environment.";
-    wallpaper = mkOpt (types.oneOf [ types.package types.path types.str ]) "" "The wallpaper to use.";
+    wallpaper = mkOpt (types.oneOf [ types.package types.path types.str ]) pkgs.spirenix.wallpapers "The wallpaper to use.";
   };
 
   config = mkIf cfg.enable {
     services.hyprpaper = {
       enable = true;
-      settings = {
-        preload = [ cfg.wallpaper ];
-        wallpaper = ", ${cfg.wallpaper}";
-      };
+      # settings = {
+      #   wallpaper = ", ${cfg.wallpaper}";
+      # };
     };
   };
 }

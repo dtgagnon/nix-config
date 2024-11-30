@@ -1,47 +1,31 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types foldl';
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
   cfg = config.${namespace}.desktop.stylix;
 in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    imageFilename = mkOpt (types.nullOr types.str) null "Designate the file name of the source image";
+    wallpaperName = mkOpt types.str "nord-rainbow-dark-nix-ultrawide" "Designate the name of the source image";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
   config = mkIf cfg.enable {
-
+    spirenix.desktop.addons.wallpapers = enabled;
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      image = if cfg.imageFilename != null
-        then "${pkgs.spirenix.wallpapers}/share/wallpapers/${cfg.imageFilename}"
-        else "${pkgs.spirenix.wallpapers}/share/wallpapers/nord-rainbow-dark-nix-ultrawide.png";
-      # base16Scheme = { #NOTE: see below for merged attr set
-      #   base00 = "";
-      #   base01 = "";
-      #   base02 = "";
-      #   base03 = "";
-      #   base04 = "";
-      #   base05 = "";
-      #   base06 = "";
-      #   base07 = "";
-      #   base08 = "";
-      #   base09 = "";
-      #   base0A = "";
-      #   base0B = "";
-      #   base0C = "";
-      #   base0D = "";
-      #   base0E = "";
-      #   base0F = "";
-      # };
+      image = pkgs.spirenix.wallpapers.${cfg.wallpaperName};
+
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
 
       fonts = {
         monospace = {
@@ -71,12 +55,13 @@ in
         popups = 1.0;
       };
 
-      targets = foldl'
-        (acc: target: acc // {
+      targets = foldl' (
+        acc: target:
+        acc
+        // {
           ${target}.enable = false;
-        })
-        { }
-        cfg.excludedTargets;
-    } // mkIf (cfg.imageFilename == null) { base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml"; };
+        }
+      ) { } cfg.excludedTargets;
+    };
   };
 }

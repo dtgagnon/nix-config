@@ -6,6 +6,7 @@
     stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
+    nur.url = "github:nix-community/NUR";  # Community package repository
 
     ## configuration frameworks
     snowfall-lib.url = "github:snowfallorg/lib";
@@ -60,11 +61,16 @@
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.nixpkgs.follows = "hyprland";
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
 
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
-    ## miscellaneous
+    ## programming langs
+    astal.url = "github:Aylur/astal";
+    astal.inputs.nixpkgs.follows = "nixpkgs";
+    ags.url = "github:Aylur/ags";
+    ags.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs:
@@ -94,7 +100,8 @@
 
         overlays = with inputs; [
           neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
-	  nix-topology.overlays.default
+          nix-topology.overlays.default
+          nur.overlay
         ];
 
         systems.modules.nixos = with inputs; [
@@ -104,27 +111,31 @@
           impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
-	  nix-topology.nixosModules.default
+          nix-topology.nixosModules.default
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
         ];
 
+        homes.modules = with inputs; [
+          ags.homeManagerModules.default
+        ];
+
         deploy = lib.mkDeploy { inherit (inputs) self; };
 
         outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
 
-	topology =  with inputs; let 
-	  host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
-	in 
-	  import nix-topology { 
-	    inherit (host) pkgs;
-	    modules = [ 
-	      (import ./topology { inherit (host) config; })
-	      { inherit (self) nixosConfigurations; }
-	    ];
-	  };
+        topology =  with inputs; let
+          host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
+        in
+          import nix-topology {
+            inherit (host) pkgs;
+            modules = [
+              (import ./topology { inherit (host) config; })
+              { inherit (self) nixosConfigurations; }
+            ];
+          };
 
         templates = {
           empty.description = "A Nix Flake using snowfall-lib";

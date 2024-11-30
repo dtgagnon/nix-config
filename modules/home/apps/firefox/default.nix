@@ -1,6 +1,7 @@
 { lib
 , config
 , namespace
+, pkgs
 , ...
 }:
 let
@@ -21,6 +22,14 @@ in
       profiles.${config.${namespace}.user.name} = {
         id = 0;
         name = config.${namespace}.user.name;
+
+        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          bitwarden
+          ublock-origin
+          reddit-enhancement-suite
+          return-youtube-dislikes
+        ];
+
         settings = {
           "browser.aboutwelcome.enabled" = false;
           "browser.meta_refresh_when_inactive.disabled" = true;

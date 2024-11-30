@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) enabled;
+  inherit (lib.${namespace}) enabled disabled;
 in
 {
   imports = [ ./hardware.nix ];
@@ -16,15 +16,15 @@ in
     suites.networking = enabled;
 
     desktop = {
-      gnome = enabled;
+      gnome = disabled;
       fonts = enabled;
-      # hyprland = enabled;
+      hyprland = enabled;
       stylix = enabled;
     };
 
     hardware = {
       audio = enabled;
-      keyboard = enabled; # xkb stuff
+      # keyboard = enabled; # xkb stuff
       nvidia = enabled;
       storage = {
         boot.enable = true;

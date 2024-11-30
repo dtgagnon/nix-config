@@ -8,6 +8,9 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.shells.nushell;
+
+  # Helper function to create conditional Nushell integrations
+  mkNushellIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
 in
 {
   options.${namespace}.cli.shells.nushell = {
@@ -77,10 +80,10 @@ in
         l = "ls";
         la = "ls -a";
         ll = "ls -la";
-        ea = "eza -a";
-        ela = "eza -la";
-        tr = "eza -Ta -L 3";
-        trl = "eza -Ta -L";
+        ea = "eza -a --icons";
+        ela = "eza -la --icons --git";
+        tr = "eza -Ta -L 3 --icons --git";
+        trl = "eza -Ta -L --icons --git";
         h = "history";
         c = "clear";
 
@@ -103,9 +106,16 @@ in
       enableNushellIntegration = true;
     };
 
-    # programs.eza.enableNushellIntegration = true;
-    programs.zoxide.enableNushellIntegration = true;
-    programs.direnv.enableNushellIntegration = true;
+    programs = {
+      atuin.enableNushellIntegration = mkNushellIntegration "atuin";
+      broot.enableNushellIntegration = mkNushellIntegration "broot";
+      carapace.enableNushellIntegration = mkNushellIntegration "carapace";
+      direnv.enableNushellIntegration = mkNushellIntegration "direnv";
+      eza.enableNushellIntegration = mkNushellIntegration "eza";
+      thefuck.enableNushellIntegration = mkNushellIntegration "thefuck";
+      yazi.enableNushellIntegration = mkNushellIntegration "yazi";
+      zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";
+    };
 
     home.sessionVariables.SHELL = "nushell";
   };

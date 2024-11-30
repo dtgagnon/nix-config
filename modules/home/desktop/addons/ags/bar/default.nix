@@ -1,6 +1,8 @@
 { lib
 , pkgs
 , config
+, inputs
+, system
 , namespace
 , ...
 }:
@@ -21,10 +23,11 @@ in
 {
   options.${namespace}.desktop.addons.ags.bar = {
     enable = mkBoolOpt false "AGS Bar";
-    package = mkOpt types.package pkgs.ags "The package to use for AGS";
+    package = mkOpt types.package inputs.ags.packages.${system}.default "The package to use for AGS";
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
     spirenix = {
       desktop.hyprland.extraConfig = {
         exec-once = [ "${getExe cfg.package} --config ${bar}/config.js" ];

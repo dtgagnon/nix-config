@@ -23,10 +23,5 @@ in
     home.packages = with pkgs; [
       wofi-emoji
     ];
-
-    # config -> .config/wofi/config
-    # css -> .config/wofi/style.css
-    # spirenix.home.configFile."wofi/config".source = ./config;
-    # spirenix.home.configFile."wofi/style.css".source = ./style.css;
   };
 }

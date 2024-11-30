@@ -32,7 +32,7 @@ in
       let
         user = config.${namespace}.user.name;
         users = [ "root" user ] ++ optional config.services.hydra.enable "hydra";
-        isHomeManagerDirenvEnabled = config.home-manager.users.${user}.${namespace}.tools.direnv.enable;
+        isHomeManagerDirenvEnabled = config.home-manager.users.${user}.${namespace}.cli.direnv.enable;
 
       in
       {
