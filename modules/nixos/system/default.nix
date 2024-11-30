@@ -3,24 +3,32 @@
   config,
   namespace,
   ...
-}: let
+}:
+let
   inherit (lib) mkDefault mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  inherit (lib) concatMapStringsSep concatStringsSep isList mapAttrs mapAttrsToList;
+  inherit (lib)
+    concatMapStringsSep
+    concatStringsSep
+    isList
+    mapAttrs
+    mapAttrsToList
+    ;
 
   cfg = config.${namespace}.system;
-in {
+in
+{
   options.${namespace}.system = {
     enable = mkBoolOpt true "Whether to enable system configuration.";
 
     # Network configuration
     network = {
       enable = mkBoolOpt true "Whether to enable networking support.";
-      hosts = mkOpt types.attrs {} "An attribute set to merge with networking.hosts.";
+      hosts = mkOpt types.attrs { } "An attribute set to merge with networking.hosts.";
       firewall = {
         enable = mkBoolOpt true "Whether to enable the firewall.";
-        allowedTCPPorts = mkOpt (types.listOf types.port) [] "List of allowed TCP ports.";
-        allowedUDPPorts = mkOpt (types.listOf types.port) [] "List of allowed UDP ports.";
+        allowedTCPPorts = mkOpt (types.listOf types.port) [ ] "List of allowed TCP ports.";
+        allowedUDPPorts = mkOpt (types.listOf types.port) [ ] "List of allowed UDP ports.";
       };
     };
 
@@ -35,7 +43,13 @@ in {
     # Environment configuration
     environment = {
       enable = mkBoolOpt true "Whether to enable environment configuration.";
-      variables = mkOpt (types.attrsOf (types.oneOf [ types.str types.path (types.listOf (types.either types.str types.path)) ])) { } "System-wide environment variables.";
+      variables = mkOpt (types.attrsOf (
+        types.oneOf [
+          types.str
+          types.path
+          (types.listOf (types.either types.str types.path))
+        ]
+      )) { } "System-wide environment variables.";
       sessionVariables = mkOpt (types.attrsOf types.str) { } "Session-specific environment variables.";
     };
   };
@@ -50,7 +64,7 @@ in {
       };
 
       hosts = {
-        "127.0.0.1" = ["local.test"] ++ (cfg.network.hosts."127.0.0.1" or []);
+        "127.0.0.1" = [ "local.test" ] ++ (cfg.network.hosts."127.0.0.1" or [ ]);
       } // cfg.network.hosts;
 
       networkmanager = {
@@ -60,7 +74,7 @@ in {
     };
 
     # Add user to networkmanager group if networking is enabled
-    ${namespace}.user.extraGroups = mkIf cfg.network.enable ["networkmanager"];
+    ${namespace}.user.extraGroups = mkIf cfg.network.enable [ "networkmanager" ];
 
     # Disable NetworkManager-wait-online to prevent nixos-rebuild issues
     systemd.services.NetworkManager-wait-online.enable = false;
@@ -82,8 +96,8 @@ in {
     environment = mkIf cfg.environment.enable {
       variables = {
         EDITOR = "nvim";
-        SHELL = "nushell";
-        TERMINAL = "wezterm";
+        SHELL = "nu";
+        TERMINAL = "kitty";
         LESSHISTFILE = "$HOME/.cache/less.history";
         WGETRC = "$HOME/.config/wgetrc";
       } // cfg.environment.variables;
@@ -93,10 +107,11 @@ in {
         XDG_DATA_HOME = "$HOME/.local/share";
         XDG_BIN_HOME = "$HOME/.local/bin";
         XDG_DESKTOP_DIR = "$HOME";
-       } // cfg.environment.sessionVariables;
-      extraInit = concatStringsSep "\n" (mapAttrsToList 
-        (n: v: ''export ${n}="${if isList v then concatMapStringsSep ":" toString v else toString v}"'') 
-        cfg.environment.variables
+      } // cfg.environment.sessionVariables;
+      extraInit = concatStringsSep "\n" (
+        mapAttrsToList (
+          n: v: ''export ${n}="${if isList v then concatMapStringsSep ":" toString v else toString v}"''
+        ) cfg.environment.variables
       );
     };
   };
