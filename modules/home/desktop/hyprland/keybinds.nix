@@ -11,11 +11,16 @@ in
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraKeybinds = {
       bind = [
-        "${cfg.primaryModifier}, Return, exec, kitty"
-        "${cfg.primaryModifier}, P, exec, rofi -show drun"
+        # Window
         "${cfg.primaryModifier}, Q, killactive,"
         "${cfg.primaryModifier}, F, fullscreen, 0"
         "${cfg.primaryModifier}, Space, togglefloating,"
+
+        # Open
+        "${cfg.primaryModifier}, Return, exec, kitty"
+        "${cfg.primaryModifier}, E, exec, thunar"
+        "${cfg.primaryModifier}, P, exec, rofi -show drun"
+        "${cfg.primaryModifier}, B, exec, firefox"
 
         # Focus
         "${cfg.primaryModifier}, h, movefocus, l"
@@ -54,6 +59,9 @@ in
         "${cfg.primaryModifier}_ALT, k, resizeactive, 0 -20"
         "${cfg.primaryModifier}_ALT, j, resizeactive, 0 20"
       ];
+
+      bindm = "ALT, mouse:272, movewindow";
+      bindmn = "mouse:273, mouse:272, resizewindow, 2";
     };
   };
 }
