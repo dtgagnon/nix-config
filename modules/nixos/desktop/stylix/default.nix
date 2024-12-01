@@ -8,7 +8,7 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.stylix;
 in
 {
@@ -17,10 +17,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [
-      pkgs.spirenix.wallpapers
-      pkgs.bibata-cursors
-    ];
+    # environment.systemPackages = [
+    #   pkgs.spirenix.wallpapers
+    #   pkgs.bibata-cursors
+    # ];
 
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
@@ -36,8 +36,13 @@ in
 
       fonts = {
         monospace = {
-          package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
-          name = "JetBrainsMono Nerd Font Mono";
+          package = pkgs.nerdfonts.override {
+            fonts = [
+              "Iosevka"
+              "JetBrainsMono"
+            ];
+          };
+          name = "Iosevka Nerd Font Mono";
         };
         sansSerif = {
           package = pkgs.dejavu_fonts;
@@ -48,10 +53,10 @@ in
           name = "DejaVu Serif";
         };
         sizes = {
-          applications = 12;
-          terminal = 15;
-          desktop = 10;
-          popups = 10;
+          applications = 16;
+          terminal = 18;
+          desktop = 12;
+          popups = 12;
         };
       };
     };

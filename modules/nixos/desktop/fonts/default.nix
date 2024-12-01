@@ -1,16 +1,16 @@
 {
-  options,
-  config,
-  pkgs,
   lib,
+  pkgs,
+  config,
   namespace,
   ...
 }:
 let
-	inherit (lib) mkIf types;
-	inherit (lib.${namespace}) mkOpt mkBoolOpt;
-	cfg = config.${namespace}.desktop.fonts;
-in {
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt;
+  cfg = config.${namespace}.desktop.fonts;
+in
+{
   options.${namespace}.desktop.fonts = {
     enable = mkBoolOpt false "Whether or not to manage fonts.";
     fonts = mkOpt (types.listOf types.package) [ ] "Custom font packages to install.";
@@ -27,11 +27,23 @@ in {
     fonts.packages =
       with pkgs;
       [
-        (nerdfonts.override { fonts = [ "FiraCode" "FiraMono" ]; })
+        (nerdfonts.override {
+          fonts = [
+            "FiraCode"
+            "FiraMono"
+
+            "iosevka"
+            "jetbrains-mono"
+          ];
+        })
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-cjk-serif
         noto-fonts-emoji
+
+        iosevka
+
+        jetbrains-mono
       ]
       ++ cfg.fonts;
   };
