@@ -30,6 +30,11 @@ in
         "$mod, Space, togglefloating,"
         "$mod, N, togglesplit,"
 
+        "$mod_ALT, h, movewindow, l"
+        "$mod_ALT, l, movewindow, r"
+        "$mod_ALT, k, movewindow, u"
+        "$mod_ALT, j, movewindow, d"
+
         # Focus
         "$mod, h, movefocus, l"
         "$mod, l, movefocus, r"
@@ -66,11 +71,7 @@ in
 
       # Repeating (hold-able) binds
       binde = [
-        # Window Position + Size
-        "$mod_ALT, h, movewindow, l"
-        "$mod_ALT, l, movewindow, r"
-        "$mod_ALT, k, movewindow, u"
-        "$mod_ALT, j, movewindow, d"
+        # Window Size
         "$mod_ALT_CTRL, h, resizeactive, -20 0"
         "$mod_ALT_CTRL, l, resizeactive, 20 0"
         "$mod_ALT_CTRL, k, resizeactive, 0 -20"
@@ -87,7 +88,7 @@ in
       # Mouse
       bindm = [
         "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow, 2"
+        "$mod, mouse:273, resizewindow 2"
       ];
     };
   };
