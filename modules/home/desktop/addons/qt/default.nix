@@ -16,7 +16,7 @@ in
     platformTheme = mkOpt types.str "gtk" "Qt platform theme to use.";
     style = {
       name = mkOpt types.str "adwaita-dark" "Qt style to use.";
-      package = mkOpt types.package null "Package providing the Qt style.";
+      package = mkOpt (types.nullOr types.package) null "Package providing the Qt style.";
     };
     scaling = mkOpt types.float 1.0 "Global scale factor for Qt applications.";
   };
