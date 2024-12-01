@@ -51,7 +51,5 @@ in
       nushell
       bash
     '';
-
-    security.pam.services.greetd.enableGnomeKeyring = true;
   };
 }

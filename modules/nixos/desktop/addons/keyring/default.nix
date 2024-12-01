@@ -15,8 +15,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.gnome.gnome-keyring.enable = true;
+    programs.seahorse.enable = true;
 
-    environment.systemPackages = [ pkgs.seahorse ];
+    services.gnome.gnome-keyring.enable = true;
+    security.pam.services.greetd.enableGnomeKeyring = true;
   };
 }
