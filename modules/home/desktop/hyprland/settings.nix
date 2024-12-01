@@ -16,13 +16,9 @@ in
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
         "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
+        "swww init ; sleep 1; setwall"
+        "hyprctl setcursor Bibata-Modern-Ice 24"
       ];
-
-      input = {
-        kb_layout = "us";
-        accel_profile = "flat";
-        follow_mouse = 1;
-      };
 
       general = {
         gaps_in = 3;
@@ -30,22 +26,31 @@ in
         border_size = 3;
         # "col.active_border" = "0xff${colors.base07}";
         # "col.inactive_border" = "0xff${colors.base02}";
+        # resize_on_border = false;
+        # allow_tearing = false;
+        # layout = "dwindle";
       };
 
       decoration = {
         rounding = 5;
+        active_opacity = 1.0;
+        inactive_opacity = 1.0;
+        blur = {
+          enabled = true;
+          new_optimizations = "on";
+          size = 5;
+          passes = 2;
+          vibrancy = 0.1696;
+        };
         shadow = {
           range = 30;
           render_power = 3;
         };
-        blur = {
-          size = 5;
-          passes = 2;
-        };
       };
 
       animations = {
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+        # bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+        bezier = "myBezier, 0.3, 0, 0, 1";
         animation = [
           "windows, 1, 7, myBezier"
           "windowsOut, 1, 7, default, popin 80%"
@@ -57,9 +62,39 @@ in
         ];
       };
 
+      binds.allow_workspace_cycles = true;
+
       dwindle = {
-        preserve_split = true;
+        pseudotile = "yes";
+        preserve_split = "yes";
         special_scale_factor = 1;
+      };
+
+      gestures = {
+        workspace_swipe = true;
+        workspace_swipe_use_r = true;
+      };
+
+      input = {
+        # keyboard
+        kb_layout = "us";
+        repeat_delay = 200;
+        repeat_rate = 50;
+        # mouse
+        accel_profile = "flat";
+        follow_mouse = 1;
+        sensitivity = 0;
+        # misc
+        touchpad.disable_while_typing = true;
+      };
+
+      misc = {
+        animate_manual_resizes = true;
+        animate_mouse_windowdragging = true;
+        new_window_takes_over_fullscreen = 1;
+        initial_workspace_tracking = 0;
+        disable_hyprland_logo = true;
+        disable_autoreload = true;
       };
 
       master = {
@@ -74,15 +109,6 @@ in
         "blur, rofi"
         "blur, notification"
       ];
-
-      misc = {
-        animate_manual_resizes = true;
-        animate_mouse_windowdragging = true;
-        new_window_takes_over_fullscreen = 1;
-        initial_workspace_tracking = 0;
-        disable_hyprland_logo = true;
-        disable_autoreload = true;
-      };
     };
   };
 }
