@@ -36,21 +36,22 @@ in
       ];
 
       windowrulev2 = [
-        "float,title:^(Picture-in-Picture)$"
-        "opacity 1.0 override 1.0 override,title:^(Picture-in-Picture)$"
-        "pin,title:^(Picture-in-Picture)$"
+        "float, title:^(Picture in Picture)$"
+        "float, title:^(Volume Control)$"
+
+        "opacity 1.0 override 1.0 override, title:^(Picture in Picture)$"
         "opacity 1.0 override 1.0 override,title:^(.*imv.*)$"
         "opacity 1.0 override 1.0 override,title:^(.*mpv.*)$"
         "opacity 1.0 override 1.0 override,class:(Aseprite)"
         "opacity 1.0 override 1.0 override,class:(Unity)"
+
+        "pin, title:^(Picture in Picture)$"
+
+        "idleinhibit fullscreen, class:^(firefox)$"
         "idleinhibit focus,class:^(mpv)$"
-        "idleinhibit fullscreen,class:^(firefox)$"
-        "float,class:^(zenity)$"
-        "center,class:^(zenity)$"
-        "size 850 500,class:^(zenity)$"
-        "float,class:^(pavucontrol)$"
-        "float,class:^(SoundWireServer)$"
-        "float,class:^(.sameboy-wrapped)$"
+
+        "suppressevent maximize, class:.*"
+
         "float,class:^(file_progress)$"
         "float,class:^(confirm)$"
         "float,class:^(dialog)$"
@@ -58,11 +59,13 @@ in
         "float,class:^(notification)$"
         "float,class:^(error)$"
         "float,class:^(confirmreset)$"
+        "float,class:^(pavucontrol)$"
         "float,title:^(Open File)$"
         "float,title:^(branchdialog)$"
         "float,title:^(Confirm to replace files)$"
         "float,title:^(File Operation Progress)$"
 
+        # not sure I use these, they're from borrowed config
         "opacity 0.0 override,class:^(xwaylandvideobridge)$"
         "noanim,class:^(xwaylandvideobridge)$"
         "noinitialfocus,class:^(xwaylandvideobridge)$"
