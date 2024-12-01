@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types;
@@ -15,7 +16,7 @@ in
     platformTheme = mkOpt types.str "gtk" "Qt platform theme to use.";
     style = {
       name = mkOpt types.str "adwaita-dark" "Qt style to use.";
-      package = mkOpt types.package pkgs.adwaita-qt "Package providing the Qt style.";
+      package = mkOpt types.package null "Package providing the Qt style.";
     };
     scaling = mkOpt types.float 1.0 "Global scale factor for Qt applications.";
   };
@@ -40,7 +41,7 @@ in
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       QT_SCALE_FACTOR = toString cfg.scaling;
       QT_QPA_PLATFORM = "wayland;xcb";
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     };
   };
 }

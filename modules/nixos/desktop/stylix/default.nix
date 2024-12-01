@@ -31,7 +31,7 @@ in
 
       cursor = {
         package = pkgs.bibata-cursors;
-        name = "Bibata-Modern_Ice";
+        name = "Bibata-Modern-Ice";
       };
 
       fonts = {
