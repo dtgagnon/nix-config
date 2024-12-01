@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -67,7 +68,7 @@ in
           }
           {
             type = "custom";
-            format = " OS -> ZaneyOS 2.2";
+            format = " OS -> NixOS";
           }
           {
             type = "kernel";
@@ -106,14 +107,14 @@ in
           {
             type = "command";
             key = "│  ";
-            text = #bash
+            text = # bash
               ''
-                								birth_install=$(stat -c %W /)
-                								current=$(date +%s)
-                								delta=$((current - birth_install))
-                								delta_days=$((delta / 86400))
-                								echo $delta_days days
-                							'';
+                birth_install=$(stat -c %W /)
+                current=$(date +%s)
+                delta=$((current - birth_install))
+                delta_days=$((delta / 86400))
+                echo $delta_days days
+              '';
           }
           {
             type = "uptime";

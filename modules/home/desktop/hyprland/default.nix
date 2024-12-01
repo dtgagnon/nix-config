@@ -18,14 +18,14 @@ in
   options.spirenix.desktop.hyprland = {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
     extraConfig = mkOpt types.str "" "Additional hyprland configuration in string format";
-    primaryModifier = mkOpt types.str "SUPER" "The primary modifier key.";
+    hyprModifier = mkOpt types.str "SUPER" "The main hyprland modifier key.";
     extraKeybinds =
       mkOpt (types.attrsOf types.anything) { }
         "Additional keybinds to add to the Hyprland config";
     extraSettings =
       mkOpt (types.attrsOf types.anything) { }
         "Additional settings to add to the Hyprland config";
-		extraWinRules = mkOpt (types.attrsOf types.anything) { } "Window rules for Hyprland";
+    extraWinRules = mkOpt (types.attrsOf types.anything) { } "Window rules for Hyprland";
   };
 
   config = mkIf cfg.enable {
