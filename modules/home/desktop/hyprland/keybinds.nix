@@ -30,10 +30,10 @@ in
         "$mod, Space, togglefloating,"
         "$mod, N, togglesplit,"
 
-        "$mod_ALT, h, movewindow, l"
-        "$mod_ALT, l, movewindow, r"
-        "$mod_ALT, k, movewindow, u"
-        "$mod_ALT, j, movewindow, d"
+        "$mod_CTRL, h, movewindow, l"
+        "$mod_CTRL, l, movewindow, r"
+        "$mod_CTRL, k, movewindow, u"
+        "$mod_CTRL, j, movewindow, d"
 
         # Focus
         "$mod, h, movefocus, l"
@@ -72,10 +72,10 @@ in
       # Repeating (hold-able) binds
       binde = [
         # Window Size
-        "$mod_ALT_CTRL, h, resizeactive, -20 0"
-        "$mod_ALT_CTRL, l, resizeactive, 20 0"
-        "$mod_ALT_CTRL, k, resizeactive, 0 -20"
-        "$mod_ALT_CTRL, j, resizeactive, 0 20"
+        "$mod_ALT, h, resizeactive, -10 0"
+        "$mod_ALT, l, resizeactive, 10 0"
+        "$mod_ALT, k, resizeactive, 0 -10"
+        "$mod_ALT, j, resizeactive, 0 10"
 
         "$mod, code:34, exec, hyprupdategaps --inc_gaps_in ; hyprupdategaps --inc_gaps_out"
         "$mod, code:35, exec, hyprupdategaps --dec_gaps_in ; hyprupdategaps --dec_gaps_out"
