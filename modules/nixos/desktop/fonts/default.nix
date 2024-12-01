@@ -29,21 +29,19 @@ in
       [
         (nerdfonts.override {
           fonts = [
+            "0xProto"
             "FiraCode"
             "FiraMono"
-
-            "iosevka"
-            "jetbrains-mono"
+            "Iosevka"
+            "IosevkaTerm"
+            "JetBrainsMono"
+            "OpenDyslexic"
           ];
         })
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-cjk-serif
         noto-fonts-emoji
-
-        iosevka
-
-        jetbrains-mono
       ]
       ++ cfg.fonts;
   };
