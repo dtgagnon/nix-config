@@ -125,7 +125,7 @@ in {
           network = {
             interval = 1;
             format-wifi = "  {essid}";
-            format-ethernet = " 󰈀 ";
+            format-ethernet = "󰈀 ";
             format-disconnected = " 󱚵  ";
             tooltip-format = ''
               {ifname}
@@ -137,8 +137,8 @@ in {
           };
           pulseaudio = {
             scroll-step = 2;
-            format = "{icon}  {volume}%";
-            format-bluetooth = " {icon} {volume}%";
+            format = "{icon}  {volume}% ";
+            format-bluetooth = " {icon} {volume}% ";
             format-muted = "  ";
             format-icons = {
               headphone = "  ";
