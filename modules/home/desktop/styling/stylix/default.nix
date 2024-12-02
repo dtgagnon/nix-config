@@ -9,10 +9,10 @@
 let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
-  cfg = config.${namespace}.desktop.stylix;
+  cfg = config.${namespace}.desktop.styles.stylix;
 in
 {
-  options.${namespace}.desktop.stylix = {
+  options.${namespace}.desktop.styles.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaperName = mkOpt types.str "nord-rainbow-dark-nix-ultrawide" "Designate the name of the source image";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";

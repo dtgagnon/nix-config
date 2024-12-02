@@ -26,6 +26,8 @@ in
       mkOpt (types.attrsOf types.anything) { }
         "Additional settings to add to the Hyprland config";
     extraWinRules = mkOpt (types.attrsOf types.anything) { } "Window rules for Hyprland";
+
+    extraAddons = mkOpt (types.attrsOf types.anything) { } "Additional addons to enable";
   };
 
   config = mkIf cfg.enable {
@@ -38,11 +40,16 @@ in
       settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
     };
 
-    spirenix.desktop.addons = {
-      clipboard = enabled;
-      qt = enabled;
-      rofi = enabled;
-      waybar = enabled;
+    spirenix.desktop = {
+      addons = {
+        clipboard = enabled;
+        rofi = enabled;
+        waybar = enabled;
+      } // cfg.extraAddons;
+      styling = {
+        gtk = enabled;
+        qt = enabled;
+      };
     };
 
     home.packages = with pkgs; [

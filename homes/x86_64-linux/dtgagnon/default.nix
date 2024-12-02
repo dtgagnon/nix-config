@@ -46,7 +46,7 @@ in
 
     desktop = {
       hyprland.enable = true;
-      stylix = enabled;
+      styling.stylix = enabled;
     };
   };
 

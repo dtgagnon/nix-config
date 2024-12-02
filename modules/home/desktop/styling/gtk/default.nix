@@ -8,10 +8,10 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.desktop.addons.gtk;
+  cfg = config.${namespace}.desktop.styling.gtk;
 in
 {
-  options.${namespace}.desktop.addons.gtk = {
+  options.${namespace}.desktop.styling.gtk = {
     enable = mkBoolOpt false "Whether to customize GTK and apply themes.";
   };
 

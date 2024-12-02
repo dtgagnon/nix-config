@@ -8,10 +8,10 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.desktop.addons.qt;
+  cfg = config.${namespace}.desktop.styling.qt;
 in
 {
-  options.${namespace}.desktop.addons.qt = {
+  options.${namespace}.desktop.styling.qt = {
     enable = mkBoolOpt false "Whether to enable Qt theming and configuration.";
     platformTheme = mkOpt types.str "gtk" "Qt platform theme to use.";
     style = {

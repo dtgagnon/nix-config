@@ -7,12 +7,12 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.desktop.addons.wallpapers;
+  cfg = config.${namespace}.desktop.styling.wallpapers;
 
   inherit (pkgs.spirenix) wallpapers;
 in
 {
-  options.${namespace}.desktop.addons.wallpapers = {
+  options.${namespace}.desktop.styling.wallpapers = {
     enable = mkBoolOpt false "Whether or not to add wallpapers to ~/Pictures/wallpapers.";
   };
 
