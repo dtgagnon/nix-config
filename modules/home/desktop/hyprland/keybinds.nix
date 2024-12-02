@@ -21,7 +21,8 @@ in
         # Open
         "$mod, Return, exec, $terminal"
         "$mod, E, exec, thunar"
-        "$mod, P, exec, rofi -show drun"
+        "$mod, P, exec, $menu"
+        "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, firefox"
 
         # Window Control

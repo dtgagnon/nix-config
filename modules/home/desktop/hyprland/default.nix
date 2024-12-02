@@ -46,6 +46,7 @@ in
         rofi = enabled;
         term = enabled;
         waybar = enabled;
+        fuzzel = enabled;
       } // cfg.extraAddons;
       styling = {
         gtk = enabled;
