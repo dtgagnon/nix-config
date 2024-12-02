@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  namespace,
   ...
 }: let
   inherit (lib) mkIf;
