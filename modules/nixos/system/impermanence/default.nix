@@ -5,13 +5,7 @@
   ...
 }:
 let
-  inherit (lib)
-    mkIf
-    types
-    optionalString
-    concatLines
-    attrValues
-    ;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.system.impermanence;
   user = config.home-manager.users.${config.${namespace}.user.name}.${namespace}.user;
