@@ -80,7 +80,7 @@ in
           enabled = true;
           padding = mkLiteral "15px";
           orientation = mkLiteral "vertical";
-          children = map mkLiteral ["inputbar", "listbox"];
+          children = map mkLiteral ["inputbar" "listbox"];
           # background-color = mkLiteral "@bg-col";
           background-color = mkLiteral "transparent";
         };
