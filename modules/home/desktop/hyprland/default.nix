@@ -44,6 +44,7 @@ in
       addons = {
         clipboard = enabled;
         rofi = enabled;
+        term = enabled;
         waybar = enabled;
       } // cfg.extraAddons;
       styling = {

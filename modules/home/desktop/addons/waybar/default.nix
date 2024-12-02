@@ -63,11 +63,11 @@ in {
             on-click = "activate";
           };
           clock = {
-            format = "󰃰 {:%a, %d %b, %I:%M %p}";
+            format = "󰃰 {:%a, %b %d - %I:%M %p} ";
             interval = 1;
-            tooltip-format = "<tt><small>{calendar}</small></tt>";
+            tooltip-format = "<tt><medium>{calendar}</medium></tt>";
             calendar = {
-              mode = "year";
+              mode = "month";
               "mode-mon-col" = 3;
               "weeks-pos" = "right";
               "on-scroll" = 1;
@@ -114,7 +114,7 @@ in {
           battery = {
             states = {
               good = 80;
-              warning = 50;
+              warning = 30;
               critical = 15;
             };
             format = "{icon} {capacity}%";
@@ -137,7 +137,7 @@ in {
           };
           pulseaudio = {
             scroll-step = 2;
-            format = "{icon} {volume}%";
+            format = "{icon}  {volume}%";
             format-bluetooth = " {icon} {volume}%";
             format-muted = "  ";
             format-icons = {
