@@ -8,9 +8,9 @@
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   inherit (config.lib.stylix) colors;
-  cfg = config.modules.desktop.addons.fuzzel;
+  cfg = config.${namespace}.desktop.addons.fuzzel;
 in {
-  options.modules.desktop.addons.fuzzel = {
+  options.${namespace}.desktop.addons.fuzzel = {
     enable = mkBoolOpt false "Enable fuzzel app launcher for wayland";
   };
 
