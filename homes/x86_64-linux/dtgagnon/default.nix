@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) enabled disabled;
+  inherit (lib.${namespace}) enabled;
 in
 {
   spirenix = {
@@ -16,12 +16,9 @@ in
       email = "gagnon.derek@gmail.com";
     };
 
-    ai = {
-      aider-chat = disabled;
-    };
-
     apps = {
       firefox = enabled;
+      nix-software-center = enabled;
       terminals = {
         kitty = enabled;
         wezterm = enabled;

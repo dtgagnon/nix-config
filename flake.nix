@@ -54,6 +54,8 @@
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-software-center.url = "github:snowfallorg/nix-software-center";
+
     zen-browser.url = "github:fufexan/zen-browser-flake";
 
     ## desktop
