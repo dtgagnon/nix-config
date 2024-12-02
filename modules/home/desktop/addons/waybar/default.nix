@@ -9,6 +9,8 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
+
+  customTransition = "all 0.3s cubic-bezier(.55,-0.68,.48,1.682)";
 in {
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
@@ -23,22 +25,26 @@ in {
     programs.waybar = {
       enable = true;
       systemd.enable = true;
-      # style = builtins.readFile ./styles.css;
+      # style = "???";
       settings = [
         {
           layer = "top";
           position = "top";
           margin = "0 0 0 0";
           modules-left = [
+            "custom/startmenu"
             "hyprland/workspaces"
             "tray"
           ];
           modules-center = [
             "custom/notification"
             "clock"
-            "idle_inhibitor"
           ];
           modules-right = [
+            "idle_inhibitor"
+            "cpu"
+            "memory"
+            "gpu"
             "backlight"
             "battery"
             "pulseaudio"
@@ -63,9 +69,9 @@ in {
             on-click = "activate";
           };
           clock = {
-            format = "󰃰 {:%a, %b %d - %I:%M %p} ";
+            format = "{ :%a, %b %d    %I:%M %p}";
             interval = 1;
-            tooltip-format = "<tt><medium>{calendar}</medium></tt>";
+            tooltip-format = "<tt>{calendar}</tt>";
             calendar = {
               mode = "month";
               "mode-mon-col" = 3;
@@ -85,13 +91,13 @@ in {
             tooltip = false;
             format = "{} {icon}";
             "format-icons" = {
-              notification = "󱅫";
+              notification = "<span foreground='red'><sup>󱅫</sup></span>";
               none = "";
-              "dnd-notification" = " ";
+              "dnd-notification" = "<span foreground='red'><sup></sup></span>";
               "dnd-none" = "󰂛";
-              "inhibited-notification" = " ";
+              "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
               "inhibited-none" = "";
-              "dnd-inhibited-notification" = " ";
+              "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
               "dnd-inhibited-none" = " ";
             };
             "return-type" = "json";

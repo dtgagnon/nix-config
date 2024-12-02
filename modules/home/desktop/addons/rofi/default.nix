@@ -28,9 +28,7 @@ in
         show-icons = true;
         icon-theme = "Papirus";
         location = 0;
-
         drun-display-format = "{icon} {name}";
-
         display-drun = "  Apps ";
         display-filebrowser = "  Files ";
         display-run = "  Run ";
@@ -153,7 +151,7 @@ in
         "mode-switcher" = {
           expand = true;
           spacing = mkLiteral "10px";
-          background-color = mkLiteral "transparent";
+          # background-color = mkLiteral "transparent";
         };
 
         # Individual mode selection buttons
@@ -205,8 +203,8 @@ in
           # spacing = mkLiteral "10px";
           padding = mkLiteral "5px";
           border-radius = mkLiteral "8px";
-          background-color = mkLiteral "@bg-col";
-          text-color = mkLiteral "@fg-col";
+          # background-color = mkLiteral "@bg-col";
+          # text-color = mkLiteral "@fg-col";
           cursor = mkLiteral "inherit";
         };
 
@@ -250,17 +248,17 @@ in
 
         # Icon styling for results
         "element-icon" = {
-          background-color = mkLiteral "transparent";
-          text-color = mkLiteral "inherit";
+          # background-color = mkLiteral "transparent";
+          # text-color = mkLiteral "inherit";
           size = mkLiteral "36px";
           cursor = mkLiteral "inherit";
         };
 
         # Text styling for results
         "element-text" = {
-          background-color = mkLiteral "transparent";
+          # background-color = mkLiteral "transparent";
           # font = "JetBrainsMono Nerd Font Mono 12";
-          text-color = mkLiteral "inherit";
+          # text-color = mkLiteral "inherit";
           cursor = mkLiteral "inherit";
 
           vertical-align = mkLiteral "0.5";
