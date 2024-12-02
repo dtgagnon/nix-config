@@ -9,17 +9,17 @@
 let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
-  cfg = config.${namespace}.desktop.styles.stylix;
+  cfg = config.${namespace}.desktop.styling.stylix;
 in
 {
-  options.${namespace}.desktop.styles.stylix = {
+  options.${namespace}.desktop.styling.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaperName = mkOpt types.str "nord-rainbow-dark-nix-ultrawide" "Designate the name of the source image";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
   config = mkIf cfg.enable {
-    spirenix.desktop.addons.wallpapers = enabled;
+    spirenix.desktop.styling.wallpapers = enabled;
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
