@@ -4,12 +4,13 @@
   config,
   ...
 }: let
-  inherit (lib) mkEnableOption mkIf mkOption types;
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   inherit (config.lib.stylix) colors;
   cfg = config.modules.desktop.addons.fuzzel;
 in {
   options.modules.desktop.addons.fuzzel = {
-    enable = mkEnableOption "fuzzel";
+    enable = mkBoolOpt false "Enable fuzzel app launcher for wayland";
   };
 
   config = mkIf cfg.enable {
