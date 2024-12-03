@@ -254,7 +254,7 @@ in
         # Text styling for results
         "element-text" = {
           background-color = mkLiteral "transparent";
-          font = "${config.spirenix.stylix.fonts.monospace.name} 16";
+          font = "${config.spirenix.desktop.styling.stylix.fonts.monospace.name} 16";
           text-color = mkLiteral "inherit";
           cursor = mkLiteral "inherit";
 
