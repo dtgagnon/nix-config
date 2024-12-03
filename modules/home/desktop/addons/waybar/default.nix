@@ -74,7 +74,7 @@ in
             on-click = "activate";
           };
           clock = {
-            format = "    {:%a, %b. %d         %I:%M %p}";
+            format = "   {:%a, %b. %d         %I:%M %p}";
             interval = 1;
             tooltip-format = "<tt>{calendar}</tt>";
             calendar = {
@@ -119,9 +119,9 @@ in
             format = "  {percent}%";
           };
           network = {
-            interval = 1;
+            interval = 2;
             format-wifi = "   {essid}";
-            format-ethernet = " 󰈀 {bandwidthDownOctets}";
+            format-ethernet = " 󰈀  {bandwidthDownBytes}";
             format-disconnected = " 󱚵  ";
             tooltip = true;
             tooltip-format = ''
@@ -185,7 +185,7 @@ in
 
           "custom/exit" = {
             tooltip = false;
-            format = "  ";
+            format = "   ";
             on-click = "sleep 0.1 && wlogout";
           };
           "custom/startmenu" = {
