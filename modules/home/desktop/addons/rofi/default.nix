@@ -87,6 +87,7 @@ in
           children = map mkLiteral [
             "inputbar"
             "listbox"
+            "mode-switcher"
           ];
           # background-color = mkLiteral "@bg";
           background-color = mkLiteral "transparent";
@@ -99,25 +100,23 @@ in
           margin = mkLiteral "10px";
 
           background-color = mkLiteral "transparent";
-          # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
+          background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
           border-radius = mkLiteral "12px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral [
             "entry"
-            "dummy"
-            "mode-switcher"
           ];
         };
 
         # Text input field for search
         "entry" = {
           enabled = true;
-          expand = false;
-          # width = mkLiteral "80%";
+          expand = true;
+          # width = mkLiteral "5%";
           padding = mkLiteral "10px";
-          border-radius = mkLiteral "12px";
-          background-color = mkLiteral "@constant";          # Using base09 for entry background
+          border-radius = mkLiteral "10px";
+          background-color = mkLiteral "@lighter-bg";          # Using base01 for entry background
           text-color = mkLiteral "@default-fg";              # Using base05 for entry text
 
           cursor = mkLiteral "text";
@@ -155,10 +154,10 @@ in
         };
 
         # Spacer element for layout
-        "dummy" = {
-          expand = true;
-          background-color = mkLiteral "transparent";
-        };
+        # "dummy" = {
+        #   expand = true;
+        #   background-color = mkLiteral "transparent";
+        # };
 
         # Container for mode buttons (drun, run, window, etc)
         "mode-switcher" = {
@@ -169,10 +168,11 @@ in
 
         # Individual mode selection buttons
         "button" = {
-          width = mkLiteral "5%";
-          padding = mkLiteral "10px";
-          border-radius = mkLiteral "8px";
-          background-color = mkLiteral "@constant";          # Using base09 for button background
+          width = mkLiteral "20%";
+          height = mkLiteral "5px";
+          padding = mkLiteral "0px";
+          border-radius = mkLiteral "0px";
+          background-color = mkLiteral "@background";          # Using base09 for button background
           text-color = mkLiteral "@default-fg";              # Using base05 for button text
           cursor = mkLiteral "pointer";
 
@@ -216,6 +216,25 @@ in
           cursor = mkLiteral "inherit";
         };
 
+        # Text styling for results
+        "element-text" = {
+          background-color = mkLiteral "transparent";
+          font = "${config.stylix.fonts.monospace.name} 16";
+          text-color = mkLiteral "inherit";
+          cursor = mkLiteral "inherit";
+
+          vertical-align = mkLiteral "0.5";
+          horizontal-align = mkLiteral "0.0";
+        };
+
+        # Icon styling for results
+        "element-icon" = {
+          background-color = mkLiteral "transparent";
+          text-color = mkLiteral "inherit";
+          size = mkLiteral "36px";
+          cursor = mkLiteral "inherit";
+        };
+
         # Various element states - normal, urgent, active in different combinations
         "element normal.normal" = {
           background-color = mkLiteral "inherit";
@@ -254,44 +273,23 @@ in
           text-color = mkLiteral "inherit";
         };
 
-        # Icon styling for results
-        "element-icon" = {
-          background-color = mkLiteral "transparent";
-          text-color = mkLiteral "inherit";
-          size = mkLiteral "36px";
-          cursor = mkLiteral "inherit";
-        };
-
-        # Text styling for results
-        "element-text" = {
-          background-color = mkLiteral "transparent";
-          font = "${config.stylix.fonts.monospace.name} 16";
-          text-color = mkLiteral "inherit";
-          cursor = mkLiteral "inherit";
-
-          vertical-align = mkLiteral "0.5";
-          horizontal-align = mkLiteral "0.0";
-        };
-
         # Generic text display styling
         "textbox" = {
           padding = mkLiteral "6px";
-          # margin = mkLiteral "20px 0px 0px 20px";
-          border-radius = mkLiteral "12px";
-
-          text-color = mkLiteral "@string";                  # Using base0B for text color
-          background-color = mkLiteral "@constant";          # Using base09 for text background
-
+          margin = mkLiteral "0px 0px 0px 0px";
+          border-radius = mkLiteral "4px";
+          text-color = mkLiteral "@constant";                  # Using base0B for text color
+          background-color = mkLiteral "@background";          # Using base09 for text background
           vertical-align = mkLiteral "0.5";
-          horizontal-align = mkLiteral "0.0";
+          horizontal-align = mkLiteral "0.5";
         };
 
         # Error message styling
         "error-message" = {
-          background-color = mkLiteral "@constant";          # Using base09 for error background
+          background-color = mkLiteral "@constant";
           margin = mkLiteral "2px";
           padding = mkLiteral "2px";
-          border-radius = mkLiteral "5px";
+          border-radius = mkLiteral "4px";
         };
       };
     };

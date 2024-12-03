@@ -36,6 +36,7 @@ in
           margin = "0 0 0 0";
           modules-left = [
             "custom/startmenu"
+            "custom/hyprbindings"
             "hyprland/workspaces"
             "tray"
           ];
@@ -52,6 +53,7 @@ in
             "battery"
             "pulseaudio"
             "network"
+            "custom/exit"
           ];
           "hyprland/workspaces" = {
             format = "{icon}";
@@ -119,7 +121,7 @@ in
           network = {
             interval = 1;
             format-wifi = "  {essid}";
-            format-ethernet = "󰈀  {bandwidthDownOctets}";
+            format-ethernet = "󰈀 {bandwidthDownOctets}";
             format-disconnected = " 󱚵  ";
             tooltip = true;
             tooltip-format = ''
