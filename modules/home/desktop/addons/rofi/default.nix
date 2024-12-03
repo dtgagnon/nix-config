@@ -195,12 +195,6 @@ in
           margin = mkLiteral "20px 0px 0px 20px";
         };
 
-        # Colon separator after prompt (if used)
-        "textbox-prompt-colon" = {
-          expand = false;
-          #str =  mkLiteral ":";
-        };
-
         # Scrollbar styling (when enabled)
         "scrollbar" = {
           width = mkLiteral "4px";
