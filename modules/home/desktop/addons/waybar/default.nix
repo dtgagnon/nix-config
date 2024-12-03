@@ -173,14 +173,6 @@ in
             format = "󱕴";
             on-click = "sleep 0.1 && list-hypr-bindings";
           };
-          "idle_inhibitor" = {
-            format = "{icon}";
-            format-icons = {
-              activated = "";
-              deactivated = "";
-            };
-            tooltip = "true";
-          };
           "battery" = {
             states = {
               warning = 30;
