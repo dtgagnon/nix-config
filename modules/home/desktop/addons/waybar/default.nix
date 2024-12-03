@@ -105,7 +105,7 @@ in
           };
           "memory" = {
             interval = 5;
-            format = " {mem_used:1}G"
+            format = " {mem_used:1}G";
             tooltip = true;
           };
           "gpu" = {
