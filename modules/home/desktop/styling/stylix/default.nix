@@ -23,7 +23,7 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      image = cfg.wallpaper or pkgs.spirenix.wallpapers.nord-rainbow-dark-nix;
+      image = cfg.wallpaper;
 
       base16Scheme = lib.mkIf (cfg.wallpaper == null) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
 
