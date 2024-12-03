@@ -6,16 +6,18 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
-  inherit (config.lib.stylix) colors;
 
-  customTransition = "all 0.3s cubic-bezier(.55,-0.68,.48,1.682)";
+  inherit (config.lib.stylix) colors;
 in
 {
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
+    extraStyle = mkOpt (types.attrsOf types.anything) { } "Additional style to add to waybar";
   };
 
   config = mkIf cfg.enable {
@@ -27,7 +29,6 @@ in
     programs.waybar = {
       enable = true;
       systemd.enable = true;
-      # style = "???";
       settings = [
         {
           layer = "top";
@@ -71,7 +72,7 @@ in
             on-click = "activate";
           };
           clock = {
-            format = "   {:%a, %b. %d     %I:%M %p}";
+            format = "    {:%a, %b. %d         %I:%M %p}";
             interval = 1;
             tooltip-format = "<tt>{calendar}</tt>";
             calendar = {
@@ -88,6 +89,137 @@ in
                 today = "<span color='#${colors.base09}'><b><u>{}</u></b></span>";
               };
             };
+          };
+
+          "idle_inhibitor" = {
+            format = "{icon}";
+            format-icons = {
+              activated = "  ";
+              deactivated = "  ";
+            };
+          };
+          "cpu" = {
+            interval = 5;
+            format = "{cpu_temp:1}°C  {usage:2}%";
+            tooltip = true;
+          };
+          "memory" = {
+            interval = 5;
+            format = " {mem_used:1}G"
+            tooltip = true;
+          };
+          "gpu" = {
+            interval = 5;
+            format = "{gpu_temp:1}°C 󰍹 {mem_used:1}G";
+            tooltip = true;
+          };
+          backlight = {
+            format = " {percent}%";
+          };
+          network = {
+            interval = 1;
+            format-wifi = "  {essid}";
+            format-ethernet = "󰈀  {bandwidthDownOctets}";
+            format-disconnected = " 󱚵  ";
+            tooltip = true;
+            tooltip-format = ''
+              {ifname}
+              {ipaddr}/{cidr}
+              {signalstrength}
+              Up: {bandwidthUpBits}
+              Down: {bandwidthDownBits}
+            '';
+          };
+          "pulseaudio" = {
+            scroll-step = 2;
+            format = "{icon} {volume}% {format_source}";
+            format-bluetooth = "{volume}% {icon} {format_source}";
+            format-bluetooth-muted = "󰝟 {icon} {format_source}";
+            format-muted = "󰝟 {format_source}";
+            format-source = " {volume}%";
+            format-source-muted = "";
+            format-icons = {
+              headphone = "";
+              hands-free = "󰋎";
+              headset = "󰋎";
+              phone = "";
+              portable = "";
+              car = "";
+              default = [
+                ""
+                ""
+                ""
+              ];
+            };
+            on-click = "sleep 0.1 && pavucontrol";
+          };
+          tray = {
+            icon-size = 14;
+            spacing = 8;
+          };
+          "custom/exit" = {
+            tooltip = false;
+            format = "";
+            on-click = "sleep 0.1 && wlogout";
+          };
+          "custom/startmenu" = {
+            tooltip = false;
+            format = "";
+            # exec = "rofi -show drun";
+            on-click = "sleep 0.1 && rofi-launcher";
+          };
+          "custom/hyprbindings" = {
+            tooltip = false;
+            format = "󱕴";
+            on-click = "sleep 0.1 && list-hypr-bindings";
+          };
+          "idle_inhibitor" = {
+            format = "{icon}";
+            format-icons = {
+              activated = "";
+              deactivated = "";
+            };
+            tooltip = "true";
+          };
+          "battery" = {
+            states = {
+              warning = 30;
+              critical = 15;
+            };
+            format = "{icon} {capacity}%";
+            format-charging = "󰂄 {capacity}%";
+            format-plugged = "󱘖 {capacity}%";
+            format-icons = [
+              "󰁺"
+              "󰁻"
+              "󰁼"
+              "󰁽"
+              "󰁾"
+              "󰁿"
+              "󰂀"
+              "󰂁"
+              "󰂂"
+              "󰁹"
+            ];
+            on-click = "";
+            tooltip = false;
+          };
+
+          "custom/exit" = {
+            tooltip = false;
+            format = "";
+            on-click = "sleep 0.1 && wlogout";
+          };
+          "custom/startmenu" = {
+            tooltip = false;
+            format = "";
+            # exec = "rofi -show drun";
+            on-click = "sleep 0.1 && rofi-launcher";
+          }
+          "custom/hyprbindings" = {
+            tooltip = false;
+            format = "󱕴";
+            on-click = "sleep 0.1 && list-hypr-bindings";
           };
           "custom/notification" = {
             tooltip = false;
@@ -108,64 +240,6 @@ in
             "on-click" = "sleep 0.1 && swaync-client -t -sw";
             "on-click-right" = "sleep 0.1 && swaync-client -d -sw";
             escape = true;
-          };
-          "idle_inhibitor" = {
-            format = "{icon}";
-            format-icons = {
-              activated = "  ";
-              deactivated = "  ";
-            };
-          };
-          backlight = {
-            format = " {percent}%";
-          };
-          battery = {
-            states = {
-              good = 80;
-              warning = 30;
-              critical = 15;
-            };
-            format = "{icon} {capacity}%";
-            format-alt = "{time}";
-            format-charging = "  {capacity}%";
-            format-icons = [
-              "󰁻 "
-              "󰁽 "
-              "󰁿 "
-              "󰂁 "
-              "󰂂 "
-            ];
-          };
-          network = {
-            interval = 1;
-            format-wifi = "  {essid}";
-            format-ethernet = "󰈀 ";
-            format-disconnected = " 󱚵  ";
-            tooltip-format = ''
-              {ifname}
-              {ipaddr}/{cidr}
-              {signalstrength}
-              Up: {bandwidthUpBits}
-              Down: {bandwidthDownBits}
-            '';
-          };
-          pulseaudio = {
-            scroll-step = 2;
-            format = "{icon}  {volume}% ";
-            format-bluetooth = " {icon} {volume}% ";
-            format-muted = "  ";
-            format-icons = {
-              headphone = "  ";
-              headset = "  ";
-              default = [
-                "  "
-                "  "
-              ];
-            };
-          };
-          tray = {
-            icon-size = 16;
-            spacing = 8;
           };
         }
       ];
