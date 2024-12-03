@@ -70,7 +70,7 @@ in
         color: #${colors.base08};
       }
 
-      // Waybar left
+      /* Waybar left */
       #custom-startmenu {
         color: #${colors.base0B};
         background: #${colors.base02};
@@ -87,7 +87,7 @@ in
         border-radius: 0px 0px 0px 0px;
       }
 
-      // Waybar center
+      /* Waybar center */
       #custom-notification, #clock {
         font-weight: bold;
         color: #${colors.base00};
@@ -97,7 +97,7 @@ in
         border-radius: 0px 0px 0px 40px;
       }
 
-      // Waybar right
+      /* Waybar right */
       #idle_inhibitor, #cpu, #memory, #gpu, #network, #pulseaudio, #battery, #custom-exit {
         font-weight: bold;
         background: #${colors.base0F};

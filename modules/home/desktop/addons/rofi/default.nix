@@ -168,10 +168,10 @@ in
 
         # Individual mode selection buttons
         "button" = {
-          width = mkLiteral "20%";
-          height = mkLiteral "5px";
-          padding = mkLiteral "0px";
-          border-radius = mkLiteral "0px";
+          # width = mkLiteral "20%";
+          padding = mkLiteral "4px";
+          margin = mkLiteral "2px";
+          border-radius = mkLiteral "4px";
           background-color = mkLiteral "@background";          # Using base09 for button background
           text-color = mkLiteral "@default-fg";              # Using base05 for button text
           cursor = mkLiteral "pointer";
