@@ -48,7 +48,7 @@ in
       hyprland.enable = true;
       styling.stylix = { 
         enable = true;
-        wallpaper = "painted-green-mountains";
+        wallpaper = pkgs.spirenix.wallpapers.painted-green-mountains;
       };
     };
   };
