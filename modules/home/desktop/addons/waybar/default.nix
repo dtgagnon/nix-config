@@ -94,7 +94,7 @@ in
           };
 
           "idle_inhibitor" = {
-            format = "{icon}";
+            format = " {icon} ";
             format-icons = {
               activated = "  ";
               deactivated = "  ";
@@ -102,26 +102,26 @@ in
           };
           "cpu" = {
             interval = 5;
-            format = "{cpu_temp:1}°C  {usage:2}%";
+            format = " {temperature:1}°C  {usage:2}% ";
             tooltip = true;
           };
           "memory" = {
             interval = 5;
-            format = " {mem_used:1}G";
+            format = "  {mem_used:1}G ";
             tooltip = true;
           };
           "gpu" = {
             interval = 5;
-            format = "{gpu_temp:1}°C 󰍹 {mem_used:1}G";
+            format = " {temperature:1}°C 󰍹 {mem_used:1}G ";
             tooltip = true;
           };
           backlight = {
-            format = " {percent}%";
+            format = "  {percent}%";
           };
           network = {
             interval = 1;
-            format-wifi = "  {essid}";
-            format-ethernet = "󰈀 {bandwidthDownOctets}";
+            format-wifi = "   {essid}";
+            format-ethernet = " 󰈀 {bandwidthDownOctets}";
             format-disconnected = " 󱚵  ";
             tooltip = true;
             tooltip-format = ''
@@ -134,23 +134,23 @@ in
           };
           "pulseaudio" = {
             scroll-step = 2;
-            format = "{icon} {volume}% {format_source}";
-            format-bluetooth = "{volume}% {icon} {format_source}";
-            format-bluetooth-muted = "󰝟 {icon} {format_source}";
-            format-muted = "󰝟 {format_source}";
-            format-source = " {volume}%";
-            format-source-muted = "";
+            format = " {icon} {volume}% {format_source} ";
+            format-bluetooth = " {volume}% {icon} {format_source} ";
+            format-bluetooth-muted = " 󰝟 {icon} {format_source} ";
+            format-muted = " 󰝟 {format_source} ";
+            format-source = "  {volume}% ";
+            format-source-muted = "  ";
             format-icons = {
-              headphone = "";
-              hands-free = "󰋎";
-              headset = "󰋎";
-              phone = "";
-              portable = "";
-              car = "";
+              headphone = "  ";
+              hands-free = " 󰋎 ";
+              headset = " 󰋎 ";
+              phone = "  ";
+              portable = "  ";
+              car = "  ";
               default = [
-                ""
-                ""
-                ""
+                "  "
+                "  "
+                "  "
               ];
             };
             on-click = "sleep 0.1 && pavucontrol";
@@ -164,20 +164,20 @@ in
               warning = 30;
               critical = 15;
             };
-            format = "{icon} {capacity}%";
-            format-charging = "󰂄 {capacity}%";
-            format-plugged = "󱘖 {capacity}%";
+            format = " {icon} {capacity}% ";
+            format-charging = " 󰂄 {capacity}% ";
+            format-plugged = " 󱘖 {capacity}% ";
             format-icons = [
-              "󰁺"
-              "󰁻"
-              "󰁼"
-              "󰁽"
-              "󰁾"
-              "󰁿"
-              "󰂀"
-              "󰂁"
-              "󰂂"
-              "󰁹"
+              " 󰁺 "
+              " 󰁻 "
+              " 󰁼 "
+              " 󰁽 "
+              " 󰁾 "
+              " 󰁿 "
+              " 󰂀 "
+              " 󰂁 "
+              " 󰂂 "
+              " 󰁹 "
             ];
             on-click = "";
             tooltip = false;
@@ -185,18 +185,18 @@ in
 
           "custom/exit" = {
             tooltip = false;
-            format = "";
+            format = "  ";
             on-click = "sleep 0.1 && wlogout";
           };
           "custom/startmenu" = {
             tooltip = false;
-            format = "";
+            format = "  ";
             # exec = "rofi -show drun";
             on-click = "sleep 0.1 && rofi-launcher";
           };
           "custom/hyprbindings" = {
             tooltip = false;
-            format = "󱕴";
+            format = " 󱕴 ";
             on-click = "sleep 0.1 && list-hypr-bindings";
           };
           "custom/notification" = {

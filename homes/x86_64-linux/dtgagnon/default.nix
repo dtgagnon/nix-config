@@ -46,7 +46,7 @@ in
 
     desktop = {
       hyprland.enable = true;
-      styling.stylix = enabled;
+      styling.stylix = { enable = true; wallpaper = "painted-green-mountains"; };
     };
   };
 
