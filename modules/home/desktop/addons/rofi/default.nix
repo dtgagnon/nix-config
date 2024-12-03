@@ -188,11 +188,12 @@ in
 
         # Prompt text before search input
         "prompt" = {
+          enabled = false;
           background-color = mkLiteral "@string";            # Using base0B for prompt background
           padding = mkLiteral "6px";
           text-color = mkLiteral "@background";              # Using base00 for prompt text
           border-radius = mkLiteral "3px";
-          margin = mkLiteral "20px 0px 0px 20px";
+          margin = mkLiteral "0px 0px 0px 0px";
         };
 
         # Scrollbar styling (when enabled)
