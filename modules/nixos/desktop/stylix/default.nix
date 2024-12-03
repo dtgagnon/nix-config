@@ -53,6 +53,10 @@ in
           package = pkgs.dejavu_fonts;
           name = "DejaVu Serif";
         };
+        emoji = {
+          package = pkgs.noto-fonts-emoji;
+          name = "Noto Color Emoji";
+        };
         sizes = {
           applications = 16;
           terminal = 18;
