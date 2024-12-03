@@ -94,6 +94,7 @@ in
 
         # Search bar container with entry field and mode switcher
         "inputbar" = {
+          width = mkLiteral "50%";
           enabled = true;
           padding = mkLiteral "2px";
           margin = mkLiteral "10px";
