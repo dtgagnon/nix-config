@@ -114,7 +114,7 @@ in
         "entry" = {
           enabled = true;
           expand = false;
-          width = mkLiteral "80%";
+          # width = mkLiteral "80%";
           padding = mkLiteral "10px";
           border-radius = mkLiteral "12px";
           background-color = mkLiteral "@constant";          # Using base09 for entry background
