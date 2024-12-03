@@ -22,7 +22,7 @@ in
             // This configuration file allows you to pass permanent command line arguments to VS Code.
             {
               // For compatibility with Hyprland, to get it to know what keyring to use.
-              "password-store":"gnome-libsecret"
+              "password-store":"gnome-libsecret",
 
               // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
               // "disable-hardware-acceleration": true,
