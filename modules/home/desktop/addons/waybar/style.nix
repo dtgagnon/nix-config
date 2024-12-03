@@ -102,9 +102,9 @@ in
         font-weight: bold;
         background: #${colors.base0F};
         color: #${colors.base00};
-        margin: 0px 0px;
-        border-radius: 0px 0px 0px 0px;
-        padding: 0px 0px;
+        # margin: 0px 0px;
+        # border-radius: 0px 0px 0px 0px;
+        # padding: 0px 0px;
       }
     '' ];
   };

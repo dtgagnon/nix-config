@@ -13,7 +13,7 @@ let
   inherit (config.lib.stylix) colors;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  # imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
