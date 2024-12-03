@@ -12,7 +12,7 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.waybar.style = concatStrings [ ''${cfg.extraStyle}'' ] + concatStrings [ ''
+    programs.waybar.style = concatStrings [ ${cfg.extraStyle} + ''
       * {
         font-family: JetBrainsMono Nerd Font Mono;
         font-size: 16px;
