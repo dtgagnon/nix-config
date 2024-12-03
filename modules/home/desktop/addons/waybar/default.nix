@@ -17,7 +17,7 @@ in
 
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
-    extraStyle = mkOpt (types.attrsOf types.anything) { } "Additional style to add to waybar";
+    extraStyle = mkOpt types.str "" "Additional style to add to waybar";
   };
 
   config = mkIf cfg.enable {
