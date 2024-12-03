@@ -102,7 +102,7 @@ in
           };
           "cpu" = {
             interval = 5;
-            format = " {temperature:1}°C  {usage:2}% ";
+            format = " {temperature}°C  {usage:2}% ";
             tooltip = true;
           };
           "memory" = {
@@ -112,7 +112,7 @@ in
           };
           "gpu" = {
             interval = 5;
-            format = " {temperature:1}°C 󰍹 {mem_used:1}G ";
+            format = " {temperature}°C 󰍹 {mem_used:1}G ";
             tooltip = true;
           };
           backlight = {
