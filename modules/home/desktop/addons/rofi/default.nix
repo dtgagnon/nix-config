@@ -42,15 +42,15 @@ in
         
         # Global color and style variables used throughout the theme
         "*" = {
-          bg-col = mkLiteral "#${colors.base00}";
-          bg-col-light = mkLiteral "#${colors.base01}";
-          border-col = mkLiteral "#${colors.base05}";
-          selected-col = mkLiteral "#${colors.base00}";
-          blue = mkLiteral "#${colors.base0D}";
-          fg-col = mkLiteral "#${colors.base05}";
-          fg-col2 = mkLiteral "#${colors.base08}";
-          grey = mkLiteral "#737994";
-          # width = 600;
+          bg = mkLiteral "#${colors.base00}";
+          bg-alt = mkLiteral "#${colors.base01}";
+          foreground = mkLiteral "#${colors.base05}";
+          selected = mkLiteral "#${colors.base08}";
+          active = mkLiteral "#${colors.base0D}";
+          text-color = mkLiteral "#${colors.base05}";
+          text-selected = mkLiteral "#${colors.base00}";
+          border-color = mkLiteral "#${colors.base05}";
+          urgent = mkLiteral "#${colors.base0E}";
         };
 
         # Inherit background and text colors for these specific elements
@@ -61,18 +61,18 @@ in
 
         # Main rofi window container
         "window" = {
-          width = mkLiteral "50%";
-          height = mkLiteral "360px";
+          width = mkLiteral "25%";
+          height = mkLiteral "50%";
 
           transparency = "real";
           # orientation = mkLiteral "vertical";
           # cursor = mkLiteral "default";
           # spacing = mkLiteral "0px";
           
-          border = mkLiteral "3px";
-          border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@border-col";
-          background-color = mkLiteral "@bg-col";
+          border = mkLiteral "2px";
+          border-radius = mkLiteral "12px";
+          border-color = mkLiteral "@border-color";
+          background-color = mkLiteral "@bg";
         };
 
         # Container for all main elements (inputbar and listbox)
@@ -81,7 +81,7 @@ in
           padding = mkLiteral "15px";
           orientation = mkLiteral "vertical";
           children = map mkLiteral ["inputbar" "listbox"];
-          # background-color = mkLiteral "@bg-col";
+          # background-color = mkLiteral "@bg";
           background-color = mkLiteral "transparent";
         };
 
@@ -93,8 +93,8 @@ in
           
           background-color = mkLiteral "transparent";
           # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
-          # background-color = mkLiteral "@bg-col";
-          border-radius = mkLiteral "5px";
+          # background-color = mkLiteral "@bg";
+          border-radius = mkLiteral "12px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral ["entry" "dummy" "mode-switcher" ];
@@ -106,9 +106,9 @@ in
           expand = false;
           width = mkLiteral "20%";
           padding = mkLiteral "10px";
-          border-radius = mkLiteral "8px";
-          background-color = mkLiteral "@bg-col-light";
-          text-color = mkLiteral "@fg-col";
+          border-radius = mkLiteral "12px";
+          background-color = mkLiteral "@bg-alt";
+          text-color = mkLiteral "@foreground";
 
           cursor = mkLiteral "text";
           placeholder = "🖥️ Search ";
@@ -138,7 +138,7 @@ in
           fixed-columns = true;
           spacing = mkLiteral "10px";
           border = mkLiteral "0px";
-          background-color = mkLiteral "@bg-col";
+          background-color = mkLiteral "@bg";
         };
 
         # Spacer element for layout
@@ -159,8 +159,8 @@ in
           #width = mkLiteral "5%";
           padding = mkLiteral "10px";
           #border-radius = mkLiteral "8px";
-          background-color = mkLiteral "@bg-col-light";
-          text-color = mkLiteral "@grey";
+          background-color = mkLiteral "@bg-alt";
+          text-color = mkLiteral "@foreground";
           cursor = mkLiteral "pointer";
 
           vertical-align = mkLiteral "0.5";
@@ -169,15 +169,15 @@ in
 
         # Style for selected mode button
         "button selected" = {
-          background-color = mkLiteral "@bg-col";
-          text-color = mkLiteral "@blue";
+          background-color = mkLiteral "@bg";
+          text-color = mkLiteral "@active";
         };
 
         # Prompt text before search input
         "prompt" = {
-          background-color = mkLiteral "@blue";
+          background-color = mkLiteral "@active";
           padding = mkLiteral "6px";
-          text-color = mkLiteral "@bg-col";
+          text-color = mkLiteral "@bg";
           border-radius = mkLiteral "3px";
           margin = mkLiteral "20px 0px 0px 20px";
         };
@@ -192,7 +192,7 @@ in
         "scrollbar" = {
           width = mkLiteral "4px";
           border = 0;
-          handle-color = mkLiteral "@border-col";
+          handle-color = mkLiteral "@border-color";
           handle-width = mkLiteral "6px";
           padding = 0;
         };
@@ -202,9 +202,9 @@ in
           enabled = true;
           # spacing = mkLiteral "10px";
           padding = mkLiteral "5px";
-          border-radius = mkLiteral "8px";
-          # background-color = mkLiteral "@bg-col";
-          # text-color = mkLiteral "@fg-col";
+          border-radius = mkLiteral "12px";
+          # background-color = mkLiteral "@bg";
+          # text-color = mkLiteral "@fg-color";
           cursor = mkLiteral "inherit";
         };
 
@@ -222,7 +222,7 @@ in
           text-color = mkLiteral "@foreground";
         };
         "element selected.normal" = {
-          background-color = mkLiteral "@selected";
+          background-color = mkLiteral "@text-selected";
           text-color = mkLiteral "@text-selected";
         };
         "element selected.urgent" = {
@@ -271,8 +271,8 @@ in
           margin = mkLiteral "20px 0px 0px 20px";
           # border-radius = mkLiteral "8px";
 
-          text-color = mkLiteral "@blue";
-          background-color = mkLiteral "@bg-col-light";
+          text-color = mkLiteral "@active";
+          background-color = mkLiteral "@bg-alt";
 
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.0";
@@ -280,7 +280,7 @@ in
 
         # Error message styling
         "error-message" = {
-          background-color = mkLiteral "@bg-col-light";
+          background-color = mkLiteral "@bg-alt";
           margin = mkLiteral "2px";
           padding = mkLiteral "2px";
           border-radius = mkLiteral "5px";
