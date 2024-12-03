@@ -9,9 +9,11 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
+  inherit (config.lib.stylix) colors;
 
   customTransition = "all 0.3s cubic-bezier(.55,-0.68,.48,1.682)";
-in {
+in
+{
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
   };
@@ -69,7 +71,7 @@ in {
             on-click = "activate";
           };
           clock = {
-            format = "  {:%a, %b %d    %I:%M %p}";
+            format = "   {:%a, %b. %d     %I:%M %p}";
             interval = 1;
             tooltip-format = "<tt>{calendar}</tt>";
             calendar = {
@@ -79,11 +81,11 @@ in {
               "on-scroll" = 1;
               "on-click-right" = "mode";
               format = {
-                months = "<span color='#cba6f7'><b>{}</b></span>";
-                days = "<span color='#b4befe'><b>{}</b></span>";
-                weeks = "<span color='#89dceb'><b>W{}</b></span>";
-                weekdays = "<span color='#f2cdcd'><b>{}</b></span>";
-                today = "<span color='#f38ba8'><b><u>{}</u></b></span>";
+                months = "<span color='#${colors.base05}'><b>{}</b></span>";
+                days = "<span color='#${colors.base06}'><b>{}</b></span>";
+                weeks = "<span color='#${colors.base07}'><b>W{}</b></span>";
+                weekdays = "<span color='#${colors.base08}'><b>{}</b></span>";
+                today = "<span color='#${colors.base09}'><b><u>{}</u></b></span>";
               };
             };
           };
@@ -126,7 +128,13 @@ in {
             format = "{icon} {capacity}%";
             format-alt = "{time}";
             format-charging = "  {capacity}%";
-            format-icons = ["󰁻 " "󰁽 " "󰁿 " "󰂁 " "󰂂 "];
+            format-icons = [
+              "󰁻 "
+              "󰁽 "
+              "󰁿 "
+              "󰂁 "
+              "󰂂 "
+            ];
           };
           network = {
             interval = 1;
@@ -149,7 +157,10 @@ in {
             format-icons = {
               headphone = "  ";
               headset = "  ";
-              default = ["  " "  "];
+              default = [
+                "  "
+                "  "
+              ];
             };
           };
           tray = {
