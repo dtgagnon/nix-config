@@ -94,7 +94,6 @@ in
 
         # Search bar container with entry field and mode switcher
         "inputbar" = {
-          width = mkLiteral "50%";
           enabled = true;
           padding = mkLiteral "2px";
           margin = mkLiteral "10px";
@@ -122,7 +121,7 @@ in
           text-color = mkLiteral "@default-fg";              # Using base05 for entry text
 
           cursor = mkLiteral "text";
-          placeholder = "🖥️ Search ";
+          placeholder = "🔍 Search... ";
           placeholder-color = mkLiteral "inherit";
         };
 
@@ -282,7 +281,7 @@ in
         # Generic text display styling
         "textbox" = {
           padding = mkLiteral "6px";
-          margin = mkLiteral "20px 0px 0px 20px";
+          # margin = mkLiteral "20px 0px 0px 20px";
           border-radius = mkLiteral "12px";
 
           text-color = mkLiteral "@string";                  # Using base0B for text color
