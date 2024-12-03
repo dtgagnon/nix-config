@@ -23,9 +23,8 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      homeManagerIntegration.followSystem = false;
 
-      image = cfg.wallpaper;
+      image = if cfg.wallpaper == null then pkgs.spirenix.wallpapers.nord-rainbow-dark-nix else cfg.wallpaper;
       imageScalingMode = "stretch";
 
       base16Scheme = lib.mkIf (cfg.wallpaper == null) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
