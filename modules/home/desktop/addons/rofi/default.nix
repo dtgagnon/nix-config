@@ -1,12 +1,13 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
-  inherit (lib) mkIf mkDefault mkForce types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib) mkIf mkForce;
+  inherit (lib.${namespace}) mkBoolOpt;
   inherit (config.lib.stylix) colors;
   inherit (config.lib.formats.rasi) mkLiteral;
   cfg = config.${namespace}.desktop.addons.rofi;
@@ -38,8 +39,6 @@ in
         sidebar-mode = true;
       };
       theme = lib.mkForce {
-        #"@import" = "default";
-        
         # Global color and style variables used throughout the theme
         "*" = {
           bg = mkLiteral "#${colors.base00}";
@@ -78,7 +77,10 @@ in
           enabled = true;
           padding = mkLiteral "15px";
           orientation = mkLiteral "vertical";
-          children = map mkLiteral ["inputbar" "listbox"];
+          children = map mkLiteral [
+            "inputbar"
+            "listbox"
+          ];
           # background-color = mkLiteral "@bg";
           background-color = mkLiteral "transparent";
         };
@@ -88,13 +90,17 @@ in
           enabled = true;
           padding = mkLiteral "2px";
           margin = mkLiteral "10px";
-          
+
           background-color = mkLiteral "transparent";
           # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
           border-radius = mkLiteral "12px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
-          children = map mkLiteral ["entry" "dummy" "mode-switcher" ];
+          children = map mkLiteral [
+            "entry"
+            "dummy"
+            "mode-switcher"
+          ];
         };
 
         # Text input field for search
@@ -118,7 +124,10 @@ in
           padding = mkLiteral "10px";
           background-color = mkLiteral "transparent";
           orientation = mkLiteral "vertical";
-          children = map mkLiteral ["message" "listview"];
+          children = map mkLiteral [
+            "message"
+            "listview"
+          ];
         };
 
         # Grid view of search results
@@ -201,7 +210,7 @@ in
           padding = mkLiteral "5px";
           border-radius = mkLiteral "12px";
           background-color = mkLiteral "@bg";
-          text-color = mkLiteral "@fg-color";
+          text-color = mkLiteral "@foreground";
           cursor = mkLiteral "inherit";
         };
 
