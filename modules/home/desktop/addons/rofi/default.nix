@@ -43,32 +43,30 @@ in
         # Global color and style variables used throughout the theme
         "*" = {
           bg = mkLiteral "#${colors.base00}";
-          bg-alt = mkLiteral "#${colors.base01}";
-          foreground = mkLiteral "#${colors.base05}";
+          bg-alt = mkLiteral "#${colors.base09}";
+          foreground = mkLiteral "#${colors.base01}";
           selected = mkLiteral "#${colors.base08}";
-          active = mkLiteral "#${colors.base0D}";
-          text-color = mkLiteral "#${colors.base05}";
+          active = mkLiteral "#${colors.base0B}";
           text-selected = mkLiteral "#${colors.base00}";
-          border-color = mkLiteral "#${colors.base05}";
+          text-color = mkLiteral "#${colors.base05}";
+          border-color = mkLiteral "#${colors.base0F}";
           urgent = mkLiteral "#${colors.base0E}";
         };
 
         # Inherit background and text colors for these specific elements
-        "element-text, element-icon , mode-switcher" = {
-          background-color = mkLiteral "inherit";
-          text-color = mkLiteral "inherit";
-        };
+        # "element-text, element-icon , mode-switcher" = {
+        #   background-color = mkLiteral "inherit";
+        #   text-color = mkLiteral "inherit";
+        # };
 
         # Main rofi window container
         "window" = {
           width = mkLiteral "25%";
           height = mkLiteral "50%";
-
           transparency = "real";
-          # orientation = mkLiteral "vertical";
-          # cursor = mkLiteral "default";
-          # spacing = mkLiteral "0px";
-          
+          orientation = mkLiteral "vertical";
+          cursor = mkLiteral "default";
+          spacing = mkLiteral "0px";
           border = mkLiteral "2px";
           border-radius = mkLiteral "12px";
           border-color = mkLiteral "@border-color";
@@ -93,7 +91,6 @@ in
           
           background-color = mkLiteral "transparent";
           # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
-          # background-color = mkLiteral "@bg";
           border-radius = mkLiteral "12px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
@@ -151,14 +148,14 @@ in
         "mode-switcher" = {
           expand = true;
           spacing = mkLiteral "10px";
-          # background-color = mkLiteral "transparent";
+          background-color = mkLiteral "transparent";
         };
 
         # Individual mode selection buttons
         "button" = {
-          #width = mkLiteral "5%";
+          width = mkLiteral "5%";
           padding = mkLiteral "10px";
-          #border-radius = mkLiteral "8px";
+          border-radius = mkLiteral "8px";
           background-color = mkLiteral "@bg-alt";
           text-color = mkLiteral "@foreground";
           cursor = mkLiteral "pointer";
@@ -200,11 +197,11 @@ in
         # Individual items in the results list
         "element" = {
           enabled = true;
-          # spacing = mkLiteral "10px";
+          spacing = mkLiteral "10px";
           padding = mkLiteral "5px";
           border-radius = mkLiteral "12px";
-          # background-color = mkLiteral "@bg";
-          # text-color = mkLiteral "@fg-color";
+          background-color = mkLiteral "@bg";
+          text-color = mkLiteral "@fg-color";
           cursor = mkLiteral "inherit";
         };
 
@@ -248,17 +245,17 @@ in
 
         # Icon styling for results
         "element-icon" = {
-          # background-color = mkLiteral "transparent";
-          # text-color = mkLiteral "inherit";
+          background-color = mkLiteral "transparent";
+          text-color = mkLiteral "inherit";
           size = mkLiteral "36px";
           cursor = mkLiteral "inherit";
         };
 
         # Text styling for results
         "element-text" = {
-          # background-color = mkLiteral "transparent";
-          # font = "JetBrainsMono Nerd Font Mono 12";
-          # text-color = mkLiteral "inherit";
+          background-color = mkLiteral "transparent";
+          font = "${config.spirenix.stylix.fonts.monospace.name} 16";
+          text-color = mkLiteral "inherit";
           cursor = mkLiteral "inherit";
 
           vertical-align = mkLiteral "0.5";
@@ -269,7 +266,7 @@ in
         "textbox" = {
           padding = mkLiteral "6px";
           margin = mkLiteral "20px 0px 0px 20px";
-          # border-radius = mkLiteral "8px";
+          border-radius = mkLiteral "12px";
 
           text-color = mkLiteral "@active";
           background-color = mkLiteral "@bg-alt";

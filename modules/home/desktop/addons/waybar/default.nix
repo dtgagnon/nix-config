@@ -69,7 +69,7 @@ in {
             on-click = "activate";
           };
           clock = {
-            format = "{ :%a, %b %d    %I:%M %p}";
+            format = "  {:%a, %b %d    %I:%M %p}";
             interval = 1;
             tooltip-format = "<tt>{calendar}</tt>";
             calendar = {
