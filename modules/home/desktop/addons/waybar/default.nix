@@ -157,22 +157,6 @@ in
             icon-size = 14;
             spacing = 8;
           };
-          "custom/exit" = {
-            tooltip = false;
-            format = "";
-            on-click = "sleep 0.1 && wlogout";
-          };
-          "custom/startmenu" = {
-            tooltip = false;
-            format = "";
-            # exec = "rofi -show drun";
-            on-click = "sleep 0.1 && rofi-launcher";
-          };
-          "custom/hyprbindings" = {
-            tooltip = false;
-            format = "󱕴";
-            on-click = "sleep 0.1 && list-hypr-bindings";
-          };
           "battery" = {
             states = {
               warning = 30;
@@ -207,7 +191,7 @@ in
             format = "";
             # exec = "rofi -show drun";
             on-click = "sleep 0.1 && rofi-launcher";
-          }
+          };
           "custom/hyprbindings" = {
             tooltip = false;
             format = "󱕴";
