@@ -25,7 +25,7 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      polarity = "either"; # "light" || "dark" || "either"
+      polarity = "dark"; # "light" || "dark" || "either"
 
       # image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
       image = pkgs.spirenix.wallpapers.painted-green-mountains;
