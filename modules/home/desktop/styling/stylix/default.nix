@@ -15,6 +15,10 @@ in
   options.${namespace}.desktop.styling.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaper = mkOpt (types.nullOr types.package) null "Designate the name of the source image";
+    override = {
+      base = mkOpt (types.nullOr types.str) null "Designate the base16 target to override";
+      withColor = mkOpt (types.nullOr types.str) null "Designate the base16 color to use for override";
+    };
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
@@ -27,7 +31,12 @@ in
       image = if cfg.wallpaper == null then pkgs.spirenix.wallpapers.nord-rainbow-dark-nix else cfg.wallpaper;
       imageScalingMode = "stretch";
 
-      base16Scheme = lib.mkIf (cfg.wallpaper == null) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      base16Scheme = mkIf (cfg.wallpaper == null) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      # override = mkIf (cfg.override != null) { cfg.override.base = { base = cfg.override.withColor; }; }
+      override = {
+        base00 = "#9DA18F";
+        base02 = "${config.stylix.base16Scheme.base05}";
+      };
 
       fonts = {
         monospace = {
