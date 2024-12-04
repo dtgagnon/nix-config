@@ -61,7 +61,7 @@ in
         # Main rofi window container
         "window" = {
           width = mkLiteral "25%";
-          height = mkLiteral "50%";
+          height = mkLiteral "33%";
           transparency = "real";
           orientation = mkLiteral "vertical";
           cursor = mkLiteral "default";
@@ -111,7 +111,7 @@ in
         "entry" = {
           enabled = true;
           expand = true;
-          align = mkLiteral "center";
+          
           # width = mkLiteral "X%";
           padding = mkLiteral "10px";
           border = mkLiteral "2px";
@@ -124,6 +124,8 @@ in
           font = "${config.stylix.fonts.sansSerif.name} 12";
           placeholder = "🔍 Search... ";
           placeholder-color = mkLiteral "inherit";
+          horizontal-align = mkLiteral "0.5";
+          vertical-align = mkLiteral "0.5";
         };
 
         # Container for message and results list
@@ -144,7 +146,7 @@ in
         "listview" = {
           enabled = true;
           spacing = mkLiteral "10px";
-          margin = mkLiteral "0px 0px 0px 0px";
+          margin = mkLiteral "0px";
 
           columns = 2;
           lines = 5;
@@ -154,7 +156,7 @@ in
 
           layout = mkLiteral "vertical";
           reverse = false;
-          fixed-lines = true;
+          fixed-height = true;
           fixed-columns = true;
           
           border = mkLiteral "2px";
@@ -233,11 +235,15 @@ in
           background-color = mkLiteral "@base00";
           text-color = mkLiteral "@base08";
           cursor = mkLiteral "inherit";
+          children = map mkLiteral [
+            "element-icon"
+            "element-text"
+          ];
         };
 
         # Text styling for results
         "element-text" = {
-          background-color = mkLiteral "transparent";
+          background-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
           font = "${config.stylix.fonts.monospace.name} 16";
           vertical-align = mkLiteral "0.5";
@@ -247,7 +253,7 @@ in
 
         # Icon styling for results
         "element-icon" = {
-          background-color = mkLiteral "transparent";
+          background-color = mkLiteral "inherit";
           # text-color = mkLiteral "inherit";
           size = mkLiteral "36px";
           cursor = mkLiteral "inherit";
