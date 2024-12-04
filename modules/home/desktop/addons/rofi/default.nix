@@ -152,7 +152,7 @@ in
           fixed-columns = true;
           spacing = mkLiteral "10px";
           border = mkLiteral "2px";
-          border-color = mkLiteral "@deprecated";
+          border-color = mkLiteral "#FFFFFF";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "transparent";
         };
@@ -167,6 +167,9 @@ in
         "mode-switcher" = {
           expand = true;
           spacing = mkLiteral "10px";
+          border = mkLiteral "2px";
+          border-radius = mkLiteral "8px";
+          border-color = mkLiteral "@deprecated";
           background-color = mkLiteral "transparent";
         };
 
@@ -175,6 +178,7 @@ in
           # width = mkLiteral "20%";
           padding = mkLiteral "4px";
           margin = mkLiteral "20px";
+          border = mkLiteral "2px";
           border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "@background";
@@ -215,8 +219,9 @@ in
           enabled = true;
           spacing = mkLiteral "10px";
           padding = mkLiteral "5px";
-          border-radius = mkLiteral "12px";
-          border-color = mkLiteral "#FFFFFF";
+          border = mkLiteral "2px";
+          border-radius = mkLiteral "8px";
+          border-color = mkLiteral "@deprecated";
           background-color = mkLiteral "@background";
           text-color = mkLiteral "@default-fg";
           cursor = mkLiteral "inherit";
