@@ -102,7 +102,7 @@ in
           };
           "cpu" = {
             interval = 5;
-            format = " {temperature}°C  {usage:2}% ";
+            format = "  {usage:2}% ";
             tooltip = true;
           };
           "memory" = {
@@ -112,7 +112,7 @@ in
           };
           "gpu" = {
             interval = 5;
-            format = " {temperature}°C 󰍹 {mem_used:1}G ";
+            format = " 󰍹 {mem_used:1}G ";
             tooltip = true;
           };
           backlight = {
@@ -121,7 +121,7 @@ in
           network = {
             interval = 2;
             format-wifi = "   {essid}";
-            format-ethernet = " 󰈀  {bandwidthDownBytes}";
+            format-ethernet = " 󰈀  {bandwidthDownBytes:1}";
             format-disconnected = " 󱚵  ";
             tooltip = true;
             tooltip-format = ''
@@ -138,7 +138,7 @@ in
             format-bluetooth = " {volume}% {icon} {format_source} ";
             format-bluetooth-muted = " 󰝟 {icon} {format_source} ";
             format-muted = " 󰝟 {format_source} ";
-            format-source = "  {volume}% ";
+            format-source = "  ";
             format-source-muted = "  ";
             format-icons = {
               headphone = "  ";

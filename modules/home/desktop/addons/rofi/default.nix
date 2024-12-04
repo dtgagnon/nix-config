@@ -23,7 +23,7 @@ in
       package = pkgs.rofi-wayland;
       terminal = "${pkgs.kitty}/bin/kitty";
       extraConfig = {
-        modi = "filebrowser,drun,window,run,ssh";
+        modi = "run,filebrowser,drun,window,ssh";
         disable-history = false;
         hide-scrollbar = true;
         show-icons = true;
@@ -59,12 +59,6 @@ in
           deprecated = mkLiteral "#${colors.base0F}";
         };
 
-        # Inherit background and text colors for these specific elements
-        # "element-text, element-icon , mode-switcher" = {
-        #   background-color = mkLiteral "inherit";
-        #   text-color = mkLiteral "inherit";
-        # };
-
         # Main rofi window container
         "window" = {
           width = mkLiteral "25%";
@@ -73,8 +67,8 @@ in
           orientation = mkLiteral "vertical";
           cursor = mkLiteral "default";
           spacing = mkLiteral "0px";
-          border = mkLiteral "2px";
-          border-radius = mkLiteral "12px";
+          border = mkLiteral "8px";
+          border-radius = mkLiteral "16px";
           border-color = mkLiteral "@deprecated";
           background-color = mkLiteral "@background";
         };
@@ -89,18 +83,20 @@ in
             "listbox"
             "mode-switcher"
           ];
+          border-radius = mkLiteral "16px";
           background-color = mkLiteral "transparent";
         };
 
         # Search bar container with entry field and mode switcher
         "inputbar" = {
           enabled = true;
-          padding = mkLiteral "2px";
+          height = mkLiteral "20%";
+          padding = mkLiteral "10px";
           margin = mkLiteral "10px";
 
           background-color = mkLiteral "transparent";
           # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
-          border-radius = mkLiteral "0px";
+          border-radius = mkLiteral "8px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral [
@@ -127,8 +123,10 @@ in
 
         # Container for message and results list
         "listbox" = {
-          spacing = mkLiteral "10px";
-          padding = mkLiteral "10px";
+          height = mkLiteral "50%";
+          spacing = mkLiteral "0px";
+          padding = mkLiteral "0px";
+          margin = mkLiteral "0px 0px 0px 0px";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "transparent";
           orientation = mkLiteral "vertical";
@@ -141,16 +139,20 @@ in
         # Grid view of search results
         "listview" = {
           enabled = true;
+          spacing = mkLiteral "10px";
+          margin = mkLiteral "0px 0px 0px 0px";
+
           columns = 2;
           lines = 5;
           cycle = true;
           dynamic = true;
           scrollbar = false;
+
           layout = mkLiteral "vertical";
           reverse = false;
           fixed-height = false;
           fixed-columns = true;
-          spacing = mkLiteral "10px";
+          
           border = mkLiteral "2px";
           border-color = mkLiteral "#FFFFFF";
           border-radius = mkLiteral "8px";
@@ -165,7 +167,9 @@ in
 
         # Container for mode buttons (drun, run, window, etc)
         "mode-switcher" = {
-          expand = true;
+          height = mkLiteral "20%";
+          expand = false;
+          margin = mkLiteral "0px 0px 0px 0px";
           spacing = mkLiteral "10px";
           border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
@@ -175,13 +179,13 @@ in
 
         # Individual mode selection buttons
         "button" = {
-          # width = mkLiteral "20%";
           padding = mkLiteral "0px";
-          margin = mkLiteral "5px 0px 20px 0px";
+          margin = mkLiteral "0px 0px 0px 0px";
           border = mkLiteral "2px";
           border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "@background";
+          text-size = mkLiteral "10px";
           text-color = mkLiteral "@comments";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
@@ -285,7 +289,7 @@ in
 
         # Generic text display styling
         "textbox" = {
-          padding = mkLiteral "6px";
+          padding = mkLiteral "0px";
           margin = mkLiteral "0px 0px 0px 0px";
           border-radius = mkLiteral "8px";
           text-color = mkLiteral "@constant";
@@ -297,8 +301,8 @@ in
         # Error message styling
         "error-message" = {
           background-color = mkLiteral "@constant";
-          margin = mkLiteral "2px";
-          padding = mkLiteral "2px";
+          margin = mkLiteral "0px";
+          padding = mkLiteral "0px";
           border-radius = mkLiteral "8px";
         };
       };
