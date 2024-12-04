@@ -66,7 +66,7 @@ in
           orientation = mkLiteral "vertical";
           cursor = mkLiteral "default";
           spacing = mkLiteral "0px";
-          border = mkLiteral "4px";
+          border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@base0F";
           background-color = mkLiteral "@base00";
@@ -145,6 +145,7 @@ in
         # Grid view of search results
         "listview" = {
           enabled = true;
+          expand = true;
           spacing = mkLiteral "10px";
           margin = mkLiteral "0px";
 
@@ -177,9 +178,9 @@ in
           expand = false;
           margin = mkLiteral "10px";
           spacing = mkLiteral "5px";
-          border = mkLiteral "1px";
+          border = mkLiteral "0px";
           border-radius = mkLiteral "0px";
-          border-color = mkLiteral "@base03";
+          border-color = mkLiteral "transparent";
           background-color = mkLiteral "transparent";
         };
 
@@ -187,7 +188,7 @@ in
         "button" = {
           padding = mkLiteral "10px";
           margin = mkLiteral "10px";
-          border = mkLiteral "1px";
+          border = mkLiteral "2px";
           border-color = mkLiteral "@base0F";
           border-radius = mkLiteral "4px";
           background-color = mkLiteral "@base00";
@@ -245,7 +246,7 @@ in
         "element-text" = {
           background-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
-          font = "${config.stylix.fonts.monospace.name} 16";
+          font = "${config.stylix.fonts.monospace.name} 14";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.0";
           cursor = mkLiteral "inherit";
