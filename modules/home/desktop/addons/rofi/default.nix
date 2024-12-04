@@ -177,7 +177,7 @@ in
         "button" = {
           # width = mkLiteral "20%";
           padding = mkLiteral "0px";
-          margin = mkLiteral "0px";
+          margin = mkLiteral "0px 20px 0px 50px";
           border = mkLiteral "2px";
           border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "8px";
