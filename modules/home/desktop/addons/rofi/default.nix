@@ -218,7 +218,7 @@ in
 
         # Text styling for results
         "element-text" = {
-          background-color = mkLiteral "@transparent";
+          background-color = mkLiteral "transparent";
           text-color = mkLiteral "inherit";
           font = "${config.stylix.fonts.monospace.name} 16";
           cursor = mkLiteral "inherit";
@@ -249,7 +249,7 @@ in
           text-color = mkLiteral "@default-fg";
         };
         "element selected.normal" = {
-          background-color = mkLiteral "@transparent";
+          background-color = mkLiteral "transparent";
           text-color = mkLiteral "@error"; 
           border-color = mkLiteral "@selection-bg";
         };
