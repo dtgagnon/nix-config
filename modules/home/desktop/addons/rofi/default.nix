@@ -41,22 +41,22 @@ in
       theme = lib.mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
-          background = mkLiteral "#${colors.base00}";         # Primary background
-          lighter-bg = mkLiteral "#${colors.base01}";        # Lighter background for UI elements
-          selection-bg = mkLiteral "#${colors.base02}";      # Selection background
-          comments = mkLiteral "#${colors.base03}";          # Comments/secondary content
-          dark-fg = mkLiteral "#${colors.base04}";           # Dark foreground/borders
-          default-fg = mkLiteral "#${colors.base05}";        # Default foreground text
-          light-fg = mkLiteral "#${colors.base06}";          # Light foreground text
-          light-bg = mkLiteral "#${colors.base07}";          # Light background
-          error = mkLiteral "#${colors.base08}";             # Error/red accent
-          constant = mkLiteral "#${colors.base09}";          # Constants/orange accent
-          class = mkLiteral "#${colors.base0A}";             # Class names/yellow accent
-          string = mkLiteral "#${colors.base0B}";            # Strings/green accent
-          support = mkLiteral "#${colors.base0C}";           # Support functions/cyan accent
-          function = mkLiteral "#${colors.base0D}";          # Functions/blue accent
-          keyword = mkLiteral "#${colors.base0E}";           # Keywords/purple accent
-          deprecated = mkLiteral "#${colors.base0F}";        # Deprecated/brown accent
+          background = mkLiteral "#${colors.base00}";
+          lighter-bg = mkLiteral "#${colors.base01}";
+          selection-bg = mkLiteral "#${colors.base02}";
+          comments = mkLiteral "#${colors.base03}";
+          dark-fg = mkLiteral "#${colors.base04}";
+          default-fg = mkLiteral "#${colors.base05}";
+          light-fg = mkLiteral "#${colors.base06}";
+          light-bg = mkLiteral "#${colors.base07}";
+          error = mkLiteral "#${colors.base08}";
+          constant = mkLiteral "#${colors.base09}";
+          class = mkLiteral "#${colors.base0A}";
+          string = mkLiteral "#${colors.base0B}";
+          support = mkLiteral "#${colors.base0C}";
+          function = mkLiteral "#${colors.base0D}";
+          keyword = mkLiteral "#${colors.base0E}";
+          deprecated = mkLiteral "#${colors.base0F}";
         };
 
         # Inherit background and text colors for these specific elements
@@ -75,8 +75,8 @@ in
           spacing = mkLiteral "0px";
           border = mkLiteral "2px";
           border-radius = mkLiteral "12px";
-          border-color = mkLiteral "@deprecated";            # Using base0F for borders
-          background-color = mkLiteral "@background";        # Using base00 for main background
+          border-color = mkLiteral "@deprecated";
+          background-color = mkLiteral "@background";
         };
 
         # Container for all main elements (inputbar and listbox)
@@ -100,7 +100,7 @@ in
           margin = mkLiteral "10px";
 
           background-color = mkLiteral "transparent";
-          background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
+          # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
           border-radius = mkLiteral "12px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
@@ -116,8 +116,8 @@ in
           # width = mkLiteral "5%";
           padding = mkLiteral "10px";
           border-radius = mkLiteral "10px";
-          background-color = mkLiteral "@lighter-bg";          # Using base01 for entry background
-          text-color = mkLiteral "@default-fg";              # Using base05 for entry text
+          background-color = mkLiteral "@lighter-bg";
+          text-color = mkLiteral "@default-fg";
 
           cursor = mkLiteral "text";
           placeholder = "🔍 Search... ";
@@ -150,7 +150,7 @@ in
           fixed-columns = true;
           spacing = mkLiteral "10px";
           border = mkLiteral "0px";
-          background-color = mkLiteral "@background";        # Using base00 for listview background
+          background-color = mkLiteral "@background";
         };
 
         # Spacer element for layout
@@ -172,8 +172,8 @@ in
           padding = mkLiteral "4px";
           margin = mkLiteral "2px";
           border-radius = mkLiteral "4px";
-          background-color = mkLiteral "@background";          # Using base09 for button background
-          text-color = mkLiteral "@default-fg";              # Using base05 for button text
+          background-color = mkLiteral "@background";
+          text-color = mkLiteral "@default-fg";
           cursor = mkLiteral "pointer";
 
           vertical-align = mkLiteral "0.5";
@@ -182,16 +182,16 @@ in
 
         # Style for selected mode button
         "button selected" = {
-          background-color = mkLiteral "@background";        # Using base00 for selected button background
-          text-color = mkLiteral "@string";                  # Using base0B for selected button text
+          background-color = mkLiteral "@background";
+          text-color = mkLiteral "@string";
         };
 
         # Prompt text before search input
         "prompt" = {
           enabled = false;
-          background-color = mkLiteral "@string";            # Using base0B for prompt background
+          background-color = mkLiteral "@string";
           padding = mkLiteral "6px";
-          text-color = mkLiteral "@background";              # Using base00 for prompt text
+          text-color = mkLiteral "@background";
           border-radius = mkLiteral "3px";
           margin = mkLiteral "0px 0px 0px 0px";
         };
@@ -200,7 +200,7 @@ in
         "scrollbar" = {
           width = mkLiteral "4px";
           border = 0;
-          handle-color = mkLiteral "@deprecated";            # Using base0F for scrollbar handle
+          handle-color = mkLiteral "@deprecated";
           handle-width = mkLiteral "6px";
           padding = 0;
         };
@@ -211,16 +211,16 @@ in
           spacing = mkLiteral "10px";
           padding = mkLiteral "5px";
           border-radius = mkLiteral "12px";
-          background-color = mkLiteral "@background";        # Using base00 for element background
-          text-color = mkLiteral "@default-fg";              # Using base05 for element text
+          background-color = mkLiteral "@background";
+          text-color = mkLiteral "@default-fg";
           cursor = mkLiteral "inherit";
         };
 
         # Text styling for results
         "element-text" = {
-          background-color = mkLiteral "transparent";
-          font = "${config.stylix.fonts.monospace.name} 16";
+          background-color = mkLiteral "@transparent";
           text-color = mkLiteral "inherit";
+          font = "${config.stylix.fonts.monospace.name} 16";
           cursor = mkLiteral "inherit";
 
           vertical-align = mkLiteral "0.5";
@@ -241,24 +241,25 @@ in
           text-color = mkLiteral "inherit";
         };
         "element normal.urgent" = {
-          background-color = mkLiteral "@error";             # Using base08 for urgent background
-          text-color = mkLiteral "@default-fg";              # Using base05 for urgent text
+          background-color = mkLiteral "@error";
+          text-color = mkLiteral "@default-fg";
         };
         "element normal.active" = {
-          background-color = mkLiteral "@string";            # Using base0B for active background
-          text-color = mkLiteral "@default-fg";              # Using base05 for active text
+          background-color = mkLiteral "@string";
+          text-color = mkLiteral "@default-fg";
         };
         "element selected.normal" = {
-          background-color = mkLiteral "@lighter-bg";        # Using base01 for selected background
-          text-color = mkLiteral "@lighter-bg";              # Using base01 for selected text
+          background-color = mkLiteral "@transparent";
+          text-color = mkLiteral "@error"; 
+          border-color = mkLiteral "@selection-bg";
         };
         "element selected.urgent" = {
-          background-color = mkLiteral "@error";             # Using base08 for urgent selected background
-          text-color = mkLiteral "@lighter-bg";              # Using base01 for urgent selected text
+          background-color = mkLiteral "@error";
+          text-color = mkLiteral "@lighter-bg";
         };
         "element selected.active" = {
-          background-color = mkLiteral "@error";             # Using base08 for active selected background
-          text-color = mkLiteral "@lighter-bg";              # Using base01 for active selected text
+          background-color = mkLiteral "@error";
+          text-color = mkLiteral "@lighter-bg";
         };
         "element alternate.normal" = {
           background-color = mkLiteral "transparent";
@@ -278,8 +279,8 @@ in
           padding = mkLiteral "6px";
           margin = mkLiteral "0px 0px 0px 0px";
           border-radius = mkLiteral "4px";
-          text-color = mkLiteral "@constant";                  # Using base0B for text color
-          background-color = mkLiteral "@background";          # Using base09 for text background
+          text-color = mkLiteral "@constant";
+          background-color = mkLiteral "@background";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
         };
