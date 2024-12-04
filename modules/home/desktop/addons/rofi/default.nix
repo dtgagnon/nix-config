@@ -176,13 +176,13 @@ in
         # Individual mode selection buttons
         "button" = {
           # width = mkLiteral "20%";
-          padding = mkLiteral "2px";
-          margin = mkLiteral "10px";
+          padding = mkLiteral "0px";
+          margin = mkLiteral "0px";
           border = mkLiteral "2px";
           border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "@background";
-          text-color = mkLiteral "@default-fg";
+          text-color = mkLiteral "@comments";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
           cursor = mkLiteral "pointer";
