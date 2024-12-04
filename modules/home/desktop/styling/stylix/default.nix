@@ -36,6 +36,7 @@ in
 
       override = {
         base00 = "#9DA18F";
+        base0B = "${config.stylix.base16Scheme.base05}";
       } // cfg.override;
 
       fonts = {
@@ -61,7 +62,7 @@ in
 
       opacity = {
         applications = 1.0;
-        terminal = 0.9;
+        terminal = 0.8;
         desktop = 1.0;
         popups = 1.0;
       };
