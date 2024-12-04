@@ -46,9 +46,9 @@ in
           ];
           modules-right = [
             "idle_inhibitor"
+            "temperature"
             "cpu"
             "memory"
-            "gpu"
             "backlight"
             "battery"
             "pulseaudio"
@@ -96,23 +96,25 @@ in
           "idle_inhibitor" = {
             format = " {icon} ";
             format-icons = {
-              activated = "  ";
-              deactivated = "  ";
+              activated = "";
+              deactivated = "";
             };
+          };
+          "temperature" = {
+            interval = 5;
+            format = "{temperatureC}°";
+            tooltip = true;
+            critical-threshold = 30;
+            format-critical = "<span color='#${colors.base0E}'></span>{temperatureC}°";
           };
           "cpu" = {
             interval = 5;
-            format = "  {usage:2}% ";
+            format = "   {usage}% ";
             tooltip = true;
           };
           "memory" = {
             interval = 5;
-            format = "  {mem_used:1}G ";
-            tooltip = true;
-          };
-          "gpu" = {
-            interval = 5;
-            format = " 󰍹 {mem_used:1}G ";
+            format = "   {used}GB ";
             tooltip = true;
           };
           backlight = {
@@ -121,15 +123,20 @@ in
           network = {
             interval = 2;
             format-wifi = "   {essid}";
-            format-ethernet = " 󰈀  {bandwidthDownBytes:1}";
+            format-ethernet = " 󰈀  {bandwidthDownBytes}";
             format-disconnected = " 󱚵  ";
             tooltip = true;
             tooltip-format = ''
               {ifname}
               {ipaddr}/{cidr}
               {signalstrength}
-              Up: {bandwidthUpBits}
-              Down: {bandwidthDownBits}
+              Up: {bandwidthUpBytes}
+              Down: {bandwidthDownBytes}
+            '';
+            tooltip-format-ethernet = ''
+              {ipaddr}/{cidr}
+              Up: {bandwidthUpBytes}
+              Down: {bandwidthDownBytes}
             '';
           };
           "pulseaudio" = {

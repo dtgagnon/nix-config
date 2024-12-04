@@ -43,6 +43,7 @@ in
     spirenix.desktop = {
       addons = {
         clipboard = enabled;
+        mako = enabled;
         rofi = enabled;
         term = enabled;
         waybar = enabled;

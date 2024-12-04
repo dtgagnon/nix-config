@@ -20,6 +20,7 @@ in
     apps = {
       firefox = enabled;
       nix-software-center = enabled;
+      super-productivity = enabled;
       terminals = {
         kitty = enabled;
         wezterm = enabled;

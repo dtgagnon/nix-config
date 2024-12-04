@@ -30,33 +30,32 @@ in
         icon-theme = "Papirus";
         location = 0;
         drun-display-format = "{icon} {name}";
-        display-drun = "  Apps ";
-        display-filebrowser = "  Files ";
-        display-run = "  Run ";
-        display-Network = " 󰤨 Network";
-        display-ssh = " 󰈀 SSH";
-        display-window = "  Window";
+        display-drun = "   Apps ";
+        display-filebrowser = "   Files ";
+        display-run = "   Run ";
+        display-ssh = " 󰈀  SSH";
+        display-window = "   Window";
         sidebar-mode = true;
       };
       theme = lib.mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
-          background = mkLiteral "#${colors.base00}";
-          lighter-bg = mkLiteral "#${colors.base01}";
-          selection-bg = mkLiteral "#${colors.base02}";
-          comments = mkLiteral "#${colors.base03}";
-          dark-fg = mkLiteral "#${colors.base04}";
-          default-fg = mkLiteral "#${colors.base05}";
-          light-fg = mkLiteral "#${colors.base06}";
-          light-bg = mkLiteral "#${colors.base07}";
-          error = mkLiteral "#${colors.base08}";
-          constant = mkLiteral "#${colors.base09}";
-          class = mkLiteral "#${colors.base0A}";
-          string = mkLiteral "#${colors.base0B}";
-          support = mkLiteral "#${colors.base0C}";
-          function = mkLiteral "#${colors.base0D}";
-          keyword = mkLiteral "#${colors.base0E}";
-          deprecated = mkLiteral "#${colors.base0F}";
+          base00 = mkLiteral "#${colors.base00}";
+          base01 = mkLiteral "#${colors.base01}";
+          base02 = mkLiteral "#${colors.base02}";
+          base03 = mkLiteral "#${colors.base03}";
+          base04 = mkLiteral "#${colors.base04}";
+          base05 = mkLiteral "#${colors.base05}";
+          base06 = mkLiteral "#${colors.base06}";
+          base07 = mkLiteral "#${colors.base07}";
+          base08 = mkLiteral "#${colors.base08}";
+          base09 = mkLiteral "#${colors.base09}";
+          base0A = mkLiteral "#${colors.base0A}";
+          base0B = mkLiteral "#${colors.base0B}";
+          base0C = mkLiteral "#${colors.base0C}";
+          base0D = mkLiteral "#${colors.base0D}";
+          base0E = mkLiteral "#${colors.base0E}";
+          base0F = mkLiteral "#${colors.base0F}";
         };
 
         # Main rofi window container
@@ -67,23 +66,26 @@ in
           orientation = mkLiteral "vertical";
           cursor = mkLiteral "default";
           spacing = mkLiteral "0px";
-          border = mkLiteral "8px";
-          border-radius = mkLiteral "16px";
-          border-color = mkLiteral "@deprecated";
-          background-color = mkLiteral "@background";
+          border = mkLiteral "4px";
+          border-radius = mkLiteral "8px";
+          border-color = mkLiteral "@base0F";
+          background-color = mkLiteral "@base00";
         };
 
         # Container for all main elements (inputbar and listbox)
         "mainbox" = {
           enabled = true;
-          padding = mkLiteral "15px";
+          padding = mkLiteral "10px";
+          margin = mkLiteral "10px";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
             "inputbar"
             "listbox"
             "mode-switcher"
           ];
-          border-radius = mkLiteral "16px";
+          border-radius = mkLiteral "0px";
+          border = mkLiteral "1px";
+          border-color = mkLiteral "transparent";
           background-color = mkLiteral "transparent";
         };
 
@@ -93,10 +95,11 @@ in
           height = mkLiteral "20%";
           padding = mkLiteral "10px";
           margin = mkLiteral "10px";
-
           background-color = mkLiteral "transparent";
           # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
-          border-radius = mkLiteral "8px";
+          border = mkLiteral "1px";
+          border-color = mkLiteral "transparent";
+          border-radius = mkLiteral "0px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral [
@@ -108,26 +111,27 @@ in
         "entry" = {
           enabled = true;
           expand = true;
+          align = mkLiteral "center";
           # width = mkLiteral "X%";
           padding = mkLiteral "10px";
           border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@deprecated";
-          background-color = mkLiteral "@lighter-bg";
-          text-color = mkLiteral "@default-fg";
+          border-color = mkLiteral "@base03";
+          background-color = mkLiteral "@base01";
+          text-color = mkLiteral "@base05";
 
           cursor = mkLiteral "text";
+          font = "${config.stylix.fonts.sansSerif.name} 12";
           placeholder = "🔍 Search... ";
           placeholder-color = mkLiteral "inherit";
         };
 
         # Container for message and results list
         "listbox" = {
-          height = mkLiteral "50%";
           spacing = mkLiteral "0px";
-          padding = mkLiteral "0px";
-          margin = mkLiteral "0px 0px 0px 0px";
-          border-radius = mkLiteral "8px";
+          padding = mkLiteral "10px";
+          margin = mkLiteral "0px";
+          border-radius = mkLiteral "0px";
           background-color = mkLiteral "transparent";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
@@ -145,16 +149,16 @@ in
           columns = 2;
           lines = 5;
           cycle = true;
-          dynamic = true;
+          dynamic = false;
           scrollbar = false;
 
           layout = mkLiteral "vertical";
           reverse = false;
-          fixed-height = false;
+          fixed-lines = true;
           fixed-columns = true;
           
           border = mkLiteral "2px";
-          border-color = mkLiteral "#FFFFFF";
+          border-color = mkLiteral "@base03";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "transparent";
         };
@@ -169,24 +173,24 @@ in
         "mode-switcher" = {
           height = mkLiteral "20%";
           expand = false;
-          margin = mkLiteral "0px 0px 0px 0px";
-          spacing = mkLiteral "10px";
-          border = mkLiteral "2px";
-          border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@deprecated";
+          margin = mkLiteral "10px";
+          spacing = mkLiteral "5px";
+          border = mkLiteral "1px";
+          border-radius = mkLiteral "0px";
+          border-color = mkLiteral "@base03";
           background-color = mkLiteral "transparent";
         };
 
         # Individual mode selection buttons
         "button" = {
-          padding = mkLiteral "0px";
-          margin = mkLiteral "0px 0px 0px 0px";
-          border = mkLiteral "2px";
-          border-color = mkLiteral "@deprecated";
-          border-radius = mkLiteral "8px";
-          background-color = mkLiteral "@background";
-          text-size = mkLiteral "10px";
-          text-color = mkLiteral "@comments";
+          padding = mkLiteral "10px";
+          margin = mkLiteral "10px";
+          border = mkLiteral "1px";
+          border-color = mkLiteral "@base0F";
+          border-radius = mkLiteral "4px";
+          background-color = mkLiteral "@base00";
+          font = "${config.stylix.fonts.sansSerif.name} 12";
+          text-color = mkLiteral "@base03";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
           cursor = mkLiteral "pointer";
@@ -194,25 +198,26 @@ in
 
         # Style for selected mode button
         "button selected" = {
-          background-color = mkLiteral "@background";
-          text-color = mkLiteral "@keyword";
+          background-color = mkLiteral "@base00";
+          text-color = mkLiteral "@base0E";
+          border-color = mkLiteral "@base0E";
         };
 
         # Prompt text before search input
         "prompt" = {
           enabled = false;
-          background-color = mkLiteral "@string";
+          background-color = mkLiteral "@base0B";
           padding = mkLiteral "6px";
-          text-color = mkLiteral "@background";
+          text-color = mkLiteral "@base00";
           border-radius = mkLiteral "4px";
-          margin = mkLiteral "0px 0px 0px 0px";
+          margin = mkLiteral "0px";
         };
 
         # Scrollbar styling (when enabled)
         "scrollbar" = {
           width = mkLiteral "4px";
           border = 0;
-          handle-color = mkLiteral "@deprecated";
+          handle-color = mkLiteral "@base0F";
           handle-width = mkLiteral "6px";
           padding = 0;
         };
@@ -224,9 +229,9 @@ in
           padding = mkLiteral "5px";
           border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@deprecated";
-          background-color = mkLiteral "@background";
-          text-color = mkLiteral "@default-fg";
+          border-color = mkLiteral "@base03";
+          background-color = mkLiteral "@base00";
+          text-color = mkLiteral "@base08";
           cursor = mkLiteral "inherit";
         };
 
@@ -243,7 +248,7 @@ in
         # Icon styling for results
         "element-icon" = {
           background-color = mkLiteral "transparent";
-          text-color = mkLiteral "inherit";
+          # text-color = mkLiteral "inherit";
           size = mkLiteral "36px";
           cursor = mkLiteral "inherit";
         };
@@ -251,39 +256,47 @@ in
         # Various element states - normal, urgent, active in different combinations
         "element normal.normal" = {
           background-color = mkLiteral "inherit";
+          border-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
         };
         "element normal.urgent" = {
-          background-color = mkLiteral "@error";
-          text-color = mkLiteral "@default-fg";
+          background-color = mkLiteral "@base0E";
+          border-color = mkLiteral "inherit";
+          text-color = mkLiteral "@base07";
         };
         "element normal.active" = {
-          background-color = mkLiteral "@string";
-          text-color = mkLiteral "@default-fg";
+          background-color = mkLiteral "@base08";
+          border-color = mkLiteral "inherit";
+          text-color = mkLiteral "@base03";
         };
         "element selected.normal" = {
           background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@error"; 
-          border-color = mkLiteral "@selection-bg";
+          border-color = mkLiteral "@base05";
+          text-color = mkLiteral "@base05"; 
         };
         "element selected.urgent" = {
-          background-color = mkLiteral "@error";
-          text-color = mkLiteral "@lighter-bg";
+          background-color = mkLiteral "@base07";
+          border-color = mkLiteral "inherit";
+          text-color = mkLiteral "@base0E";
         };
         "element selected.active" = {
-          background-color = mkLiteral "@error";
-          text-color = mkLiteral "@lighter-bg";
+          background-color = mkLiteral "@base08";
+          border-color = mkLiteral "inherit";
+          text-color = mkLiteral "@base01";
         };
         "element alternate.normal" = {
-          background-color = mkLiteral "transparent";
+          background-color = mkLiteral "inherit";
+          border-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
         };
         "element alternate.urgent" = {
-          background-color = mkLiteral "transparent";
+          background-color = mkLiteral "inherit";
+          border-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
         };
         "element alternate.active" = {
-          background-color = mkLiteral "transparent";
+          background-color = mkLiteral "inherit";
+          border-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
         };
 
@@ -292,15 +305,15 @@ in
           padding = mkLiteral "0px";
           margin = mkLiteral "0px 0px 0px 0px";
           border-radius = mkLiteral "8px";
-          text-color = mkLiteral "@constant";
-          background-color = mkLiteral "@background";
+          text-color = mkLiteral "@base09";
+          background-color = mkLiteral "@base00";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
         };
 
         # Error message styling
         "error-message" = {
-          background-color = mkLiteral "@constant";
+          background-color = mkLiteral "@base09";
           margin = mkLiteral "0px";
           padding = mkLiteral "0px";
           border-radius = mkLiteral "8px";
