@@ -89,7 +89,6 @@ in
             "listbox"
             "mode-switcher"
           ];
-          # background-color = mkLiteral "@bg";
           background-color = mkLiteral "transparent";
         };
 
@@ -101,7 +100,7 @@ in
 
           background-color = mkLiteral "transparent";
           # background-image = mkLiteral ''url("~/Pictures/wallpapers/nord-rainbow-dark-nix.png", width)'';
-          border-radius = mkLiteral "12px";
+          border-radius = mkLiteral "0px";
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral [
@@ -113,9 +112,10 @@ in
         "entry" = {
           enabled = true;
           expand = true;
-          # width = mkLiteral "5%";
+          # width = mkLiteral "X%";
           padding = mkLiteral "10px";
-          border-radius = mkLiteral "10px";
+          border-radius = mkLiteral "8px";
+          border-color = mkLiteral "@deprecated";
           background-color = mkLiteral "@lighter-bg";
           text-color = mkLiteral "@default-fg";
 
@@ -128,7 +128,7 @@ in
         "listbox" = {
           spacing = mkLiteral "10px";
           padding = mkLiteral "10px";
-          background-color = mkLiteral "transparent";
+          background-color = mkLiteral "@transparent";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
             "message"
@@ -149,8 +149,10 @@ in
           fixed-height = false;
           fixed-columns = true;
           spacing = mkLiteral "10px";
-          border = mkLiteral "0px";
-          background-color = mkLiteral "@background";
+          border = mkLiteral "2px";
+          border-color = mkLiteral "@deprecated";
+          border-radius = mkLiteral "8px";
+          background-color = mkLiteral "@transparent";
         };
 
         # Spacer element for layout
@@ -170,7 +172,8 @@ in
         "button" = {
           # width = mkLiteral "20%";
           padding = mkLiteral "4px";
-          margin = mkLiteral "2px";
+          margin = mkLiteral "20px";
+          border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "4px";
           background-color = mkLiteral "@background";
           text-color = mkLiteral "@default-fg";
@@ -211,6 +214,7 @@ in
           spacing = mkLiteral "10px";
           padding = mkLiteral "5px";
           border-radius = mkLiteral "12px";
+          border-color = mkLiteral "#FFFFFF";
           background-color = mkLiteral "@background";
           text-color = mkLiteral "@default-fg";
           cursor = mkLiteral "inherit";
@@ -221,10 +225,9 @@ in
           background-color = mkLiteral "transparent";
           text-color = mkLiteral "inherit";
           font = "${config.stylix.fonts.monospace.name} 16";
-          cursor = mkLiteral "inherit";
-
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.0";
+          cursor = mkLiteral "inherit";
         };
 
         # Icon styling for results
