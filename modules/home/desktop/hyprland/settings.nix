@@ -9,6 +9,7 @@ let
   cfg = config.spirenix.desktop.hyprland;
 
   inherit (config.lib.stylix) colors;
+  cursorSize = toString config.stylix.cursor.size;
 in
 {
   config = mkIf cfg.enable {
@@ -17,7 +18,7 @@ in
         "gnome-keyring-daemon --start --components=secrets"
         "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
         "swww init ; sleep 1; setwall"
-        "hyprctl setcursor ${config.stylix.cursor.name} ${config.stylix.cursor.size}"
+        "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
       ];
 
       general = {
@@ -56,7 +57,7 @@ in
           "windowsOut, 1, 7, default, popin 80%"
           "border, 1, 10, default"
           "borderangle, 1, 8, default"
-          "fade, 1, 7, myBezier"
+          "fade, 1, 5, myBezier"
           "workspaces, 1, 6, default"
           "specialWorkspace, 1, 6, default, fade"
         ];

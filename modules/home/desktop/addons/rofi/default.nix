@@ -114,6 +114,7 @@ in
           expand = true;
           # width = mkLiteral "X%";
           padding = mkLiteral "10px";
+          border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@deprecated";
           background-color = mkLiteral "@lighter-bg";
@@ -128,7 +129,8 @@ in
         "listbox" = {
           spacing = mkLiteral "10px";
           padding = mkLiteral "10px";
-          background-color = mkLiteral "@transparent";
+          border-radius = mkLiteral "8px";
+          background-color = mkLiteral "transparent";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
             "message"
@@ -152,7 +154,7 @@ in
           border = mkLiteral "2px";
           border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "8px";
-          background-color = mkLiteral "@transparent";
+          background-color = mkLiteral "transparent";
         };
 
         # Spacer element for layout
@@ -174,7 +176,7 @@ in
           padding = mkLiteral "4px";
           margin = mkLiteral "20px";
           border-color = mkLiteral "@deprecated";
-          border-radius = mkLiteral "4px";
+          border-radius = mkLiteral "8px";
           background-color = mkLiteral "@background";
           text-color = mkLiteral "@default-fg";
           cursor = mkLiteral "pointer";
@@ -281,7 +283,7 @@ in
         "textbox" = {
           padding = mkLiteral "6px";
           margin = mkLiteral "0px 0px 0px 0px";
-          border-radius = mkLiteral "4px";
+          border-radius = mkLiteral "8px";
           text-color = mkLiteral "@constant";
           background-color = mkLiteral "@background";
           vertical-align = mkLiteral "0.5";
@@ -293,7 +295,7 @@ in
           background-color = mkLiteral "@constant";
           margin = mkLiteral "2px";
           padding = mkLiteral "2px";
-          border-radius = mkLiteral "4px";
+          border-radius = mkLiteral "8px";
         };
       };
     };
