@@ -176,23 +176,22 @@ in
         # Individual mode selection buttons
         "button" = {
           # width = mkLiteral "20%";
-          padding = mkLiteral "4px";
-          margin = mkLiteral "20px";
+          padding = mkLiteral "2px";
+          margin = mkLiteral "10px";
           border = mkLiteral "2px";
           border-color = mkLiteral "@deprecated";
           border-radius = mkLiteral "8px";
           background-color = mkLiteral "@background";
           text-color = mkLiteral "@default-fg";
-          cursor = mkLiteral "pointer";
-
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
+          cursor = mkLiteral "pointer";
         };
 
         # Style for selected mode button
         "button selected" = {
           background-color = mkLiteral "@background";
-          text-color = mkLiteral "@string";
+          text-color = mkLiteral "@keyword";
         };
 
         # Prompt text before search input
@@ -201,7 +200,7 @@ in
           background-color = mkLiteral "@string";
           padding = mkLiteral "6px";
           text-color = mkLiteral "@background";
-          border-radius = mkLiteral "3px";
+          border-radius = mkLiteral "4px";
           margin = mkLiteral "0px 0px 0px 0px";
         };
 
