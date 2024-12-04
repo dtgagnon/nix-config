@@ -1,14 +1,16 @@
-{ lib
-, host
-, config
-, namespace
-, ...
+{
+  lib,
+  host,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.shells.nushell;
 
+  inherit (config.lib.stylix) colors;
   # Helper function to create conditional Nushell integrations
   mkNushellIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
 in
@@ -24,20 +26,20 @@ in
       #   	let EDITOR = "nvim"
       # '';
       extraConfig = ''
-        				$env.config = {
-        					edit_mode: "vi"
-        					render_right_prompt_on_last_line: true
-        					highlight_resolved_externals: true
-        					color_config: {
-        						shape_external: { fg: "cyan" }
-        						shape_external_resolved: { fg: "blue" }
-        						shape_internal: { fg: "green" }
-        						shape_unknown: { fg: "red" }
-        					}
+        $env.config = {
+        	edit_mode: "vi"
+        	render_right_prompt_on_last_line: true
+        	highlight_resolved_externals: true
+        	color_config: {
+        		shape_external: { fg: "${colors.base0D}" }
+        		shape_external_resolved: { fg: "${colors.base0C}" }
+        		shape_internal: { fg: "${colors.base08}" }
+        		shape_unknown: { fg: "${colors.base0E}" }
+        	}
 
-        					show_banner: false,
-        				}
-        			'';
+        	show_banner: false,
+        }
+      '';
 
       # nu-abbr = {
       #   abbreviations = {
@@ -70,6 +72,7 @@ in
       shellAliases = {
         # Flake Stuff
         rebuild = "nixos-rebuild switch --use-remote-sudo --flake .#${host}";
+        test = "nixos-rebuild test --use-remote-sudo --flake .#${host}";
         update = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command nushell";
 
