@@ -68,7 +68,7 @@ in
           spacing = mkLiteral "0px";
           border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@base03";
+          border-color = mkLiteral "@base0F";
           background-color = mkLiteral "@base00";
         };
 
@@ -102,16 +102,16 @@ in
           orientation = mkLiteral "horizontal";
           # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral [
-            "dummy"
+						"dummy"
             "entry"
-            "dummy"
+						"dummy"
           ];
         };
 
         # Text input field for search
         "entry" = {
           enabled = true;
-          width = mkLiteral "33%";
+					width = mkLiteral "33%";
           blink = false;
           expand = true;
           padding = mkLiteral "10px";
@@ -131,7 +131,7 @@ in
 
         # Container for message and results list
         "listbox" = {
-          border = mkLiteral "2px 0px";
+          border = mkLiteral "1px 0px";
           border-color = mkLiteral "@base03";
           spacing = mkLiteral "0px";
           padding = mkLiteral "0px";
@@ -152,7 +152,7 @@ in
           padding = mkLiteral "10px";
           margin = mkLiteral "0px";
 
-          columns = 4;
+          columns = 3;
           lines = 5;
           cycle = true;
           dynamic = false;
@@ -180,7 +180,7 @@ in
           expand = false;
           margin = mkLiteral "0px";
           spacing = mkLiteral "0px";
-          border = mkLiteral "2px 0px 0px 0px";
+          border = mkLiteral "1px 0px 0px 0px";
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@base03";
           background-color = mkLiteral "transparent";
@@ -230,9 +230,8 @@ in
         # Individual items in the results list
         "element" = {
           enabled = true;
-          expand = true;
           spacing = mkLiteral "0px";
-          margin = mkLiteral "10px 10px";
+          margin = mkLiteral "5px";
           padding = mkLiteral "5px";
           border = mkLiteral "0px";
           border-radius = mkLiteral "0px";
@@ -240,7 +239,6 @@ in
           background-color = mkLiteral "@base00";
           text-color = mkLiteral "@base0D";
           cursor = mkLiteral "inherit";
-          orientation = mkLiteral "vertical";
           children = map mkLiteral [
             "element-icon"
             "element-text"
@@ -251,9 +249,9 @@ in
         "element-text" = {
           background-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
-          font = "${config.stylix.fonts.sansSerif.name} 12";
-          vertical-align = mkLiteral "0";
-          horizontal-align = mkLiteral "0.5";
+          font = "${config.stylix.fonts.sansSerif.name} 14";
+          vertical-align = mkLiteral "0.5";
+          horizontal-align = mkLiteral "0.0";
           cursor = mkLiteral "inherit";
         };
 
@@ -263,8 +261,6 @@ in
           # text-color = mkLiteral "inherit";
           size = mkLiteral "36px";
           cursor = mkLiteral "inherit";
-          vertical-align = mkLiteral "1.0";
-          horizontal-align = mkLiteral "0.5";
         };
 
         # Various element states - normal, urgent, active in different combinations
@@ -280,26 +276,25 @@ in
         };
         "element normal.active" = {
           background-color = mkLiteral "@base0D";
-          border-radius = mkLiteral "8px";
+					border-radius = mkLiteral "8px";
           border-color = mkLiteral "inherit";
-          text-color = mkLiteral "@base01";
+          text-color = mkLiteral "@base03";
         };
         "element selected.normal" = {
           background-color = mkLiteral "transparent";
-          border = mkLiteral "0px 0px 3px 0px";
+          border = mkLiteral "0px 0px 0px 3px";
           border-color = mkLiteral "@base05";
           text-color = mkLiteral "@base05";
         };
         "element selected.urgent" = {
           background-color = mkLiteral "@base07";
-          border = mkLiteral "0px 0px 3px 0px";
+          border = mkLiteral "0px 0px 0px 3px";
           border-color = mkLiteral "inherit";
           text-color = mkLiteral "@base0E";
         };
         "element selected.active" = {
-          background-color = mkLiteral "@base0D";
-          border = mkLiteral "0px 0px 3px 0px";
-          border-radius = mkLiteral "8px";
+          background-color = mkLiteral "@base08";
+          border = mkLiteral "0px 0px 0px 3px";
           border-color = mkLiteral "inherit";
           text-color = mkLiteral "@base01";
         };

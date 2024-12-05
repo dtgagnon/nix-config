@@ -65,6 +65,9 @@ in
         "float,title:^(Confirm to replace files)$"
         "float,title:^(File Operation Progress)$"
 
+        # attempting to get transparency on rofi
+        "opacity 0.75 override 0.75 override, class:^(rofi)$"
+
         # not sure I use these, they're from borrowed config
         "opacity 0.0 override,class:^(xwaylandvideobridge)$"
         "noanim,class:^(xwaylandvideobridge)$"

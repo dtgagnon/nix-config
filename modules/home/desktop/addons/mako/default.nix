@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.libnotify ];
+    home.packages = [ pkgs.libnotify pkgs.jq ];
 
     services.mako = {
       enable = true;

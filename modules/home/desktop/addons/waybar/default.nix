@@ -208,7 +208,7 @@ in
           };
           "custom/notification" = {
             tooltip = false;
-            format = "{} {icon}";
+            format = "{summary} {icon}";
             "format-icons" = {
               notification = "<span foreground='red'><sup>󱅫</sup></span>";
               none = "";
@@ -219,11 +219,11 @@ in
               "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
               "dnd-inhibited-none" = " ";
             };
-            "return-type" = "json";
-            "exec-if" = "which swaync-client";
-            exec = "swaync-client -swb";
-            "on-click" = "sleep 0.1 && swaync-client -t -sw";
-            "on-click-right" = "sleep 0.1 && swaync-client -d -sw";
+            return-type = "json";
+            exec = "makoctl list -t | jq '.[0] // {}'";
+            interval = 5;
+            on-click = "notify-send \"$(makoctl list -t | jq -r '.[0].summary')\" \"$(makoctl list -t | jq -r '.[0].body')\"";
+            on-click-right = "sleep 0.1 && makoctl dismiss -a";
             escape = true;
           };
         }
