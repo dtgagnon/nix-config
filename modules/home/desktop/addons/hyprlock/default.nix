@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -22,10 +23,10 @@ in
           disable_loading_bar = true;
           hide_cursor = true;
         };
-        
+
         background = {
-          monitor = "";
-          path = "${pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide}";
+          # monitor = "";
+          path = "${config.stylix.image}";
         };
 
         label = [
