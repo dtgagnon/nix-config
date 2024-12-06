@@ -11,25 +11,24 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.waybar.style = concatStrings [ ''
+    programs.waybar.style = ''
       ${cfg.extraStyle}
+
       * {
         font-family: "JetBrains Nerd Font", sans-serif;
         font-size: 14px;
         min-height: 20px;
-        border: none;
+        border: 2px;
         border-radius: 0;
         margin: 0;
         padding: 0;
       }
-      
+
       window#waybar {
         background: ${colors.base00};
         color: ${colors.base05};
         border: none;
       }
-
-/* ~~~~~~~~~~~Left Side~~~~~~~~~~~~~~~~ */
 
       #custom-startmenu {
         color: ${colors.base05};
@@ -91,7 +90,6 @@ in
         color: ${colors.base05};
       }
 
-/* ~~~~~~~~~~~Center~~~~~~~~~~~~~~~~ */
 
       #custom-notification {
         font-weight: bold;
@@ -109,9 +107,8 @@ in
         border-radius: 0 40px 0 0;
       }
 
-/* ~~~~~~~~~~~Right side~~~~~~~~~~~~~~~~ */
 
-      #idle_inhibitor {
+      #idle-inhibitor {
         padding: 0 5px;
         border-radius: 0 0 0 40px;
         color: ${colors.base05};
@@ -127,6 +124,6 @@ in
         color: ${colors.base05};
       }
 
-    ''];
+    '';
   };
 }

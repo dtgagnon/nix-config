@@ -50,12 +50,12 @@ in
             dots_spacing = 0.35;
             dots_center = true;
             outer_color = "rgba(0, 0, 0, 0)";
-            inner_color = "${config.stylix.base16Scheme.base02}";
-            font_color = "#FFFFFF";  # White for dots
-            fade_on_empty = true;
+            inner_color = "${config.stylix.base16Scheme.base01}";
+            font_color = "rgba(0, 0, 0, 1.0)";  # White for dots
+            fade_on_empty = false;
             rounding = -1;
             check_color = "${config.stylix.base16Scheme.base0E}";
-            placeholder_text = <i><span foreground=${config.stylix.base16Scheme.base01}>"Keep trying your best..."</span></i>;
+            placeholder_text = "Keep trying your best...";
             hide_input = false;
             position = "0, -400";
             halign = "center";
