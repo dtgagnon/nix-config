@@ -16,16 +16,16 @@ in
 
       * {
         font-family: JetBrainsMono Nerd Font Mono;
-        font-size: 14px;
-        min-height: 20px;
-        border: 2px solid #${colors.base00};
+        font-size: 18px;
+        min-height: 0px;
+        border: none;
         border-radius: 0;
         margin: 0;
         padding: 0;
       }
 
       window#waybar {
-        background: #${colors.base00};
+        background: transparent;
         color: #${colors.base05};
         border: none;
       }
@@ -38,7 +38,7 @@ in
         font-size: 32px;
         margin: 0;
         padding: 0;
-        border-radius: 0 0 0 40px;
+        border-radius: 0 20px 0 20px;
       }
 
       #custom-hyprbindings {
@@ -58,23 +58,23 @@ in
       }
 
       #workspaces button {
-        padding: 0px 5px;
-        margin: 0px 3px;
-        border-radius: 16px;
+        padding: 0;
+        margin: 0;
+        border-radius: 8px;
         color: #${colors.base05};
         background: #${colors.base01};
-        opacity: 0.5;
+        opacity: 0.7;
       }
 
       #workspaces button.active {
         font-weight: bold;
-        padding: 0px 5px;
-        margin: 0px 3px;
-        border-radius: 16px;
+        padding: 0;
+        margin: 0;
+        border-radius: 8px;
         color: #${colors.base05};
         background: #${colors.base01};
         opacity: 1.0;
-        min-width: 40px;
+        min-width: 20px;
       }
 
       #tray {
@@ -82,7 +82,7 @@ in
         padding: 0;
         background: #${colors.base01};
         color: #${colors.base05};
-        border-radius: 0;
+        border-radius: 8px;
       }
 
       #window {
@@ -98,21 +98,21 @@ in
         background: #${colors.base05};
         margin: 0;
         padding: 0;
-        border-radius: 0 0 0 40px;
+        border-radius: 20px 0px 0 20px;
       }
 
       #clock {
         padding: 0 5px;
         background: #${colors.base04};
         color: #${colors.base05};
-        border-radius: 0 40px 0 0;
+        border-radius: 0 20px 20px 0;
       }
 
       /* ---------------Right--------------- */
 
       #idle_inhibitor {
         padding: 0 5px;
-        border-radius: 0 0 0 40px;
+        border-radius: 20px 0 0 20px;
         color: #${colors.base05};
       }
 
@@ -122,7 +122,7 @@ in
       }
 
       #custom-exit {
-        border-radius: 0 40px 0 0;
+        border-radius: 0 20px 20px 0;
         color: #${colors.base05};
       }
     '';
