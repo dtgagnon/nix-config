@@ -286,21 +286,21 @@ in
         };
         "element selected.normal" = {
           background-color = mkLiteral "transparent";
-          border = mkLiteral "0px 0px 3px 0px";
+          border = mkLiteral "0px 0px 2px 0px";
           border-color = mkLiteral "@base05";
           text-color = mkLiteral "@base05";
         };
         "element selected.urgent" = {
           background-color = mkLiteral "@base07";
-          border = mkLiteral "0px 0px 3px 0px";
+          border = mkLiteral "0px 0px 2px 0px";
           border-color = mkLiteral "inherit";
           text-color = mkLiteral "@base0E";
         };
         "element selected.active" = {
           background-color = mkLiteral "@base0D";
-          border = mkLiteral "0px 0px 3px 0px";
-          border-radius = mkLiteral "8px";
-          border-color = mkLiteral "inherit";
+          border = mkLiteral "0px 0px 2px 0px";
+          border-radius = mkLiteral "8px 8px 0px 0px";
+          border-color = mkLiteral "@base07";
           text-color = mkLiteral "@base01";
         };
         "element alternate.normal" = {
