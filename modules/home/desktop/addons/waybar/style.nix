@@ -25,15 +25,15 @@ in
       
       window#waybar {
         background: ${colors.base00};
-        color: ${colors.base02};
+        color: ${colors.base05};
         border: none;
       }
 
 /* ~~~~~~~~~~~Left Side~~~~~~~~~~~~~~~~ */
 
       #custom-startmenu {
-        color: ${colors.base02};
-        background: ${colors.backgroundAlt};
+        color: ${colors.base05};
+        background: ${colors.base01};
         font-size: 32px;
         margin: 0;
         padding: 0;
@@ -44,13 +44,13 @@ in
         font-weight: bold;
         padding: 0;
         background: ${colors.base01};
-        color: ${colors.base02};
+        color: ${colors.base05};
         border-radius: 0;
       }
 
       #workspaces {
         background: ${colors.base00};
-        color: ${colors.base02};
+        color: ${colors.base05};
         margin: 4px 4px;
         padding: 5px 5px;
         border-radius: 16px;
@@ -60,7 +60,7 @@ in
         padding: 0px 5px;
         margin: 0px 3px;
         border-radius: 16px;
-        color: ${colors.base02};
+        color: ${colors.base05};
         background: ${colors.base01};
         opacity: 0.5;
       }
@@ -70,7 +70,7 @@ in
         padding: 0px 5px;
         margin: 0px 3px;
         border-radius: 16px;
-        color: ${colors.base02};
+        color: ${colors.base05};
         background: ${colors.base01};
         opacity: 1.0;
         min-width: 40px;
@@ -80,7 +80,7 @@ in
         font-weight: bold;
         padding: 0;
         background: ${colors.base01};
-        color: ${colors.base02};
+        color: ${colors.base05};
         border-radius: 0;
         justify-content: center;
       }
@@ -88,15 +88,15 @@ in
       #window {
         justify-content: center;
         font-weight: bold;
-        color: ${colors.base02};
+        color: ${colors.base05};
       }
 
 /* ~~~~~~~~~~~Center~~~~~~~~~~~~~~~~ */
 
       #custom-notification {
         font-weight: bold;
-        color: ${colors.base02};
-        background: ${colors.primary};
+        color: ${colors.base05};
+        background: ${colors.base05};
         margin: 0;
         padding: 0;
         border-radius: 0 0 0 40px;
@@ -105,7 +105,7 @@ in
       #clock {
         padding: 0 5px;
         background: ${colors.base04};
-        color: ${colors.base02};
+        color: ${colors.base05};
         border-radius: 0;
       }
 
@@ -114,17 +114,17 @@ in
       #idle_inhibitor {
         padding: 0 5px;
         border-radius: 0 0 0 40px;
-        color: ${colors.base02};
+        color: ${colors.base05};
       }
 
       #battery, #memory, #cpu, #temperature, #backlight, #pulseaudio, #network {
         padding: 0 5px;
-        color: ${colors.base02};
+        color: ${colors.base05};
       }
 
       #custom-exit {
         border-radius: 0 40px 0 0;
-        color: ${colors.base02};
+        color: ${colors.base05};
       }
 
     ''];

@@ -13,7 +13,7 @@ in
       windowrulev2 = [
 
         # Aseprite - pixel art editor
-        "tile,Aseprite"
+        "tile,title:^(Aseprite)$"
 
         # Kitty - terminal
         "float,title:^(float_kitty)$"
@@ -48,22 +48,21 @@ in
         "suppressevent maximize, class:.*"
 
         # System tray and utility windows
-        "float,udiskie"
         "float,title:^(Transmission)$"
         "float,title:^(Volume Control)$"
         "float,title:^(Firefox — Sharing Indicator)$"
         "move 0 0,title:^(Firefox — Sharing Indicator)$"
 
         # Image viewer (imv) settings - floating centered window with fixed size
-        "float,imv"
-        "center,imv"
-        "size 1200 725,imv"
+        "float,class:^(imv)$"
+        "center,class:^(imv)$"
+        "size 1200 725,class:^(imv)$"
 
         # Media player (mpv) settings - floating centered window with fixed size
-        "float,mpv"
-        "center,mpv"
-        "size 1200 725,mpv"
-        "idleinhibit focus,mpv"
+        "float,class:^(mpv)$"
+        "center,class:^(mpv)$"
+        "size 1200 725,class:^(mpv)$"
+        "idleinhibit focus,class:^(mpv)$"
 
         # Float dialogs and notifications
         "float,class:^(file_progress)$"

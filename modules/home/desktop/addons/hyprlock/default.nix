@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkForce;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.hyprlock;
 in
@@ -18,12 +18,12 @@ in
   config = mkIf cfg.enable {
     programs.hyprlock = {
       enable = true;
-      settings = {
+      settings = mkForce {
         background = [
           {
-            # monitor = "";
+            monitor = "";
             path = "${config.stylix.image}";
-            # color = "rgba(0, 0, 0, 0)";
+            color = "rgba(0, 0, 0, 0)";
             blur_passes = 2;
             blur_size = 4;
             contrast = 1;
@@ -60,14 +60,14 @@ in
             position = "0, -400";
             halign = "center";
             valign = "center";
-          };
+          }
         ];
 
         label = [
           # Date
           {
             monitor = "";
-            text = cmd[update:1000] echo "$(date +"%A, %B %d")"
+            text = ''cmd[update:1000] echo "$(date +"%A, %B %d")"'';
             color = "rgba(145, 105, 160, 0.75)";  # Soft muted purple for date text
             font_size = 22;
             font_family = "JetBrains Mono";
