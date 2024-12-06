@@ -49,13 +49,13 @@ in
             dots_size = 0.2;
             dots_spacing = 0.35;
             dots_center = true;
-            outer_color = "rgba(0, 0, 0, 0)";  # Transparent outer color
-            inner_color = "rgba(90, 40, 90, 0.5)";  # Dark soft purple for input field background
-            font_color = "rgba(242, 243, 244, 1)";  # White for dots
-            fade_on_empty = false;
+            outer_color = "rgba(0, 0, 0, 0)";
+            inner_color = "${config.stylix.base16Scheme.base02}";
+            font_color = "#FFFFFF";  # White for dots
+            fade_on_empty = true;
             rounding = -1;
-            check_color = "rgba(190, 150, 200, 1)";  # Light purple for the checkmark
-            placeholder_text = "<i><span foreground=#cdd6f4>Keep trying your best...</span></i>";
+            check_color = "${config.stylix.base16Scheme.base0E}";
+            placeholder_text = <i><span foreground=${config.stylix.base16Scheme.base01}>"Keep trying your best..."</span></i>;
             hide_input = false;
             position = "0, -400";
             halign = "center";
@@ -68,7 +68,7 @@ in
           {
             monitor = "";
             text = ''cmd[update:1000] echo "$(date +"%A, %B %d")"'';
-            color = "rgba(145, 105, 160, 0.75)";  # Soft muted purple for date text
+            color = "${config.stylix.base16Scheme.base01}";
             font_size = 22;
             font_family = "JetBrains Mono";
             position = "0, 300";
@@ -80,7 +80,7 @@ in
           {
             monitor = "";
             text = ''cmd[update:1000] echo "$(date +"%-I:%M")"'';
-            color = "rgba(145, 105, 160, 0.75)";  # Soft muted purple for time text
+            color = "${config.stylix.base16Scheme.base01}";
             font_size = 95;
             font_family = "JetBrains Mono Extrabold";
             position = "0, 200";
@@ -93,10 +93,10 @@ in
           # Profile picture
           {
             monitor = "";
-            path = "${spirenix.pkgs.profile-pics.dtgagnon}";
+            path = "${pkgs.spirenix.profile-pics.dtgagnon}";
             size = 170;
             border_size = 2;
-            border_color = "rgba(145, 105, 160, 0.75)";
+            border_color = "${config.stylix.base16Scheme.base01}";
             position = "0, -100";
             halign = "center";
             valign = "center";
@@ -105,11 +105,11 @@ in
           # Desktop environment icon
           {
             monitor = "";
-            # path = "${config.stylix.image}"; #replace with hyprland logo
+            path = "${config.stylix.image}"; #replace with hyprland logo
             size = 75;
             border_size = 2;
-            border_color = "rgba(145, 105, 160, 1.0)";
-            position = "-50, -50";
+            border_color = "${config.stylix.base16Scheme.base01}";
+            position = "-50, -20";
             halign = "right";
             valign = "bottom";
           }

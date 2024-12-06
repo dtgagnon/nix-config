@@ -61,7 +61,7 @@ in
         # Main rofi window container
         "window" = {
           width = mkLiteral "25%";
-          height = mkLiteral "40%";
+          height = mkLiteral "36%";
           transparency = "real";
           orientation = mkLiteral "vertical";
           cursor = mkLiteral "default";
@@ -158,7 +158,7 @@ in
           dynamic = false;
           scrollbar = false;
 
-          layout = mkLiteral "vertical";
+          layout = mkLiteral "horizontal";
           reverse = false;
           fixed-height = true;
           fixed-columns = true;

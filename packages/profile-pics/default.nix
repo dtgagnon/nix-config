@@ -9,7 +9,7 @@
 }:
 let
   # Get a list of all profile picture filenames from the ./profile-pics directory
-  images = builtins.attrNames (builtins.readDir ./profiles);
+  images = builtins.attrNames (builtins.readDir ./profile-pics);
 
   # Helper function to create a Nix derivation for a single profile picture
   # Takes a name and source path as arguments

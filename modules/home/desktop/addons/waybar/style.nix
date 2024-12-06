@@ -14,9 +14,9 @@ in
     programs.waybar.style = concatStrings [ ''
       ${cfg.extraStyle}
       * {
-        font-family: "Iosevka Nerd Font Mono", sans-serif;
+        font-family: "JetBrains Nerd Font", sans-serif;
         font-size: 14px;
-        min-height: 0;
+        min-height: 20px;
         border: none;
         border-radius: 0;
         margin: 0;
@@ -106,7 +106,7 @@ in
         padding: 0 5px;
         background: ${colors.base04};
         color: ${colors.base05};
-        border-radius: 0;
+        border-radius: 0 40px 0 0;
       }
 
 /* ~~~~~~~~~~~Right side~~~~~~~~~~~~~~~~ */
