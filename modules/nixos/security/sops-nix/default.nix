@@ -44,6 +44,7 @@ in
           owner = "${username}";
           path = "/persist/home/${username}/.ssh/${username}-key.pub";
         };
+        syncthing-webui-password = { };
         tailscale-authKey = { };
         openai_api = { };
         anthropic_api = { };
