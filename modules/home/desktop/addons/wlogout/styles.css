@@ -1,40 +1,31 @@
-@define-color background      #1E1E2E;
-@define-color background-alt1 #28283d;
-@define-color background-alt2 #32324d;
-@define-color foreground      #CDD6F4;
-@define-color selected        #89B4FA;
-@define-color black           #45475A;
-@define-color red             #F38BA8;
-@define-color green           #A6E3A1;
-@define-color yellow          #F9E2AF;
-@define-color blue            #89B4FA;
-@define-color magenta         #F5C2E7;
-@define-color cyan            #94E2D5;
-@define-color white           #BAC2DE;
-@define-color lavender        #b4befe;
 * {
-  font-size: 15px;
-  font-weight: bold;
+  background-image: none;
+  box-shadow: none;;
 }
 
 window {
-  background-color: @background;
+  background-color: rgba(23,23,23,0.8);
 }
 
 button {
-  background-color: @background-alt1;
-  color: @foreground;
-  border: 1px solid @background-alt2;
-  border-radius: 50px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(188, 123, 231, 1);
+  border-radius: 25px;
+  color: #FFFFFF;
+  text-decoration-color: #FFFFFF;
+  background-color: rbga(33, 33, 52, 0.9);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 30%;
+  background-size: 25%;
+  transition: background-color 0.3s, border-color 0.3s; /* Smooth hover effect */
 }
 
 button:focus,
+button:active,
 button:hover {
-  background-color: @lavender;
-  color: @background;
+  background-color: rgba(115, 95, 181, 0.8);
+  border-color: rbga(255, 133, 199, 1);
   outline-style: none;
 }
 

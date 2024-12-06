@@ -42,17 +42,25 @@ in
 
     spirenix.desktop = {
       addons = {
-        clipboard = enabled;
+        # Utilities
+        mako = enabled;     # notifications
+        rofi = enabled;     # launcher
+        fuzzel = enabled;   # app launcher
+        wlsunset = enabled; # color temperature manager
+
+        # Basic functionality
+        hypridle = enabled;
 				hyprlock = enabled;
-        mako = enabled;
-        rofi = enabled;
-        term = enabled;
         waybar = enabled;
-        fuzzel = enabled;
-      } // cfg.extraAddons;
+        wlogout = enabled;
+
+        # Misc
+        term = enabled;
+        clipboard = enabled;
+      };
       styling = {
-        gtk = enabled;
-        qt = enabled;
+        gtk = enabled;      # GTK theme
+        qt = enabled;       # Qt theme
       };
     };
 

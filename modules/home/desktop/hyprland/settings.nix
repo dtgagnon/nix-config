@@ -65,12 +65,6 @@ in
 
       binds.allow_workspace_cycles = true;
 
-      dwindle = {
-        pseudotile = "yes";
-        preserve_split = "yes";
-        special_scale_factor = 1;
-      };
-
       gestures = {
         workspace_swipe = true;
         workspace_swipe_use_r = true;
@@ -80,7 +74,7 @@ in
         # keyboard
         kb_layout = "us";
         repeat_delay = 200;
-        repeat_rate = 50;
+        repeat_rate = 100;
         # mouse
         accel_profile = "flat";
         follow_mouse = 1;
@@ -92,7 +86,7 @@ in
       misc = {
         animate_manual_resizes = true;
         animate_mouse_windowdragging = true;
-        new_window_takes_over_fullscreen = 1;
+        new_window_takes_over_fullscreen = 2;
         initial_workspace_tracking = 0;
         disable_hyprland_logo = true;
         disable_autoreload = true;
@@ -102,6 +96,12 @@ in
         new_on_top = true;
         new_status = "master";
         mfact = 0.55;
+        special_scale_factor = 1;
+      };
+
+      dwindle = {
+        pseudotile = "yes";
+        preserve_split = "yes";
         special_scale_factor = 1;
       };
 

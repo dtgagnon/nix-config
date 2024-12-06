@@ -33,21 +33,21 @@ in {
         }
         {
           label = "logout";
-          action = "loginctl terminate-user $USER";
+          action = "hyprctl dispatch exit";
           text = "Logout";
-          keybind = "L";
+          keybind = "e";
         }
         {
           label = "shutdown";
           action = "systemctl poweroff";
           text = "Shutdown";
-          keybind = "S";
+          keybind = "s";
         }
         {
           label = "suspend";
           action = "systemctl suspend";
           text = "Suspend";
-          keybind = "s";
+          keybind = "u";
         }
         {
           label = "reboot";
