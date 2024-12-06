@@ -20,7 +20,7 @@ in
       bind = [
         # Open
         "$mod, Return, exec, $terminal"
-        "$mod, E, exec, thunar"
+        "$mod, E, exec, yazi"
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, firefox"
