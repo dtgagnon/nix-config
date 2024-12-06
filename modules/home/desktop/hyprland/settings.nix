@@ -29,7 +29,7 @@ in
         # "col.inactive_border" = "0xff${colors.base02}";
         # resize_on_border = false;
         # allow_tearing = false;
-        # layout = "dwindle";
+        layout = "dwindle";
       };
 
       decoration = {
@@ -104,12 +104,6 @@ in
         preserve_split = "yes";
         special_scale_factor = 1;
       };
-
-      layerrule = [
-        "blur, ironbar"
-        "blur, rofi"
-        "blur, notification"
-      ];
     };
   };
 }
