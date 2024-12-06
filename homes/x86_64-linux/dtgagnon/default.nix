@@ -20,6 +20,7 @@ in
     apps = {
       firefox = enabled;
       nix-software-center = enabled;
+      obsidian = enabled;
       super-productivity = enabled;
       terminals = {
         kitty = enabled;
@@ -53,6 +54,8 @@ in
         wallpaper = pkgs.spirenix.wallpapers.painted-green-mountains;
       };
     };
+
+    services.syncthing = enabled;
   };
 
   home.stateVersion = "24.05";

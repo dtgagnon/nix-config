@@ -16,7 +16,6 @@ in
     suites.networking = enabled;
 
     desktop = {
-      gnome = disabled;
       fonts = enabled;
       hyprland = enabled;
       stylix = enabled;
@@ -24,24 +23,16 @@ in
 
     hardware = {
       audio = enabled;
-      # keyboard = enabled; # xkb stuff
       nvidia = enabled;
       storage = {
         boot.enable = true;
-        disko = {
-          enable = true;
-          device = "/dev/nvme0n1";
-        };
+        disko = { enable = true; device = "/dev/nvme0n1"; };
       };
     };
 
     security = {
       sudo = enabled;
       sops-nix = enabled;
-    };
-
-    services = {
-      openssh = enabled;
     };
 
     system = {
