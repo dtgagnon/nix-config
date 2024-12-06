@@ -1,4 +1,4 @@
-# This is a Nix derivation for managing system wallpapers
+# This is a Nix derivation for managing system profile pictures
 # It takes standard Nix inputs: lib (for helper functions), pkgs (for dependencies),
 # config (for system configuration), and namespace
 { lib
@@ -8,16 +8,16 @@
 , ...
 }:
 let
-  # Get a list of all wallpaper filenames from the ./wallpapers directory
-  images = builtins.attrNames (builtins.readDir ./wallpapers);
+  # Get a list of all profile picture filenames from the ./profile-pics directory
+  images = builtins.attrNames (builtins.readDir ./profiles);
 
-  # Helper function to create a Nix derivation for a single wallpaper
+  # Helper function to create a Nix derivation for a single profile picture
   # Takes a name and source path as arguments
-  mkWallpaper = name: src:
+  mkProfilePic = name: src:
     let
       # Extract just the filename from the full path
       fileName = builtins.baseNameOf src;
-      # Create a simple derivation that just copies the wallpaper file
+      # Create a simple derivation that just copies the profile picture file
       pkg = pkgs.stdenvNoCC.mkDerivation {
         inherit name src;
 
@@ -37,40 +37,40 @@ let
     in
     pkg;
 
-  # Create a list of wallpaper names without their file extensions
+  # Create a list of profile picture names without their file extensions
   names = builtins.map (lib.snowfall.path.get-file-name-without-extension) images;
 
-  # Create an attribute set mapping wallpaper names to their derivations
+  # Create an attribute set mapping profile picture names to their derivations
   # This transforms the list of image files into a set of Nix packages
-  wallpapers = lib.foldl
+  profilePics = lib.foldl
     (
       acc: image:
         let
-          # Get the name of the wallpaper without its extension
+          # Get the name of the profile picture without its extension
           name = lib.snowfall.path.get-file-name-without-extension image;
         in
-        # Add this wallpaper to the accumulated set
-        acc // { "${name}" = mkWallpaper name (./wallpapers + "/${image}"); }
+        # Add this profile picture to the accumulated set
+        acc // { "${name}" = mkProfilePic name (./profile-pics + "/${image}"); }
     )
     { }
     images;
 
-  # Define where wallpapers will be installed in the final system
-  installTarget = "$out/share/wallpapers";
+  # Define where profile pictures will be installed in the final system
+  installTarget = "$out/share/profile-pics";
 
-  # Create installation instructions for each wallpaper
-  installWallpapers = builtins.mapAttrs
-    (name: wallpaper: ''
-      cp ${wallpaper} ${installTarget}/${wallpaper.fileName}
+  # Create installation instructions for each profile picture
+  installProfilePics = builtins.mapAttrs
+    (name: profilePic: ''
+      cp ${profilePic} ${installTarget}/${profilePic.fileName}
     '')
-    wallpapers;
+    profilePics;
 in
-# Main derivation that creates the complete wallpaper package
+# Main derivation that creates the complete profile pictures package
 pkgs.stdenvNoCC.mkDerivation {
-  name = "wallpapers";
-  src = ./wallpapers;
+  name = "profile-pics";
+  src = ./profile-pics;
 
-  # Installation phase: create directory and copy all wallpapers
+  # Installation phase: create directory and copy all profile pictures
   installPhase = ''
     mkdir -p ${installTarget}
 
@@ -78,9 +78,9 @@ pkgs.stdenvNoCC.mkDerivation {
     find * -type f -mindepth 0 -maxdepth 0 -exec cp ./{} ${installTarget}/{} ';'
   '';
 
-  # Make wallpaper names and individual wallpaper derivations available
+  # Make profile picture names and individual profile picture derivations available
   # to other parts of the Nix configuration
   passthru = {
     inherit names;
-  } // wallpapers;
+  } // profilePics;
 }

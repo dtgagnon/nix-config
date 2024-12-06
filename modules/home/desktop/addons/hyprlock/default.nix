@@ -55,7 +55,7 @@ in
             fade_on_empty = false;
             rounding = -1;
             check_color = "rgba(190, 150, 200, 1)";  # Light purple for the checkmark
-            placeholder_text = "<i><span foreground=\"#cdd6f4\">Input Password...</span></i>";
+            placeholder_text = "<i><span foreground=#cdd6f4>Keep trying your best...</span></i>";
             hide_input = false;
             position = "0, -400";
             halign = "center";
@@ -93,7 +93,7 @@ in
           # Profile picture
           {
             monitor = "";
-            path = "${config.stylix.image}";
+            path = "${spirenix.pkgs.profile-pics.dtgagnon}";
             size = 170;
             border_size = 2;
             border_color = "rgba(145, 105, 160, 0.75)";
