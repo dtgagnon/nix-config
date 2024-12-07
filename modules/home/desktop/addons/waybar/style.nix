@@ -37,19 +37,19 @@ in
 
       #custom-startmenu {
         font-size: 20px;
-        padding: 0 8px;
+        padding: 0 14px 0 4;
         margin: 0 2px;
-        background: #${colors.base02};
+        background: #${colors.base00};
         border-radius: 10px;
-        border: 2px solid #${colors.base0E};
+        border: 2px solid #${colors.base0C};
       }
 
       #workspaces {
         padding: 0 8px;
-        margin: 0 4px;
-        background: #${colors.base02};
+        margin: 0 2px;
+        background: #${colors.base00};
         border-radius: 10px;
-        border: 2px solid #${colors.base0E};
+        border: 2px solid #${colors.base0C};
       }
 
       #workspaces button {
@@ -68,13 +68,14 @@ in
 
       #waybar .modules-center {
         margin: 8px 0;
-        border-radius: 10px;
-        border: 2px solid #${colors.base0E};
       }
 
       #clock {
-        padding: 0 4px;
         margin: 0;
+        padding: 0 4px;
+        background: #${colors.base00};
+        border: 2px solid #${colors.base0C};
+        border-radius: 10px;
       }
 
       /* ---------------Right--------------- */
@@ -82,14 +83,26 @@ in
         margin: 8px 12px;
       }
 
-      #group-hardware {
-        margin: 0 10px;
-        padding: 0 10px;
+      #hardware {
+        margin: 0 2px;
+        padding: 0 20px;
+        background: #${colors.base02};
+        border: 2px solid #${colors.base0E};
+        border-radius: 10px;
       }
       
-      #group-utilities {
-        margin: 0 10px;
+      #utilities {
+        margin: 0 2px;
+        padding: 0 20px 0 0;
+        background: #${colors.base02};
+        border: 2px solid #${colors.base0E};
+        border-radius: 10px;
+      }
+
+      #pulseaudio {
+        margin: 0 2px;
         padding: 0 10px;
+        background: #${colors.base02};
         border: 2px solid #${colors.base0E};
         border-radius: 10px;
       }
