@@ -36,7 +36,6 @@ in
 
       override = {
         base00 = "#9DA18F";
-        base0B = "${config.stylix.base16Scheme.base05}";
       } // cfg.override;
 
       fonts = {

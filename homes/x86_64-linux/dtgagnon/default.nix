@@ -51,7 +51,7 @@ in
       hyprland = enabled;
       styling.stylix = { 
         enable = true;
-        wallpaper = pkgs.spirenix.wallpapers.painted-green-mountains;
+        wallpaper = pkgs.spirenix.wallpapers.frosted-purple-snowy-pinetrees;
       };
     };
 

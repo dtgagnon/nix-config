@@ -70,6 +70,7 @@ in
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@base03";
           background-color = mkLiteral "@base00";
+          opacity = mkLiteral "0.5";
         };
 
         # Container for all main elements (inputbar and listbox)

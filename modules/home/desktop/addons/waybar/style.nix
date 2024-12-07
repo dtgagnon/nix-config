@@ -40,16 +40,16 @@ in
         padding: 0 14px 0 4;
         margin: 0 2px;
         background: #${colors.base00};
-        border-radius: 10px;
-        border: 2px solid #${colors.base0C};
+        border-radius: 12px;
+        border: 2px solid #${colors.base0B};
       }
 
       #workspaces {
         padding: 0 8px;
         margin: 0 2px;
         background: #${colors.base00};
-        border-radius: 10px;
-        border: 2px solid #${colors.base0C};
+        border-radius: 12px;
+        border: 2px solid #${colors.base0B};
       }
 
       #workspaces button {
@@ -74,37 +74,46 @@ in
         margin: 0;
         padding: 0 4px;
         background: #${colors.base00};
-        border: 2px solid #${colors.base0C};
-        border-radius: 10px;
+        border: 2px solid #${colors.base0B};
+        border-radius: 12px;
       }
 
       /* ---------------Right--------------- */
       #waybar .modules-right {
         margin: 8px 12px;
       }
+      
+      #pulseaudio {
+        margin: 0 2px;
+        padding: 0 16px 0 8px;
+        background: #${colors.base00};
+        border: 2px solid #${colors.base0B};
+        border-radius: 12px;
+      }
 
       #hardware {
         margin: 0 2px;
+        padding: 0 12px;
+        background: #${colors.base00};
+        border: 2px solid #${colors.base0B};
+        border-radius: 12px;
+      }
+
+      #temperature, #cpu, #memory, #network {
         padding: 0 20px;
-        background: #${colors.base02};
-        border: 2px solid #${colors.base0E};
-        border-radius: 10px;
       }
       
       #utilities {
         margin: 0 2px;
-        padding: 0 20px 0 0;
-        background: #${colors.base02};
-        border: 2px solid #${colors.base0E};
-        border-radius: 10px;
+        padding: 0 12px;
+        background: #${colors.base00};
+        border: 2px solid #${colors.base0B};
+        border-radius: 12px;
       }
 
-      #pulseaudio {
-        margin: 0 2px;
+      #custom-exit {
+        margin: 0;
         padding: 0 10px;
-        background: #${colors.base02};
-        border: 2px solid #${colors.base0E};
-        border-radius: 10px;
       }
     '';
   };
