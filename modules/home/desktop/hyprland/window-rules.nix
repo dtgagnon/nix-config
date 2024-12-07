@@ -89,7 +89,7 @@ in
       ];
 
       layerrule = [
-        "blur, waybar"
+        # "blur, waybar"
 
         "blur, rofi"
         "dimaround, rofi"
