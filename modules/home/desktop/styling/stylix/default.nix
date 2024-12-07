@@ -35,7 +35,6 @@ in
       ) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
 
       override = {
-        base00 = "#9DA18F";
       } // cfg.override;
 
       fonts = {
