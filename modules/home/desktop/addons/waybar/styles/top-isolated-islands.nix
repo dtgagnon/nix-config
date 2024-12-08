@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib) mkIf types;
-  inherit (lib.stylix) colors;
+  inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.waybar;
 in
 {
