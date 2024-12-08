@@ -26,7 +26,7 @@ in
 
       window#waybar {
         background: transparent;
-        color: #${colors.base03};
+        color: #${colors.base05};
       }
 
       /* ---------------Left--------------- */
