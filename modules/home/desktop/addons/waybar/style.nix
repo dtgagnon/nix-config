@@ -16,7 +16,7 @@ in
 
       * {
         font-family: ${config.stylix.fonts.sansSerif.name};
-        font-size: 16px;
+        font-size: 20px;
         min-height: 0;
         border: none;
         border-radius: 0;
@@ -36,8 +36,8 @@ in
       }
 
       #custom-startmenu {
-        font-size: 20px;
-        padding: 0 14px 0 4;
+        font-size: 24px;
+        padding: 0 16px 0 4px;
         margin: 0 2px;
         background: #${colors.base00};
         border-radius: 12px;
@@ -72,7 +72,7 @@ in
 
       #clock {
         margin: 0;
-        padding: 0 4px;
+        padding: 0 8px;
         background: #${colors.base00};
         border: 2px solid #${colors.base03};
         border-radius: 12px;
@@ -93,7 +93,7 @@ in
 
       #hardware {
         margin: 0 2px;
-        padding: 0 12px;
+        padding: 0 12px 0 6px;
         background: #${colors.base00};
         border: 2px solid #${colors.base03};
         border-radius: 12px;
@@ -113,7 +113,7 @@ in
 
       #custom-exit {
         margin: 0;
-        padding: 0 10px;
+        padding: 0 8px 0 0;
       }
     '';
   };
