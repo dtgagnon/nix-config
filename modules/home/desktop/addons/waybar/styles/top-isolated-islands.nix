@@ -10,7 +10,7 @@ let
   cfg = config.${namespace}.desktop.addons.waybar;
 in
 {
-  config = mkIf cfg.waybarStyle == "top-isolated-islands" {
+  config = mkIf (cfg.waybarStyle == "top-isolated-islands") {
     programs.waybar.style = ''
       ${cfg.extraStyle}
 
