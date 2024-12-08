@@ -19,13 +19,11 @@ in
     extraStyle = mkOpt types.str "" "Additional style to add to waybar";
   };
 
-  imports = [ ./styles/${cfg.waybarStyle}.nix ];
+  
 
   config = mkIf cfg.enable {
-    home.packages = [
-      pkgs.hyprpanel
-      pkgs.ags
-    ];
+    imports = [ ./styles/${cfg.waybarStyle}.nix ];
+    home.packages = with pkgs; [ hyprpanel ags ];
 
     programs.waybar = {
       enable = true;
