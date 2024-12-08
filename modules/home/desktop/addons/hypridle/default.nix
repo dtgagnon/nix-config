@@ -17,10 +17,6 @@ in
       lock = mkOpt int 600 "Seconds until screen locks.";
       suspend = mkOpt int 1800 "Seconds until system suspends.";
     };
-
-    lockCmd = mkOpt str "pidof hyprlock || hyprlock" "Command to run for locking the screen.";
-    beforeSleepCmd = mkOpt str "loginctl lock-session" "Command to run before sleep.";
-    afterSleepCmd = mkOpt str "hyprctl dispatch dpms on" "Command to run after sleep.";
   };
 
   config = mkIf cfg.enable {
@@ -28,28 +24,26 @@ in
       enable = true;
       settings = {
         general = {
-          before_sleep_cmd = cfg.beforeSleepCmd;
-          after_sleep_cmd = cfg.afterSleepCmd;
-          lock_cmd = cfg.lockCmd;
+          before_sleep_cmd = "loginctl lock-session && hyprctl dispatch dpms standby";
+          after_sleep_cmd = "hyprctl dispatch dpms on";
+          lock_cmd = "pidof hyprlock || hyprlock";
         };
 
         listener = [
           {
             timeout = cfg.timeouts.screen;
-            on-timeout = "notify-send 'Screen Dim' 'Screen will dim in 30 seconds' -t 3000";
+            on-timeout = "notify-send 'Screen Dim' 'Screen will dim in 30 seconds' -t 3000 && sleep 30 && brightnessctl set 10%";
+            on-resume = "brightnessctl -r";
           }
           {
             timeout = cfg.timeouts.lock;
-            on-timeout = "notify-send 'Screen Lock' 'Screen will lock in 30 seconds' -t 3000";
-          }
-          {
-            timeout = cfg.timeouts.lock + 30;
-            on-timeout = "loginctl lock-session && hyprctl dispatch dpms off";
+            on-timeout = "notify-send 'Screen Lock' 'Screen will lock in 30 seconds' -t 3000 && sleep 30 && loginctl lock-session && hyprctl dispatch dpms standby";
             on-resume = "hyprctl dispatch dpms on";
           }
           {
             timeout = cfg.timeouts.suspend;
             on-timeout = "notify-send 'System Suspend' 'System will suspend in 30 seconds' -t 3000 && sleep 30 && systemctl suspend";
+            on-resume = "hyprctl dispatch dpms on";
           }
         ];
       };

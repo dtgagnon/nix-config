@@ -99,8 +99,12 @@ in
         border-radius: 12px;
       }
 
-      #temperature, #cpu, #memory, #network {
+      #cpu, #memory, #network {
         padding: 0 8px;
+      }
+
+      #temperature {
+        padding: 0 4px 0 -4px;
       }
       
       #utilities {

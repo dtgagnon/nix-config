@@ -13,12 +13,13 @@ let
   inherit (config.lib.stylix) colors;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
-
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
+    waybarStyle = mkOpt types.str "top-isolated-islands" "The waybar style to use";
     extraStyle = mkOpt types.str "" "Additional style to add to waybar";
   };
+
+  imports = [ ./styles/${cfg.waybarStyle}.nix ];
 
   config = mkIf cfg.enable {
     home.packages = [
@@ -120,7 +121,7 @@ in
 
           cpu = {
             interval = 5;
-            format = "  {usage}<small>%</small>";
+            format = "   {usage}<small>%</small>";
             tooltip = true;
           };
 
