@@ -113,7 +113,7 @@ in
 
       #custom-exit {
         margin: 0;
-        padding: 0 8px 0 0;
+        padding: 0 8px;
       }
     '';
   };
