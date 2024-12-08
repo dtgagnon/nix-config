@@ -9,6 +9,8 @@ let
   inherit (lib) mkIf types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
   cfg = config.${namespace}.desktop.styling.stylix;
+
+  core = config.spirenix.desktop.styling.core;
 in
 {
   options.${namespace}.desktop.styling.stylix = {
@@ -32,32 +34,38 @@ in
 
       base16Scheme = mkIf (
         cfg.wallpaper == null
-      ) "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+      ) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
 
       override = {
       } // cfg.override;
 
+      cursor = {
+        package = core.cursor.package;
+        name = core.cursor.name;
+        size = core.cursor.size;
+      };
+
       fonts = {
         monospace = {
           package = pkgs.nerdfonts.override { fonts = [ 
+            core.fonts.monospace.nerdfont
             "Iosevka"
-            "JetBrainsMono"
           ]; };
-          name = "JetBrainsMono Nerd Font Mono";
+          name = core.fonts.monospace.name;
         };
         sansSerif = {
-          package = pkgs.dejavu_fonts;
-          name = "DejaVu Sans";
+          package = core.fonts.sansSerif.package;
+          name = core.fonts.sansSerif.name;
         };
         serif = {
-          package = pkgs.dejavu_fonts;
-          name = "DejaVu Serif";
+          package = core.fonts.serif.package;
+          name = core.fonts.serif.name;
         };
         sizes = {
-          applications = 12;
-          terminal = 15;
-          desktop = 10;
-          popups = 10;
+          applications = core.fonts.sizes.applications;
+          terminal = core.fonts.sizes.terminal;
+          desktop = core.fonts.sizes.desktop;
+          popups = core.fonts.sizes.popups;
         };
       };
 

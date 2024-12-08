@@ -61,6 +61,7 @@ in
 
       programs.home-manager.enable = true;
       home = {
+        preferXdgDirectories = true;
         username = mkDefault cfg.name;
         homeDirectory = mkDefault cfg.home;
         stateVersion = lib.mkDefault (osConfig.system.stateVersion or "24.05");

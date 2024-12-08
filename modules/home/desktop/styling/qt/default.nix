@@ -9,6 +9,8 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.styling.qt;
+
+  core = config.spirenix.desktop.styling.core;
 in
 {
   options.${namespace}.desktop.styling.qt = {
@@ -24,10 +26,10 @@ in
   config = mkIf cfg.enable {
     qt = {
       enable = true;
-      platformTheme.name = cfg.platformTheme;
+      platformTheme.name = core.qt.platform or cfg.platformTheme;
       style = {
-        name = cfg.style.name;
-        package = cfg.style.package;
+        name = core.qt.style.name or cfg.style.name;
+        package = core.qt.style.package or cfg.style.package;
       };
     };
 

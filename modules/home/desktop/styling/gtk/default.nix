@@ -9,6 +9,8 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.styling.gtk;
+
+  core = config.spirenix.desktop.styling.core;
 in
 {
   options.${namespace}.desktop.styling.gtk = {
@@ -19,22 +21,19 @@ in
     gtk = lib.mkForce {
       enable = true;
       theme = {
-        name = "adw-gtk3-dark";
-        package = pkgs.adw-gtk3;
+        name = core.gtk.theme.name;
+        package = core.gtk.theme.package;
       };
 
       iconTheme = {
-        package = pkgs.catppuccin-papirus-folders.override {
-          flavor = "mocha";
-          accent = "lavender";
-        };
-        name = "Papirus-Dark";
+        package = core.gtk.iconTheme.package;
+        name = core.gtk.iconTheme.name;
       };
 
       cursorTheme = {
-        name = "Bibata-Modern-Ice";
-        package = pkgs.bibata-cursors;
-        size = 24;
+        name = core.cursor.name;
+        package = core.cursor.package;
+        size = core.cursor.size;
       };
 
       gtk3 = {
@@ -74,11 +73,5 @@ in
     };
 
     home.sessionVariables.GTK_THEME = "Adwaita:dark";
-    home.pointerCursor = lib.mkForce {
-      name = "Bibata-Modern-Ice";
-      package = pkgs.bibata-cursors;
-      size = 24;
-      gtk.enable = true;
-    };
   };
 }
