@@ -13,16 +13,15 @@ let
   inherit (config.lib.stylix) colors;
 in
 {
+  imports = if cfg.waybarStyle == null then [] else [ ./styles/${cfg.waybarStyle}.nix ];
+
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
-    waybarStyle = mkOpt types.str "top-isolated-islands" "The waybar style to use";
+    waybarStyle = mkOpt (types.nullOr types.str) "top-isolated-islands" "The waybar style to use";
     extraStyle = mkOpt types.str "" "Additional style to add to waybar";
   };
 
-  
-
   config = mkIf cfg.enable {
-    imports = [ ./styles/${cfg.waybarStyle}.nix ];
     home.packages = with pkgs; [ hyprpanel ags ];
 
     programs.waybar = {
