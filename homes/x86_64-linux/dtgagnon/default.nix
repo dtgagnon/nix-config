@@ -49,19 +49,18 @@ in
 
     desktop = {
       hyprland = enabled;
-      styling = {
-        core = {
-          enable = true;
-          cursor = {
-            package = pkgs.bibata-cursors;
-            name = "Bibata-Modern-Ice";
-            size = 24;
-          };
+      styling.stylix = {
+        enable = true;
+        override = { base00 = "#313243"; base03 = "#232332"; base05 = "#4F5165"; };
+      };
+      styling.core = {
+        enable = true;
+        cursor = {
+          package = pkgs.bibata-cursors;
+          name = "Bibata-Modern-Ice";
+          size = 24;
         };
-        stylix = { 
-          enable = true;
-          wallpaper = pkgs.spirenix.wallpapers.frosted-purple-snowy-pinetrees;
-        };
+        wallpaper = pkgs.spirenix.wallpapers.frosted-purple-snowy-pinetrees;
       };
     };
 

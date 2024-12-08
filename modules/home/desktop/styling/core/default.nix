@@ -13,6 +13,8 @@ in
 {
   options.${namespace}.desktop.styling.core = {
     enable = mkBoolOpt false "Whether to enable core styling configuration.";
+    wallpaper = mkOpt (types.package) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
+    theme = mkOpt (types.nullOr types.str) null "The theme to use.";
     
     cursor = {
       package = mkOpt (types.package) pkgs.bibata-cursors "The cursor theme package to use.";
@@ -45,8 +47,6 @@ in
         name = mkOpt lib.types.str "Noto Sans" "The name of the interface font.";
       };
     };
-
-    theme = mkOpt types.str "gruvbox-dark-medium" "The theme to use.";
 
     gtk = {
       theme = {

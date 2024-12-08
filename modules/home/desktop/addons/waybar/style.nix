@@ -26,7 +26,7 @@ in
 
       window#waybar {
         background: transparent;
-        color: #${colors.base05};
+        color: #${colors.base03};
       }
 
       /* ---------------Left--------------- */
@@ -41,7 +41,7 @@ in
         margin: 0 2px;
         background: #${colors.base00};
         border-radius: 12px;
-        border: 2px solid #${colors.base0B};
+        border: 2px solid #${colors.base03};
       }
 
       #workspaces {
@@ -49,7 +49,7 @@ in
         margin: 0 2px;
         background: #${colors.base00};
         border-radius: 12px;
-        border: 2px solid #${colors.base0B};
+        border: 2px solid #${colors.base03};
       }
 
       #workspaces button {
@@ -74,7 +74,7 @@ in
         margin: 0;
         padding: 0 4px;
         background: #${colors.base00};
-        border: 2px solid #${colors.base0B};
+        border: 2px solid #${colors.base03};
         border-radius: 12px;
       }
 
@@ -87,7 +87,7 @@ in
         margin: 0 2px;
         padding: 0 16px 0 8px;
         background: #${colors.base00};
-        border: 2px solid #${colors.base0B};
+        border: 2px solid #${colors.base03};
         border-radius: 12px;
       }
 
@@ -95,19 +95,19 @@ in
         margin: 0 2px;
         padding: 0 12px;
         background: #${colors.base00};
-        border: 2px solid #${colors.base0B};
+        border: 2px solid #${colors.base03};
         border-radius: 12px;
       }
 
       #temperature, #cpu, #memory, #network {
-        padding: 0 20px;
+        padding: 0 8px;
       }
       
       #utilities {
         margin: 0 2px;
         padding: 0 12px;
         background: #${colors.base00};
-        border: 2px solid #${colors.base0B};
+        border: 2px solid #${colors.base03};
         border-radius: 12px;
       }
 

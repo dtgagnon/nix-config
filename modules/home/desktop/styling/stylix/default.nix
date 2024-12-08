@@ -28,13 +28,10 @@ in
     stylix = {
       enable = true;
 
-      image =
-        if cfg.wallpaper == null then pkgs.spirenix.wallpapers.nord-rainbow-dark-nix else cfg.wallpaper;
+      image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
       imageScalingMode = "stretch";
 
-      base16Scheme = mkIf (
-        cfg.wallpaper == null
-      ) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
+      base16Scheme = mkIf (core.theme != null) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
 
       override = {
       } // cfg.override;
