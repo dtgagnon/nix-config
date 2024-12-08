@@ -1,4 +1,4 @@
-{
+config = mkIf cfg.enable {
   programs.waybar.style = ''
     ${cfg.extraStyle}
 
