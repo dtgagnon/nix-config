@@ -30,7 +30,7 @@ button:hover {
 }
 
 #lock {
-  background-image: image(url("icons/lock.png"));
+  background-image: image(url(icons/lock.png"));
 }
 
 #logout {

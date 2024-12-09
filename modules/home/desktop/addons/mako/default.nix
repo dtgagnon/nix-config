@@ -36,8 +36,8 @@ in
 
       borderRadius = 12;
       borderSize = 2;
-      margin = "12px";
-      padding = "12px";
+      margin = 12;
+      padding = 12;
     };
   };
 }
