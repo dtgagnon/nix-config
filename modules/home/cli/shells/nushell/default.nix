@@ -114,7 +114,6 @@ in
       broot.enableNushellIntegration = mkNushellIntegration "broot";
       carapace.enableNushellIntegration = mkNushellIntegration "carapace";
       direnv.enableNushellIntegration = mkNushellIntegration "direnv";
-      eza.enableNushellIntegration = mkNushellIntegration "eza";
       thefuck.enableNushellIntegration = mkNushellIntegration "thefuck";
       yazi.enableNushellIntegration = mkNushellIntegration "yazi";
       zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";

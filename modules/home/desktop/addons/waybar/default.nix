@@ -239,7 +239,7 @@ in
 
           "custom/notification" = {
             tooltip = false;
-            format = "{summary} {icon}";
+            format = "{icon}";
             "format-icons" = {
               notification = "<span foreground='red'><sup>󱅫</sup></span>";
               none = "";
@@ -251,11 +251,13 @@ in
               "dnd-inhibited-none" = " ";
             };
             return-type = "json";
-            exec = "makoctl list -t | jq '.[0] // {}'";
-            interval = 5;
-            on-click = "notify-send \"$(makoctl list -t | jq -r '.[0].summary')\" \"$(makoctl list -t | jq -r '.[0].body')\"";
-            on-click-right = "sleep 0.1 && makoctl dismiss -a";
+            exec-if = "which makoctl";
+            exec = "makoctl list -t | jq --unbuffered --compact-output '[.[0] // {}] | if length > 0 then {\"alt\":\"notification\", \"tooltip\": (.[0].summary + \:\n\" + .[0].body)} else {\"alt\":\"none\"} end'";
+            on-click = "makoctl invoke";
+            on-click-right = "sleep 0.1 && makoctl dismiss";
             escape = true;
+
+            # interval = 5;
           };
 
           "custom/startmenu" = {

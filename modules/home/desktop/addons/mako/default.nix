@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -16,7 +17,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    # home.packages = [ pkgs.libnotify pkgs.jq ];
+    home.packages = [
+      pkgs.libnotify
+      pkgs.jq
+    ];
 
     services.mako = {
       enable = true;
@@ -26,7 +30,7 @@ in
       defaultTimeout = 5000;
       maxVisible = 3;
 
-## Already handled by stylix
+      ## Already handled by stylix
       # backgroundColor = "${colors.base00}";
       # textColor = "${colors.base05}";
       # borderColor = "${colors.base03}";
@@ -36,8 +40,8 @@ in
 
       borderRadius = 12;
       borderSize = 2;
-      margin = 12;
-      padding = 12;
+      # margin = "12";
+      # padding = "12";
     };
   };
 }

@@ -17,7 +17,6 @@ in
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
         # "waybar"
-        "mako"
         "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
         "swww init ; sleep 1; setwall"
         "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
