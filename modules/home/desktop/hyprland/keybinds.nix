@@ -24,6 +24,7 @@ in
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, firefox"
+        "$mod, W, exec, windsurf"
 
         # Window Control
         "$mod, Q, killactive,"
