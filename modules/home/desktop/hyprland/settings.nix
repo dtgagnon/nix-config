@@ -16,9 +16,10 @@ in
     spirenix.desktop.hyprland.extraSettings = {
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
-        "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
+        # "waybar"
         "swww init ; sleep 1; setwall"
         "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
+        "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
       ];
 
       general = {

@@ -30,7 +30,7 @@ in
       polarity = "dark"; # "light" || "dark" || "either"
 
       # image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
-      image = pkgs.spirenix.wallpapers.painted-green-mountains;
+      image = pkgs.spirenix.wallpapers.frosted-purple-snowy-pinetrees;
 
       cursor = {
         package = pkgs.bibata-cursors;

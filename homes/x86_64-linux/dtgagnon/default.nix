@@ -18,8 +18,8 @@ in
     };
 
     apps = {
+      discord = enabled;
       firefox = enabled;
-      nix-software-center = enabled;
       obsidian = enabled;
       super-productivity = enabled;
       terminals = {

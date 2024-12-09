@@ -17,12 +17,15 @@ in
 
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
-    waybarStyle = mkOpt (types.nullOr types.str) "top-isolated-islands" "The waybar style to use";
+    preset = mkOpt (types.nullOr types.str) "top-isolated-islands" "The waybar style to use";
     extraStyle = mkOpt types.str "" "Additional style to add to waybar";
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ hyprpanel ags ];
+    home.packages = with pkgs; [
+      hyprpanel
+      ags
+    ];
 
     programs.waybar = {
       enable = true;
@@ -46,7 +49,7 @@ in
             "group/utilities"
           ];
 
-# Custom grouping of modules
+          # Custom grouping of modules
           "group/hardware" = {
             orientation = "inherit";
             modules = [
@@ -56,6 +59,14 @@ in
               "backlight"
               "battery"
               "network"
+            ];
+          };
+
+          "group/audioControl" = {
+            orientation = "inherit";
+            modules = [
+              "custom/music"
+              "pulseaudio"
             ];
           };
 
@@ -86,8 +97,7 @@ in
             on-click = "activate";
           };
 
-
-# Individual module configuration
+          # Individual module configuration
           clock = {
             format = "{:%a, %b. %d   %I:%M <small>%p</small>}";
             interval = 1;
@@ -211,16 +221,20 @@ in
             on-click = "sleep 0.1 && wlogout";
           };
 
-          "custom/startmenu" = {
-            tooltip = false;
-            format = "";
-            on-click = "sleep 0.1 && rofi -show drun";
-          };
-
           "custom/hyprbindings" = {
             tooltip = false;
             format = "󱕴";
             on-click = "sleep 0.1 && list-hypr-bindings";
+          };
+
+          "custom/music" = {
+            format = " 𝄞 {}";
+            escape = true;
+            interval = 1;
+            tooltip = false;
+            exec = "playerctl metadata --format '{{ title }} - {{ artist }}'";
+            on-click = "playerctl play-pause";
+            max-length = 50;
           };
 
           "custom/notification" = {
@@ -243,6 +257,14 @@ in
             on-click-right = "sleep 0.1 && makoctl dismiss -a";
             escape = true;
           };
+
+          "custom/startmenu" = {
+            tooltip = false;
+            format = "";
+            on-click = "sleep 0.1 && rofi -show drun";
+          };
+
+
         }
       ];
     };

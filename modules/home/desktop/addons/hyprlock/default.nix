@@ -18,6 +18,7 @@ in
   config = mkIf cfg.enable {
     programs.hyprlock = {
       enable = true;
+      sourceFirst = true;
       settings = mkForce {
         background = [
           {

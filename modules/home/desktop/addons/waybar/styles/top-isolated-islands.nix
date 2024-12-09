@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf types;
+  inherit (lib) mkIf;
   inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.waybar;
 in
 {
-  config = mkIf (cfg.waybarStyle == "top-isolated-islands") {
+  config = mkIf (cfg.preset == "top-isolated-islands") {
     programs.waybar.style = ''
       ${cfg.extraStyle}
 
@@ -53,9 +53,16 @@ in
       }
 
       #workspaces button {
-        opacity: 0.7;
+        opacity: 0.65;
         padding: 0 8px;
         margin: 0;
+      }
+
+      #workspaces button:hover {
+        text-shadow: inherit;
+        box-shadow: inherit;
+        transition: border-color 0.3s, color 0.3s;
+        color: #${colors.base05};
       }
 
       #workspaces .active {
@@ -82,13 +89,18 @@ in
       #waybar .modules-right {
         margin: 8px 12px;
       }
-      
-      #pulseaudio {
+
+      #audioControl {
         margin: 0 2px;
-        padding: 0 16px 0 8px;
+        padding: 0 12px;
         background: #${colors.base00};
         border: 2px solid #${colors.base03};
         border-radius: 12px;
+      }
+
+      #pulseaudio {
+        margin: 0 2px;
+        padding: 0 16px 0 8px;
       }
 
       #hardware {
@@ -104,9 +116,9 @@ in
       }
 
       #temperature {
-        padding: 0 4px 0 -4px;
+        padding: 0 4px 0 0;
       }
-      
+
       #utilities {
         margin: 0 2px;
         padding: 0 12px;

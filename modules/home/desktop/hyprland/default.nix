@@ -53,10 +53,6 @@ in
 				hyprlock = enabled;
         waybar = enabled;
         wlogout = enabled;
-
-        # Misc
-        term = enabled;
-        clipboard = enabled;
       };
       styling = {
         gtk = enabled;      # GTK theme
@@ -70,6 +66,16 @@ in
       glib
       gtk3.out
       wayland
+
+      # basic features
+      grim            # Screenshot utility for Wayland
+      swww            # Efficient animated wallpaper daemon for Wayland
+      slurp           # Select a region in Wayland compositors
+      swappy          # A screenshot editing tool for Wayland
+      playerctl       # Command-line utility to control media players
+      brightnessctl   # Brightness control for Linux
+      wl-clipboard    # Command-line clipboard utilities for Wayland
+      kitty           # GPU-accelerated terminal emulator
     ];
   };
 }
