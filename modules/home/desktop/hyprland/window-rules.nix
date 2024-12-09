@@ -15,6 +15,10 @@ in
         # Aseprite - pixel art editor
         "tile,title:^(Aseprite)$"
 
+        # Discord
+        "float,class:^(discord)$"
+        "move 0 0,class:^(discord)$"
+
         # Kitty - terminal
         "float,title:^(float_kitty)$"
         "center,title:^(float_kitty)$"
@@ -31,8 +35,6 @@ in
         "opacity 1.0 override 1.0 override,title:^(.*mpv.*)$"
         "opacity 1.0 override 1.0 override,class:(Aseprite)"
         "opacity 1.0 override 1.0 override,class:(Unity)"
-
-
 
 #### General Window Rules ####
 
