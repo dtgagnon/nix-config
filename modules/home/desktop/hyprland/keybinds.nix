@@ -68,7 +68,7 @@ in
         "$mod_SHIFT, 0, movetoworkspacesilent, 10"
 
         # General Desktop
-        "$mod_CTRL, L, exec, $lock"
+        "$mod_SHIFT_CTRL, L, exec, $lock"
       ];
 
       # Repeating (hold-able) binds
