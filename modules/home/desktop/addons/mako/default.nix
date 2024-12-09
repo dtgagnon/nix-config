@@ -35,13 +35,13 @@ in
       # textColor = "${colors.base05}";
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
-      iconPath = "${pkgs.breeze-icons}/share/icons/breeze-dark";
-      maxIconSize = 24;
+      # iconPath = "${pkgs.catppuccin-papirus}/share/icons/Papirus-Dark";
+      maxIconSize = 20;
 
       borderRadius = 12;
       borderSize = 2;
-      # margin = "12";
-      # padding = "12";
+      margin = "12";
+      padding = "12";
     };
   };
 }

@@ -17,9 +17,9 @@ in
   config = mkIf cfg.enable {
     services.syncthing = {
       enable = true;
-      passwordFile = "/run/secrets/syncthing-webui-password";
+      # passwordFile = "/run/secrets/syncthing-webui-password";
       guiAddress = "127.0.0.1:8384";
-      
+
       # key = null;   # Path to the key.pem file, which will be copied into Syncthing's config directory
       overrideDevices = false;    # Delete the devices not configured via the devices option
       overrideFolders = false;    # Delete the folders not configured via the folders option
@@ -29,8 +29,8 @@ in
         options = {
           limitBandwidthInLan = false;    # Apply bandwidth limits to devices in the same broadcast domain as the local device
           localAnnounceEnabled = true;    # Send announcements to the local LAN, also use announcements to find other devices
-          localAnnouncePort = 21027;
-          maxFolderConcurrency = 0;   # This option controls how many folders may concurrently be in I/O-intensive operations
+          localAnnouncePort = 22000;
+          maxFolderConcurrency = null;   # This option controls how many folders may concurrently be in I/O-intensive operations
           relaysEnabled = true;
           urAccepted = -1;
         };
@@ -38,7 +38,7 @@ in
         # devices = {
         #   "<name>" = {
         #     autoAcceptFolders = "true or false";
-        #     id = "";   # The ID of the device
+        #     id = "DG Fold4";   # The ID of the device
         #     name = "";   # The name of the device
         #   };
         # };

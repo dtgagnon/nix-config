@@ -18,9 +18,11 @@ in
   config = mkIf cfg.enable {
     services.syncthing = {
       enable = true;
-      user = "${username}";
-      dataDir = "/home/${username}";
+      dataDir = "/home/${username}/.local/state/syncthing";
       configDir = "/home/${username}/.config/syncthing";
+      user = "dtgagnon";
+      group = "users";
+			openDefaultPorts = true;
     };
 
     # Add syncthing system configuration to user's home persistence
