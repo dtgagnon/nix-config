@@ -50,6 +50,7 @@ in
           };
 
           "group/audioControl" = {
+            orientation = "inherit";
             modules = [
               "pulseaudio"
               "custom/music"
@@ -57,100 +58,87 @@ in
           };
 
           "group/utilities" = {
+            orientation = "inherit";
             modules = [
               "custom/exit"
             ];
           };
 
+##### 󰲌   󰎞   󰺵  󰝦    #####
           "hyprland/workspaces#odds" = {
             persistent-workspaces = {
-              "1" = "󰲌";
-              "3" = "󰎞";
-              "5" = "";
+              "1" = "";
+              "3" = "";
+              "5" = "󰎞";
             };
             format = "{icon}";
             format-icons = {
-              "1" = "󰲌";
-              "3" = "󰎞";
-              "5" = "";
+              "1" = "";
+              "3" = "";
+              "5" = "󰎞";
+              "default" = "󰝦";
+              "urgent" = "";
             };
             on-click = "activate";
 						ignore-workspaces = [
 							"2"
 							"4"
 							"6"
+              "8"
+              "10"
 						];
           };
 
           "hyprland/workspaces#evens" = {
             persistent-workspaces = {
               "2" = "";
-              "4" = "";
+              "4" = "";
               "6" = "󰺵";
             };
             format = "{icon}";
             format-icons = {
               "2" = "";
-              "4" = "";
+              "4" = "";
               "6" = "󰺵";
+              "default" = "󰝦";
+              "urgent" = "";
             };
             on-click = "activate";
 						ignore-workspaces = [
 							"1"
 							"3"
 							"5"
+              "7"
+              "9"
 						];
           };
 
-          # FROM BEFORE TRYING TO SPLIT WORKSPACES
-          #     "hyprland/workspaces" = {
-          # "persistent-workspaces" = {
-          # 	""
-          #
-          # };
-          #       format = "{icon}";
-          #       sort-by-number = true;
-          #       active-only = false;
-          #       format-icons = {
-          #         "1" = "󰲌";
-          #         "2" = "";
-          #         "3" = "󰎞";
-          #         "4" = "";
-          #         "5" = "";
-          #         "6" = "󰺵";
-          #         "7" = "";
-          #         urgent = "";
-          #         focused = "";
-          #         default = "";
-          #       };
-          #       on-click = "activate";
-          #     };
-
-          # Individual module configuration
+### v--- Individual module configuration ---v ###
           "clock#clock" = {
-            format = "{ %I:%M <small>%p</small>}";
+            format = "{:%I:%M<small>%p</small>}";
             interval = 15;
+            tooltip = false;
           };
 
 					"clock#calendar" = {
-              format = "{:%a, %b. %d}";
-              interval = 1;
-              tooltip-format = "<tt>{calendar}</tt>";
-              calendar = {
-                mode = "month";
-                "mode-mon-col" = 3;
-                "weeks-pos" = "right";
-                "on-scroll" = 1;
-                "on-click-right" = "mode";
-                format = {
-                  months = "<span color='#${colors.base05}'><b>{}</b></span>";
-                  days = "<span color='#${colors.base06}'>{}</span>";
-                  weeks = "<span color='#${colors.base07}'>W{}</span>";
-                  weekdays = "<span color='#${colors.base08}'>{}</span>";
-                  today = "<span color='#${colors.base09}'><b><u>{}</u></b></span>";
-                };
+            format = "{:%a, %b. %d}";
+            interval = 1;
+            tooltip-format = "<tt>{calendar}</tt>";
+            calendar = {
+              mode = "month";
+              "mode-mon-col" = 3;
+              "weeks-pos" = "right";
+              "on-scroll" = 1;
+              "on-click-right" = "mode";
+              format = {
+                months = "<span color='#${colors.base05}'><b>{}</b></span>";
+                days = "<span color='#${colors.base06}'>{}</span>";
+                weeks = "<span color='#${colors.base07}'>W{}</span>";
+                weekdays = "<span color='#${colors.base08}'>{}</span>";
+                today = "<span color='#${colors.base09}'><b><u>{}</u></b></span>";
               };
             };
+          };
 
           temperature = {
             interval = 5;

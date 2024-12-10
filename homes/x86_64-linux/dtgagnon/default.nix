@@ -26,6 +26,7 @@ in
         kitty = enabled;
         wezterm = enabled;
       };
+      thunderbird = enabled;
       windsurf = enabled;
     };
 
