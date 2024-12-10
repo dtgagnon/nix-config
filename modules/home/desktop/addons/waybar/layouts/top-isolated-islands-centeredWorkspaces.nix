@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   namespace,
   ...
@@ -41,17 +40,16 @@ in
           "group/hardware" = {
             orientation = "inherit";
             modules = [
-              "temperature"
-              "cpu"
-              "memory"
-              "backlight"
-              "battery"
               "network"
+							"battery"
+							"backlight"
+							"memory"
+							"cpu"
+							"temperature"
             ];
           };
 
           "group/audioControl" = {
-            orientation = "inherit";
             modules = [
               "pulseaudio"
               "custom/music"
@@ -59,47 +57,49 @@ in
           };
 
           "group/utilities" = {
-            orientation = "inherit";
             modules = [
               "custom/exit"
             ];
           };
 
-          "hyprland/workspaces" = {
-            "persistent-workspaces" = {
-              "1" = "󰲌";
-              "2" = "";
-            };
-          };
-
           "hyprland/workspaces#odds" = {
+            persistent-workspaces = {
+              "1" = "󰲌";
+              "3" = "󰎞";
+              "5" = "";
+            };
             format = "{icon}";
-            sort-by-number = true;
-            active-only = false;
             format-icons = {
               "1" = "󰲌";
               "3" = "󰎞";
               "5" = "";
-              urgent = "";
-              focused = "";
-              default = "";
             };
             on-click = "activate";
+						ignore-workspaces = [
+							"2"
+							"4"
+							"6"
+						];
           };
 
           "hyprland/workspaces#evens" = {
+            persistent-workspaces = {
+              "2" = "";
+              "4" = "";
+              "6" = "󰺵";
+            };
             format = "{icon}";
-            sort-by-number = true;
-            active-only = false;
             format-icons = {
               "2" = "";
               "4" = "";
               "6" = "󰺵";
-              urgent = "";
-              focused = "";
-              default = "";
             };
             on-click = "activate";
+						ignore-workspaces = [
+							"1"
+							"3"
+							"5"
+						];
           };
 
           # FROM BEFORE TRYING TO SPLIT WORKSPACES
@@ -128,7 +128,7 @@ in
 
           # Individual module configuration
           "clock#clock" = {
-            format = "{%I:%M<small>%p</small>}";
+            format = "{ %I:%M <small>%p</small>}";
             interval = 15;
           };
 
@@ -287,7 +287,7 @@ in
             };
             return-type = "json";
             exec-if = "which makoctl";
-            exec = "makoctl list -t | jq --unbuffered --compact-output '[.[0] // {}] | if length > 0 then {\"alt\":\"notification\", \"tooltip\": (.[0].summary + \:\n\" + .[0].body)} else {\"alt\":\"none\"} end'";
+            exec = "makoctl list -t | jq --unbuffered --compact-output '[.[0] // {}] | if length > 0 then {\"alt\":\"notification\", \"tooltip\": (.[0].summary + \":\\n\" + .[0].body)} else {\"alt\":\"none\"} end'";
             on-click = "makoctl invoke";
             on-click-right = "sleep 0.1 && makoctl dismiss";
             escape = true;
@@ -301,7 +301,7 @@ in
             on-click = "sleep 0.1 && rofi -show drun";
           };
         }
-      ];
+			];
     };
   };
 }

@@ -85,15 +85,7 @@ in
       }
 
       #custom-startmenu {
-      	font-size: 24px;
-      	padding: 0 16px 0 4px;
-      	margin: 0 2px;
-      	background: #${colors.base00};
-      	border-radius: 12px;
-      	border: 2px solid #${colors.base03};
-      }
-
-      #workspaces#odds {
+      	font-size: 32px;
       	padding: 0 8px;
       	margin: 0 2px;
       	background: #${colors.base00};
@@ -101,26 +93,34 @@ in
       	border: 2px solid #${colors.base03};
       }
 
-      #workspaces#odds button {
+      workspaces.odds {
+      	padding: 0 8px;
+      	margin: 0 2px;
+      	background: #${colors.base00};
+      	border-radius: 12px;
+      	border: 2px solid #${colors.base03};
+      }
+
+      workspaces.odds button {
       	opacity: 0.65;
       	padding: 0 8px;
       	margin: 0;
       }
 
-      #workspaces#odds button:hover {
+      workspaces.odds button:hover {
       	text-shadow: inherit;
       	box-shadow: inherit;
       	transition: border-color 0.3s, color 0.3s;
       	color: #${colors.base05};
       }
 
-      #workspaces#odds .active {
+      workspaces.odds .active {
       	opacity: 1.0;
       	margin: 0;
       	padding: 0 8px;
       }
 
-      #workspaces#evens {
+      workspaces.evens {
       	padding: 0 8px;
       	margin: 0 2px;
       	background: #${colors.base00};
@@ -128,20 +128,20 @@ in
       	border: 2px solid #${colors.base03};
       }
 
-      #workspaces#evens button {
+      workspaces.evens button {
       	opacity: 0.65;
       	padding: 0 8px;
       	margin: 0;
       }
 
-      #workspaces#evens button:hover {
+      workspaces.evens button:hover {
       	text-shadow: inherit;
       	box-shadow: inherit;
       	transition: border-color 0.3s, color 0.3s;
       	color: #${colors.base05};
       }
 
-      #workspaces#evens .active {
+      workspaces.evens .active {
       	opacity: 1.0;
       	margin: 0;
       	padding: 0 8px;
@@ -153,7 +153,7 @@ in
       	margin: 8px 12px;
       }
 
-      #clock {
+      #clock#clock {
       	margin: 0 2px;
       	padding: 0 8px;
       	background: #${colors.base00};
@@ -161,7 +161,7 @@ in
       	border-radius: 12px;
       }
 
-      #custom-calendar {
+      #clock#calendar {
       	margin: 0 2px;
       	padding: 0 8px;
       	background: #${colors.base00};
