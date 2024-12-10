@@ -3,7 +3,7 @@
 
 <div align="center">
 
-![stars](https://img.shields.io/github/stars/TheMaxMur/NixOS-Configuration?label=Stars&color=F5A97F&labelColor=303446&style=flat&logo=starship&logoColor=F5A97F)
+![stars](https://img.shields.io/github/stars/dtgagnon/nix-config?label=Stars&color=F5A97F&labelColor=303446&style=flat&logo=starship&logoColor=F5A97F)
 ![nixos](https://img.shields.io/badge/NixOS-unstable-blue.svg?style=flat&logo=nixos&logoColor=CAD3F5&colorA=24273A&colorB=8aadf4)
 ![flake check](https://img.shields.io/static/v1?label=Nix%20Flake&message=Check&style=flat&logo=nixos&colorA=24273A&colorB=9173ff&logoColor=CAD3F5)
 ![license](https://img.shields.io/static/v1.svg?style=flat&label=License&message=Unlicense&colorA=24273A&colorB=91d7e3&logo=unlicense&logoColor=91d7e3&)
@@ -16,7 +16,6 @@
 - [File structure](#-file-structure)
 - [Desktop preview](#%EF%B8%8F-desktop-preview)
   - [Hyprland](#-hyprland)
-  - [SwayFX](#-swayfx)
 - [Software](#-software)
 - [Hosts description](#%EF%B8%8F-hosts-description)
 - [Keyboard](#%EF%B8%8F-keyboard)
