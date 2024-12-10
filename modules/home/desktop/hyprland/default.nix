@@ -43,20 +43,20 @@ in
     spirenix.desktop = {
       addons = {
         # Utilities
-        mako = enabled;     # notifications
-        rofi = enabled;     # launcher
-        fuzzel = enabled;   # app launcher
+        mako = enabled; # notifications
+        rofi = enabled; # launcher
+        fuzzel = enabled; # app launcher
         wlsunset = enabled; # color temperature manager
 
         # Basic functionality
         hypridle = enabled;
-				hyprlock = enabled;
+        hyprlock = enabled;
         waybar = enabled;
         wlogout = enabled;
       };
       styling = {
-        gtk = enabled;      # GTK theme
-        qt = enabled;       # Qt theme
+        gtk = enabled; # GTK theme
+        qt = enabled; # Qt theme
       };
     };
 
@@ -68,14 +68,18 @@ in
       wayland
 
       # basic features
-      grim            # Screenshot utility for Wayland
-      swww            # Efficient animated wallpaper daemon for Wayland
-      slurp           # Select a region in Wayland compositors
-      swappy          # A screenshot editing tool for Wayland
-      playerctl       # Command-line utility to control media players
-      brightnessctl   # Brightness control for Linux
-      wl-clipboard    # Command-line clipboard utilities for Wayland
-      kitty           # GPU-accelerated terminal emulator
+      ## screen shots
+      grim
+      slurp
+      hyprshot
+      swappy
+
+      # misc
+      wl-clipboard
+      swww
+      playerctl
+      brightnessctl
+      kitty
     ];
   };
 }

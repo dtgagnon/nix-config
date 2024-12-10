@@ -25,6 +25,7 @@ in
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, firefox"
         "$mod, W, exec, windsurf"
+        "$mod_SHIFT, S, exec, hyprshot -z -m region -t 2000 --clipboard-only"
 
         # Window Control
         "$mod, Q, killactive,"

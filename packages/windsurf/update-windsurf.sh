@@ -43,35 +43,35 @@ calculate_hash() {
 # Main update function
 update_package() {
     echo "Updating Windsurf package..."
-    
+
     # Get version info for linux-x64 (primary platform)
     local version
     version=$(get_latest_version "linux-x64")
     echo "Latest version: $version"
-    
+
     local commit_hash
     commit_hash=$(get_commit_hash "linux-x64" "$version")
     echo "Commit hash: $commit_hash"
-    
+
     # Generate platform-specific hashes
     local hashes=""
     for platform in "${!platforms[@]}"; do
         local plat="${platforms[$platform]}"
         local archive_fmt="tar.gz"
         [[ $platform == *"darwin"* ]] && archive_fmt="zip"
-        
+
         local url="https://windsurf-stable.codeiumdata.com/$plat/stable/$commit_hash/Windsurf-$plat-$version.$archive_fmt"
         local hash
         hash=$(calculate_hash "$url")
-        
+
         hashes+="    $platform = \"$hash\";\n"
     done
-    
+
     # Update default.nix
     local default_nix="$SCRIPT_DIR/default.nix"
     sed -i "s/version = \".*\"/version = \"$version\"/" "$default_nix"
     sed -i "s|/stable/[a-f0-9]\{40\}/|/stable/$commit_hash/|" "$default_nix"
-    
+
     # Update sha256 values
     awk -v hashes="$hashes" '
     /sha256 = {/ {
@@ -90,7 +90,7 @@ update_package() {
     }
     ' "$default_nix" > "$default_nix.tmp"
     mv "$default_nix.tmp" "$default_nix"
-    
+
     echo "Update complete!"
 }
 

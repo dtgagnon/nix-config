@@ -41,11 +41,11 @@ in
             orientation = "inherit";
             modules = [
               "network"
-							"battery"
-							"backlight"
-							"memory"
-							"cpu"
-							"temperature"
+              "battery"
+              "backlight"
+              "memory"
+              "cpu"
+              "temperature"
             ];
           };
 
@@ -64,7 +64,7 @@ in
             ];
           };
 
-##### 󰲌   󰎞   󰺵  󰝦    #####
+          ##### 󰲌   󰎞   󰺵  󰝦    #####
           "hyprland/workspaces#odds" = {
             persistent-workspaces = {
               "1" = "";
@@ -80,13 +80,13 @@ in
               "urgent" = "";
             };
             on-click = "activate";
-						ignore-workspaces = [
-							"2"
-							"4"
-							"6"
+            ignore-workspaces = [
+              "2"
+              "4"
+              "6"
               "8"
               "10"
-						];
+            ];
           };
 
           "hyprland/workspaces#evens" = {
@@ -104,23 +104,23 @@ in
               "urgent" = "";
             };
             on-click = "activate";
-						ignore-workspaces = [
-							"1"
-							"3"
-							"5"
+            ignore-workspaces = [
+              "1"
+              "3"
+              "5"
               "7"
               "9"
-						];
+            ];
           };
 
-### v--- Individual module configuration ---v ###
+          ### v--- Individual module configuration ---v ###
           "clock#clock" = {
             format = "{:%I:%M<small>%p</small>}";
             interval = 15;
             tooltip = false;
           };
 
-					"clock#calendar" = {
+          "clock#calendar" = {
             format = "{:%a, %b. %d}";
             interval = 1;
             tooltip-format = "<tt>{calendar}</tt>";
@@ -150,13 +150,13 @@ in
 
           cpu = {
             interval = 5;
-            format = "  {usage}<small>%</small>";
+            format = "{usage}<small>%</small> ";
             tooltip = true;
           };
 
           memory = {
             interval = 5;
-            format = " {used}<small>G</small>";
+            format = "{used}<small>G</small> ";
             tooltip = true;
           };
 
@@ -237,7 +237,7 @@ in
             tooltip = false;
           };
 
-#====================CUSTOM MODULES====================
+          #====================CUSTOM MODULES====================
           "custom/exit" = {
             tooltip = false;
             format = "";
@@ -289,7 +289,7 @@ in
             on-click = "sleep 0.1 && rofi -show drun";
           };
         }
-			];
+      ];
     };
   };
 }

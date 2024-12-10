@@ -1,5 +1,4 @@
 {
-  lib,
   stdenv,
   inputs,
   callPackage,
@@ -57,7 +56,7 @@ callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec
   updateScript = "nil";
 
   meta = {
-    description = "The first agentic IDE, and then some";
+    description = "Windsurf - A vsCodium fork + AI features";
     platforms = [ "x86_64-linux" ];
   };
 }
