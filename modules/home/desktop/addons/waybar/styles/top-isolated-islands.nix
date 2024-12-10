@@ -10,12 +10,12 @@ let
   cfg = config.${namespace}.desktop.addons.waybar;
 in
 {
-  config = mkIf (cfg.preset == "top-isolated-islands") {
+  config = mkIf (cfg.presetStyle == "top-isolated-islands") {
     programs.waybar.style = ''
       ${cfg.extraStyle}
 
       * {
-        font-family: ${config.stylix.fonts.sansSerif.name};
+        font-family: ${config.stylix.fonts.monospace.name};
         font-size: 20px;
         min-height: 0;
         border: none;
