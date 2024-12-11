@@ -21,23 +21,23 @@ declare -A platforms=(
     # ["armv7l-linux"]="linux-armhf"
 )
 
-# Get latest version from API
+# Get latest version from API json
 get_latest_version() {
     local plat="$1"
-    curl -s "https://windsurf-stable.codeium.com/api/update/$plat/stable/latest" | jq -r '.version'
+    curl -s "https://windsurf-stable.codeium.com/api/update/$plat/stable/latest" | jq -r ".windsurfVersion"
 }
 
-# Get commit hash from version metadata
+# Get commit hash from API json
 get_commit_hash() {
     local plat="$1"
     local version="$2"
-    curl -s "https://windsurf-stable.codeium.com/api/update/$plat/stable/latest" | jq -r '.url' | grep -o '[a-f0-9]\{40\}'
+    curl -s "https://windsurf-stable.codeium.com/api/update/$plat/stable/latest" | jq -r ".version"
 }
 
-# Calculate sha256 hash for a URL
-calculate_hash() {
-    local url="$1"
-    nix-prefetch-url "$url" 2>/dev/null
+# Get sha256hash from API json
+get_sha256_hash() {
+		local plat="$1"
+    curl -s "https://windsurf-stable.codeium.com/api/update/$plat/stable/latest" | jq -r ".sha256hash"
 }
 
 # Main update function
@@ -53,43 +53,15 @@ update_package() {
     commit_hash=$(get_commit_hash "linux-x64" "$version")
     echo "Commit hash: $commit_hash"
 
-    # Generate platform-specific hashes
-    local hashes=""
-    for platform in "${!platforms[@]}"; do
-        local plat="${platforms[$platform]}"
-        local archive_fmt="tar.gz"
-        [[ $platform == *"darwin"* ]] && archive_fmt="zip"
-
-        local url="https://windsurf-stable.codeiumdata.com/$plat/stable/$commit_hash/Windsurf-$plat-$version.$archive_fmt"
-        local hash
-        hash=$(calculate_hash "$url")
-
-        hashes+="    $platform = \"$hash\";\n"
-    done
+		local sha256_hash
+		sha256_hash=$(get_sha256_hash "linux-x64")
+		echo "sha256 hash: $sha256_hash"
 
     # Update default.nix
     local default_nix="$SCRIPT_DIR/default.nix"
     sed -i "s/version = \".*\"/version = \"$version\"/" "$default_nix"
     sed -i "s|/stable/[a-f0-9]\{40\}/|/stable/$commit_hash/|" "$default_nix"
-
-    # Update sha256 values
-    awk -v hashes="$hashes" '
-    /sha256 = {/ {
-        print $0
-        print hashes
-        skip = 1
-        next
-    }
-    skip && /};/ {
-        skip = 0
-        print
-        next
-    }
-    !skip {
-        print
-    }
-    ' "$default_nix" > "$default_nix.tmp"
-    mv "$default_nix.tmp" "$default_nix"
+		sed -i "s/x86_64-linux = \".*\"/x86_64-linux = \"$sha256_hashes\"/" "$default_nix"
 
     echo "Update complete!"
 }

@@ -44,7 +44,7 @@ in
 
       fonts = {
         monospace = {
-          package = pkgs.nerdfonts.override { fonts = [ 
+          package = pkgs.nerdfonts.override { fonts = [
             core.fonts.monospace.nerdfont
             "Iosevka"
           ]; };

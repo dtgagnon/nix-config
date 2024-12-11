@@ -52,7 +52,13 @@ in
       hyprland = enabled;
       styling.stylix = {
         enable = true;
-        override = { base00 = "#313243"; base03 = "#51536F"; base05 = "#C5C6D5"; };
+        override = {
+          base00 = "#313243";
+          base03 = "#51536F";
+          base05 = "#C5C6D5";
+        };
+        excludedTargets = [ "neovim" ];
+
       };
       styling.core = {
         enable = true;

@@ -8,6 +8,9 @@ let
   inherit (lib) mkIf types;
   inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.waybar;
+
+  core = config.spirenix.desktop.styling.core;
+  spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="20pt">${icon}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -67,50 +70,38 @@ in
           ##### 󰲌   󰎞   󰺵  󰝦    #####
           "hyprland/workspaces#odds" = {
             persistent-workspaces = {
-              "1" = "";
-              "3" = "";
-              "5" = "󰎞";
+              "1" = spanWrapIcon "";
+              "3" = spanWrapIcon "";
+              "5" = spanWrapIcon "󰎞";
             };
             format = "{icon}";
             format-icons = {
-              "1" = "";
-              "3" = "";
-              "5" = "󰎞";
-              "default" = "󰝦";
-              "urgent" = "";
+              "1" = spanWrapIcon "";
+              "3" = spanWrapIcon "";
+              "5" = spanWrapIcon "󰎞";
+              "default" = spanWrapIcon "󰝦";
+              "urgent" = spanWrapIcon "";
             };
             on-click = "activate";
-            ignore-workspaces = [
-              "2"
-              "4"
-              "6"
-              "8"
-              "10"
-            ];
+            ignore-workspaces = [ "2" "4" "6" "8" "10" ];
           };
 
           "hyprland/workspaces#evens" = {
             persistent-workspaces = {
-              "2" = "";
-              "4" = "";
-              "6" = "󰺵";
+              "2" = spanWrapIcon "󰲌";
+              "4" = spanWrapIcon "";
+              "6" = spanWrapIcon "󰺵";
             };
             format = "{icon}";
             format-icons = {
-              "2" = "";
-              "4" = "";
-              "6" = "󰺵";
-              "default" = "󰝦";
-              "urgent" = "";
+              "2" = spanWrapIcon "󰲌";
+              "4" = spanWrapIcon "";
+              "6" = spanWrapIcon "󰺵";
+              "default" = spanWrapIcon "󰝦";
+              "urgent" = spanWrapIcon "";
             };
             on-click = "activate";
-            ignore-workspaces = [
-              "1"
-              "3"
-              "5"
-              "7"
-              "9"
-            ];
+            ignore-workspaces = [ "1" "3" "5" "7" "9" ];
           };
 
           ### v--- Individual module configuration ---v ###
@@ -133,7 +124,7 @@ in
               format = {
                 months = "<span color='#${colors.base05}'><b>{}</b></span>";
                 days = "<span color='#${colors.base06}'>{}</span>";
-                weeks = "<span color='#${colors.base07}'>W{}</span>";
+                weeks = "<span color='#${colors.base07}'>w{}</span>";
                 weekdays = "<span color='#${colors.base08}'>{}</span>";
                 today = "<span color='#${colors.base09}'><b><u>{}</u></b></span>";
               };
@@ -144,31 +135,31 @@ in
             interval = 5;
             format = "{temperatureC}°";
             tooltip = true;
-            critical-threshold = 30;
-            format-critical = "<span color='#${colors.base0E}'></span>{temperatureC}°";
+            critical-threshold = 25;
+            format-critical = "{temperatureC}°" + spanWrapIcon "<span color='#FF2800'></span>";
           };
 
           cpu = {
             interval = 5;
-            format = "{usage}<small>%</small> ";
+            format = "{usage}<small>%</small>  " + spanWrapIcon "";
             tooltip = true;
           };
 
           memory = {
             interval = 5;
-            format = "{used}<small>G</small> ";
+            format = "{used}<small>G</small>  " + spanWrapIcon "";
             tooltip = true;
           };
 
           backlight = {
-            format = " {percent}%;";
+            format = spanWrapIcon "" + " {percent}%;";
           };
 
           network = {
             interval = 5;
-            format-wifi = " {essid}";
-            format-ethernet = "󰈀";
-            format-disconnected = "󱚵";
+            format-wifi = spanWrapIcon "" + " {essid}";
+            format-ethernet = spanWrapIcon "󰈀";
+            format-disconnected = spanWrapIcon "󱚵";
             tooltip = true;
             tooltip-format = ''
               {ifname}
@@ -186,23 +177,23 @@ in
 
           pulseaudio = {
             scroll-step = 2;
-            format = "{volume}<small>%</small> {format_source} {icon}";
-            format-bluetooth = "{volume}<small>%</small> {format_source} {icon}";
-            format-bluetooth-muted = "{format_source} 󰝟 {icon}";
-            format-muted = "{format_source} 󰝟";
-            format-source = "";
-            format-source-muted = "";
+            format = "{icon} {volume}<small>%</small> {format_source}";
+            format-bluetooth = "{volume}<small>%</small> {format_source} {icon}";
+            format-bluetooth-muted = "{format_source}" + spanWrapIcon "󰝟";
+            format-muted = "{format_source}" + spanWrapIcon "󰝟";
+            format-source = spanWrapIcon "";
+            format-source-muted = spanWrapIcon "";
             format-icons = {
-              headphone = "";
-              hands-free = "󰋎";
-              headset = "󰋎";
-              phone = "";
-              portable = "";
-              car = "";
+              headphone = spanWrapIcon "";
+              hands-free = spanWrapIcon "󰋎";
+              headset = spanWrapIcon "󰋎";
+              phone = spanWrapIcon "";
+              portable = spanWrapIcon "";
+              car = spanWrapIcon "";
               default = [
-                ""
-                ""
-                ""
+                (spanWrapIcon "")
+                (spanWrapIcon "")
+                (spanWrapIcon "")
               ];
             };
             on-click = "sleep 0.1 && pavucontrol";
@@ -218,20 +209,18 @@ in
               warning = 30;
               critical = 15;
             };
-            format = "{icon}{capacity}%";
-            format-charging = "󰂄 {capacity}%";
-            format-plugged = "󱘖 {capacity}%";
+            format = "{icon} {capacity}%";
+            format-charging = spanWrapIcon "󰂄" + " {capacity}%";
+            format-plugged = spanWrapIcon "󱘖" + " {capacity}%";
             format-icons = [
-              "󰁺"
-              "󰁻"
-              "󰁼"
-              "󰁽"
-              "󰁾"
-              "󰁿"
-              "󰂀"
-              "󰂁"
-              "󰂂"
-              "󰁹"
+              (spanWrapIcon "󰁺")
+              (spanWrapIcon "󰁻")
+              (spanWrapIcon "󰁼")
+              (spanWrapIcon "󰁾")
+              (spanWrapIcon "󰁿")
+              (spanWrapIcon "󰂀")
+              (spanWrapIcon "󰂁")
+              (spanWrapIcon "󰂂")
             ];
             on-click = "";
             tooltip = false;
@@ -240,13 +229,13 @@ in
           #====================CUSTOM MODULES====================
           "custom/exit" = {
             tooltip = false;
-            format = "";
+            format = spanWrapIcon "";
             on-click = "sleep 0.1 && wlogout";
           };
 
           "custom/hyprbindings" = {
             tooltip = false;
-            format = "󱕴";
+            format = spanWrapIcon "󱕴";
             on-click = "sleep 0.1 && list-hypr-bindings";
           };
 
@@ -264,28 +253,28 @@ in
             tooltip = false;
             format = "{icon}";
             "format-icons" = {
-              "notification" = "<span foreground='red'><sup>󱅫</sup></span>";
-              "none" = "";
-              "dnd-notification" = "<span foreground='red'><sup></sup></span>";
-              "dnd-none" = "󰂛";
-              "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-              "inhibited-none" = "";
-              "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-              "dnd-inhibited-none" = " ";
+              "notification" = spanWrapIcon "<span foreground='red'><sup>󱅫</sup></span>";
+              "none" = spanWrapIcon "";
+              "dnd-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
+              "dnd-none" = spanWrapIcon "󰂛";
+              "inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
+              "inhibited-none" = spanWrapIcon "";
+              "dnd-inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup>";
+              "dnd-inhibited-none" = spanWrapIcon "";
             };
             return-type = "json";
             exec-if = "which makoctl";
             exec = "makoctl list -t | jq --unbuffered --compact-output '[.[0] // {}] | if length > 0 then {\"alt\":\"notification\", \"tooltip\": (.[0].summary + \":\\n\" + .[0].body)} else {\"alt\":\"none\"} end'";
             on-click = "makoctl invoke";
             on-click-right = "sleep 0.1 && makoctl dismiss";
-            escape = true;
+            escape = false;
 
             interval = 5;
           };
 
           "custom/startmenu" = {
             tooltip = false;
-            format = "";
+            format = spanWrapIcon "";
             on-click = "sleep 0.1 && rofi -show drun";
           };
         }
