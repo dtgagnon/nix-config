@@ -61,10 +61,6 @@ in
           package = pkgs.qemu_kvm;
           ovmf = enabled;
           swtpm = enabled;
-          verbatimConfig = ''
-            namespaces = []
-            user = "+${builtins.toString config.users.users.${user.name}.uid}"
-          '';
         };
       };
     };
