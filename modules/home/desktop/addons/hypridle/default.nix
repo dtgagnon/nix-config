@@ -1,7 +1,8 @@
-{ lib
-, config
-, namespace
-, ...
+{
+  lib,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types;
@@ -11,7 +12,7 @@ in
 {
   options.${namespace}.desktop.addons.hypridle = with types; {
     enable = mkBoolOpt false "Whether to enable hypridle.";
-    
+
     timeouts = {
       screen = mkOpt int 300 "Seconds until screen dims.";
       lock = mkOpt int 600 "Seconds until screen locks.";
@@ -24,7 +25,7 @@ in
       enable = true;
       settings = {
         general = {
-          before_sleep_cmd = "loginctl lock-session && hyprctl dispatch dpms standby";
+          before_sleep_cmd = "pidof hyprlock || hyprlock && hyprctl dispatch dpms standby";
           after_sleep_cmd = "hyprctl dispatch dpms on";
           lock_cmd = "pidof hyprlock || hyprlock";
         };

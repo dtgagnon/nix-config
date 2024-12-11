@@ -52,7 +52,7 @@ in
             dots_center = true;
             outer_color = "rgba(0, 0, 0, 0)";
             inner_color = "${config.stylix.base16Scheme.base01}";
-            font_color = "rgba(0, 0, 0, 1.0)";  # White for dots
+            font_color = "rgba(0, 0, 0, 1.0)"; # White for dots
             fade_on_empty = false;
             rounding = -1;
             check_color = "${config.stylix.base16Scheme.base0E}";
@@ -106,11 +106,11 @@ in
           # Desktop environment icon
           {
             monitor = "";
-            path = "${config.stylix.image}"; #replace with hyprland logo
+            path = "${config.stylix.image}"; # replace with hyprland logo
             size = 75;
             border_size = 2;
             border_color = "${config.stylix.base16Scheme.base01}";
-            position = "-50, -20";
+            position = "-50, 0";
             halign = "right";
             valign = "bottom";
           }
