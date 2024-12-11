@@ -21,6 +21,7 @@ in
       discord = enabled;
       firefox = enabled;
       obsidian = enabled;
+      office.okular-pdf = enabled;
       super-productivity = enabled;
       terminals = {
         kitty = enabled;
