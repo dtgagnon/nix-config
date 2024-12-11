@@ -38,7 +38,7 @@ in
           }
           {
             timeout = cfg.timeouts.lock;
-            on-timeout = "notify-send 'Screen Lock' 'Screen will lock in 30 seconds' -t 3000 && sleep 30 && loginctl lock-session && hyprctl dispatch dpms standby";
+            on-timeout = "notify-send 'Screen Lock' 'Screen will lock in 30 seconds' -t 3000 && sleep 30 && pidof hyprlock || hyprlock";
             on-resume = "hyprctl dispatch dpms on";
           }
           {
