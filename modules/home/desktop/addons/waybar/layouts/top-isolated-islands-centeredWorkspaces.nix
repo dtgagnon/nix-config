@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf types;
+  inherit (lib) mkIf;
   inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.waybar;
 
   core = config.spirenix.desktop.styling.core;
-  spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="20pt">${icon}</span>'';
+  spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="24pt">${icon}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -83,7 +83,13 @@ in
               "urgent" = spanWrapIcon "";
             };
             on-click = "activate";
-            ignore-workspaces = [ "2" "4" "6" "8" "10" ];
+            ignore-workspaces = [
+              "2"
+              "4"
+              "6"
+              "8"
+              "10"
+            ];
           };
 
           "hyprland/workspaces#evens" = {
@@ -101,7 +107,13 @@ in
               "urgent" = spanWrapIcon "";
             };
             on-click = "activate";
-            ignore-workspaces = [ "1" "3" "5" "7" "9" ];
+            ignore-workspaces = [
+              "1"
+              "3"
+              "5"
+              "7"
+              "9"
+            ];
           };
 
           ### v--- Individual module configuration ---v ###
@@ -135,19 +147,19 @@ in
             interval = 5;
             format = "{temperatureC}°";
             tooltip = true;
-            critical-threshold = 25;
-            format-critical = "{temperatureC}°" + spanWrapIcon "<span color='#FF2800'></span>";
+            critical-threshold = 80;
+            format-critical = "{temperatureC}° " + spanWrapIcon "<span color='#FF2800'></span>";
           };
 
           cpu = {
             interval = 5;
-            format = "{usage}<small>%</small>  " + spanWrapIcon "";
+            format = "{usage}<small>%</small> " + spanWrapIcon "";
             tooltip = true;
           };
 
           memory = {
             interval = 5;
-            format = "{used}<small>G</small>  " + spanWrapIcon "";
+            format = "{used}<small>G</small> " + spanWrapIcon "";
             tooltip = true;
           };
 
@@ -177,7 +189,7 @@ in
 
           pulseaudio = {
             scroll-step = 2;
-            format = "{icon} {volume}<small>%</small> {format_source}";
+            format = "{volume}<small>%</small> {icon} {format_source}";
             format-bluetooth = "{volume}<small>%</small> {format_source} {icon}";
             format-bluetooth-muted = "{format_source}" + spanWrapIcon "󰝟";
             format-muted = "{format_source}" + spanWrapIcon "󰝟";
@@ -200,7 +212,7 @@ in
           };
 
           tray = {
-            icon-size = 16;
+            icon-size = 20;
             spacing = 8;
           };
 
@@ -274,7 +286,7 @@ in
 
           "custom/startmenu" = {
             tooltip = false;
-            format = spanWrapIcon "";
+            format = "<span size='32pt'><tt></tt></span>";
             on-click = "sleep 0.1 && rofi -show drun";
           };
         }
