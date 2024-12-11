@@ -50,6 +50,9 @@
     nix-topology.url = "github:oddlama/nix-topology";
     nix-topology.inputs.nixpkgs.follows = "nixpkgs";
 
+    NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
+    NixVirt.inputs.nixpkgs.follows = "stablepkgs";
+
     ## applications
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
@@ -114,6 +117,7 @@
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
+          NixVirt.nixosModules.default
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [

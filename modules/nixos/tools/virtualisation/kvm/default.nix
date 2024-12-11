@@ -51,7 +51,7 @@ in
       libvirtd = {
         enable = true;
         extraConfig = ''
-          user="${user.name}"
+          user = "${user.name}"
         '';
 
         onBoot = "ignore";
