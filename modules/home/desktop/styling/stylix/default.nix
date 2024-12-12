@@ -16,6 +16,9 @@ in
   options.${namespace}.desktop.styling.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaper = mkOpt (types.nullOr types.package) null "Designate the name of the source image";
+    polarity =
+      mkOpt (types.nullOr types.str) null
+        "Choose automatic theme polarity [`either`, `light`, `dark`]";
     override = mkOpt (types.attrsOf types.str) { } "Designate the base16 target to override";
     excludedTargets =
       mkOpt (types.listOf types.str) [ ]
@@ -27,14 +30,17 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
+      polarity = mkIf (cfg.polarity != null) cfg.polarity;
 
       image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
       imageScalingMode = "stretch";
 
       base16Scheme = mkIf (core.theme != null) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
 
-      override = {
-      } // cfg.override;
+      override =
+        {
+        }
+        // cfg.override;
 
       cursor = {
         package = core.cursor.package;
@@ -44,10 +50,12 @@ in
 
       fonts = {
         monospace = {
-          package = pkgs.nerdfonts.override { fonts = [
-            core.fonts.monospace.nerdfont
-            "Iosevka"
-          ]; };
+          package = pkgs.nerdfonts.override {
+            fonts = [
+              core.fonts.monospace.nerdfont
+              "Iosevka"
+            ];
+          };
           name = core.fonts.monospace.name;
         };
         sansSerif = {
