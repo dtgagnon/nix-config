@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   namespace,
   ...
@@ -31,11 +30,11 @@ in
         logo = {
           source = ./nixos.png;
           type = "kitty-direct";
-          height = 15;
-          width = 30;
+          height = 10;
+          width = 20;
           padding = {
-            top = 3;
-            left = 3;
+            top = 2;
+            left = 2;
           };
         };
 
@@ -43,7 +42,11 @@ in
           "break"
           {
             type = "custom";
-            format = "┌──────────────────────Hardware──────────────────────┐";
+            format = "┌─────────────────────────Hardware─────────────────────────┐";
+          }
+          {
+            type = "board";
+            key = "│ MB";
           }
           {
             type = "cpu";
@@ -58,13 +61,17 @@ in
             key = "│ 󰑭 ";
           }
           {
+            type = "display";
+            key = "│ MON";
+          }
+          {
             type = "custom";
-            format = "└────────────────────────────────────────────────────┘";
+            format = "└──────────────────────────────────────────────────────────┘";
           }
           "break"
           {
             type = "custom";
-            format = "┌──────────────────────Software──────────────────────┐";
+            format = "┌─────────────────────────Software─────────────────────────┐";
           }
           {
             type = "custom";
@@ -88,21 +95,25 @@ in
             key = " WM";
           }
           {
+            type = "terminal";
+            key = "│ ├ ";
+          }
+          {
             type = "wmtheme";
             key = "│ ├󰉼 ";
           }
           {
-            type = "terminal";
-            key = "└ └ ";
+            type = "colors";
+            key = "└ └󰉼 ";
           }
           {
             type = "custom";
-            format = "└────────────────────────────────────────────────────┘";
+            format = "└──────────────────────────────────────────────────────────┘";
           }
           "break"
           {
             type = "custom";
-            format = "┌────────────────────Uptime / Age────────────────────┐";
+            format = "┌───────────────────────Uptime / Age───────────────────────┐";
           }
           {
             type = "command";
@@ -122,7 +133,7 @@ in
           }
           {
             type = "custom";
-            format = "└────────────────────────────────────────────────────┘";
+            format = "└──────────────────────────────────────────────────────────┘";
           }
           "break"
         ];
