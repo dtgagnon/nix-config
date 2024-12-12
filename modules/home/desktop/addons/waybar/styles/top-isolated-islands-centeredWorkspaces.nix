@@ -18,7 +18,6 @@ in
 
       * {
       	font-family: ${core.fonts.monospace.name};
-      	font-size: 22px;
       	min-height: 0;
       	border: none;
       	border-radius: 0;
@@ -51,13 +50,13 @@ in
       }
 
       #pulseaudio {
-      	margin: 0 2px;
-      	padding: 0 16px;
+      	padding: 0 8px 0 16px;
       }
 
       #hardware {
+				font-size: 20px;
       	margin: 0 2px;
-      	padding: 0 12px 0 6px;
+      	padding: 0 12px 0 0;
       	background: #${colors.base00};
       	border: 2px solid #${colors.base03};
       	border-radius: 12px;
@@ -68,7 +67,7 @@ in
       }
 
       #temperature {
-      	padding: 0 4px 0 0;
+				padding: 0 4px 0 0;
       }
 
       #utilities {
@@ -108,7 +107,7 @@ in
       }
 
       #workspaces.odds button {
-      	opacity: 0.65;
+      	opacity: 0.40;
       	padding: 0 8px;
       	margin: 0;
       }
@@ -135,7 +134,7 @@ in
       }
 
       #workspaces.evens button {
-      	opacity: 0.65;
+      	opacity: 0.40;
       	padding: 0 8px;
       	margin: 0;
       }
@@ -144,7 +143,7 @@ in
       	text-shadow: inherit;
       	box-shadow: inherit;
       	transition: border-color 0.3s, color 0.3s;
-      	color: #${colors.base05};
+      	color: #${colors.base03};
       }
 
       #workspaces.evens .active {

@@ -40,6 +40,13 @@ in
           ];
 
           # Custom grouping of modules
+          "group/utilities" = {
+            orientation = "inherit";
+            modules = [
+              "custom/exit"
+            ];
+          };
+
           "group/hardware" = {
             orientation = "inherit";
             modules = [
@@ -57,13 +64,6 @@ in
             modules = [
               "pulseaudio"
               "custom/music"
-            ];
-          };
-
-          "group/utilities" = {
-            orientation = "inherit";
-            modules = [
-              "custom/exit"
             ];
           };
 
@@ -153,7 +153,7 @@ in
 
           cpu = {
             interval = 5;
-            format = "{usage}<small>%</small> " + spanWrapIcon "";
+            format = "{usage} <small>%</small> " + spanWrapIcon "";
             tooltip = true;
           };
 
@@ -286,7 +286,7 @@ in
 
           "custom/startmenu" = {
             tooltip = false;
-            format = "<span size='32pt'><tt></tt></span>";
+            format = "<span size='42pt'><tt></tt></span>";
             on-click = "sleep 0.1 && rofi -show drun";
           };
         }
