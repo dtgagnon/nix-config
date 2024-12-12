@@ -25,8 +25,8 @@ in
     services.mako = {
       enable = true;
       layer = "overlay";
-      width = 500;
-      height = 160;
+      # width = 500;
+      # height = 160;
       defaultTimeout = 5000;
       maxVisible = 3;
 
@@ -36,7 +36,7 @@ in
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
       # iconPath = "${pkgs.catppuccin-papirus}/share/icons/Papirus-Dark";
-      maxIconSize = 20;
+      maxIconSize = 12;
 
       borderRadius = 12;
       borderSize = 2;

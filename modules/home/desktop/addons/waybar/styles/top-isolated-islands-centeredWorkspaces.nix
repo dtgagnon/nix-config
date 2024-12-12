@@ -39,7 +39,7 @@ in
 
       #audioControl {
       	margin: 0 2px;
-      	padding: 0 16px;
+      	padding: 0 8px;
       	background: #${colors.base00};
       	border: 2px solid #${colors.base03};
       	border-radius: 12px;
@@ -51,7 +51,7 @@ in
       }
 
       #pulseaudio {
-      	padding: 0 8px 0 16px;
+      	padding: 0 16px 0 0;
       }
 
       #hardware {
@@ -63,11 +63,11 @@ in
       }
 
       #cpu, #memory, #network {
-      	padding: 0 8px;
+      	padding: 0 10px;
       }
 
       #temperature {
-				padding: 0 4px 0 0;
+				padding: 0;
       }
 
       #utilities {

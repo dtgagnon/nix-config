@@ -11,7 +11,7 @@ let
 
   core = config.spirenix.desktop.styling.core;
   spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="24pt">${icon}</span>'';
-  spanWrapText = text: ''<span face="${core.fonts.monospace.name}" size="18pt">${text}</span>'';
+  spanWrapText = text: ''<span face="${core.fonts.sansSerif.name}" size="14pt" rise="5pt">${text}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -146,8 +146,8 @@ in
 
           temperature = {
             interval = 5;
-            format = "{temperatureC}°";
-            tooltip = true;
+            format = spanWrapText "{temperatureC}°";
+            tooltip = false;
             critical-threshold = 80;
             format-critical = spanWrapText "{temperatureC}° " + spanWrapIcon "<span color='#FF2800'></span>";
           };
@@ -161,7 +161,7 @@ in
           memory = {
             interval = 5;
             format = spanWrapText "{used}<small>G</small> " + spanWrapIcon "";
-            tooltip = true;
+            tooltip = false;
           };
 
           backlight = {
@@ -190,7 +190,7 @@ in
 
           pulseaudio = {
             scroll-step = 2;
-            format = spanWrapText "{volume}<small>%</small>" + "{icon}";
+            format = spanWrapText "{volume}<small>%</small> " + "{icon}";
             format-bluetooth = "{volume}<small>%</small> {icon}";
             format-bluetooth-muted = spanWrapIcon "󰝟";
             format-muted = spanWrapIcon "󰝟";
@@ -287,7 +287,7 @@ in
 
           "custom/startmenu" = {
             tooltip = false;
-            format = "<span size='42pt'><tt></tt></span>";
+            format = "<span size='36pt'><tt></tt></span>";
             on-click = "sleep 0.1 && rofi -show drun";
           };
         }
