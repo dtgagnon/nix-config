@@ -241,7 +241,7 @@ in
           border-radius = mkLiteral "0px";
           border-color = mkLiteral "transparent";
           background-color = mkLiteral "@base00";
-          text-color = mkLiteral "@base0D";
+          text-color = mkLiteral "@base02";
           cursor = mkLiteral "inherit";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
