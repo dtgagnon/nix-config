@@ -50,6 +50,7 @@
     nix-topology.url = "github:oddlama/nix-topology";
     nix-topology.inputs.nixpkgs.follows = "nixpkgs";
 
+		## virtualisation
     NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
     NixVirt.inputs.nixpkgs.follows = "stablepkgs";
 
