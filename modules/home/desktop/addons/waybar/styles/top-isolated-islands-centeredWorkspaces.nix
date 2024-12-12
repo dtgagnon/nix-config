@@ -18,6 +18,7 @@ in
 
       * {
       	font-family: ${core.fonts.monospace.name};
+				font-size: 20px;
       	min-height: 0;
       	border: none;
       	border-radius: 0;
@@ -54,7 +55,6 @@ in
       }
 
       #hardware {
-				font-size: 20px;
       	margin: 0 2px;
       	padding: 0 12px 0 0;
       	background: #${colors.base00};

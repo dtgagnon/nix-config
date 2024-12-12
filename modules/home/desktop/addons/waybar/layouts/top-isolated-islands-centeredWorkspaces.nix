@@ -11,6 +11,7 @@ let
 
   core = config.spirenix.desktop.styling.core;
   spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="24pt">${icon}</span>'';
+  spanWrapText = text: ''<span face="${core.fonts.monospace.name}" size="18pt">${text}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -148,18 +149,18 @@ in
             format = "{temperatureC}°";
             tooltip = true;
             critical-threshold = 80;
-            format-critical = "{temperatureC}° " + spanWrapIcon "<span color='#FF2800'></span>";
+            format-critical = spanWrapText "{temperatureC}° " + spanWrapIcon "<span color='#FF2800'></span>";
           };
 
           cpu = {
             interval = 5;
-            format = "{usage} <small>%</small> " + spanWrapIcon "";
+            format = spanWrapText "{usage}<small>%</small> " + spanWrapIcon "";
             tooltip = true;
           };
 
           memory = {
             interval = 5;
-            format = "{used}<small>G</small> " + spanWrapIcon "";
+            format = spanWrapText "{used}<small>G</small> " + spanWrapIcon "";
             tooltip = true;
           };
 
@@ -189,10 +190,10 @@ in
 
           pulseaudio = {
             scroll-step = 2;
-            format = "{volume}<small>%</small> {icon} {format_source}";
-            format-bluetooth = "{volume}<small>%</small> {format_source} {icon}";
-            format-bluetooth-muted = "{format_source}" + spanWrapIcon "󰝟";
-            format-muted = "{format_source}" + spanWrapIcon "󰝟";
+            format = spanWrapText "{volume}<small>%</small>" + "{icon}";
+            format-bluetooth = "{volume}<small>%</small> {icon}";
+            format-bluetooth-muted = spanWrapIcon "󰝟";
+            format-muted = spanWrapIcon "󰝟";
             format-source = spanWrapIcon "";
             format-source-muted = spanWrapIcon "";
             format-icons = {
