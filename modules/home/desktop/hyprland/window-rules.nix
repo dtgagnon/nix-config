@@ -96,8 +96,6 @@ in
         "blur, rofi"
         "dimaround, rofi"
         "xray on, rofi"
-
-        "blur, notification"
       ];
     };
   };

@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkForce;
   inherit (lib.${namespace}) mkBoolOpt;
   inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.mako;
@@ -22,7 +22,7 @@ in
       pkgs.jq
     ];
 
-    services.mako = {
+    services.mako = mkForce {
       enable = true;
       layer = "overlay";
       # width = 500;
@@ -31,7 +31,7 @@ in
       maxVisible = 3;
 
       ## Already handled by stylix
-      # backgroundColor = "${colors.base00}";
+      backgroundColor = "${colors.base00}80";
       # textColor = "${colors.base05}";
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
