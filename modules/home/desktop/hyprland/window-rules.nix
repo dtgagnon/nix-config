@@ -20,13 +20,13 @@ in
         "move 0 0,class:^(discord)$"
 
         # Kitty - terminal
-        "float,title:^(float_kitty)$"
-        "center,title:^(float_kitty)$"
-        "size 950 600,title:^(float_kitty)$"
+        "float,class:^(float_kitty)$"
+        "center,class:^(float_kitty)$"
+        "size 950 600,class:^(float_kitty)$"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"
-        "move 40 55%,title:^(Volume Control)$"
+        "move 50% 50%,title:^(Volume Control)$"
         "float, title:^(Volume Control)$"
 
         # Force total opacity

@@ -1,45 +1,5 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
-}:
-let
-  inherit (lib) mkIf mkForce;
-  inherit (lib.${namespace}) mkBoolOpt;
-  inherit (config.lib.stylix) colors;
-  inherit (config.lib.formats.rasi) mkLiteral;
-  cfg = config.${namespace}.desktop.addons.rofi;
-in
-{
-  options.${namespace}.desktop.addons.rofi = {
-    enable = mkBoolOpt false "Whether to enable rofi in the desktop environment.";
-  };
 
-  config = mkIf cfg.enable {
-    programs.rofi = {
-      enable = true;
-      package = pkgs.rofi-wayland;
-      plugins = [ pkgs.rofi-calc ];
-      terminal = "${pkgs.kitty}/bin/kitty";
-      extraConfig = {
-        modi = "run,filebrowser,drun,window,ssh";
-        disable-history = false;
-        hide-scrollbar = true;
-        show-icons = true;
-        icon-theme = "Papirus";
-        location = 0;
-        drun-display-format = "{icon} {name}";
-        display-drun = "   Apps ";
-        display-filebrowser = "   Files ";
-        display-run = "   Run ";
-        display-ssh = " 󰈀  SSH";
-        display-window = "   Window";
-        sidebar-mode = true;
-      };
-      location = "top";
-      theme = mkForce {
+     theme = mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
           base00 = mkLiteral "#${colors.base00}";
@@ -207,7 +167,7 @@ in
         # Style for selected mode button
         "button selected" = {
           background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@base02";
+          text-color = mkLiteral "@base0E";
           border-color = mkLiteral "@base03";
         };
 
@@ -341,6 +301,3 @@ in
           border-radius = mkLiteral "8px";
         };
       };
-    };
-  };
-}
