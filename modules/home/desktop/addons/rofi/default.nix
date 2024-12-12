@@ -71,7 +71,7 @@ in
           border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@base03";
-          background-color = mkLiteral "@base00";
+          background-color = mkLiteral "@base01";
           opacity = mkLiteral "0.5";
         };
 
@@ -207,7 +207,7 @@ in
         # Style for selected mode button
         "button selected" = {
           background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@base02";
+          text-color = mkLiteral "@base00";
           border-color = mkLiteral "@base03";
         };
 
