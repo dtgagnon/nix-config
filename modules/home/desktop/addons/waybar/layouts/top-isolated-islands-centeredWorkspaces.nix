@@ -95,13 +95,13 @@ in
 
           "hyprland/workspaces#evens" = {
             persistent-workspaces = {
-              "2" = spanWrapIcon "󰲌";
+              "2" = spanWrapIcon "";
               "4" = spanWrapIcon "";
               "6" = spanWrapIcon "󰺵";
             };
             format = "{icon}";
             format-icons = {
-              "2" = spanWrapIcon "󰲌";
+              "2" = spanWrapIcon "";
               "4" = spanWrapIcon "";
               "6" = spanWrapIcon "󰺵";
               "default" = spanWrapIcon "󰝦";
