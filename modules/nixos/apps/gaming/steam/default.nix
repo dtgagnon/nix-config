@@ -17,7 +17,7 @@ in
 
   config = mkIf cfg.enable {
     programs.steam = {
-      enabled = true;
+      enable = true;
       gamescopeSession.enable = true;
       protontricks.enable = true;
     };
