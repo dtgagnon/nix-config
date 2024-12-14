@@ -76,18 +76,22 @@ in
 
       opacity = {
         applications = 1.0;
-        terminal = 0.75;
-        desktop = 1.0;
-        popups = 1.0;
+        terminal = 0.8;
+        desktop = 0.8;
+        popups = 0.8;
       };
 
-      targets = foldl' (
-        acc: target:
-        acc
+      targets =
+        foldl' (
+          acc: target:
+          acc
+          // {
+            ${target}.enable = false;
+          }
+        ) { } cfg.excludedTargets
         // {
-          ${target}.enable = false;
-        }
-      ) { } cfg.excludedTargets;
+          neovim.enable = false;
+        };
     };
   };
 }
