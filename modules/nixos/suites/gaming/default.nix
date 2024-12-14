@@ -19,13 +19,8 @@ in
       apps = {
         bottles = enabled;
         steam = enabled;
-        protontricks = enabled;
-        winetricks = enabled;
-      };
-
-      tools = {
-        wine = enabled;
         proton = enabled;
+        wine = enabled;
       };
     };
   };

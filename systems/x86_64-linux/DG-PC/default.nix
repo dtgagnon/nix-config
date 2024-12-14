@@ -13,7 +13,10 @@ in
   networking.hostName = host;
 
   spirenix = {
-    suites.networking = enabled;
+    suites = {
+      gaming = enabled;
+      networking = enabled;
+    };
 
     desktop = {
       fonts = enabled;

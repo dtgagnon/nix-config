@@ -31,7 +31,7 @@ in
       maxVisible = 3;
 
       ## Already handled by stylix
-      backgroundColor = "${colors.base00}80";
+      # backgroundColor = "${colors.base00}80";
       # textColor = "${colors.base05}";
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
