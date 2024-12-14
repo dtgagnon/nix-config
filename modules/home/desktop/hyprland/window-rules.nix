@@ -17,13 +17,13 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50%-w/2 82,class:^(discord)$"
+        "move 50%-(w/2) 82,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Kitty - terminal
         # "float,class:^(kitty)$"
-        "center,class:^(kitty)$,floating:1"
-        "size 950 600,class:^(kitty)$,floating:1"
+        "center,class:kitty,floating:1"
+        "size 950 600,class:kitty,floating:1"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"
