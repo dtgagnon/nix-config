@@ -17,7 +17,7 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 0 0,class:^(discord)$"
+        "move 50% 81,class:^(discord)$"
 
         # Kitty - terminal
         "float,class:^(float_kitty)$"
