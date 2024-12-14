@@ -17,7 +17,9 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50% 81,class:^(discord)$"
+        "center,class:^(discord)$"
+        # "move 50% 81,class:^(discord)$"
+        "size 900 600,class:^(discord)$"
 
         # Kitty - terminal
         "float,class:^(float_kitty)$"
@@ -36,7 +38,7 @@ in
         "opacity 1.0 override 1.0 override,class:(Aseprite)"
         "opacity 1.0 override 1.0 override,class:(Unity)"
 
-#### General Window Rules ####
+        #### General Window Rules ####
 
         # Picture-in-Picture
         "float, title:^(Picture in Picture)$"
