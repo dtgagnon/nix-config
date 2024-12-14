@@ -11,7 +11,8 @@ let
 
   core = config.spirenix.desktop.styling.core;
   spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="24pt">${icon}</span>'';
-  spanWrapText = text: ''<span face="${core.fonts.sansSerif.name}" size="14pt" rise="5pt">${text}</span>'';
+  spanWrapText =
+    text: ''<span face="${core.fonts.sansSerif.name}" size="14pt" rise="5pt">${text}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -145,6 +146,8 @@ in
           };
 
           temperature = {
+            "hwmon-path-abs" = "/sys/devices/platform/coretemp.0/hwmon/hwmon3";
+            "input-filename" = "temp2_input";
             interval = 5;
             format = spanWrapText "{temperatureC}°";
             tooltip = false;

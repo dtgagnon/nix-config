@@ -38,7 +38,7 @@ in
         display-window = "   Window";
         sidebar-mode = true;
       };
-      location = 2;
+      location = "top";
       theme = mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
@@ -73,8 +73,6 @@ in
           border-color = mkLiteral "@base03";
           background-color = mkLiteral "@base01";
           opacity = mkLiteral "0.5";
-          # x = mkLiteral "center";
-          # y = mkLiteral "30px";
         };
 
         # Container for all main elements (inputbar and listbox)
