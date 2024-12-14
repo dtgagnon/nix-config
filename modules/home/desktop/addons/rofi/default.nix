@@ -73,8 +73,8 @@ in
           border-color = mkLiteral "@base03";
           background-color = mkLiteral "@base01";
           opacity = mkLiteral "0.5";
-          x = mkLiteral "center";
-          y = mkLiteral "30px";
+          # x = mkLiteral "center";
+          # y = mkLiteral "30px";
         };
 
         # Container for all main elements (inputbar and listbox)
