@@ -29,7 +29,6 @@ in
         hide-scrollbar = true;
         show-icons = true;
         icon-theme = "Papirus";
-        location = 0;
         drun-display-format = "{icon} {name}";
         display-drun = "   Apps ";
         display-filebrowser = "   Files ";
