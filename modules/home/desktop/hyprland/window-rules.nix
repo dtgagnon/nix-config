@@ -26,9 +26,9 @@ in
         # "size 600 900,floating:1,class:kitty"
 
         # Yazi - file explorer
-        "float,title:^(Yazi)$"
-        "center,floating:1,title:^(Yazi)$"
-        "size 1200 725,floating:1,title:^(Yazi)$"
+        # "float,title:^(Yazi)$"
+        # "center,floating:1,title:^(Yazi)$"
+        # "size 1200 725,floating:1,title:^(Yazi)$"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"

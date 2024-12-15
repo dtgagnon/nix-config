@@ -1,52 +1,53 @@
 { pkgs, ... }:
 
 pkgs.stdenv.mkDerivation {
-  name = "chatgpt-webview";
+  pname = "chatgpt-webview";
   version = "1.0";
-  src = pkgs.runCommand "dummy-src" {} ''
+
+  # Inline C source
+  src = pkgs.runCommand "source" {} ''
     mkdir -p $out
-    cat > $out/main.c <<EOF
-    #include <gtk/gtk.h>
-    #include <webkit6/webkit6.h>
+    cat > $out/simple-webview.c <<EOF
+    #include <gtk4/gtk.h>
+    #include <webkitgtk_6_0/webkitgtk.h>
 
-    static void activate(GtkApplication *app, gpointer user_data) {
-        GtkWidget *window = gtk_application_window_new(app);
+    int main(int argc, char *argv[]) {
+        gtk_init(&argc, &argv);
+
+        GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        GtkWidget *webview = webkit_web_view_new();
+
+        gtk_window_set_title(GTK_WINDOW(window), "ChatGPT WebView");
         gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
-        gtk_window_set_title(GTK_WINDOW(window), "ChatGPT Webview");
 
-        WebKitWebView *webview = WEBKIT_WEB_VIEW(webkit_web_view_new());
-        gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(webview));
+        webkit_web_view_load_uri(WEBKIT_WEB_VIEW(webview), "https://chatgpt.com");
+        gtk_container_add(GTK_CONTAINER(window), webview);
 
-        webkit_web_view_load_uri(webview, "https://chatgpt.com");
-
+        g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
         gtk_widget_show_all(window);
-    }
 
-    int main(int argc, char **argv) {
-        GtkApplication *app = gtk_application_new("com.chatgpt.webview", G_APPLICATION_FLAGS_NONE);
-        g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
-        int status = g_application_run(G_APPLICATION(app), argc, argv);
-        g_object_unref(app);
-        return status;
+        gtk_main();
+        return 0;
     }
     EOF
   '';
 
+  buildInputs = [ pkgs.gtk4.dev pkgs.webkitgtk_6_0 ];
   nativeBuildInputs = [ pkgs.pkg-config ];
-  buildInputs = [
-    pkgs.gtk3
-    pkgs.webkitgtk_6_0
-  ];
+
+  buildPhase = ''
+    gcc -o simple-webview $src/simple-webview.c \
+      `pkg-config --cflags --libs gtk4 webkitgtk-6.0`
+  '';
 
   installPhase = ''
     mkdir -p $out/bin
-    gcc -o $out/bin/chatgpt-webview $src/main.c \
-      $(pkg-config --cflags --libs gtk+-3.0 webkitgtk-6.0)
-    chmod +x $out/bin/chatgpt-webview
+    mv simple-webview $out/bin/chatgpt-webview
   '';
 
   meta = with pkgs.lib; {
-    description = "Lightweight webview application to open ChatGPT in a window using WebKitGTK 6.0";
-    homepage = "https://chatgpt.com";
+    description = "Minimal webview application using WebKitGTK";
+    license = licenses.mit;
+    platforms = platforms.linux;
   };
 }
