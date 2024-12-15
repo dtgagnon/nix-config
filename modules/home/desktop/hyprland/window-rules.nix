@@ -21,9 +21,9 @@ in
         "size 1600 900,class:^(discord)$"
 
         # Kitty - terminal
-        "float,class:^(kitty)$"
-        "center,floating:1,class:kitty"
-        "size 950 600,floating:1,class:kitty"
+        # "float,class:^(kitty)$"
+        # "center,floating:1,class:kitty"
+        # "size 600 900,floating:1,class:kitty"
 
         # Yazi - file explorer
         "float,title:^(Yazi)$"

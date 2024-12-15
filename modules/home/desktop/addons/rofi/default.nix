@@ -41,9 +41,9 @@ in
       theme = mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
-          base00 = mkLiteral "#${colors.base00}";
-          base01 = mkLiteral "#${colors.base01}";
-          base02 = mkLiteral "#${colors.base02}";
+          base00 = mkLiteral "#${colors.base00}80";
+          base01 = mkLiteral "#${colors.base01}80";
+          base02 = mkLiteral "#${colors.base02}80";
           base03 = mkLiteral "#${colors.base03}";
           base04 = mkLiteral "#${colors.base04}";
           base05 = mkLiteral "#${colors.base05}";
