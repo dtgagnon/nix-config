@@ -17,17 +17,22 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50%-(w/2) 82,class:^(discord)$"
+        "move 50%-w 82,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Kitty - terminal
-        # "float,class:^(kitty)$"
-        "center,class:kitty,floating:1"
-        "size 950 600,class:kitty,floating:1"
+        "float,class:^(kitty)$"
+        "center,floating:1,class:kitty"
+        "size 950 600,floating:1,class:kitty"
+
+        # Yazi - file explorer
+        "float,title:^(Yazi)$"
+        "center,floating:1,title:^(Yazi)$"
+        "size 1200 725,floating:1,title:^(Yazi)$"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"
-        "move 50% 50%,title:^(Volume Control)$"
+        "center,title:^(Volume Control)$"
         "float, title:^(Volume Control)$"
 
         # Force total opacity

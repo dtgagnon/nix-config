@@ -24,11 +24,19 @@ in
 
     services.mako = mkForce {
       enable = true;
-      layer = "overlay";
-      # width = 500;
-      # height = 160;
       defaultTimeout = 5000;
+      ignoreTimeout = true; # ignore timeout set by application, uses default instead
       maxVisible = 3;
+
+      layer = "overlay";
+      anchor = "top-center";
+      margin = "12";
+      padding = "12";
+
+      borderRadius = 12;
+      borderSize = 1;
+
+      maxIconSize = 12;
 
       ## Already handled by stylix
       # backgroundColor = "${colors.base00}80";
@@ -36,12 +44,6 @@ in
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
       # iconPath = "${pkgs.catppuccin-papirus}/share/icons/Papirus-Dark";
-      maxIconSize = 12;
-
-      borderRadius = 12;
-      borderSize = 2;
-      margin = "12";
-      padding = "12";
     };
   };
 }

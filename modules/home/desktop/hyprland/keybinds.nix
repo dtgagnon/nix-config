@@ -19,8 +19,9 @@ in
 
       bind = [
         # Open
+        "$mod, ., exec, [float; center] $terminal"
         "$mod, Return, exec, $terminal"
-        "$mod, E, exec, kitty -e yazi /home/${config.spirenix.user.name}"
+        "$mod, E, exec, [float; center] kitty -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, firefox"
