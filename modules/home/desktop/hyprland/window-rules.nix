@@ -100,7 +100,6 @@ in
         # "blur, waybar"
 
         "blur, rofi"
-        "dimaround, rofi"
         "xray on, rofi"
       ];
     };

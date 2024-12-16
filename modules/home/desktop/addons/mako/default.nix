@@ -30,7 +30,9 @@ in
 
       layer = "overlay";
       anchor = "top-center";
-      margin = "12";
+      width = 400;
+      height = 82;
+      margin = "2";
       padding = "12";
 
       borderRadius = 12;
@@ -44,6 +46,10 @@ in
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
       # iconPath = "${pkgs.catppuccin-papirus}/share/icons/Papirus-Dark";
+
+      extraConfig = ''
+        text-alignment=center
+      '';
     };
   };
 }

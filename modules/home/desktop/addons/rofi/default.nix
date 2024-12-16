@@ -184,7 +184,7 @@ in
           spacing = mkLiteral "0px";
           border = mkLiteral "2px 0px 0px 0px";
           border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@base03";
+          border-color = mkLiteral "@base04";
           background-color = mkLiteral "transparent";
         };
 
@@ -193,11 +193,11 @@ in
           padding = mkLiteral "10px";
           margin = mkLiteral "10px";
           border = mkLiteral "2px";
-          border-color = mkLiteral "@base03";
+          border-color = mkLiteral "@base05";
           border-radius = mkLiteral "4px";
           background-color = mkLiteral "transparent";
           font = "${config.stylix.fonts.sansSerif.name} 12";
-          text-color = mkLiteral "@base03";
+          text-color = mkLiteral "@base05";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
           cursor = mkLiteral "pointer";
@@ -206,8 +206,8 @@ in
         # Style for selected mode button
         "button selected" = {
           background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@base00";
-          border-color = mkLiteral "@base03";
+          text-color = mkLiteral "@base04";
+          border-color = mkLiteral "@base04";
         };
 
         # Prompt text before search input
@@ -240,7 +240,7 @@ in
           border-radius = mkLiteral "0px";
           border-color = mkLiteral "transparent";
           background-color = mkLiteral "@base00";
-          text-color = mkLiteral "@base02";
+          text-color = mkLiteral "@base05";
           cursor = mkLiteral "inherit";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
@@ -289,21 +289,21 @@ in
         "element selected.normal" = {
           background-color = mkLiteral "transparent";
           border = mkLiteral "0px 0px 2px 0px";
-          border-color = mkLiteral "@base05";
-          text-color = mkLiteral "@base05";
+          border-color = mkLiteral "@base04";
+          text-color = mkLiteral "@base04";
         };
         "element selected.urgent" = {
           background-color = mkLiteral "@base07";
           border = mkLiteral "0px 0px 2px 0px";
           border-color = mkLiteral "inherit";
-          text-color = mkLiteral "@base0E";
+          text-color = mkLiteral "@base01";
         };
         "element selected.active" = {
           background-color = mkLiteral "@base0D";
           border = mkLiteral "0px 0px 2px 0px";
           border-radius = mkLiteral "8px 8px 0px 0px";
-          border-color = mkLiteral "@base07";
-          text-color = mkLiteral "@base01";
+          border-color = mkLiteral "@base05";
+          text-color = mkLiteral "@base05";
         };
         "element alternate.normal" = {
           background-color = mkLiteral "inherit";
