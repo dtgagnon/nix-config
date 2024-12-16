@@ -107,8 +107,8 @@ in
       }
 
       #workspaces.odds button {
-      	opacity: 0.40;
-      	padding: 0 8px;
+      	opacity: 0.30;
+      	padding: 10px 8px;
       	margin: 0;
       }
 
@@ -123,6 +123,7 @@ in
       	opacity: 1.0;
       	margin: 0;
       	padding: 0 8px;
+				border: none;
       }
 
       #workspaces.evens {
@@ -134,22 +135,23 @@ in
       }
 
       #workspaces.evens button {
-      	opacity: 0.40;
-      	padding: 0 8px;
+      	opacity: 0.30;
+      	padding: 10px 8px;
       	margin: 0;
       }
 
       #workspaces.evens button:hover {
       	text-shadow: inherit;
       	box-shadow: inherit;
-      	transition: border-color 0.3s, color 0.3s;
-      	color: #${colors.base03};
+				transition: border-color 0.3s, color 0.3s;
+      	color: #${colors.base05};
       }
 
       #workspaces.evens .active {
       	opacity: 1.0;
       	margin: 0;
       	padding: 0 8px;
+				border: none;
       }
 
       /* ---------------Right--------------- */
