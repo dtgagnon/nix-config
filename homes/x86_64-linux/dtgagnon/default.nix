@@ -23,7 +23,6 @@ in
       freecad = enabled;
       obsidian = enabled;
       office.okular-pdf = enabled;
-      proton = enabled;
       super-productivity = enabled;
       terminals = {
         kitty = enabled;
