@@ -45,8 +45,9 @@ in
         #### General Window Rules ####
 
         # Picture-in-Picture
-        "float, title:^(Picture in Picture)$"
-        "pin, title:^(Picture in Picture)$"
+        "float, title:^(Picture-in-Picture)$"
+        "pin, title:^(Picture-in-Picture)$"
+        "move w 0, title:^(Picture-in-Picture)$"
 
         # Inhibit Idle for fullscreen videos/focused media
         "idleinhibit fullscreen, class:^(firefox)$"
