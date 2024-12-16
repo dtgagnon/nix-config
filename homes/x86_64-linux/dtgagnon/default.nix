@@ -19,7 +19,6 @@ in
 
     apps = {
       discord = enabled;
-      firefox = enabled;
       freecad = enabled;
       obsidian = enabled;
       office.okular-pdf = enabled;
