@@ -6,7 +6,7 @@
     stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
-    nur.url = "github:nix-community/NUR";  # Community package repository
+    nur.url = "github:nix-community/NUR"; # Community package repository
 
     ## configuration frameworks
     snowfall-lib.url = "github:snowfallorg/lib";
@@ -50,7 +50,7 @@
     nix-topology.url = "github:oddlama/nix-topology";
     nix-topology.inputs.nixpkgs.follows = "nixpkgs";
 
-		## virtualisation
+    ## virtualisation
     NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
     NixVirt.inputs.nixpkgs.follows = "stablepkgs";
 
@@ -58,9 +58,8 @@
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-software-center.url = "github:snowfallorg/nix-software-center";
-
-    zen-browser.url = "github:fufexan/zen-browser-flake";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
@@ -79,7 +78,8 @@
     ags.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs:
+  outputs =
+    inputs:
     let
       lib = inputs.snowfall-lib.mkLib {
         inherit inputs;
@@ -94,62 +94,72 @@
       };
     in
 
-    lib.mkFlake
-      {
-        inherit inputs;
-        src = ./.;
+    lib.mkFlake {
+      inherit inputs;
+      src = ./.;
 
-        channels-config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [ ];
-        };
+      channels-config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [ ];
+      };
 
-        overlays = with inputs; [
-          neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
-          nix-topology.overlays.default
-          nur.overlay
-        ];
+      overlays = with inputs; [
+        neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
+        nix-topology.overlays.default
+        nur.overlay
+      ];
 
-        systems.modules.nixos = with inputs; [
-          stylix.nixosModules.stylix
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          impermanence.nixosModules.impermanence
-          home-manager.nixosModules.home-manager
-          nix-index-database.nixosModules.nix-index
-          nix-topology.nixosModules.default
-          NixVirt.nixosModules.default
-        ];
+      homes.packages = with inputs; [
+        zen-browser.packages.specific
+      ];
 
-        systems.hosts.DGPC-WSL.modules = with inputs; [
-          nixos-wsl.nixosModules.default
-        ];
+      systems.modules.nixos = with inputs; [
+        stylix.nixosModules.stylix
+        sops-nix.nixosModules.sops
+        disko.nixosModules.disko
+        impermanence.nixosModules.impermanence
+        home-manager.nixosModules.home-manager
+        nix-index-database.nixosModules.nix-index
+        nix-topology.nixosModules.default
+        NixVirt.nixosModules.default
+      ];
 
-        homes.modules = with inputs; [
-          ags.homeManagerModules.default
-        ];
+      systems.hosts.DGPC-WSL.modules = with inputs; [
+        nixos-wsl.nixosModules.default
+      ];
 
-        deploy = lib.mkDeploy { inherit (inputs) self; };
+      homes.modules = with inputs; [
+        ags.homeManagerModules.default
+      ];
 
-        outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
+      deploy = lib.mkDeploy { inherit (inputs) self; };
 
-        topology =  with inputs; let
+      outputs-builder = channels: {
+        formatter = channels.nixpkgs.nixfmt-rfc-style;
+      };
+
+      topology =
+        with inputs;
+        let
           host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
         in
-          import nix-topology {
-            inherit (host) pkgs;
-            modules = [
-              (import ./topology { inherit (host) config; })
-              { inherit (self) nixosConfigurations; }
-            ];
-          };
-
-        templates = {
-          empty.description = "A Nix Flake using snowfall-lib";
-          tmpDevShell.description = "A placeholder for a dev environment flake structure";
-          aiderProj.description = "dev-env w/ aider flake template";
-          sysMod.description = "template for NixOS system modules.";
-          homeMod.description = "template for home-manager modules.";
+        import nix-topology {
+          inherit (host) pkgs;
+          modules = [
+            (import ./topology { inherit (host) config; })
+            { inherit (self) nixosConfigurations; }
+          ];
         };
-      } // { self = inputs.self; };
+
+      templates = {
+        empty.description = "A Nix Flake using snowfall-lib";
+        tmpDevShell.description = "A placeholder for a dev environment flake structure";
+        aiderProj.description = "dev-env w/ aider flake template";
+        sysMod.description = "template for NixOS system modules.";
+        homeMod.description = "template for home-manager modules.";
+      };
+    }
+    // {
+      self = inputs.self;
+    };
 }

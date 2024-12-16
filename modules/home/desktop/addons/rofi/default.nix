@@ -24,18 +24,18 @@ in
       plugins = [ pkgs.rofi-calc ];
       terminal = "${pkgs.kitty}/bin/kitty";
       extraConfig = {
-        modi = "run,filebrowser,drun,window,ssh";
+        modi = "drun,window,filebrowser,ssh,run";
         disable-history = false;
         hide-scrollbar = true;
         show-icons = true;
         icon-theme = "Papirus";
         drun-display-format = "{icon} {name}";
-        display-drun = "   Apps ";
-        display-filebrowser = "   Files ";
-        display-run = "   Run ";
-        display-ssh = " 󰈀  SSH";
-        display-window = "   Window";
-        sidebar-mode = true;
+        display-drun = "";
+        display-filebrowser = "";
+        display-run = "";
+        display-ssh = "󰈀";
+        display-window = "";
+        sidebar-mode = false;
       };
       location = "top";
       theme = mkForce {
@@ -44,7 +44,7 @@ in
           base00 = mkLiteral "#${colors.base00}80";
           base01 = mkLiteral "#${colors.base01}80";
           base02 = mkLiteral "#${colors.base02}80";
-          base03 = mkLiteral "#${colors.base03}";
+          base03 = mkLiteral "#${colors.base03}80";
           base04 = mkLiteral "#${colors.base04}";
           base05 = mkLiteral "#${colors.base05}";
           base06 = mkLiteral "#${colors.base06}";
@@ -61,14 +61,14 @@ in
 
         # Main rofi window container
         "window" = {
-          width = mkLiteral "25%";
-          height = mkLiteral "38%";
+          width = mkLiteral "15%";
+          height = mkLiteral "28%";
           transparency = "real";
           orientation = mkLiteral "vertical";
           cursor = mkLiteral "default";
           spacing = mkLiteral "0px";
           border = mkLiteral "2px";
-          border-radius = mkLiteral "8px";
+          border-radius = mkLiteral "16px";
           border-color = mkLiteral "@base03";
           background-color = mkLiteral "@base00";
           opacity = mkLiteral "0.5";
@@ -83,10 +83,9 @@ in
           children = map mkLiteral [
             "inputbar"
             "listbox"
-            "mode-switcher"
           ];
-          border-radius = mkLiteral "0px";
-          border = mkLiteral "1px";
+          border-radius = mkLiteral "inherit";
+          border = mkLiteral "0px";
           border-color = mkLiteral "transparent";
           background-color = mkLiteral "transparent";
         };
@@ -102,21 +101,32 @@ in
           border-color = mkLiteral "transparent";
           border-radius = mkLiteral "8px";
           orientation = mkLiteral "horizontal";
-          # children = mkLiteral "[prompt,entry]";
           children = map mkLiteral [
-            "dummy"
             "entry"
-            "dummy"
+            "mode-switcher"
           ];
+        };
+
+        # Prompt text before search input
+        "prompt" = {
+          enable = false;
+          padding = mkLiteral "6px";
+          margin = mkLiteral "0px";
+          background-color = mkLiteral "transparent";
+          text-color = mkLiteral "@base04";
+          border-radius = mkLiteral "4px";
+          vertical-align = mkLiteral "0.5";
+          horizontal-align = mkLiteral "0.5";
         };
 
         # Text input field for search
         "entry" = {
           enabled = true;
-          width = mkLiteral "33%";
+          width = mkLiteral "100%";
           blink = false;
           expand = true;
           padding = mkLiteral "10px";
+          margin = mkLiteral "0px 40px 0px 0px";
           border = mkLiteral "2px 0px";
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@base03";
@@ -125,10 +135,44 @@ in
 
           cursor = mkLiteral "text";
           font = "${config.stylix.fonts.sansSerif.name} 12";
-          placeholder = "🔍 Search... ";
-          placeholder-color = mkLiteral "inherit";
+          placeholder = "Search...";
+          placeholder-color = mkLiteral "@base03";
           horizontal-align = mkLiteral "0.5";
           vertical-align = mkLiteral "0.5";
+        };
+
+        # Container for mode buttons (drun, run, window, etc)
+        "mode-switcher" = {
+          expand = false;
+          padding = mkLiteral "4px";
+          margin = mkLiteral "0px";
+          spacing = mkLiteral "0px";
+          border = mkLiteral "2px 0px";
+          border-radius = mkLiteral "8px";
+          border-color = mkLiteral "@base03";
+          background-color = mkLiteral "transparent";
+        };
+
+        # Individual mode selection buttons
+        "button" = {
+          padding = mkLiteral "2px 4px";
+          margin = mkLiteral "0px 2px";
+          border = mkLiteral "0px";
+          border-color = mkLiteral "transparent";
+          border-radius = mkLiteral "4px";
+          background-color = mkLiteral "transparent";
+          font = "${config.stylix.fonts.monospace.name} 22";
+          text-color = mkLiteral "@base05";
+          vertical-align = mkLiteral "0.5";
+          horizontal-align = mkLiteral "0.5";
+          cursor = mkLiteral "pointer";
+        };
+
+        # Style for selected mode button
+        "button selected" = {
+          background-color = mkLiteral "transparent";
+          text-color = mkLiteral "@base04";
+          border-color = mkLiteral "@base04";
         };
 
         # Container for message and results list
@@ -151,11 +195,11 @@ in
         "listview" = {
           enabled = true;
           expand = true;
-          padding = mkLiteral "10px";
+          padding = mkLiteral "12px 0px 4px 0px";
           margin = mkLiteral "0px";
 
-          columns = 4;
-          lines = 5;
+          columns = 3;
+          lines = 3;
           cycle = true;
           dynamic = false;
           scrollbar = false;
@@ -172,76 +216,17 @@ in
           text-color = mkLiteral "@base05";
         };
 
-        # Spacer element for layout
-        "dummy" = {
-          expand = true;
-          background-color = mkLiteral "transparent";
-        };
-
-        # Container for mode buttons (drun, run, window, etc)
-        "mode-switcher" = {
-          expand = false;
-          margin = mkLiteral "0px";
-          spacing = mkLiteral "0px";
-          border = mkLiteral "2px 0px 0px 0px";
-          border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@base04";
-          background-color = mkLiteral "transparent";
-        };
-
-        # Individual mode selection buttons
-        "button" = {
-          padding = mkLiteral "10px";
-          margin = mkLiteral "10px";
-          border = mkLiteral "2px";
-          border-color = mkLiteral "@base05";
-          border-radius = mkLiteral "4px";
-          background-color = mkLiteral "transparent";
-          font = "${config.stylix.fonts.sansSerif.name} 12";
-          text-color = mkLiteral "@base05";
-          vertical-align = mkLiteral "0.5";
-          horizontal-align = mkLiteral "0.5";
-          cursor = mkLiteral "pointer";
-        };
-
-        # Style for selected mode button
-        "button selected" = {
-          background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@base04";
-          border-color = mkLiteral "@base04";
-        };
-
-        # Prompt text before search input
-        "prompt" = {
-          enabled = false;
-          background-color = mkLiteral "@base0B";
-          padding = mkLiteral "6px";
-          text-color = mkLiteral "@base00";
-          border-radius = mkLiteral "4px";
-          margin = mkLiteral "0px";
-        };
-
-        # Scrollbar styling (when enabled)
-        "scrollbar" = {
-          width = mkLiteral "4px";
-          border = 0;
-          handle-color = mkLiteral "@base0F";
-          handle-width = mkLiteral "6px";
-          padding = 0;
-        };
-
         # Individual items in the results list
         "element" = {
           enabled = true;
           expand = true;
           spacing = mkLiteral "0px";
-          margin = mkLiteral "10px 10px";
-          padding = mkLiteral "5px";
+          margin = mkLiteral "5px 0px 0px 0px";
+          padding = mkLiteral "5px 0px 0px 0px";
           border = mkLiteral "0px";
           border-radius = mkLiteral "0px";
           border-color = mkLiteral "transparent";
           background-color = mkLiteral "@base00";
-          text-color = mkLiteral "@base05";
           cursor = mkLiteral "inherit";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
@@ -253,8 +238,8 @@ in
         # Text styling for results
         "element-text" = {
           background-color = mkLiteral "inherit";
-          text-color = mkLiteral "inherit";
-          font = "${config.stylix.fonts.sansSerif.name} 12";
+          text-color = mkLiteral "@base05";
+          font = "${config.stylix.fonts.sansSerif.name} 10";
           vertical-align = mkLiteral "0";
           horizontal-align = mkLiteral "0.5";
           cursor = mkLiteral "inherit";
@@ -264,7 +249,7 @@ in
         "element-icon" = {
           background-color = mkLiteral "inherit";
           # text-color = mkLiteral "inherit";
-          size = mkLiteral "36px";
+          size = mkLiteral "32px";
           cursor = mkLiteral "inherit";
           vertical-align = mkLiteral "1.0";
           horizontal-align = mkLiteral "0.5";
@@ -320,6 +305,21 @@ in
           background-color = mkLiteral "inherit";
           border-color = mkLiteral "inherit";
           text-color = mkLiteral "inherit";
+        };
+
+        # Spacer element for layout
+        "dummy" = {
+          expand = true;
+          background-color = mkLiteral "transparent";
+        };
+
+        # Scrollbar styling (when enabled)
+        "scrollbar" = {
+          width = mkLiteral "4px";
+          border = 0;
+          handle-color = mkLiteral "@base0F";
+          handle-width = mkLiteral "6px";
+          padding = 0;
         };
 
         # Generic text display styling

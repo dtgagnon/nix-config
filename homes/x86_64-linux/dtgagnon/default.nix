@@ -30,6 +30,7 @@ in
       };
       thunderbird = enabled;
       windsurf = enabled;
+			zen = enabled;
     };
 
     cli = {
