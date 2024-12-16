@@ -24,8 +24,8 @@ in
         "$mod, E, exec, [float; center; size 1600 900] kitty -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
-        "$mod, B, exec, firefox"
-        "$mod, W, exec, [workspace 1] windsurf"
+        "$mod, B, exec, zen"
+        "$mod, W, exec, [move workspace 1] windsurf"
         "$mod_SHIFT, S, exec, hyprshot -z -m region -t 2000 --clipboard-only"
 
         # Window Control
