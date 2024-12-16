@@ -18,6 +18,10 @@ in
       networking = enabled;
     };
 
+    apps = {
+      proton = enabled;
+    };
+
     desktop = {
       fonts = enabled;
       hyprland = enabled;
