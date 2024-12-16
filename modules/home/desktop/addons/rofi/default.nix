@@ -70,7 +70,7 @@ in
           border = mkLiteral "2px";
           border-radius = mkLiteral "8px";
           border-color = mkLiteral "@base03";
-          background-color = mkLiteral "@base01";
+          background-color = mkLiteral "@base00";
           opacity = mkLiteral "0.5";
         };
 
@@ -169,6 +169,7 @@ in
           border-color = mkLiteral "transparent";
           border-radius = mkLiteral "0px";
           background-color = mkLiteral "transparent";
+          text-color = mkLiteral "@base05";
         };
 
         # Spacer element for layout
