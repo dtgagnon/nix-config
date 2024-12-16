@@ -26,7 +26,7 @@ let
   archive_fmt = if stdenv.hostPlatform.isDarwin then "zip" else "tar.gz";
 
   sha256 = {
-      x86_64-linux = "81f7fa8c2289f0beccf5b887539db9301eaa1c7693912df127e9b506d368cda0";
+      x86_64-linux = "7ec0cfcc7b4099021f157edd8e2e7df10f8a5cee80e45f481440be6e7990cd55";
     }
     .${system} or throwSystem;
 
@@ -35,7 +35,7 @@ in
 callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec {
   inherit commandLineArgs useVSCodeRipgrep;
 
-  version = "1.0.7";
+  version = "1.1.0";
   pname = "windsurf";
 
   executableName = "windsurf";
@@ -43,7 +43,7 @@ callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec
   shortName = "windsurf";
 
   src = fetchurl {
-    url = "https://windsurf-stable.codeiumdata.com/${plat}/stable/bf4345439764c543a1e5ff3517bbce5a22128bca/Windsurf-${plat}-${version}.${archive_fmt}";
+    url = "https://windsurf-stable.codeiumdata.com/${plat}/stable/c418a14b63f051e96dafb37fe06f1fe0b10ba3c8/Windsurf-${plat}-${version}.${archive_fmt}";
     inherit sha256;
   };
 
