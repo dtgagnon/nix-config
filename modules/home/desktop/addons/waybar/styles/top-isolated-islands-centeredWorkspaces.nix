@@ -101,15 +101,24 @@ in
       #workspaces.odds {
       	padding: 0 8px;
       	margin: 0 2px;
-      	background: #${colors.base00};
+      	background: linear-gradient(
+					180deg,
+					#${colors.base03} 0%,
+					#${colors.base00} 50%,
+					#${colors.base03} 100%
+				);
       	border-radius: 12px;
       	border: 2px solid #${colors.base03};
+        border-bottom: none;
+				border-top: none;
       }
 
       #workspaces.odds button {
+				background: transparent;
       	opacity: 0.30;
       	padding: 10px 8px;
       	margin: 0;
+				border-radius: 4px;
       }
 
       #workspaces.odds button:hover {
@@ -123,7 +132,11 @@ in
       	opacity: 1.0;
       	margin: 0;
       	padding: 0 8px;
-				border: none;
+				box-shadow: none;
+      }
+
+      #workspaces.odds .occupied {
+        opacity: 0.7;
       }
 
       #workspaces.evens {
@@ -132,12 +145,16 @@ in
       	background: #${colors.base00};
       	border-radius: 12px;
       	border: 2px solid #${colors.base03};
+        border-bottom: none;
+				border-top: none;
       }
 
       #workspaces.evens button {
+				background: transparent;
       	opacity: 0.30;
       	padding: 10px 8px;
       	margin: 0;
+				border-radius: 4px;
       }
 
       #workspaces.evens button:hover {
@@ -151,7 +168,11 @@ in
       	opacity: 1.0;
       	margin: 0;
       	padding: 0 8px;
-				border: none;
+				box-shadow: none;
+      }
+
+      #workspaces.evens .occupied {
+        opacity: 0.7;
       }
 
       /* ---------------Right--------------- */

@@ -35,6 +35,12 @@ in
         "center,title:^(Volume Control)$"
         "float, title:^(Volume Control)$"
 
+        # Zen Browser
+        ## Extensions
+        "float, title:^(Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser)$"
+        "move 0 84, title:^(Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser)$"
+        "size 300 900, title:^(Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser)$"
+
         # Force total opacity
         "opacity 1.0 override 1.0 override, title:^(Picture in Picture)$"
         "opacity 1.0 override 1.0 override,title:^(.*imv.*)$"
