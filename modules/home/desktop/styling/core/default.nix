@@ -13,9 +13,10 @@ in
 {
   options.${namespace}.desktop.styling.core = {
     enable = mkBoolOpt false "Whether to enable core styling configuration.";
-    wallpaper = mkOpt (types.package) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
+    wallpaper = mkOpt (types.package
+    ) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
     theme = mkOpt (types.nullOr types.str) null "The theme to use.";
-    
+
     cursor = {
       package = mkOpt (types.package) pkgs.bibata-cursors "The cursor theme package to use.";
       name = mkOpt types.str "Bibata-Modern-Ice" "The name of the cursor theme.";
@@ -30,8 +31,7 @@ in
         popups = mkOpt types.int 10 "The font size for popups.";
       };
       monospace = {
-        nerdfont = mkOpt types.str "JetBrainsMono" "The name of the monospace nerd font.";
-        package = mkOpt types.package pkgs.jetbrains-mono "The monospace font package to use.";
+        package = mkOpt types.package pkgs.nerd-fonts.jetbrains-mono "The monospace font package to use.";
         name = mkOpt types.str "JetBrainsMono Nerd Font Mono" "The name of the monospace font.";
       };
       sansSerif = {
@@ -54,7 +54,10 @@ in
         name = mkOpt types.str "adw-gtk3-dark" "The name of the GTK theme.";
       };
       iconTheme = {
-        package = mkOpt (types.package) (pkgs.catppuccin-papirus-folders.override { flavor = "mocha"; accent = "lavender"; }) "The icon theme package to use.";
+        package = mkOpt (types.package) (pkgs.catppuccin-papirus-folders.override {
+          flavor = "mocha";
+          accent = "lavender";
+        }) "The icon theme package to use.";
         name = mkOpt types.str "Papirus-Dark" "The name of the icon theme.";
       };
     };

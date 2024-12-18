@@ -24,25 +24,19 @@ in
       LOG_ICONS = "true";
     };
 
-    fonts.packages =
-      with pkgs;
-      [
-        (nerdfonts.override {
-          fonts = [
-            "0xProto"
-            "FiraCode"
-            "FiraMono"
-            "Iosevka"
-            "IosevkaTerm"
-            "JetBrainsMono"
-            "OpenDyslexic"
-          ];
-        })
-        noto-fonts
-        noto-fonts-cjk-sans
-        noto-fonts-cjk-serif
-        noto-fonts-emoji
-      ]
-      ++ cfg.fonts;
+    fonts.packages = with pkgs; [
+      nerd-fonts._0xproto
+      nerd-fonts.fira-code
+      nerd-fonts.fira-mono
+      nerd-fonts.iosevka
+      nerd-fonts.iosevka-term
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.open-dyslexic
+
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      noto-fonts-emoji
+    ] ++ cfg.fonts;
   };
 }

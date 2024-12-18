@@ -50,12 +50,7 @@ in
 
       fonts = {
         monospace = {
-          package = pkgs.nerdfonts.override {
-            fonts = [
-              core.fonts.monospace.nerdfont
-              "Iosevka"
-            ];
-          };
+          package = core.fonts.monospace.package;
           name = core.fonts.monospace.name;
         };
         sansSerif = {

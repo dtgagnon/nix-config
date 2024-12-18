@@ -3,7 +3,7 @@
 
   inputs = {
     ## packages
-    stablepkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    stablepkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR"; # Community package repository
@@ -52,7 +52,7 @@
 
     ## virtualisation
     NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
-    NixVirt.inputs.nixpkgs.follows = "stablepkgs";
+    NixVirt.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications
     neovim.url = "github:dtgagnon/nixvim/main";
@@ -63,7 +63,7 @@
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
+    hyprland.inputs.nixpkgs.follows = "stablepkgs";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.nixpkgs.follows = "hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
@@ -106,7 +106,7 @@
       overlays = with inputs; [
         neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
         nix-topology.overlays.default
-        nur.overlay
+        nur.overlays.default
       ];
 
       homes.packages = with inputs; [

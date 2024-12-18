@@ -10,6 +10,7 @@ let
   cfg = config.${namespace}.desktop.addons.waybar;
 
   core = config.spirenix.desktop.styling.core;
+	# workspaceGradient = ''linear-gradient(180deg, "#${colors.base03}00" 0%, "#${colors.base00}FF" 50%, "#${colors.base03}00" 100%)'';
 in
 {
   config = mkIf (cfg.presetStyle == "top-isolated-islands-centeredWorkspaces") {
@@ -142,7 +143,7 @@ in
       #workspaces.evens {
       	padding: 0 8px;
       	margin: 0 2px;
-      	background: #${colors.base00};
+      	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1.0) 50%, rgba(0, 0, 0, 0) 100%);
       	border-radius: 12px;
       	border: 2px solid #${colors.base03};
         border-bottom: none;
