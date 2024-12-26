@@ -20,7 +20,7 @@ let
   name = host;
 
   # this is a default user's public ssh key
-  default-key = '' config.sops.secrets."ssh-keys/dtgagnon-key.pub" '';
+  default-key = ''config.sops.secrets."ssh-keys/dtgagnon-key.pub"'';
 
   # Collects the information about the other hosts
   other-hosts = lib.filterAttrs

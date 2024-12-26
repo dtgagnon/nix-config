@@ -25,6 +25,10 @@
     nixos-wsl.url = "github:nix-community/nixos-wsl";
     nixos-wsl.inputs.nixpkgs.follows = "stablepkgs";
 
+    ## libraries
+    nix-rice.url = "github:bertof/nix-rice";
+    nix-rice.inputs.nixpkgs.follows = "nixpkgs";
+
     ## security
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "stablepkgs";
