@@ -7,10 +7,10 @@
 }:
 let
   inherit (lib) mkIf;
-	inherit (lib.${namespace}) mkRGBA;
-  inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.waybar;
 
+	inherit (lib.${namespace}) mkRGBA;
+  inherit (config.lib.stylix) colors;
   core = config.spirenix.desktop.styling.core;
 in
 {
@@ -95,7 +95,13 @@ in
 			#custom-startmenu {
 				padding: 0 8px;
 				margin: 0 2px;
-				background: #${colors.base00};
+				background: linear-gradient(
+					180deg,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 0%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 33%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 66%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 100%
+				);
 				border-radius: 12px;
 				border: 2px solid #${colors.base03};
 			}
@@ -105,9 +111,10 @@ in
 				margin: 0 2px;
 				background: linear-gradient(
 					180deg,
-					${mkRGBA { hex = "#FFFFFF"; alpha = 0.8; }} 0%,
-					${mkRGBA { hex = "#FFFFFF"; alpha = 0.0; }} 50%,
-					${mkRGBA { hex = "#FFFFFF"; alpha = 1.0; }} 100%
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 0%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 33%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 66%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 100%
 				);
 				border-radius: 12px;
 				border: 2px solid #${colors.base03};
@@ -144,7 +151,13 @@ in
 			#workspaces.evens {
 				padding: 0 8px;
 				margin: 0 2px;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 1.0) 50%, rgba(255, 255, 255, 0) 100%);
+				background: linear-gradient(
+					180deg,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 0%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 33%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 66%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 100%
+				);
 				border-radius: 12px;
 				border: 2px solid #${colors.base03};
 				border-bottom: none;
