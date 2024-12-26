@@ -19,9 +19,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.vaultwarden = {
-      enable = true;
-      inherit (cfg) dbBackend environmentFile config;
-    };
+    #TODO: add vaultwarden config
   };
 }
