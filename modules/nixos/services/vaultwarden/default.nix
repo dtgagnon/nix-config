@@ -15,7 +15,7 @@ in
     enable = mkBoolOpt false "Enable Vaultwarden service";
     dbBackend = mkOpt (types.enum [ "sqlite" "postgresql" ]) "postgresql" "Database backend for Vaultwarden";
     environmentFile = mkOpt types.path "/var/lib/vaultwarden/.env" "Path to the environment file";
-    config = mkOption (types.attrsOf types.str) { } "Additional configuration options for Vaultwarden";
+    config = mkOpt (types.attrsOf types.str) { } "Additional configuration options for Vaultwarden";
   };
 
   config = mkIf cfg.enable {
