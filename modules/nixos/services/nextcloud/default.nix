@@ -20,9 +20,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.nextcloud = {
-      enable = true;
-      inherit (cfg) home https hostname settings;
-    };
+    #TODO: Add Nextcloud config
   };
 }
