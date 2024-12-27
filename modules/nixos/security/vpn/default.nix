@@ -15,7 +15,7 @@ in {
     provider = mkOpt (types.strOfEnum ["proton-vpn" "tailscale"]) "proton-vpn" "VPN provider";
   };
 
-  config = mkIf cfg.enable && cfg.provider == "proton-vpn" {
+  config = mkIf (cfg.enable && cfg.provider == "proton-vpn") {
     environment.systemPackages = [ pkgs.protonvpn-gui ];
   };
 }
