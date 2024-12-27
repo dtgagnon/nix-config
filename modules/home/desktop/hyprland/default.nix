@@ -17,16 +17,16 @@ in
 
   options.spirenix.desktop.hyprland = {
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
+    terminal = {
+      name = mkOpt types.str "ghostty" "The terminal for hyprland to use";
+      package = mkOpt types.package inputs.ghostty.packages.${system}.${cfg.terminal.name} "The terminal for hyprland to use";
+    };
+
     extraConfig = mkOpt types.str "" "Additional hyprland configuration in string format";
     hyprModifier = mkOpt types.str "SUPER" "The main hyprland modifier key.";
-    extraKeybinds =
-      mkOpt (types.attrsOf types.anything) { }
-        "Additional keybinds to add to the Hyprland config";
-    extraSettings =
-      mkOpt (types.attrsOf types.anything) { }
-        "Additional settings to add to the Hyprland config";
+    extraKeybinds = mkOpt (types.attrsOf types.anything) { } "Additional keybinds to add to the Hyprland config";
+    extraSettings = mkOpt (types.attrsOf types.anything) { } "Additional settings to add to the Hyprland config";
     extraWinRules = mkOpt (types.attrsOf types.anything) { } "Window rules for Hyprland";
-
     extraAddons = mkOpt (types.attrsOf types.anything) { } "Additional addons to enable";
   };
 
@@ -68,6 +68,8 @@ in
       wayland
 
       # basic features
+      ## terminal
+      cfg.terminal.package
       ## screen shots
       grim
       slurp
@@ -79,7 +81,6 @@ in
       swww
       playerctl
       brightnessctl
-      kitty
     ];
   };
 }

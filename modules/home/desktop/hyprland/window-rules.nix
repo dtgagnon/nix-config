@@ -17,7 +17,7 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50%-w 82,class:^(discord)$"
+        "move 50%-1600 82,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Kitty - terminal
@@ -37,9 +37,9 @@ in
 
         # Zen Browser
         ## Extensions
-        "float, title:^(Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser)$"
-        "move 0 84, title:^(Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser)$"
-        "size 300 900, title:^(Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser)$"
+        "float, title:Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser"
+        "move 0 84, title:Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser"
+        "size 300 900, title:Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser"
 
         # Force total opacity
         "opacity 1.0 override 1.0 override, title:^(Picture in Picture)$"

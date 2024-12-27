@@ -13,7 +13,7 @@ in
 
       # Defaults
       "$mod" = "${cfg.hyprModifier}";
-      "$terminal" = "kitty";
+      "$terminal" = "${cfg.terminal.name}";
       "$menu" = "rofi -show drun";
       "$lock" = "hyprlock";
 
@@ -21,7 +21,7 @@ in
         # Open
         "$mod, Return, exec, [float; center; size 900 600] $terminal"
         "$mod_ALT, Return, exec, $terminal"
-        "$mod, E, exec, [float; center; size 1600 900] kitty -e yazi /home/${config.spirenix.user.name}"
+        "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, zen"
