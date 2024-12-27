@@ -26,7 +26,5 @@ in
       package = pkgs.protonmail-bridge;
       # path = [ ];
     };
-
-    spirenix.security.proton-vpn = enabled;
   };
 }
