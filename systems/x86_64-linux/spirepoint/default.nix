@@ -13,22 +13,21 @@ in
   networking.hostName = host;
 
   spirenix = {
-    suites.networking = enabled;
+    suites = {
+      networking = enabled;
+    };
 
     desktop = {
-      gnome = enabled;
       fonts = enabled;
+      gnome = enabled;
     };
 
     hardware = {
       audio = enabled;
-      keyboard = enabled; # xkb stuff
+      nvidia = enabled;
       storage = {
         boot.enable = true;
-        disko = {
-          enable = true;
-          device = "/dev/sda";
-        };
+        disko = { enable = true; device = "/dev/nvme0n1"; };
       };
     };
 
@@ -38,9 +37,9 @@ in
     };
 
     services = {
-      jellyfin = enabled;
-
       openssh = enabled;
+
+      jellyfin = enabled;
     };
 
     system = {
@@ -57,7 +56,10 @@ in
 
     # topology.self.hardware.info = "DG-PC";
 
-    virtualisation.podman = enabled;
+    virtualisation = {
+      podman = enabled;
+      kvm = enabled;
+    };
   };
 
   system.stateVersion = "24.05";
