@@ -9,10 +9,10 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.apps.terminal.ghostty;
+  cfg = config.${namespace}.apps.terminals.ghostty;
 in
 {
-  options.${namespace}.apps.terminal.ghostty = {
+  options.${namespace}.apps.terminals.ghostty = {
     enable = mkBoolOpt false "Enable ghostty terminal emulator";
     exampleOption = mkOpt types.str "" "Set xyz";
   };
