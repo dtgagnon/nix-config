@@ -59,6 +59,8 @@
     NixVirt.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications
+    ghostty.url = "github:ghostty-org/ghostty"; #NOTE: flake is already following nixos-unstable and 24.11 where needed
+
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
