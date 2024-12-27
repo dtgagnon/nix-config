@@ -30,8 +30,8 @@ in
       			adjust-cell-height =
       			adjust-underline-thickness =
 
-      			window-padding-x = 4px
-      			window-padding-y = 4px
+      			window-padding-x = 4
+      			window-padding-y = 4
       			window-decoration = false
 
       			# background = ${colors.base00}
