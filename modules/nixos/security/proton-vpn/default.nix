@@ -8,9 +8,9 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.security.protonvpn;
+  cfg = config.${namespace}.security.proton-vpn;
 in {
-  options.${namespace}.security.protonvpn = {
+  options.${namespace}.security.proton-vpn = {
     enable = mkBoolOpt false "Enable ProtonVPN";
     username = mkOpt types.str "Your ProtonVPN username";
     passwordFile = mkOpt types.path "Path to the file containing your ProtonVPN password";
