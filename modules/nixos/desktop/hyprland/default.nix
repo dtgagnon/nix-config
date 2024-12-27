@@ -28,6 +28,7 @@ in
       electron-support = enabled;
       greetd = enabled;
       keyring = enabled;
+      network-manager = enabled;
       thunar = enabled;
       xdg-portal = enabled;
     };

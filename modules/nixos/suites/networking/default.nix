@@ -22,7 +22,7 @@ in
     ];
 
     spirenix = {
-      security.proton-vpn = enabled;
+      security.vpn = enabled;
       services = {
         openssh = enabled;
         tailscale = enabled;
