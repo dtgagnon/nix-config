@@ -22,7 +22,7 @@ in
     home.packages = [ inputs.ghostty.packages.${system}.default ];
 
     xdg.configFile."ghostty/config".text = ''
-      			theme = dark:Gruvbox-material,light:catppuccin-latte
+      			theme = dark:gruvbox-material,light:catppuccin-latte
       			font-family =
       			font-size = 12
       			adjust-cell-width =
