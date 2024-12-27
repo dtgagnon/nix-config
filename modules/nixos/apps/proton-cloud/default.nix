@@ -7,7 +7,7 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib.${namespace}) mkBoolOpt enabled;
   cfg = config.${namespace}.apps.proton-cloud;
 in
 {
@@ -18,7 +18,6 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       proton-pass
-      protonvpn-gui
       protonmail-desktop
     ];
 
@@ -27,5 +26,7 @@ in
       package = pkgs.protonmail-bridge;
       # path = [ ];
     };
+
+    spirenix.security.proton-vpn = enabled;
   };
 }
