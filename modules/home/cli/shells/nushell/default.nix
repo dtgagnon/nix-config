@@ -75,6 +75,7 @@ in
         test = "nixos-rebuild test --use-remote-sudo --flake .#${host}";
         update = "nix flake update --use-remote-sudo";
         nixdev = "nix develop --command nushell";
+				nixvimup = ''cd ~/nix-config/nixvim/ ; git add . ; git commit -m "tweaks to nixvim config" ; git push ; cd ~/nix-config/nixos/ ; nix flake update neovim ; git add . ; test'';
 
         # Navigate Shell
         "..." = "z ../../";
