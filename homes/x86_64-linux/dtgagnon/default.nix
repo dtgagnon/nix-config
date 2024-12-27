@@ -1,11 +1,10 @@
-{
-  lib,
-  pkgs,
-  config,
-  osConfig ? { },
-  format ? "unknown",
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, osConfig ? { }
+, format ? "unknown"
+, namespace
+, ...
 }:
 let
   inherit (lib.${namespace}) enabled;
@@ -24,7 +23,11 @@ in
       office.okular-pdf = enabled;
       super-productivity = enabled;
       terminals = {
-        ghostty = enabled;
+        ghostty = {
+          enable = true;
+          dark-theme = "gruvbox-material";
+          light-theme = "catppuccin-latte";
+        };
         kitty = enabled;
       };
       thunderbird = enabled;
