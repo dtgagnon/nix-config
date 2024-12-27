@@ -28,7 +28,6 @@ in
           dark-theme = "gruvbox-material";
           light-theme = "catppuccin-latte";
         };
-        kitty = enabled;
       };
       thunderbird = enabled;
       windsurf = enabled;
