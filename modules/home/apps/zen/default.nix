@@ -17,6 +17,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ inputs.zen-browser.packages.${system}.specific ];
+    home.packages = [ inputs.zen-browser.packages.${system}.default ];
   };
 }

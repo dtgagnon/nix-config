@@ -24,12 +24,12 @@ in
       office.okular-pdf = enabled;
       super-productivity = enabled;
       terminals = {
+        ghostty = enabled;
         kitty = enabled;
-        wezterm = enabled;
       };
       thunderbird = enabled;
       windsurf = enabled;
-			zen = enabled;
+      zen = enabled;
     };
 
     cli = {
