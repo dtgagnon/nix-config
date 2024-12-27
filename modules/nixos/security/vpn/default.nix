@@ -12,7 +12,7 @@ let
 in {
   options.${namespace}.security.vpn = {
     enable = mkBoolOpt false "Enable VPN";
-    provider = mkOpt (types.strOfEnum ["proton-vpn", "tailscale"]) "proton-vpn" "VPN provider";
+    provider = mkOpt (types.strOfEnum ["proton-vpn" "tailscale"]) "proton-vpn" "VPN provider";
   };
 
   config = mkIf cfg.enable && cfg.provider == "proton-vpn" {
