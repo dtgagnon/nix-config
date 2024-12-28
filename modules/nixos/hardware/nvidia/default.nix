@@ -35,5 +35,7 @@ in
         ];
       };
     };
+
+    environment.systemPackages = [ pkgs.vulkan-tools ];
   };
 }
