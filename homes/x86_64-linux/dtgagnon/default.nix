@@ -26,7 +26,7 @@ in
         ghostty = {
           enable = true;
           dark-theme = "gruvbox-material";
-          light-theme = "catppuccin-latte";
+          light-theme = "catppuccin-frappe";
         };
       };
       thunderbird = enabled;

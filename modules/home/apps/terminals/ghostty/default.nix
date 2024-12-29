@@ -25,6 +25,11 @@ in
 
     xdg.configFile."ghostty/config".text = ''
 			theme = dark:"${cfg.dark-theme}",light:"${cfg.light-theme}"
+			background =
+			foreground =
+			selection-background =
+			selection-foreground = 
+
 			font-family =
 			font-size = 12
 			adjust-cell-width =
@@ -35,10 +40,6 @@ in
 			window-padding-y = 12
 			window-decoration = false
 
-			# background = ${colors.base00}
-			# foreground = ${colors.base05}
-			# selection-background = ${colors.base06}
-			# selection-foreground = ${colors.base08}
 		'' + (if cfg.dark-theme == "stylix" && cfg.light-theme == "stylix"
 			then ''
 				palette = 0=#${colors.base00}
