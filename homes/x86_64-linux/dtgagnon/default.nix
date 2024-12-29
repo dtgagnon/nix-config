@@ -57,7 +57,6 @@ in
       styling.stylix = {
         enable = true;
         polarity = "dark";
-        excludedTargets = [ "neovim" ];
       };
       styling.core = {
         enable = true;
