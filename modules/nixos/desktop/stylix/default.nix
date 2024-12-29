@@ -27,7 +27,12 @@ in
       enable = true;
       homeManagerIntegration.followSystem = false;
 
-      targets.nixvim.enable = false;
+      targets.nixvim = { 
+        enable = false;
+        plugin = pkgs.base16-nvim;
+        transparentBackground.main = true;
+        transparentBackground.signColumn = true;
+      };
 
       polarity = "dark"; # "light" || "dark" || "either"
 
