@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -13,8 +12,7 @@ in
 {
   options.${namespace}.desktop.styling.core = {
     enable = mkBoolOpt false "Whether to enable core styling configuration.";
-    wallpaper = mkOpt (types.package
-    ) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
+    wallpaper = mkOpt (types.package) pkgs.spirenix.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
     theme = mkOpt (types.nullOr types.str) null "The theme to use.";
 
     cursor = {
@@ -54,10 +52,11 @@ in
         name = mkOpt types.str "adw-gtk3-dark" "The name of the GTK theme.";
       };
       iconTheme = {
-        package = mkOpt (types.package) (pkgs.catppuccin-papirus-folders.override {
-          flavor = "mocha";
-          accent = "lavender";
-        }) "The icon theme package to use.";
+        package = mkOpt (types.package)
+          (pkgs.catppuccin-papirus-folders.override {
+            flavor = "mocha";
+            accent = "lavender";
+          }) "The icon theme package to use.";
         name = mkOpt types.str "Papirus-Dark" "The name of the icon theme.";
       };
     };

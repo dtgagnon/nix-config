@@ -25,7 +25,6 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
-      autoEnable = false;
       polarity = mkIf (cfg.polarity != null) cfg.polarity;
 
       image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
