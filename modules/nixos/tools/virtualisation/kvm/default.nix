@@ -5,13 +5,7 @@
 , ...
 }:
 let
-  inherit (lib)
-    mkIf
-    concatStringsSep
-    length
-    optionalString
-    types
-    ;
+  inherit (lib) mkIf concatStringsSep length optionalString types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
@@ -20,15 +14,9 @@ in
   options.${namespace}.virtualisation.kvm = with types; {
     enable = mkBoolOpt false "Enable KVM virtualisation";
     vfioIds = mkOpt (listOf str) [ ] "The hardware IDs to pass through to the VM";
-    platform = mkOpt
-      (enum [
-        "amd"
-        "intel"
-      ]) "intel" "The CPU platform of the host machine";
+    platform = mkOpt (enum [ "amd" "intel" ]) "intel" "The CPU platform of the host machine";
     # Use `machinectl` and then `machinectl status <name>` to get the unit "*.scope" of the VM
-    machineUnits =
-      mkOpt (listOf str) [ ]
-        "The systemd *.scope units to wait for before starting Scream";
+    machineUnits = mkOpt (listOf str) [ ] "The systemd *.scope units to wait for before starting Scream";
   };
 
   config = mkIf cfg.enable {
