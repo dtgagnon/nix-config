@@ -83,7 +83,6 @@ in
         // {
           neovim.enable = false;
           nixvim.enable = false;
-          spirenix-nvim.neovim.enable = false;
         };
     };
   };
