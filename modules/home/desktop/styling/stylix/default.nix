@@ -16,13 +16,9 @@ in
   options.${namespace}.desktop.styling.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaper = mkOpt (types.nullOr types.package) null "Designate the name of the source image";
-    polarity =
-      mkOpt (types.nullOr types.str) null
-        "Choose automatic theme polarity [`either`, `light`, `dark`]";
+    polarity = mkOpt (types.nullOr types.str) null "Choose automatic theme polarity [`either`, `light`, `dark`]";
     override = mkOpt (types.attrsOf types.str) { } "Designate the base16 target to override";
-    excludedTargets =
-      mkOpt (types.listOf types.str) [ ]
-        "Declare a list of targets to exclude from Stylix theming";
+    excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
   config = mkIf cfg.enable {
@@ -86,6 +82,8 @@ in
         ) { } cfg.excludedTargets
         // {
           neovim.enable = false;
+          nixvim.enable = false;
+          spirenix-nvim.neovim.enable = false;
         };
     };
   };

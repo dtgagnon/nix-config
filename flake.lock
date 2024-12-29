@@ -1739,11 +1739,11 @@
         "snowfall-lib": "snowfall-lib"
       },
       "locked": {
-        "lastModified": 1735329071,
-        "narHash": "sha256-7QJalTm7+QxPXyuM4JnPrk9sdWtZ2YY6G7asKjd8uxU=",
+        "lastModified": 1735483914,
+        "narHash": "sha256-taXWxlZaTcc/ZMqKhW5LeuZPNGYQGTvZenZhP9yCKAc=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "ff86f7c5b743c42c580e4bdc2bcf19b0cd4ad68b",
+        "rev": "62e6134bf86436706607396ff8132de43659a952",
         "type": "github"
       },
       "original": {
@@ -2199,11 +2199,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1735324294,
-        "narHash": "sha256-O+q/jORJDiZzHiX5VkKhlX7Q1eiVTxqy5u5D9pqaBCU=",
+        "lastModified": 1735378670,
+        "narHash": "sha256-A8aQA+YhJfA8mUpzXOZdlXNnKiZg2EcpCn1srgtBjTs=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "ae612f824918c336de906fd99048366a83591bdb",
+        "rev": "f4b0b81ef9eb4e37e75f32caf1f02d5501594811",
         "type": "github"
       },
       "original": {
