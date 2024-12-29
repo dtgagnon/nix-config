@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types foldl';
@@ -26,6 +25,7 @@ in
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
+      autoEnable = false;
       polarity = mkIf (cfg.polarity != null) cfg.polarity;
 
       image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
@@ -34,8 +34,7 @@ in
       base16Scheme = mkIf (core.theme != null) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
 
       override =
-        {
-        }
+        { }
         // cfg.override;
 
       cursor = {
@@ -73,13 +72,16 @@ in
       };
 
       targets =
-        foldl' (
-          acc: target:
-          acc
-          // {
-            ${target}.enable = false;
-          }
-        ) { } cfg.excludedTargets
+        foldl'
+          (
+            acc: target:
+              acc
+              // {
+                ${target}.enable = false;
+              }
+          )
+          { }
+          cfg.excludedTargets
         // {
           neovim.enable = false;
           nixvim = {
