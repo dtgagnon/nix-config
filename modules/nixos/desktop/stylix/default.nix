@@ -27,6 +27,9 @@ in
       enable = true;
       homeManagerIntegration.followSystem = false;
 
+      targets.neovim.enable = false;
+      targets.nixvim.enable = false;
+
       polarity = "dark"; # "light" || "dark" || "either"
 
       # image = pkgs.spirenix.wallpapers.nord-rainbow-dark-nix-ultrawide;
