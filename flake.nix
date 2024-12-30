@@ -55,6 +55,8 @@
     nix-topology.inputs.nixpkgs.follows = "nixpkgs";
 
     ## virtualisation
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
     NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
     NixVirt.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -100,71 +102,77 @@
       };
     in
 
-    lib.mkFlake {
-      inherit inputs;
-      src = ./.;
+    lib.mkFlake
+      {
+        inherit inputs;
+        src = ./.;
 
-      channels-config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [ ];
-      };
-
-      overlays = with inputs; [
-        neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
-        nix-topology.overlays.default
-        nur.overlays.default
-      ];
-
-      homes.packages = with inputs; [
-        zen-browser.packages.specific
-      ];
-
-      systems.modules.nixos = with inputs; [
-        stylix.nixosModules.stylix
-        sops-nix.nixosModules.sops
-        disko.nixosModules.disko
-        impermanence.nixosModules.impermanence
-        home-manager.nixosModules.home-manager
-        nix-index-database.nixosModules.nix-index
-        nix-topology.nixosModules.default
-        NixVirt.nixosModules.default
-      ];
-
-      systems.hosts.DGPC-WSL.modules = with inputs; [
-        nixos-wsl.nixosModules.default
-      ];
-
-      homes.modules = with inputs; [
-        ags.homeManagerModules.default
-      ];
-
-      deploy = lib.mkDeploy { inherit (inputs) self; };
-
-      outputs-builder = channels: {
-        formatter = channels.nixpkgs.nixfmt-rfc-style;
-      };
-
-      topology =
-        with inputs;
-        let
-          host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
-        in
-        import nix-topology {
-          inherit (host) pkgs;
-          modules = [
-            (import ./topology { inherit (host) config; })
-            { inherit (self) nixosConfigurations; }
-          ];
+        channels-config = {
+          allowUnfree = true;
+          permittedInsecurePackages = [ ];
         };
 
-      templates = {
-        empty.description = "A Nix Flake using snowfall-lib";
-        tmpDevShell.description = "A placeholder for a dev environment flake structure";
-        aiderProj.description = "dev-env w/ aider flake template";
-        sysMod.description = "template for NixOS system modules.";
-        homeMod.description = "template for home-manager modules.";
-      };
-    }
+        overlays = with inputs; [
+          neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
+          nix-topology.overlays.default
+          nur.overlays.default
+          proxmox-nixos.overlays.default
+        ];
+
+        homes.packages = with inputs; [
+          zen-browser.packages.specific
+        ];
+
+        systems.modules.nixos = with inputs; [
+          stylix.nixosModules.stylix
+          sops-nix.nixosModules.sops
+          disko.nixosModules.disko
+          impermanence.nixosModules.impermanence
+          home-manager.nixosModules.home-manager
+          nix-index-database.nixosModules.nix-index
+          nix-topology.nixosModules.default
+          NixVirt.nixosModules.default
+        ];
+
+        systems.hosts.DGPC-WSL.modules = with inputs; [
+          nixos-wsl.nixosModules.default
+        ];
+
+        systems.hosts.spirepoint.modules = with inputs; [
+          proxmox-nixos.nixosModules.proxmox-ve
+        ];
+
+        homes.modules = with inputs; [
+          ags.homeManagerModules.default
+        ];
+
+        deploy = lib.mkDeploy { inherit (inputs) self; };
+
+        outputs-builder = channels: {
+          formatter = channels.nixpkgs.nixfmt-rfc-style;
+        };
+
+        topology =
+          with inputs;
+          let
+            host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
+          in
+          import nix-topology {
+            inherit (host) pkgs;
+            modules = [
+              (import ./topology { inherit (host) config; })
+              { inherit (self) nixosConfigurations; }
+            ];
+          };
+
+        templates = {
+          empty.description = "A Nix Flake using snowfall-lib";
+          tmpDevShell.description = "A placeholder for a dev environment flake structure";
+          aiderProj.description = "dev-env w/ aider flake template";
+          sysMod.description = "template for NixOS system modules.";
+          homeMod.description = "template for home-manager modules.";
+        };
+      }
     // {
       self = inputs.self;
     };
