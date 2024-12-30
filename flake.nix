@@ -113,10 +113,10 @@
         };
 
         overlays = with inputs; [
-          neovim.overlays.default # provides spirenix-nvim namespace from custom neovim flake
+          neovim.overlays.default # provided via spirenix-nvim namespace from custom neovim flake
           nix-topology.overlays.default
           nur.overlays.default
-          proxmox-nixos.overlays.default
+          proxmox-nixos.overlays.x86_64-linux
         ];
 
         homes.packages = with inputs; [
@@ -132,14 +132,11 @@
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
           NixVirt.nixosModules.default
+          proxmox-nixos.nixosModules.proxmox-ve
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
-        ];
-
-        systems.hosts.spirepoint.modules = with inputs; [
-          proxmox-nixos.nixosModules.proxmox-ve
         ];
 
         homes.modules = with inputs; [
