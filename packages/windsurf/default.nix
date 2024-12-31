@@ -1,12 +1,11 @@
-{
-  stdenv,
-  inputs,
-  callPackage,
-  fetchurl,
-  nixosTests,
-  commandLineArgs ? "",
-  useVSCodeRipgrep ? stdenv.hostPlatform.isLinux,
-  ...
+{ stdenv
+, inputs
+, callPackage
+, fetchurl
+, nixosTests
+, commandLineArgs ? ""
+, useVSCodeRipgrep ? stdenv.hostPlatform.isLinux
+, ...
 }:
 let
   inherit (stdenv.hostPlatform) system;
@@ -20,22 +19,20 @@ let
       # aarch64-linux = "linux-arm64";
       # aarch64-darwin = "macos-arm64";
       # armv7l-linux = "linux-armhf";
-    }
-    .${system} or throwSystem;
+    }.${system} or throwSystem;
 
   archive_fmt = if stdenv.hostPlatform.isDarwin then "zip" else "tar.gz";
 
   sha256 = {
-      x86_64-linux = "7ec0cfcc7b4099021f157edd8e2e7df10f8a5cee80e45f481440be6e7990cd55";
-    }
-    .${system} or throwSystem;
+    x86_64-linux = "4007aad772ba0a7a7d605fdb704946d5a9dc8732ef1991d4822f4c5a58b2d6ef";
+  }.${system} or throwSystem;
 
 in
 # https://windsurf-stable.codeium.com/api/update/linux-x64/stable/latest
 callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec {
   inherit commandLineArgs useVSCodeRipgrep;
 
-  version = "1.1.0";
+  version = "1.1.2";
   pname = "windsurf";
 
   executableName = "windsurf";
@@ -43,7 +40,7 @@ callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec
   shortName = "windsurf";
 
   src = fetchurl {
-    url = "https://windsurf-stable.codeiumdata.com/${plat}/stable/c418a14b63f051e96dafb37fe06f1fe0b10ba3c8/Windsurf-${plat}-${version}.${archive_fmt}";
+    url = "https://windsurf-stable.codeiumdata.com/${plat}/stable/599ce698a84d43160da884347f22f6b77d0c8415/Windsurf-${plat}-${version}.${archive_fmt}";
     inherit sha256;
   };
 
