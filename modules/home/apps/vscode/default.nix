@@ -12,10 +12,30 @@ in
 {
   options.${namespace}.apps.vscode = {
     enable = mkBoolOpt false "Enable vscode";
-    extensions = mkOpt (types.listOf types.str) [ ] "List of extensions to install as strings";
+    extensions = mkOpt (types.listOf types.package) [ ] "List of extensions to install as strings";
   };
 
   config = mkIf cfg.enable {
-    programs.vscode.enable = true;
+    programs.vscode = {
+      enable = true;
+      package = pkgs.vscodium;
+      extensions = with pkgs.vscode-extensions; [
+        vscodevim.vim
+        sainnhe.gruvbox-material
+
+        github.copilot
+        github.copilot-chat
+        continue.continue
+
+        mkhl.direnv
+        jnoortheen.nix-ide
+        arrterian.nix-env-selector
+
+      ] ++ cfg.extensions;
+
+      userSettings = {
+        "[nix]"."editor.tabSize" = 2;
+      };
+    };
   };
 }
