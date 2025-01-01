@@ -30,6 +30,7 @@ in
         };
       };
       thunderbird = enabled;
+			vscode = enabled;
       zen = enabled;
     };
 
