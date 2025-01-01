@@ -31,7 +31,6 @@ in
       };
       thunderbird = enabled;
       vscode = enabled;
-      windsurf = enabled;
       zen = enabled;
     };
 
