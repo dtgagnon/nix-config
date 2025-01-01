@@ -42,7 +42,6 @@ in
 
         "editor.indentSize" = 2;
         "editor.wordWrap" = "on";
-        "editor.fontFamily" = "'Jet Brains Mono', 'monospace', monospace";
 
         "terminal.external.linuxExec" = "nu";
 
