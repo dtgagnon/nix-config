@@ -34,9 +34,6 @@ in
       ] ++ cfg.extensions;
 
       userSettings = {
-        "workbench.colorTheme" = "Gruvbox Material Dark";
-        "workbench.preferredDarkColorTheme" = "Gruvbox Material Dark";
-        "workbench.preferredLightColorTheme" = "Gruvbox Material Dark";
         "workbench.sideBar.location" = "right";
         "workbench.tips.enabled" = false;
 
