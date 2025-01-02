@@ -33,34 +33,40 @@ in
 
       ] ++ cfg.extensions;
 
-      userSettings = {
-        "workbench.sideBar.location" = "right";
-        "workbench.tips.enabled" = false;
+      xdg.configFile."VSCodium/User/defaults-for-settings.json".text = ''
+        {
+          "workbench.colorTheme" = "Gruvbox Material Dark";
+          "workbench.sideBar.location" = "right";
+          "workbench.tips.enabled" = false;
 
-        "editor.indentSize" = 2;
-        "editor.wordWrap" = "on";
+          "editor.indentSize" = 2;
+          "editor.wordWrap" = "on";
+          "editor.fontSize" = 16;
+          "editor.inlayHints.fontFamily" = "JetBrainsMono Nerd Font Mono";
+          "editor.inlineSuggesst.fontFamily" = "JetBrainsMono Nerd Font Mono";
 
-        "terminal.external.linuxExec" = "nu";
+          "terminal.external.linuxExec" = "nu";
 
-        "git.openRepositoryInParentFolders" = "always";
-        "git.enableSmartCommit" = true;
-        "git.confirmSync" = false;
+          "git.openRepositoryInParentFolders" = "always";
+          "git.enableSmartCommit" = true;
+          "git.confirmSync" = false;
 
-        # .nix stuff
-        "[nix]"."editor.tabSize" = 2;
-        "nix.enableLanguageServer" = true;
-        "nix.formatterPath" = "nixfmt";
-        "nix.serverPath" = "nixd";
+          # .nix stuff
+          "[nix]"."editor.tabSize" = 2;
+          "nix.enableLanguageServer" = true;
+          "nix.formatterPath" = "nixfmt";
+          "nix.serverPath" = "nixd";
 
-        # ai stuff
-        "github.copilot.advanced" = { };
-        "github.copilot.chat.scopeSelection" = true;
-        "github.copilot.chat.terminalChatLocation" = "terminal";
-        "github.copilot.chat.search.semanticTextResults" = true;
-        "github.copilot.chat.experimental.inlineChatCompletionTrigger.enabled" = true;
-        "github.copilot.chat.experimental.inlineChatHint.enabled" = true;
-        "github.copilot.chat.experimental.temporalContext.enabled" = true;
-      };
+          # ai stuff
+          "github.copilot.advanced" = { };
+          "github.copilot.chat.scopeSelection" = true;
+          "github.copilot.chat.terminalChatLocation" = "terminal";
+          "github.copilot.chat.search.semanticTextResults" = true;
+          "github.copilot.chat.experimental.inlineChatCompletionTrigger.enabled" = true;
+          "github.copilot.chat.experimental.inlineChatHint.enabled" = true;
+          "github.copilot.chat.experimental.temporalContext.enabled" = true;
+        }
+      '';
     };
   };
 }
