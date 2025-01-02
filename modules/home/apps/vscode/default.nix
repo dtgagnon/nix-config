@@ -16,6 +16,9 @@ in
   };
 
   config = mkIf cfg.enable {
+    spirenix.desktop.styling.stylix.excludedTargets = [ "vscode" ];
+    home.packages = [ pkgs.nixd ]; # for nix LSP
+
     programs.vscode = {
       enable = true;
       package = pkgs.vscodium;
@@ -33,26 +36,22 @@ in
 
       ] ++ cfg.extensions;
     };
-
-    home.packages = [ pkgs.nixd ];
     
     # For compatibility with Hyprland, to tell it the keyring to use.
     home.file.".vscode-oss/argv.json".text = ''
+      // This configuration file allows you to pass permanent command line arguments to VS Code.
       {
-        // This configuration file allows you to pass permanent command line arguments to VS Code.
-        {
-          // For compatibility with Hyprland, to tell it the keyring to use.
-          "password-store": "gnome-libsecret",
+        // For compatibility with Hyprland, to tell it the keyring to use.
+        "password-store": "gnome-libsecret",
 
-          // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
-          // "disable-hardware-acceleration": true,
+        // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
+        // "disable-hardware-acceleration": true,
 
-          // Allows to disable crash reporting. Should restart the app if the value is changed.
-          "enable-crash-reporter": false,
+        // Allows to disable crash reporting. Should restart the app if the value is changed.
+        "enable-crash-reporter": false,
 
-          // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
-          "crash-reporter-id": "b24b470f-e40a-4d0d-85e4-fcb22afc5576"
-        }
+        // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
+        "crash-reporter-id": "b24b470f-e40a-4d0d-85e4-fcb22afc5576"
       }
     '';
 
