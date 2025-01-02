@@ -33,6 +33,8 @@ in
 
       ] ++ cfg.extensions;
     };
+
+    home.packages = [ pkgs.nixd ];
     
     xdg.configFile."VSCodium/User/defaults-for-settings.json".text = ''
         {
