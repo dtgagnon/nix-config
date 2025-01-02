@@ -18,6 +18,7 @@ in
     environment.systemPackages = with pkgs; [
       pkgs.wine-wayland
       pkgs.winetricks
+      pkgs.wineWowPackages
     ];
   };
 }

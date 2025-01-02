@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -17,6 +16,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.lutris pkgs.openssl ];
+    environment.systemPackages = with pkgs; [
+      lutris
+      openssl
+    ];
   };
 }

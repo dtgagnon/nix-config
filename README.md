@@ -19,10 +19,8 @@
 - [Software](#-software)
 - [Hosts description](#%EF%B8%8F-hosts-description)
 - [Keyboard](#%EF%B8%8F-keyboard)
-- [Special thanks](#%EF%B8%8F-special-thanks)
-- [Star history](#-star-history)
 
-## ✨ Features 
+## ✨ Features
 
 - [X]❄️ Flakes -- for precise dependency management of the entire system.
 - [X]🏡 Home Manager -- to configure all used software for the user.
@@ -37,7 +35,7 @@
 
 - [❄️ flake.nix](flake.nix) configuration entry point
 - [1][👤🏡 Users & Homes](homes/) entry point for creating a home manager user
-    - [🧩 modules](modules/home/) home manager modules 
+    - [🧩 modules](modules/home/) home manager modules
 - [♻️ overlays](overlays/) all overlays
 - [📃 lib](lib/) helper functions for creating configurations
 - [🖥️💾 systems + hw](systems/) machine (host) configs incl. hardware
@@ -48,48 +46,33 @@
 
 ### ⚡ Hyprland
 
-![placeholder](assets/github/desktop0.png) 
+![placeholder](assets/github/desktop0.png)
+![placeholder](assets/github/desktop1.png)
 
 ## 📘 Software
 
  - OS - [**`NixOS`**](https://nixos.org/)
- - WM - [**`Hyprland`**](https://hyprland.org/) or [**`SwayFX`**](https://github.com/WillPower3309/swayfx)
+ - WM - [**`Hyprland`**](https://hyprland.org/) or [-][**`SwayFX`**](https://github.com/WillPower3309/swayfx)
  - Theme - [**`Gruvbox-medium-dark`**]()
- - Wallpapers - [**`N/A`**]()
+ - Wallpapers - [**`Packaged`**](https://github.com/dtgagnon/nix-config/tree/main/packages/wallpapers/wallpapers)
  - Editor - [**`Neovim`**](https://neovim.io/)
  - Bar - [**`Waybar`**](https://github.com/Alexays/Waybar)
- - Terminal - [**`Kitty`**](https://)
- - Shell - [**`Nushell`**](https://)
- - Promt - [**`Starship`**](https://starship.rs/)
+ - Terminal - [**`Ghostty`**](https://https://ghostty.org/)
+ - Shell - [**`Nushell`**](https://https://www.nushell.sh/)
+ - Prompt - [**`Starship`**](https://starship.rs/)
  - Filemanager - [**`Yazi`**](https://github.com/sxyazi/yazi)
 
 ## 🖥️ Hosts description
 
 | Hostname | Board | CPU | RAM | GPU | OS | State |
 | --- | --- | --- | --- | --- | --- | --- |
-| Desktop | MSI Z790 TOMAHAWK WIFI | i7-13700K | 64GB | NVIDIA RTX 4090 | NixOS | OK |
-| Spirepoint | MSI Something | i7-somethingK | 16GB | NVIDIA GTX 1050 Ti | NixOS | OK |
-| Slim | Asus Zenbook 1st Gen | i5-something | 8GB | iGPU | NixOS | OK |
+| DG-PC | MSI Z790 TOMAHAWK WIFI | i7-13700K | 64GB | NVIDIA RTX 4090 | NixOS | OK |
+| Spirepoint | MSI Something | i7-somethingK | 16GB | NVIDIA GTX 1050 Ti | NixOS | WIP |
+| Slim | Asus Zenbook 1st Gen | i5-something | 8GB | iGPU | NixOS | WIP |
 
 ## ⌨️ Keyboard
 
-I use corne split with a modified [miryoku](https://github.com/manna-harbour/miryoku) layout. This is one of the most affordable and easy options for an ergonomic keyboard. 
+I use a QK65 with a standard QWERTY layout. Dreams to move to a modified Corne split with using a modified [miryoku](https://github.com/manna-harbour/miryoku) layout.
 
-- WS Heavy Tactile switches
-- Blank white PBT Cherry keycaps
-- KBDFANS switch pads
-- Tape mod
-- O-rings
-- Jincomso wrist rest 
-
-<details><summary>Layer 0 Main</summary>
-
-![layer-0.png](assets/keyboard/layer-0.png)
-
-</details>
-
-<details><summary>Layer 1 Media</summary>
-
-![layer-1.png](assets/keyboard/layer-1.png)
-
-</details>
+- Switches: Zakus
+- Keycaps: 8008 Double-shot PBT
