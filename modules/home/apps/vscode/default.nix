@@ -36,39 +36,97 @@ in
 
     home.packages = [ pkgs.nixd ];
     
-    xdg.configFile."VSCodium/User/defaults-for-settings.json".text = ''
+    # For compatibility with Hyprland, to tell it the keyring to use.
+    home.file.".vscode-oss/argv.json".text = ''
+      {
+        // This configuration file allows you to pass permanent command line arguments to VS Code.
         {
-          "workbench.colorTheme" = "Gruvbox Material Dark";
-          "workbench.sideBar.location" = "right";
-          "workbench.tips.enabled" = false;
+          // For compatibility with Hyprland, to tell it the keyring to use.
+          "password-store": "gnome-libsecret",
 
-          "editor.indentSize" = 2;
-          "editor.wordWrap" = "on";
-          "editor.fontSize" = 16;
-          "editor.inlayHints.fontFamily" = "JetBrainsMono Nerd Font Mono";
-          "editor.inlineSuggesst.fontFamily" = "JetBrainsMono Nerd Font Mono";
+          // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
+          // "disable-hardware-acceleration": true,
 
-          "terminal.external.linuxExec" = "nu";
+          // Allows to disable crash reporting. Should restart the app if the value is changed.
+          "enable-crash-reporter": false,
 
-          "git.openRepositoryInParentFolders" = "always";
-          "git.enableSmartCommit" = true;
-          "git.confirmSync" = false;
-
-          # .nix stuff
-          "[nix]"."editor.tabSize" = 2;
-          "nix.enableLanguageServer" = true;
-          "nix.formatterPath" = "nixfmt";
-          "nix.serverPath" = "nixd";
-
-          # ai stuff
-          "github.copilot.advanced" = { };
-          "github.copilot.chat.scopeSelection" = true;
-          "github.copilot.chat.terminalChatLocation" = "terminal";
-          "github.copilot.chat.search.semanticTextResults" = true;
-          "github.copilot.chat.experimental.inlineChatCompletionTrigger.enabled" = true;
-          "github.copilot.chat.experimental.inlineChatHint.enabled" = true;
-          "github.copilot.chat.experimental.temporalContext.enabled" = true;
+          // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
+          "crash-reporter-id": "b24b470f-e40a-4d0d-85e4-fcb22afc5576"
         }
-      '';
+      }
+    '';
+
+    xdg.configFile."VSCodium/User/starter-for-settings.json".text = ''
+      {
+        // Chat settings
+        "chat.editor.fontFamily": "JetBrainsMono Nerd Font Mono",
+        "chat.editor.fontSize": 16,
+
+        // Debug console settings
+        "debug.console.fontFamily": "JetBrainsMono Nerd Font Mono",
+        "debug.console.fontSize": 16,
+
+        // Markdown preview settings
+        "markdown.preview.fontFamily": "DejaVu Sans",
+        "markdown.preview.fontSize": 16,
+
+        // SCM settings
+        "scm.inputFontFamily": "JetBrainsMono Nerd Font Mono",
+        "scm.inputFontSize": 16,
+
+        // Screencast mode settings
+        "screencastMode.fontSize": 80,
+
+        // Terminal settings
+        "terminal.integrated.fontSize": 16,
+        "terminal.external.linuxExec": "nu",
+
+        // Workbench settings
+        "workbench.colorTheme": "Gruvbox Material Dark",
+        "workbench.iconTheme": "gruvbox-material-icon-theme",
+        "workbench.productIconTheme": "material-product-icons",
+        "workbench.sideBar.location": "right",
+        "workbench.tips.enabled": false,
+
+        // Editor settings
+        "editor.indentSize": 2,
+        "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
+        "editor.fontSize": 16,
+        "editor.inlayHints.fontFamily": "JetBrainsMono Nerd Font Mono",
+        "editor.inlineSuggest.fontFamily": "JetBrainsMono Nerd Font Mono",
+        "editor.minimap.sectionHeaderFontSize": 16,
+        "editor.wordWrap": "on",
+
+        // Git settings
+        "git.openRepositoryInParentFolders": "always",
+        "git.enableSmartCommit": true,
+        "git.confirmSync": false,
+
+        // Nix settings
+        "[nix]": {
+          "editor.tabSize": 2
+        },
+        "nix.enableLanguageServer": true,
+        "nix.formatterPath": "nixfmt",
+        "nix.serverPath": "nixd",
+        "nix.serverSettings": {},
+
+        // GitHub Copilot settings
+        "github.copilot.advanced": {},
+        "github.copilot.chat.scopeSelection": true,
+        "github.copilot.chat.terminalChatLocation": "terminal",
+        "github.copilot.chat.search.semanticTextResults": true,
+        "github.copilot.chat.experimental.inlineChatCompletionTrigger.enabled": true,
+        "github.copilot.chat.experimental.inlineChatHint.enabled": true,
+        "github.copilot.chat.temporalContext.enabled": true,
+
+        // Window settings
+        "window.customTitleBarVisibility": "auto",
+        "window.menuBarVisibility": "toggle",
+
+        // Continue settings
+        "continue.enableTabAutocomplete": false
+      }
+    '';
   };
 }
