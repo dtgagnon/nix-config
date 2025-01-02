@@ -32,8 +32,9 @@ in
         arrterian.nix-env-selector
 
       ] ++ cfg.extensions;
-
-      xdg.configFile."VSCodium/User/defaults-for-settings.json".text = ''
+    };
+    
+    xdg.configFile."VSCodium/User/defaults-for-settings.json".text = ''
         {
           "workbench.colorTheme" = "Gruvbox Material Dark";
           "workbench.sideBar.location" = "right";
@@ -67,6 +68,5 @@ in
           "github.copilot.chat.experimental.temporalContext.enabled" = true;
         }
       '';
-    };
   };
 }
