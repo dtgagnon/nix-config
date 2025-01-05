@@ -6,7 +6,7 @@
   disko.devices = {
     disk.disk1 = {
       device = lib.mkDefault "/dev/sda";
-      type = "disk"
+      type = "disk";
       content = {
         type = "gpt";
         partitions = {
@@ -43,21 +43,22 @@
             };
           };
         };
-    };
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              mountpoint = "/";
-              mountOptions = [ "defaults" ];
+      };
+      lvm_vg = {
+        pool = {
+          type = "lvm_vg";
+          lvs = {
+            root = {
+              size = "100%FREE";
+              content = {
+                type = "filesystem";
+                mountpoint = "/";
+                mountOptions = [ "defaults" ];
+              };
             };
           };
-        }
+        };
       };
-    }
+    };
   };
 }

@@ -54,7 +54,7 @@ _:
 
           partitions = {
             esp = {
-              size = "5G";
+              size = "5G"; # Why 5G? Typically see 500M. What is esp partition?
               type = "EF00";
 
               content = {

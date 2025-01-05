@@ -31,5 +31,5 @@
     openssh.authorizedKeys.keys = [ "KEY" ]; # Replace "KEY" with your public key
   };
 
-  system.stateVersion = "23.05"; # Adjust to your NixOS version
+  system.stateVersion = "24.11";
 }
