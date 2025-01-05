@@ -139,6 +139,12 @@
           nixos-wsl.nixosModules.default
         ];
 
+        # For nixos-anywhere deployments run command:
+        # nix run nixpkgs#nixos-anywhere -- --flake .#generic --generate-hardware-config nixos-generate-config ./systems/x86_64-linux/generic/hardware.nix <user@hostIP>
+        systems.hosts.generic.modules = with inputs; [
+          disko.nixosModules.disko
+        ];
+
         homes.modules = with inputs; [
           ags.homeManagerModules.default
         ];
