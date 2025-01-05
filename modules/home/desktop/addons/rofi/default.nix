@@ -22,7 +22,7 @@ in
       enable = true;
       package = pkgs.rofi-wayland;
       plugins = [ pkgs.rofi-calc ];
-      terminal = "${pkgs.kitty}/bin/kitty";
+      terminal = "${pkgs.ghostty}/bin/ghostty";
       extraConfig = {
         modi = "drun,window,filebrowser,ssh,run";
         disable-history = false;
