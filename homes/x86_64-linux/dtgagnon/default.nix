@@ -30,7 +30,7 @@ in
         };
       };
       thunderbird = enabled;
-			vscode = enabled;
+      vscode = enabled;
       zen = enabled;
     };
 
@@ -53,7 +53,10 @@ in
     };
 
     desktop = {
-      hyprland = enabled;
+      hyprland = {
+        enable = true;
+        monitors = [ ",highrr,auto,1" ];
+      };
       styling.stylix = {
         enable = true;
         polarity = "dark";

@@ -1,8 +1,7 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -38,21 +37,28 @@ in
         };
 
         listener = [
+          # Dim the screen
           {
             timeout = cfg.timeouts.screen;
-            on-timeout = "notify-send 'Screen Dim' 'Screen will dim in 30 seconds' -t 3000 && sleep 30 && brightnessctl set 10%";
+            on-timeout = "brightnessctl set 10%";
             on-resume = "brightnessctl -r";
           }
+
+          # Lock the screen
           {
             timeout = cfg.timeouts.lock;
             on-timeout = "notify-send 'Screen Lock' 'Screen will lock in 30 seconds' -t 3000 && sleep 30 && loginctl lock-session";
             on-resume = "hyprctl dispatch dpms on";
           }
+
+          # Turn off the screen
           {
             timeout = cfg.timeouts.screen + 300;
             on-timeout = "hyprctl dispatch dpms suspend";
             on-resume = "hyprctl dispatch dpms on";
           }
+
+          # Enter suspended system state
           {
             timeout = cfg.timeouts.suspend;
             on-timeout = "notify-send 'System Suspend' 'System will suspend in 30 seconds' -t 3000 && sleep 30 && systemctl suspend";

@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf mkForce;
@@ -101,18 +100,6 @@ in
             position = "0, -100";
             halign = "center";
             valign = "center";
-          }
-
-          # Desktop environment icon
-          {
-            monitor = "";
-            path = "${config.stylix.image}"; # replace with hyprland logo
-            size = 75;
-            border_size = 2;
-            border_color = "${config.stylix.base16Scheme.base01}";
-            position = "-50, 0";
-            halign = "right";
-            valign = "bottom";
           }
         ];
       };

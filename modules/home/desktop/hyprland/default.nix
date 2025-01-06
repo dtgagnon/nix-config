@@ -1,11 +1,10 @@
-{
-  lib,
-  pkgs,
-  config,
-  inputs,
-  system,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, inputs
+, system
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types genAttrs;
@@ -21,6 +20,7 @@ in
       name = mkOpt types.str "ghostty" "The terminal for hyprland to use";
       package = mkOpt types.package inputs.ghostty.packages.${system}.${cfg.terminal.name} "The terminal for hyprland to use";
     };
+    monitors = mkOpt (types.listOf types.str) [ ] "Configure any additional monitors";
 
     extraConfig = mkOpt types.str "" "Additional hyprland configuration in string format";
     hyprModifier = mkOpt types.str "SUPER" "The main hyprland modifier key.";
