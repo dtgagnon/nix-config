@@ -1,7 +1,6 @@
-{
-  lib,
-  config,
-  ...
+{ lib
+, config
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -17,7 +16,7 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50%-1600 82,class:^(discord)$"
+        "move 100%-w-200 82,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Kitty - terminal

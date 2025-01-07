@@ -1,7 +1,6 @@
-{
-  lib,
-  config,
-  ...
+{ lib
+, config
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -25,7 +24,7 @@ in
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, zen"
-        "$mod_ALT, V, exec, [move workspace 1] codium"
+        "$mod_ALT, V, exec, [workspace 1] codium"
         "$mod_SHIFT, S, exec, hyprshot -z -m region -t 2000 --clipboard-only"
 
         # Window Control
