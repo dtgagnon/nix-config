@@ -21,6 +21,7 @@ in
     apps = {
       proton = enabled;
       proton-cloud = enabled;
+			ea-games = enabled;
     };
 
     desktop = {
