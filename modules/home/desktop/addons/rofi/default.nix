@@ -1,9 +1,10 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, inputs
+, system
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf mkForce;
@@ -22,7 +23,7 @@ in
       enable = true;
       package = pkgs.rofi-wayland;
       plugins = [ pkgs.rofi-calc ];
-      terminal = "${pkgs.ghostty}/bin/ghostty";
+      terminal = "${inputs.ghostty.packages.${system}.default}/bin/ghostty";
       extraConfig = {
         modi = "drun,window,filebrowser,ssh,run";
         disable-history = false;

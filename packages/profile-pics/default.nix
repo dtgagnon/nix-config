@@ -3,8 +3,6 @@
 # config (for system configuration), and namespace
 { lib
 , pkgs
-, config
-, namespace
 , ...
 }:
 let
