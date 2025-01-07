@@ -88,8 +88,8 @@ in
       };
 
       misc = {
-        animate_manual_resizes = true;
-        animate_mouse_windowdragging = true;
+        animate_manual_resizes = false;
+        animate_mouse_windowdragging = false;
         new_window_takes_over_fullscreen = 2;
         initial_workspace_tracking = 0;
         disable_hyprland_logo = true;

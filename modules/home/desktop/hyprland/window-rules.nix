@@ -5,6 +5,30 @@
 let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
+  
+  # floatWindow =
+  #   { windowSizeX
+  #   , windowSizeY
+  #   , windowAnchorX ? 0.0
+  #   , windowAnchorY ? 0.0
+  #   , screenAnchorX ? 0.0
+  #   , screenAnchorY ? 0.0
+  #   , className
+  #   }:
+  #   let
+  #     buildPos = { windowAnchor, screenAnchor, dimensionLetter }: if windowAnchor == "0" then screenAnchor else "${screenAnchor}-${dimensionLetter}-${windowAnchor}";
+
+  #     anchorX = windowSizeX * windowAnchorX;
+  #     anchorY = windowSizeY * windowAnchorY;
+      
+  #     moveX = buildPos { windowAnchor = anchorX; screenAnchor = screenAnchorX; dimensionLetter = "w"; };
+  #     moveY = buildPos { windowAnchor = anchorY; screenAnchor = screenAnchorY; dimensionLetter = "h"; };
+  #   in
+  #   ''
+  #     			float,class:^(${className})
+  #     			size ${windowSizeX} ${windowSizeY},class:^(${className})
+  #     			move ${moveX} ${moveY},class:^(${className})
+  #     		'';
 in
 {
   config = mkIf cfg.enable {
@@ -16,7 +40,7 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 100%-w-200 82,class:^(discord)$"
+        "move 50%-800 84,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Kitty - terminal
