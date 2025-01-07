@@ -55,7 +55,7 @@ in
     desktop = {
       hyprland = {
         enable = true;
-        monitors = [ ",highrr,auto,1" ];
+        monitors = [ ",highres@highrr,auto,1" ];
       };
       styling.stylix = {
         enable = true;

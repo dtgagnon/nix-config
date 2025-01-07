@@ -21,7 +21,7 @@ in
         "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
       ];
 
-      monitors = cfg.monitors ++ [
+      monitor = cfg.monitors ++ [
         ",preferred,auto,1"
       ];
 
