@@ -19,63 +19,39 @@ let
       fileName = builtins.baseNameOf path;
       relPath = lib.removePrefix (toString ./wallpapers + "/") (toString path);
       # Create a simple derivation that just copies the wallpaper file
-      pkg = pkgs.stdenvNoCC.mkDerivation {
-        name = builtins.replaceStrings ["/"] ["-"] relPath;
-        src = path;
-
-        # No need to unpack since we're just copying files
-        dontUnpack = true;
-
-        # Simple installation: just copy the file to output
-        installPhase = ''
-          mkdir -p $out/share/wallpapers/$(dirname "${relPath}")
-          cp $src $out/share/wallpapers/"${relPath}"
-        '';
-
-        # Make the filename and path available to other parts of the configuration
-        passthru = {
-          inherit fileName relPath;
-        };
-      };
+      pkg = pkgs.runCommand (builtins.replaceStrings ["/"] ["-"] relPath) { } ''
+        mkdir -p $out
+        cp ${path} $out/${fileName}
+      '';
     in
     pkg;
 
-  # Create a nested attribute set based on directory structure
-  # This transforms the list of image files into a hierarchical set of Nix packages
-  wallpapers = lib.foldl
-    (
-      acc: path:
-        let
-          # Get the relative path from the wallpapers directory
-          relPath = lib.removePrefix (toString ./wallpapers + "/") (toString path);
-          # Split the path into components
-          components = lib.splitString "/" relPath;
-          # Get the name without extension for the last component
-          baseName = lib.snowfall.path.get-file-name-without-extension (builtins.baseNameOf path);
-          # Create the full attribute path
-          attrPath = if builtins.length components > 1
-            then (lib.lists.take ((builtins.length components) - 1) components) ++ [baseName]
-            else [baseName];
-          # Create the nested attribute set
-          nestedSet = lib.setAttrByPath attrPath (mkWallpaper path);
-        in
-        lib.recursiveUpdate acc nestedSet
+  # Create a flat attribute set mapping wallpaper paths to their derivations
+  wallpapers = lib.listToAttrs (map
+    (path:
+      let
+        relPath = lib.removePrefix (toString ./wallpapers + "/") (toString path);
+        components = lib.splitString "/" relPath;
+        baseName = lib.snowfall.path.get-file-name-without-extension (builtins.baseNameOf path);
+        attrName = if builtins.length components > 1
+          then builtins.concatStringsSep "." ((lib.lists.take ((builtins.length components) - 1) components) ++ [baseName])
+          else baseName;
+      in
+      lib.nameValuePair attrName (mkWallpaper path)
     )
-    { }
-    images;
+    images);
 in
 # Main derivation that creates the complete wallpaper package
-pkgs.symlinkJoin {
+pkgs.stdenvNoCC.mkDerivation {
   name = "wallpapers";
-  paths = lib.attrValues (lib.mapAttrs (name: value: 
-    if builtins.isAttrs value && value ? outPath
-    then value
-    else if builtins.isAttrs value
-    then pkgs.symlinkJoin {
-      name = name;
-      paths = lib.attrValues value;
-    }
-    else value
-  ) wallpapers);
+  src = ./wallpapers;
+
+  # Installation phase: create directory and copy all wallpapers preserving structure
+  installPhase = ''
+    mkdir -p $out/share/wallpapers
+    cp -r $src/* $out/share/wallpapers/
+  '';
+
+  # Make wallpaper derivations available to other parts of the Nix configuration
   passthru = wallpapers;
 }
