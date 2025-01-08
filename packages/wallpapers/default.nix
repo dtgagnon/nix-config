@@ -28,13 +28,14 @@ let
 
         # Simple installation: create directory structure and copy the file
         installPhase = ''
-          mkdir -p $out/$(dirname "${relPath}")
-          cp $src $out/"${relPath}"
+          mkdir -p $out
+          cp $src $out/${fileName}
         '';
 
         # Make the filename and path available to other parts of the configuration
         passthru = {
-          inherit fileName relPath;
+          inherit fileName;
+          inherit relPath;
         };
       };
     in
@@ -59,23 +60,36 @@ let
           # Create the nested attribute set
           nestedSet = lib.setAttrByPath attrPath (mkWallpaper path);
         in
-        lib.snowfall.attrs.merge-deep [acc nestedSet]
+        lib.recursiveUpdate acc nestedSet
     )
     { }
     images;
 
   # Define where wallpapers will be installed in the final system
   installTarget = "$out/share/wallpapers";
+
+  # Helper function to recursively copy wallpapers maintaining structure
+  copyWallpapers = path: pkg:
+    if builtins.isAttrs pkg && pkg ? outPath
+    then ''
+      mkdir -p ${installTarget}/$(dirname "${pkg.relPath}")
+      cp ${pkg}/* ${installTarget}/${pkg.relPath}
+    ''
+    else if builtins.isAttrs pkg
+    then lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: copyWallpapers "${path}/${name}" value) pkg)
+    else "";
 in
 # Main derivation that creates the complete wallpaper package
 pkgs.stdenvNoCC.mkDerivation {
   name = "wallpapers";
-  src = ./wallpapers;
+
+  # No source needed as we're copying from derivations
+  dontUnpack = true;
 
   # Installation phase: create directory and copy all wallpapers preserving structure
   installPhase = ''
     mkdir -p ${installTarget}
-    cp -r $src/* ${installTarget}/
+    ${copyWallpapers "" wallpapers}
   '';
 
   # Make wallpaper derivations available to other parts of the Nix configuration
