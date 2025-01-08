@@ -8,79 +8,76 @@
 , ...
 }:
 let
-  # Get a list of all wallpaper filenames from the ./wallpapers directory
-  images = builtins.attrNames (builtins.readDir ./wallpapers);
+  # Get all wallpaper files recursively from the ./wallpapers directory
+  images = lib.snowfall.fs.get-files-recursive ./wallpapers;
 
   # Helper function to create a Nix derivation for a single wallpaper
-  # Takes a name and source path as arguments
-  mkWallpaper = name: src:
+  # Takes a path as argument
+  mkWallpaper = path:
     let
-      # Extract just the filename from the full path
-      fileName = builtins.baseNameOf src;
+      # Extract just the filename and relative path
+      fileName = builtins.baseNameOf path;
+      relPath = lib.removePrefix (toString ./wallpapers + "/") (toString path);
       # Create a simple derivation that just copies the wallpaper file
       pkg = pkgs.stdenvNoCC.mkDerivation {
-        inherit name src;
+        name = builtins.replaceStrings ["/"] ["-"] relPath;
+        src = path;
 
         # No need to unpack since we're just copying files
         dontUnpack = true;
 
-        # Simple installation: just copy the source file to the output
+        # Simple installation: create directory structure and copy the file
         installPhase = ''
-          cp $src $out
+          mkdir -p $out/$(dirname "${relPath}")
+          cp $src $out/"${relPath}"
         '';
 
-        # Make the filename available to other parts of the configuration
+        # Make the filename and path available to other parts of the configuration
         passthru = {
-          inherit fileName;
+          inherit fileName relPath;
         };
       };
     in
     pkg;
 
-  # Create a list of wallpaper names without their file extensions
-  names = builtins.map (lib.snowfall.path.get-file-name-without-extension) images;
-
-  # Create an attribute set mapping wallpaper names to their derivations
-  # This transforms the list of image files into a set of Nix packages
+  # Create a nested attribute set based on directory structure
+  # This transforms the list of image files into a hierarchical set of Nix packages
   wallpapers = lib.foldl
     (
-      acc: image:
+      acc: path:
         let
-          # Get the name of the wallpaper without its extension
-          name = lib.snowfall.path.get-file-name-without-extension image;
+          # Get the relative path from the wallpapers directory
+          relPath = lib.removePrefix (toString ./wallpapers + "/") (toString path);
+          # Split the path into components
+          components = lib.splitString "/" relPath;
+          # Get the name without extension for the last component
+          baseName = lib.snowfall.path.get-file-name-without-extension (builtins.baseNameOf path);
+          # Create the full attribute path
+          attrPath = if builtins.length components > 1
+            then (lib.lists.take ((builtins.length components) - 1) components) ++ [baseName]
+            else [baseName];
+          # Create the nested attribute set
+          nestedSet = lib.setAttrByPath attrPath (mkWallpaper path);
         in
-        # Add this wallpaper to the accumulated set
-        acc // { "${name}" = mkWallpaper name (./wallpapers + "/${image}"); }
+        lib.snowfall.attrs.merge-deep [acc nestedSet]
     )
     { }
     images;
 
   # Define where wallpapers will be installed in the final system
   installTarget = "$out/share/wallpapers";
-
-  # Create installation instructions for each wallpaper
-  installWallpapers = builtins.mapAttrs
-    (name: wallpaper: ''
-      cp ${wallpaper} ${installTarget}/${wallpaper.fileName}
-    '')
-    wallpapers;
 in
 # Main derivation that creates the complete wallpaper package
 pkgs.stdenvNoCC.mkDerivation {
   name = "wallpapers";
   src = ./wallpapers;
 
-  # Installation phase: create directory and copy all wallpapers
+  # Installation phase: create directory and copy all wallpapers preserving structure
   installPhase = ''
     mkdir -p ${installTarget}
-
-    # Copy all files from the source directory to the installation directory
-    find * -type f -mindepth 0 -maxdepth 0 -exec cp ./{} ${installTarget}/{} ';'
+    cp -r $src/* ${installTarget}/
   '';
 
-  # Make wallpaper names and individual wallpaper derivations available
-  # to other parts of the Nix configuration
-  passthru = {
-    inherit names;
-  } // wallpapers;
+  # Make wallpaper derivations available to other parts of the Nix configuration
+  passthru = wallpapers;
 }
