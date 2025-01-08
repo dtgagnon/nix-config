@@ -22,7 +22,7 @@ let
   # Recursively crawl a directory (dir) building an attribute set:
   # - If an entry is a directory => recurse and build a sub-attribute set
   # - If an entry is a file => build a mkWallpaper derivation
-  rec buildWallpapers = dir: 
+  buildWallpapers = dir: 
   let
     contents = builtins.readDir dir;    # readDir returns an attrset of { <fileName> = { ... } }
     names    = builtins.attrNames contents;
