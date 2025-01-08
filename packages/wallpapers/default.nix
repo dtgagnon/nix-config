@@ -26,16 +26,15 @@ let
         # No need to unpack since we're just copying files
         dontUnpack = true;
 
-        # Simple installation: create directory structure and copy the file
+        # Simple installation: just copy the file to output
         installPhase = ''
-          mkdir -p $out
-          cp $src $out/${fileName}
+          mkdir -p $out/share/wallpapers/$(dirname "${relPath}")
+          cp $src $out/share/wallpapers/"${relPath}"
         '';
 
         # Make the filename and path available to other parts of the configuration
         passthru = {
-          inherit fileName;
-          inherit relPath;
+          inherit fileName relPath;
         };
       };
     in
@@ -64,34 +63,19 @@ let
     )
     { }
     images;
-
-  # Define where wallpapers will be installed in the final system
-  installTarget = "$out/share/wallpapers";
-
-  # Helper function to recursively copy wallpapers maintaining structure
-  copyWallpapers = path: pkg:
-    if builtins.isAttrs pkg && pkg ? outPath
-    then ''
-      mkdir -p ${installTarget}/$(dirname "${pkg.relPath}")
-      cp ${pkg}/* ${installTarget}/${pkg.relPath}
-    ''
-    else if builtins.isAttrs pkg
-    then lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: copyWallpapers "${path}/${name}" value) pkg)
-    else "";
 in
 # Main derivation that creates the complete wallpaper package
-pkgs.stdenvNoCC.mkDerivation {
+pkgs.symlinkJoin {
   name = "wallpapers";
-
-  # No source needed as we're copying from derivations
-  dontUnpack = true;
-
-  # Installation phase: create directory and copy all wallpapers preserving structure
-  installPhase = ''
-    mkdir -p ${installTarget}
-    ${copyWallpapers "" wallpapers}
-  '';
-
-  # Make wallpaper derivations available to other parts of the Nix configuration
+  paths = lib.attrValues (lib.mapAttrs (name: value: 
+    if builtins.isAttrs value && value ? outPath
+    then value
+    else if builtins.isAttrs value
+    then pkgs.symlinkJoin {
+      name = name;
+      paths = lib.attrValues value;
+    }
+    else value
+  ) wallpapers);
   passthru = wallpapers;
 }
