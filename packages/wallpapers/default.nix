@@ -38,7 +38,7 @@ let
       in
         builtins.listToAttrs (map (entry: let
           path     = "${dir}/${entry}";
-          isDir    = contents.${entry}.directory; 
+          isDir    = contents.${entry} == "directory"; 
           nameNoExt = lib.snowfall.path.get-file-name-without-extension entry;
         in
           if isDir then
