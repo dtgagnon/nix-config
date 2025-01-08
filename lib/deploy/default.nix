@@ -40,5 +40,8 @@ in rec {
             };
           };
         }) { } names;
-    in { inherit nodes; };
+    in
+		{
+			inherit nodes;
+		};
 }
