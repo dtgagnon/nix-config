@@ -1773,11 +1773,11 @@
         "snowfall-lib": "snowfall-lib"
       },
       "locked": {
-        "lastModified": 1735695418,
-        "narHash": "sha256-RxKRrO7+Hs1fUPLUeOBqkytmyg2PimbarPAlv0XOLhE=",
+        "lastModified": 1736301484,
+        "narHash": "sha256-PflHKqmeI1pJDDfpLGO6cBioEJ3M00KsB/0wED29ffw=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "fa57d9de753ad847516f1677e89500f88eaa9f7a",
+        "rev": "dcea8bb8d4bfb07f6509cb3015eb45ec74967490",
         "type": "github"
       },
       "original": {

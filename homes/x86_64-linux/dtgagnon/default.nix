@@ -25,7 +25,7 @@ in
       terminals = {
         ghostty = {
           enable = true;
-          dark-theme = "Everforest Dark - Hard"; # "gruvbox-material";
+          dark-theme = "catppuccin-frappe"; # "gruvbox-material";
           light-theme = "catppuccin-frappe";
         };
       };
