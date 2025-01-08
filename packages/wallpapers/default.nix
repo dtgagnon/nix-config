@@ -35,13 +35,17 @@ let
       # Create a simple derivation that just copies the wallpaper file
       pkg = pkgs.stdenvNoCC.mkDerivation {
         inherit name;
-        src = lib.cleanSource (./wallpapers + "/${path}");
+        src = builtins.path {
+          path = ./wallpapers + "/${path}";
+          name = fileName;
+        };
 
         # No need to unpack since we're just copying files
         dontUnpack = true;
 
         # Simple installation: just copy the source file to the output
         installPhase = ''
+          mkdir -p $(dirname $out)
           cp $src $out
         '';
 
@@ -81,7 +85,10 @@ in
 # Main derivation that creates the complete wallpaper package
 pkgs.stdenvNoCC.mkDerivation {
   name = "wallpapers";
-  src = lib.cleanSource ./wallpapers;
+  src = builtins.path {
+    path = ./wallpapers;
+    name = "wallpapers";
+  };
 
   # Installation phase: create directory and copy all wallpapers
   installPhase = ''
