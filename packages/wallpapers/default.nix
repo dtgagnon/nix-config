@@ -1,6 +1,4 @@
 # This is a Nix derivation for managing system wallpapers
-# It takes standard Nix inputs: lib (for helper functions), pkgs (for dependencies),
-# config (for system configuration), and namespace
 { lib
 , pkgs
 , config
@@ -28,16 +26,16 @@ let
   images = getImages ./wallpapers;
 
   # Helper function to create a Nix derivation for a single wallpaper
-  # Takes a name and source path as arguments
-  mkWallpaper = path: src:
+  mkWallpaper = path: 
     let
       # Convert path to package name format (replace / with .)
       name = lib.strings.replaceStrings ["/"] ["."] (lib.removePrefix "./wallpapers/" path);
       # Extract just the filename from the full path
-      fileName = builtins.baseNameOf src;
+      fileName = builtins.baseNameOf path;
       # Create a simple derivation that just copies the wallpaper file
       pkg = pkgs.stdenvNoCC.mkDerivation {
-        inherit name src;
+        inherit name;
+        src = lib.cleanSource (./wallpapers + "/${path}");
 
         # No need to unpack since we're just copying files
         dontUnpack = true;
@@ -64,7 +62,7 @@ let
           name = lib.strings.replaceStrings ["/"] ["."] (lib.removePrefix "./wallpapers/" path);
         in
         # Add this wallpaper to the accumulated set
-        acc // { "${name}" = mkWallpaper path (./wallpapers + "/${path}"); }
+        acc // { "${name}" = mkWallpaper path; }
     )
     { }
     images;
@@ -83,7 +81,7 @@ in
 # Main derivation that creates the complete wallpaper package
 pkgs.stdenvNoCC.mkDerivation {
   name = "wallpapers";
-  src = ./wallpapers;
+  src = lib.cleanSource ./wallpapers;
 
   # Installation phase: create directory and copy all wallpapers
   installPhase = ''
@@ -92,7 +90,6 @@ pkgs.stdenvNoCC.mkDerivation {
   '';
 
   # Make wallpaper names and individual wallpaper derivations available
-  # to other parts of the Nix configuration
   passthru = {
     inherit images;
   } // wallpapers;
