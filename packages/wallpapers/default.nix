@@ -25,48 +25,27 @@ let
 
   images = getImages ./wallpapers;
 
-  # Helper function to create a Nix derivation for a single wallpaper
-  mkWallpaper = path: 
+  # Helper function to get wallpaper metadata
+  mkWallpaper = path:
     let
       # Convert path to package name format (replace / with .)
       name = lib.strings.replaceStrings ["/"] ["."] (lib.removePrefix "./wallpapers/" path);
       # Extract just the filename from the full path
       fileName = builtins.baseNameOf path;
-      # Create a simple derivation that just copies the wallpaper file
-      pkg = pkgs.stdenvNoCC.mkDerivation {
-        inherit name;
-        src = builtins.path {
-          path = ./wallpapers + "/${path}";
-          name = fileName;
-        };
-
-        # No need to unpack since we're just copying files
-        dontUnpack = true;
-
-        # Simple installation: just copy the source file to the output
-        installPhase = ''
-          mkdir -p $(dirname $out)
-          cp $src $out
-        '';
-
-        # Make the filename available to other parts of the configuration
-        passthru = {
-          inherit fileName;
-        };
-      };
     in
-    pkg;
+    {
+      inherit name fileName;
+      relativePath = lib.removePrefix "./wallpapers/" path;
+    };
 
-  # Create an attribute set mapping wallpaper paths to their derivations
+  # Create an attribute set mapping wallpaper paths to their metadata
   wallpapers = lib.foldl
     (
       acc: path:
         let
-          # Get the name of the wallpaper with folder structure
-          name = lib.strings.replaceStrings ["/"] ["."] (lib.removePrefix "./wallpapers/" path);
+          meta = mkWallpaper path;
         in
-        # Add this wallpaper to the accumulated set
-        acc // { "${name}" = mkWallpaper path; }
+        acc // { "${meta.name}" = meta; }
     )
     { }
     images;
@@ -74,13 +53,15 @@ let
   # Define where wallpapers will be installed in the final system
   installTarget = "$out/share/wallpapers";
 
-  # Create installation instructions for each wallpaper
-  installWallpapers = builtins.mapAttrs
-    (name: wallpaper: ''
-      mkdir -p $(dirname ${installTarget}/${wallpaper.fileName})
-      cp "$src/${lib.removePrefix "./wallpapers/" name}" ${installTarget}/${wallpaper.fileName}
-    '')
-    wallpapers;
+  # Create installation instructions for all wallpapers
+  installScript = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList
+      (name: meta: ''
+        mkdir -p $(dirname ${installTarget}/${meta.fileName})
+        cp "$src/${meta.relativePath}" ${installTarget}/${meta.fileName}
+      '')
+      wallpapers
+  );
 in
 # Main derivation that creates the complete wallpaper package
 pkgs.stdenvNoCC.mkDerivation {
@@ -93,11 +74,12 @@ pkgs.stdenvNoCC.mkDerivation {
   # Installation phase: create directory and copy all wallpapers
   installPhase = ''
     mkdir -p ${installTarget}
-    ${lib.concatStringsSep "\n" (lib.attrValues installWallpapers)}
+    ${installScript}
   '';
 
-  # Make wallpaper names and individual wallpaper derivations available
+  # Make wallpaper paths available
   passthru = {
     inherit images;
-  } // wallpapers;
+    paths = lib.mapAttrs (name: _: "${installTarget}/${builtins.baseNameOf name}") wallpapers;
+  };
 }
