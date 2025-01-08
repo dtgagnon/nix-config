@@ -78,7 +78,7 @@ let
   installWallpapers = builtins.mapAttrs
     (name: wallpaper: ''
       mkdir -p $(dirname ${installTarget}/${wallpaper.fileName})
-      cp ${wallpaper} ${installTarget}/${wallpaper.fileName}
+      cp "$src/${lib.removePrefix "./wallpapers/" name}" ${installTarget}/${wallpaper.fileName}
     '')
     wallpapers;
 in
