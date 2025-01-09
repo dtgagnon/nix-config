@@ -57,10 +57,6 @@ in
         enable = true;
         monitors = [ ",3440x1440@144,auto,1" ];
       };
-      styling.stylix = {
-        enable = true;
-        polarity = "dark";
-      };
       styling.core = {
         enable = true;
         cursor = {
@@ -70,6 +66,11 @@ in
         };
         wallpaper = pkgs.spirenix.wallpapers.desaturated-grey-flowers;
       };
+      styling.stylix = {
+        enable = true;
+        polarity = "dark";
+      };
+      styling.wallpapers = enabled;
     };
 
     services.syncthing = enabled;

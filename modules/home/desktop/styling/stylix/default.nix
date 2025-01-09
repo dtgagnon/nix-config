@@ -21,7 +21,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    # spirenix.desktop.styling.wallpapers = enabled;
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
