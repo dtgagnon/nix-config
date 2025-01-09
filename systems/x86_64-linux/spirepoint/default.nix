@@ -37,7 +37,7 @@ in
     };
 
     services = {
-      openssh = disabled;
+      openssh = enabled;
 
       jellyfin = enabled;
     };

@@ -1,7 +1,5 @@
 { lib
 , pkgs
-, config
-, namespace
 , ...
 }:
 let
@@ -57,9 +55,6 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     mkdir -p "$out/share/wallpapers"
     cp -r ./* "$out/share/wallpapers"
-
-		mkdir -p $HOME/Pictures/wallpapers
-		ln -sf $out/share/wallpapers/* $HOME/Pictures/wallpapers
   '';
 
   # Expose your entire nested set of wallpaper derivations
