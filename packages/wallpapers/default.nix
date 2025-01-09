@@ -68,8 +68,7 @@ pkgs.stdenvNoCC.mkDerivation {
   '';
 
   # Expose your entire nested set of wallpaper derivations
-  passthru = {
+  passthru = wallpapers;
     # Optionally, you can also expose any top-level "names" you want here
-    inherit wallpapers;
-  };
+    # inherit wallpapers;
 }
