@@ -35,3 +35,30 @@ in
     home.file = processWallpapers "" wallpapers;
   };
 }
+
+{
+  config = mkIf cfg.enable {
+    home.file = lib.foldl
+      (
+        acc: name:
+          let
+            wallpaper = wallpapers.${name};
+          in
+          acc // { "Pictures/wallpapers/${wallpaper.fileName}".source = wallpaper; }
+      )
+      { }
+      (wallpapers.names);
+  };
+}
+
+{
+	lib.foldl (acc: name:
+	let
+		value = wallSet.${name}
+	in
+	if value ? fileName
+	then acc // { "Pictures/wallpapers/${value.fileName}".source = value; }
+	else acc // 
+
+		if wallpapers.${name} 
+}

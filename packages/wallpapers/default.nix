@@ -19,14 +19,6 @@ let
       };
     };
 
-  # If you're using lib.snowfall.path.get-file-name-without-extension,
-  # be sure that function is actually in scope. Otherwise define your own,
-  # for example:
-  #
-  #  getFileNameWithoutExtension = file: builtins.head (builtins.splitVersion file);
-  #
-  # For now, we'll assume it's available via lib.snowfall.
-
   # Recursively crawl a directory building an attribute set:
   #   - If an entry is a directory, recurse to build a sub-attribute set
   #   - If an entry is a file, build a mkWallpaper derivation
@@ -65,6 +57,9 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     mkdir -p "$out/share/wallpapers"
     cp -r ./* "$out/share/wallpapers"
+
+		mkdir -p $HOME/Pictures/wallpapers
+		ln -sf $out/share/wallpapers/* $HOME/Pictures/wallpapers
   '';
 
   # Expose your entire nested set of wallpaper derivations
