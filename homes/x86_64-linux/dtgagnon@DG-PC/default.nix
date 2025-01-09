@@ -25,8 +25,8 @@ in
       terminals = {
         ghostty = {
           enable = true;
-          dark-theme = "catppuccin-frappe"; # "gruvbox-material";
-          light-theme = "catppuccin-frappe";
+          dark-theme = "catppuccin-frappe";
+          light-theme = "catppuccin-latte";
         };
       };
       thunderbird = enabled;

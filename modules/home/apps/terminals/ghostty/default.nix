@@ -14,7 +14,7 @@ let
 in
 {
   options.${namespace}.apps.terminals.ghostty = {
-    enable = mkBoolOpt false "Enable ghostty terminal emulator";
+    enable = mkBoolOpt true "Enable ghostty terminal emulator";
     dark-theme = mkOpt types.str "stylix" "Set theme to use with dark theme, defaulting to Stylix generated theme";
     light-theme = mkOpt types.str "stylix" "Set theme to use with light theme";
   };
@@ -22,6 +22,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ inputs.ghostty.packages.${system}.default ];
     home.sessionVariables.TERM = mkForce "ghostty";
+		home.sessionVariables.TERMINAL = mkForce "ghostty";
 
     xdg.configFile."ghostty/config".text = ''
 			theme = dark:"${cfg.dark-theme}",light:"${cfg.light-theme}"

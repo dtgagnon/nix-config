@@ -97,7 +97,7 @@ in
       variables = {
         EDITOR = "nvim";
         SHELL = "nu";
-        TERMINAL = "kitty";
+        TERMINAL = "xterm-ghostty";
         LESSHISTFILE = "$HOME/.cache/less.history";
         WGETRC = "$HOME/.config/wgetrc";
       } // cfg.environment.variables;
