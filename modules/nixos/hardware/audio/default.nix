@@ -31,6 +31,6 @@ in
 
     spirenix.user.extraGroups = [ "audio" ];
 
-    hardware.pulseaudio.enable = mkForce false;
+    hardware.pulseaudio.enable = false;
   };
 }
