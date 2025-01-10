@@ -22,45 +22,36 @@ in
   config = mkIf cfg.enable {
     home.packages = [ inputs.ghostty.packages.${system}.default ];
     home.sessionVariables.TERM = mkForce "ghostty";
-		home.sessionVariables.TERMINAL = mkForce "ghostty";
+    home.sessionVariables.TERMINAL = mkForce "ghostty";
 
     xdg.configFile."ghostty/config".text = ''
-			theme = dark:"${cfg.dark-theme}",light:"${cfg.light-theme}"
-			background =
-			foreground =
-			selection-background =
-			selection-foreground = 
+      			theme = dark:"${cfg.dark-theme}",light:"${cfg.light-theme}"
+      			font-size = 12
 
-			font-family =
-			font-size = 12
-			adjust-cell-width =
-			adjust-cell-height =
-			adjust-underline-thickness =
+      			window-padding-x = 8
+      			window-padding-y = 8
+      			window-decoration = false
 
-			window-padding-x = 12
-			window-padding-y = 12
-			window-decoration = false
-
-		'' + (if cfg.dark-theme == "stylix" && cfg.light-theme == "stylix"
-			then ''
-				palette = 0=#${colors.base00}
-				palette = 1=#${colors.base01}
-				palette = 2=#${colors.base02}
-				palette = 3=#${colors.base03}
-				palette = 4=#${colors.base04}
-				palette = 5=#${colors.base05}
-				palette = 6=#${colors.base06}
-				palette = 7=#${colors.base07}
-				palette = 8=#${colors.base08}
-				palette = 9=#${colors.base09}
-				palette = 10=#${colors.base0A}
-				palette = 11=#${colors.base0B}
-				palette = 12=#${colors.base0C}
-				palette = 13=#${colors.base0D}
-				palette = 14=#${colors.base0E}
-				palette = 15=#${colors.base0F}
-			''
-			else ""
-		);
+      		'' + (if cfg.dark-theme == "stylix" && cfg.light-theme == "stylix"
+    then ''
+      				palette = 0=#${colors.base00}
+      				palette = 1=#${colors.base01}
+      				palette = 2=#${colors.base02}
+      				palette = 3=#${colors.base03}
+      				palette = 4=#${colors.base04}
+      				palette = 5=#${colors.base05}
+      				palette = 6=#${colors.base06}
+      				palette = 7=#${colors.base07}
+      				palette = 8=#${colors.base08}
+      				palette = 9=#${colors.base09}
+      				palette = 10=#${colors.base0A}
+      				palette = 11=#${colors.base0B}
+      				palette = 12=#${colors.base0C}
+      				palette = 13=#${colors.base0D}
+      				palette = 14=#${colors.base0E}
+      				palette = 15=#${colors.base0F}
+      			''
+    else ""
+    );
   };
 }
