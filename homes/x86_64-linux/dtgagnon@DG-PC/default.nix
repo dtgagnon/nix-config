@@ -64,7 +64,7 @@ in
           name = "Bibata-Modern-Ice";
           size = 24;
         };
-        wallpaper = pkgs.spirenix.wallpapers.desaturated-grey-flowers;
+        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
       };
       styling.stylix = {
         enable = true;
