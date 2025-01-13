@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types foldl';
+  inherit (lib) mkIf mkMerge types foldl';
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.styling.stylix;
 
@@ -20,75 +20,80 @@ in
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
 
-  config = mkIf cfg.enable {
-    # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
-    stylix = {
-      enable = true;
-      polarity = mkIf (cfg.polarity != null) cfg.polarity;
+  config = mkMerge [
+    (mkIf cfg.enable {
+      # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
+      stylix = {
+        enable = true;
+        polarity = mkIf (cfg.polarity != null) cfg.polarity;
 
-      image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
-      imageScalingMode = "stretch";
+        image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
+        imageScalingMode = "stretch";
 
-      base16Scheme = mkIf (core.theme != null) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
+        # base16Scheme = mkIf (core.theme != null) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
 
-      override =
-        { }
-        // cfg.override;
-
-      cursor = {
-        package = core.cursor.package;
-        name = core.cursor.name;
-        size = core.cursor.size;
-      };
-
-      fonts = {
-        monospace = {
-          package = core.fonts.monospace.package;
-          name = core.fonts.monospace.name;
-        };
-        sansSerif = {
-          package = core.fonts.sansSerif.package;
-          name = core.fonts.sansSerif.name;
-        };
-        serif = {
-          package = core.fonts.serif.package;
-          name = core.fonts.serif.name;
-        };
-        sizes = {
-          applications = core.fonts.sizes.applications;
-          terminal = core.fonts.sizes.terminal;
-          desktop = core.fonts.sizes.desktop;
-          popups = core.fonts.sizes.popups;
-        };
-      };
-
-      opacity = {
-        applications = 1.0;
-        terminal = 0.8;
-        desktop = 0.8;
-        popups = 0.8;
-      };
-
-      targets =
-        foldl'
-          (
-            acc: target:
-              acc
-              // {
-                ${target}.enable = false;
-              }
-          )
+        override =
           { }
-          cfg.excludedTargets
-        // {
-          neovim.enable = false;
-          nixvim = {
-            enable = false;
-            plugin = pkgs.base16-nvim;
-            transparentBackground.main = true;
-            transparentBackground.signColumn = true;
+          // cfg.override;
+
+        cursor = {
+          package = core.cursor.package;
+          name = core.cursor.name;
+          size = core.cursor.size;
+        };
+
+        fonts = {
+          monospace = {
+            package = core.fonts.monospace.package;
+            name = core.fonts.monospace.name;
+          };
+          sansSerif = {
+            package = core.fonts.sansSerif.package;
+            name = core.fonts.sansSerif.name;
+          };
+          serif = {
+            package = core.fonts.serif.package;
+            name = core.fonts.serif.name;
+          };
+          sizes = {
+            applications = core.fonts.sizes.applications;
+            terminal = core.fonts.sizes.terminal;
+            desktop = core.fonts.sizes.desktop;
+            popups = core.fonts.sizes.popups;
           };
         };
-    };
-  };
+
+        opacity = {
+          applications = 1.0;
+          terminal = 0.8;
+          desktop = 0.8;
+          popups = 0.8;
+        };
+
+        targets =
+          foldl'
+            (
+              acc: target:
+                acc
+                // {
+                  ${target}.enable = false;
+                }
+            )
+            { }
+            cfg.excludedTargets
+          // {
+            neovim.enable = false;
+            nixvim = {
+              enable = false;
+              plugin = pkgs.base16-nvim;
+              transparentBackground.main = true;
+              transparentBackground.signColumn = true;
+            };
+          };
+      };
+    })
+    (mkIf (core.theme != null) {
+      stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
+    })
+  ];
 }

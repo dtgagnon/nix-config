@@ -12,7 +12,6 @@ let
 in
 {
   config = mkIf cfg.enable {
-    
     spirenix.desktop.hyprland.extraSettings = {
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"

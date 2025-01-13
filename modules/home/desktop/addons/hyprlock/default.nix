@@ -8,6 +8,8 @@ let
   inherit (lib) mkIf mkForce;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.hyprlock;
+
+  inherit (config.lib.stylix) colors;
 in
 {
   options.${namespace}.desktop.addons.hyprlock = {
@@ -22,7 +24,7 @@ in
         background = [
           {
             monitor = "";
-            path = "${config.stylix.image}";
+            path = "${config.spirenix.desktop.styling.core.wallpaper}";
             color = "rgba(0, 0, 0, 0)";
             blur_passes = 2;
             blur_size = 4;
@@ -50,11 +52,11 @@ in
             dots_spacing = 0.35;
             dots_center = true;
             outer_color = "rgba(0, 0, 0, 0)";
-            inner_color = "${config.stylix.base16Scheme.base01}";
+            inner_color = "${colors.base01}";
             font_color = "rgba(0, 0, 0, 1.0)"; # White for dots
             fade_on_empty = false;
             rounding = -1;
-            check_color = "${config.stylix.base16Scheme.base0E}";
+            check_color = "${colors.base0E}";
             placeholder_text = "Keep trying your best...";
             hide_input = false;
             position = "0, -400";
@@ -68,7 +70,7 @@ in
           {
             monitor = "";
             text = ''cmd[update:1000] echo "$(date +"%A, %B %d")"'';
-            color = "${config.stylix.base16Scheme.base01}";
+            color = "${colors.base01}";
             font_size = 22;
             font_family = "JetBrains Mono";
             position = "0, 300";
@@ -80,7 +82,7 @@ in
           {
             monitor = "";
             text = ''cmd[update:1000] echo "$(date +"%-I:%M")"'';
-            color = "${config.stylix.base16Scheme.base01}";
+            color = "${colors.base01}";
             font_size = 95;
             font_family = "JetBrains Mono Extrabold";
             position = "0, 200";
@@ -96,8 +98,8 @@ in
             path = "${pkgs.spirenix.profile-pics.dtgagnon}";
             size = 170;
             border_size = 2;
-            border_color = "${config.stylix.base16Scheme.base01}";
-            position = "0, -100";
+            border_color = "${colors.base01}";
+            position = "0, 0";
             halign = "center";
             valign = "center";
           }
