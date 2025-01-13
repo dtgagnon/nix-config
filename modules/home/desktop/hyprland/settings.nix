@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkForce;
   cfg = config.spirenix.desktop.hyprland;
 
   inherit (config.lib.stylix) colors;
@@ -12,11 +12,7 @@ let
 in
 {
   config = mkIf cfg.enable {
-    spirenix.desktop.hyprland.extraConfig = ''
-      general {
-        col.inactive_border = 0x99${colors.base02}
-      }
-    '';
+    
     spirenix.desktop.hyprland.extraSettings = {
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
