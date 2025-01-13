@@ -34,7 +34,6 @@ in
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraWinRules = {
       windowrulev2 = [
-
         # Aseprite - pixel art editor
         "tile,title:^(Aseprite)$"
 
@@ -42,6 +41,9 @@ in
         "float,class:^(discord)$"
         "move 50%-800 84,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
+
+        # Ghostty - terminal
+        "bordersize 0, class:^(ghostty)$"
 
         # Kitty - terminal
         # "float,class:^(kitty)$"
@@ -127,10 +129,8 @@ in
       ];
 
       layerrule = [
-        # "blur, waybar"
-
         "blur, rofi"
-        "xray on, rofi"
+        # "xray on, rofi"
       ];
     };
   };

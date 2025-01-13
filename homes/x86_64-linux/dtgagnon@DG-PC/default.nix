@@ -8,6 +8,7 @@
 }:
 let
   inherit (lib.${namespace}) enabled;
+  inherit (config.lib.stylix) colors;
 in
 {
   spirenix = {
@@ -55,7 +56,12 @@ in
     desktop = {
       hyprland = {
         enable = true;
-        monitors = [ ",3440x1440@144,auto,1" ];
+        monitors = [ "DP-5,3440x1440@144,0x0,1" ];
+        extraConfig = ''
+          general {
+            col.inactive_border = 0x99${colors.base02}
+          }
+        '';
       };
       styling.core = {
         enable = true;
@@ -64,11 +70,13 @@ in
           name = "Bibata-Modern-Ice";
           size = 24;
         };
+        theme = "catppuccin-frappe";
         wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
       };
       styling.stylix = {
         enable = true;
         polarity = "dark";
+        
       };
       styling.wallpapers = enabled;
     };

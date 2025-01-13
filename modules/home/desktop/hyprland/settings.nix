@@ -12,6 +12,11 @@ let
 in
 {
   config = mkIf cfg.enable {
+    spirenix.desktop.hyprland.extraConfig = ''
+      general {
+        col.inactive_border = 0x99${colors.base02}
+      }
+    '';
     spirenix.desktop.hyprland.extraSettings = {
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
@@ -28,24 +33,22 @@ in
       general = {
         gaps_in = 3;
         gaps_out = 5;
-        border_size = 3;
-        # "col.active_border" = "0xff${colors.base07}";
-        # "col.inactive_border" = "0xff${colors.base02}";
+        border_size = 4;
+        # "col.inactive_border" = lib.mkForce "0x99${colors.base02}";
         # resize_on_border = false;
         # allow_tearing = false;
         layout = "dwindle";
       };
 
       decoration = {
-        rounding = 6;
+        rounding = 8;
         active_opacity = 1.0;
         inactive_opacity = 1.0;
         blur = {
           enabled = true;
-          new_optimizations = "on";
+          popups = true;
           size = 5;
           passes = 2;
-          vibrancy = 0.1696;
         };
         shadow = {
           range = 30;
@@ -88,8 +91,6 @@ in
       };
 
       misc = {
-        animate_manual_resizes = false;
-        animate_mouse_windowdragging = false;
         new_window_takes_over_fullscreen = 2;
         initial_workspace_tracking = 0;
         disable_hyprland_logo = true;

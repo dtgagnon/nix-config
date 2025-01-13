@@ -28,8 +28,8 @@ in
       			theme = dark:"${cfg.dark-theme}",light:"${cfg.light-theme}"
       			font-size = 12
 
-      			window-padding-x = 8
-      			window-padding-y = 8
+      			window-padding-x = 10
+      			window-padding-y = 10
       			window-decoration = false
 
       		'' + (if cfg.dark-theme == "stylix" && cfg.light-theme == "stylix"

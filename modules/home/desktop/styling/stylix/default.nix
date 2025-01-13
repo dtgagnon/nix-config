@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib) mkIf types foldl';
-  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.styling.stylix;
 
   core = config.spirenix.desktop.styling.core;
