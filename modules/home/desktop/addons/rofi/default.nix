@@ -42,14 +42,14 @@ in
       theme = mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
-					base00 = mkLiteral "${mkRGBA { hex = "#${colors.base00}"; alpha = 0.8; }}";
-					base01 = mkLiteral "${mkRGBA { hex = "#${colors.base01}"; alpha = 0.8; }}";
-					base02 = mkLiteral "${mkRGBA { hex = "#${colors.base02}"; alpha = 0.8; }}";
-					base03 = mkLiteral "${mkRGBA { hex = "#${colors.base03}"; alpha = 0.8; }}";
-          # base00 = mkLiteral "#${colors.base00}80";
-          # base01 = mkLiteral "#${colors.base01}80";
-          # base02 = mkLiteral "#${colors.base02}80";
-          # base03 = mkLiteral "#${colors.base03}80";
+          # base00 = mkLiteral "${mkRGBA { hex = "#${colors.base00}"; alpha = 0.8; }}";
+          # base01 = mkLiteral "${mkRGBA { hex = "#${colors.base01}"; alpha = 0.8; }}";
+          # base02 = mkLiteral "${mkRGBA { hex = "#${colors.base02}"; alpha = 0.8; }}";
+          # base03 = mkLiteral "${mkRGBA { hex = "#${colors.base03}"; alpha = 0.8; }}";
+          base00 = mkLiteral "#${colors.base00}";
+          base01 = mkLiteral "#${colors.base01}";
+          base02 = mkLiteral "#${colors.base02}";
+          base03 = mkLiteral "#${colors.base03}";
           base04 = mkLiteral "#${colors.base04}";
           base05 = mkLiteral "#${colors.base05}";
           base06 = mkLiteral "#${colors.base06}";
@@ -76,7 +76,7 @@ in
           border-radius = mkLiteral "16px";
           border-color = mkLiteral "@base03";
           background-color = mkLiteral "transparent";
-          opacity = mkLiteral "1";
+          opacity = mkLiteral "0.66";
         };
 
         # Container for all main elements (inputbar and listbox)
