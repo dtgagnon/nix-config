@@ -9,8 +9,6 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.waybar;
-
-  inherit (config.lib.stylix) colors;
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files-recursive ./.;

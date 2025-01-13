@@ -99,7 +99,7 @@ in
             size = 170;
             border_size = 2;
             border_color = "${colors.base01}";
-            position = "0, 0";
+            position = "0, -100";
             halign = "center";
             valign = "center";
           }

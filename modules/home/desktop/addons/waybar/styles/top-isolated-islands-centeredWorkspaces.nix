@@ -1,6 +1,5 @@
 {
   lib,
-	pkgs,
   config,
   namespace,
   ...
@@ -37,12 +36,13 @@ in
 
 			#waybar .modules-left {
 				margin: 8px 12px;
+				
 			}
 
 			#audioControl {
 				margin: 0 2px;
 				padding: 0 8px;
-				background: #${colors.base00};
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}
@@ -59,7 +59,7 @@ in
 			#hardware {
 				margin: 0 2px;
 				padding: 0 12px 0 0;
-				background: #${colors.base00};
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}
@@ -75,7 +75,7 @@ in
 			#utilities {
 				margin: 0 2px;
 				padding: 0 12px;
-				background: #${colors.base00};
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}
@@ -98,8 +98,7 @@ in
 				background: linear-gradient(
 					180deg,
 					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 0%,
-					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 33%,
-					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 66%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }} 50%,
 					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 100%
 				);
 				border-radius: 12px;
@@ -112,8 +111,7 @@ in
 				background: linear-gradient(
 					180deg,
 					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 0%,
-					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 33%,
-					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 66%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }} 50%,
 					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 100%
 				);
 				border-radius: 12px;
@@ -154,8 +152,7 @@ in
 				background: linear-gradient(
 					180deg,
 					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 0%,
-					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 33%,
-					${mkRGBA { hex = "#${colors.base00}"; alpha = 1.0; }} 66%,
+					${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }} 50%,
 					${mkRGBA { hex = "#${colors.base00}"; alpha = 0; }} 100%
 				);
 				border-radius: 12px;
@@ -201,7 +198,7 @@ in
 				font-size: 20px;
 				margin: 0 2px;
 				padding: 0 8px;
-				background: #${colors.base00};
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}
@@ -211,7 +208,7 @@ in
 				font-size: 20px;
 				margin: 0 2px;
 				padding: 0 8px;
-				background: #${colors.base00};
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}
@@ -219,7 +216,7 @@ in
 			#tray {
 				margin: 0 2px;
 				padding: 0 8px;
-				background: #${colors.base00};
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}

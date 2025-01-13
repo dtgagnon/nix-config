@@ -7,7 +7,7 @@
 , ...
 }:
 let
-  inherit (lib.${namespace}) enabled;
+  inherit (lib.${namespace}) enabled mkRGBA;
   inherit (config.lib.stylix) colors;
 in
 {
@@ -59,7 +59,8 @@ in
         monitors = [ "DP-5,3440x1440@144,0x0,1" ];
         extraConfig = ''
           general {
-            col.inactive_border = 0x99${colors.base02}
+            col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}
+            col.inactive_border = ${mkRGBA { hex = "#${colors.base03}"; alpha = 0.6; }}
           }
         '';
       };
@@ -76,7 +77,7 @@ in
       styling.stylix = {
         enable = true;
         polarity = "dark";
-        
+
       };
       styling.wallpapers = enabled;
     };

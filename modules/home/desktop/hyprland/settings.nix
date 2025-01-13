@@ -28,7 +28,7 @@ in
       general = {
         gaps_in = 3;
         gaps_out = 5;
-        border_size = 4;
+        border_size = 3;
         # "col.inactive_border" = lib.mkForce "0x99${colors.base02}";
         # resize_on_border = false;
         # allow_tearing = false;

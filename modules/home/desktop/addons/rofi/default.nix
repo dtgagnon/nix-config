@@ -8,7 +8,7 @@
 }:
 let
   inherit (lib) mkIf mkForce;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib.${namespace}) mkBoolOpt mkRGBA;
   inherit (config.lib.stylix) colors;
   inherit (config.lib.formats.rasi) mkLiteral;
   cfg = config.${namespace}.desktop.addons.rofi;
@@ -25,7 +25,7 @@ in
       plugins = [ pkgs.rofi-calc ];
       terminal = "${inputs.ghostty.packages.${system}.default}/bin/ghostty";
       extraConfig = {
-        modi = "drun,window,filebrowser,ssh,run";
+        modi = "drun,window,filebrowser";
         disable-history = false;
         hide-scrollbar = true;
         show-icons = true;
@@ -42,10 +42,14 @@ in
       theme = mkForce {
         # Global color and style variables used throughout the theme
         "*" = {
-          base00 = mkLiteral "#${colors.base00}80";
-          base01 = mkLiteral "#${colors.base01}80";
-          base02 = mkLiteral "#${colors.base02}80";
-          base03 = mkLiteral "#${colors.base03}80";
+					base00 = mkLiteral "${mkRGBA { hex = "#${colors.base00}"; alpha = 0.8; }}";
+					base01 = mkLiteral "${mkRGBA { hex = "#${colors.base01}"; alpha = 0.8; }}";
+					base02 = mkLiteral "${mkRGBA { hex = "#${colors.base02}"; alpha = 0.8; }}";
+					base03 = mkLiteral "${mkRGBA { hex = "#${colors.base03}"; alpha = 0.8; }}";
+          # base00 = mkLiteral "#${colors.base00}80";
+          # base01 = mkLiteral "#${colors.base01}80";
+          # base02 = mkLiteral "#${colors.base02}80";
+          # base03 = mkLiteral "#${colors.base03}80";
           base04 = mkLiteral "#${colors.base04}";
           base05 = mkLiteral "#${colors.base05}";
           base06 = mkLiteral "#${colors.base06}";
@@ -71,8 +75,8 @@ in
           border = mkLiteral "2px";
           border-radius = mkLiteral "16px";
           border-color = mkLiteral "@base03";
-          background-color = mkLiteral "@base00";
-          opacity = mkLiteral "0.5";
+          background-color = mkLiteral "transparent";
+          opacity = mkLiteral "1";
         };
 
         # Container for all main elements (inputbar and listbox)
@@ -85,7 +89,7 @@ in
             "inputbar"
             "listbox"
           ];
-          border-radius = mkLiteral "inherit";
+          border-radius = mkLiteral "16px";
           border = mkLiteral "0px";
           border-color = mkLiteral "transparent";
           background-color = mkLiteral "transparent";
