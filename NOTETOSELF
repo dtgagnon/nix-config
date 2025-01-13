@@ -1,3 +1,0 @@
-Last: added wallpapers to wallpaper package, but in a separate folder called catppuccin, which is failing to build since the derivation doesn't work with folders.
-
-Next: Adjust derivation to accept folders or remove folder.
