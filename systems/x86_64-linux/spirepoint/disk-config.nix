@@ -21,7 +21,7 @@
               size = "100%";
               content = {
                 type = "luks";
-                name = "crypted";
+                name = "root-crypt";
                 # extraOpenArgs = [ ];
                 # settings = {
                 #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
@@ -31,7 +31,7 @@
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
                 content = {
                   type = "lvm_vg";
-                  vg = "pool";
+                  vg = "root-pool";
                 };
               };
             };
@@ -48,7 +48,7 @@
               size = "100%";
               content = {
                 type = "luks";
-                name = "crypted";
+                name = "data-crypt";
                 # extraOpenArgs = [ ];
                 # settings = {
                 #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
@@ -57,8 +57,8 @@
                 # };
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
                 content = {
-                  type = ""; #regular storage pool?
-                  vg = "pool";
+                  type = "lvm_vg";
+                  vg = "data-pool";
                 };
               };
             };
@@ -67,22 +67,43 @@
       };
     };
   };
+
+  # LVM definitions for volume groups
   lvm_vg = {
-    pool = {
+    root-pool = {
       type = "lvm_vg";
       lvs = {
         root = {
-          size = "100%";
+          size = "100%FREE";
           content = {
             type = "btrfs";
             extraArgs = [ "-L" "nixos" "-f" ];
-
             subvolumes = {
               "/root" = { mountpoint = "/"; };
               "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
               "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
               "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
-              "/swap" = { mountpoint = "/swap"; swap.swapfile.size = "16GB"; };
+            };
+          };
+        };
+        swap = {
+          size = "16GB";
+          content = {
+            type = "swap";
+          };
+        };
+      };
+    };
+    data-pool = {
+      type = "lvm_vg";
+      lvs = {
+        srv = {
+          size = "100%";
+          contents = {
+            type = "btrfs";
+            extraArgs = [ "-L" "services" "-f" ];
+            subvolumes = {
+              "/services" = { mountpoint = "/srv"; mountOptions = [ "subvol=srv" "compress=zstd" "noatime" ]; };
             };
           };
         };
