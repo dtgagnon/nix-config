@@ -1,14 +1,16 @@
-{
-  lib,
-  host,
-  namespace,
-  ...
+{ lib
+, host
+, namespace
+, ...
 }:
 let
   inherit (lib.${namespace}) enabled disabled;
 in
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./hardware.nix
+    ./disk-config.nix
+  ];
 
   networking.hostName = host;
 
@@ -27,7 +29,6 @@ in
       graphics = { enable = true; manufacturer = "nvidia"; };
       storage = {
         boot.enable = true;
-        disko = { enable = true; device = "/dev/nvme0n1"; };
       };
     };
 
@@ -38,13 +39,12 @@ in
 
     services = {
       openssh = enabled;
-
-      jellyfin = enabled;
+      tailscale = enabled;
     };
 
     system = {
       enable = true;
-      impermanence = enabled;
+      # impermanence = enabled;
     };
 
     tools = {
@@ -62,5 +62,5 @@ in
     };
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }
