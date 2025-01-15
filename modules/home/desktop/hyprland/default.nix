@@ -7,7 +7,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types genAttrs;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
   cfg = config.spirenix.desktop.hyprland;
 in

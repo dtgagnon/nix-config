@@ -25,7 +25,7 @@
   environment.systemPackages = map lib.lowPrio [
     pkgs.curl
     pkgs.gitMinimal
-    pkgs.neovim
+    pkgs.vim
     pkgs.age
     pkgs.sops
   ];

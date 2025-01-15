@@ -16,6 +16,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     impermanence.url = "github:nix-community/impermanence";
+    preservation.url = "github:nix-community/preservation";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "stablepkgs";
@@ -128,6 +129,7 @@
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
           impermanence.nixosModules.impermanence
+          preservation.nixosModules.preservation
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default

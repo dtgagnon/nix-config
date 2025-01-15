@@ -30,7 +30,7 @@
                 };
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
                 content = {
-                  type = "lvm_vg";
+                  type = "lvm_pv";
                   vg = "root-pool";
                 };
               };
@@ -57,7 +57,7 @@
                 };
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
                 content = {
-                  type = "lvm_vg";
+                  type = "lvm_pv";
                   vg = "data-pool";
                 };
               };
@@ -66,44 +66,44 @@
         };
       };
     };
-  };
 
-  # LVM definitions for volume groups
-  lvm_vg = {
-    root-pool = {
-      type = "lvm_vg";
-      lvs = {
-        root = {
-          size = "100%FREE";
-          content = {
-            type = "btrfs";
-            extraArgs = [ "-L" "nixos" "-f" ];
-            subvolumes = {
-              "/root" = { mountpoint = "/"; };
-              "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
-              "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
-              "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
+    # LVM definitions for volume groups
+    lvm_vg = {
+      root-pool = {
+        type = "lvm_vg";
+        lvs = {
+          root = {
+            size = "100%FREE";
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-L" "nixos" "-f" ];
+              subvolumes = {
+                "/root" = { mountpoint = "/"; };
+                "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
+                "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
+                "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
+              };
+            };
+          };
+          swap = {
+            size = "16GB";
+            content = {
+              type = "swap";
             };
           };
         };
-        swap = {
-          size = "16GB";
-          content = {
-            type = "swap";
-          };
-        };
       };
-    };
-    data-pool = {
-      type = "lvm_vg";
-      lvs = {
-        srv = {
-          size = "100%";
-          contents = {
-            type = "btrfs";
-            extraArgs = [ "-L" "services" "-f" ];
-            subvolumes = {
-              "/services" = { mountpoint = "/srv"; mountOptions = [ "subvol=srv" "compress=zstd" "noatime" ]; };
+      data-pool = {
+        type = "lvm_vg";
+        lvs = {
+          srv = {
+            size = "100%";
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-L" "services" "-f" ];
+              subvolumes = {
+                "/srv" = { mountpoint = "/srv"; mountOptions = [ "subvol=srv" "compress=zstd" "noatime" ]; };
+              };
             };
           };
         };

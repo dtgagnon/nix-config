@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) enabled disabled;
+  inherit (lib.${namespace}) enabled;
 in
 {
   imports = [ ./hardware.nix ];

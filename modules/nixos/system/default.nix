@@ -11,7 +11,6 @@ let
     concatMapStringsSep
     concatStringsSep
     isList
-    mapAttrs
     mapAttrsToList
     ;
 

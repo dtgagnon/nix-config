@@ -220,6 +220,14 @@ in
 				border: 2px solid #${colors.base03};
 				border-radius: 12px;
 			}
+
+			#custom-notification {
+				margin: 0 2px;
+				padding: 0 8px;
+				background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
+				border: 2px solid #${colors.base03};
+				border-radius: 12px;
+			}
     '';
   };
 }

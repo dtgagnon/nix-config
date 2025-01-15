@@ -2434,6 +2434,21 @@
         "type": "github"
       }
     },
+    "preservation": {
+      "locked": {
+        "lastModified": 1735322114,
+        "narHash": "sha256-b0ftF6cGH0JoZin93bmycx5qvM4fx6jCR8eM0q6k64s=",
+        "owner": "nix-community",
+        "repo": "preservation",
+        "rev": "089ffe54b44db2b6418dd024a7266c8c9343f805",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "preservation",
+        "type": "github"
+      }
+    },
     "proxmox-nixos": {
       "inputs": {
         "crane": "crane",
@@ -2481,6 +2496,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_5",
         "nur": "nur",
+        "preservation": "preservation",
         "proxmox-nixos": "proxmox-nixos",
         "snowfall-lib": "snowfall-lib_2",
         "sops-nix": "sops-nix",

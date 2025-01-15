@@ -4,10 +4,9 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce;
+  inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
 
-  inherit (config.lib.stylix) colors;
   cursorSize = toString config.stylix.cursor.size;
 in
 {
@@ -15,10 +14,11 @@ in
     spirenix.desktop.hyprland.extraSettings = {
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
-        "nm-applet"
         "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
-        "swww init ; sleep 1; setwall"
+        "nm-applet"
         "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
+        "swww init ; sleep 1; setwall"
+        "playerctld daemon"
       ];
 
       monitor = cfg.monitors ++ [
@@ -29,9 +29,6 @@ in
         gaps_in = 3;
         gaps_out = 5;
         border_size = 3;
-        # "col.inactive_border" = lib.mkForce "0x99${colors.base02}";
-        # resize_on_border = false;
-        # allow_tearing = false;
         layout = "dwindle";
       };
 

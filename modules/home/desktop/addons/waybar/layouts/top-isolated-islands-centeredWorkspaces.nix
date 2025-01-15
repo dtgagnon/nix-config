@@ -1,8 +1,7 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -252,7 +251,7 @@ in
           "custom/hyprbindings" = {
             tooltip = false;
             format = spanWrapIcon "󱕴";
-            on-click = "sleep 0.1 && list-hypr-bindings";
+            on-click = "sleep 0.1 && hyprctl binds";
           };
 
           "custom/music" = {
@@ -275,12 +274,21 @@ in
               "dnd-none" = spanWrapIcon "󰂛";
               "inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
               "inhibited-none" = spanWrapIcon "";
-              "dnd-inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup>";
+              "dnd-inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
               "dnd-inhibited-none" = spanWrapIcon "";
             };
             return-type = "json";
             exec-if = "which makoctl";
-            exec = "makoctl list -t | jq --unbuffered --compact-output '[.[0] // {}] | if length > 0 then {\"alt\":\"notification\", \"tooltip\": (.[0].summary + \":\\n\" + .[0].body)} else {\"alt\":\"none\"} end'";
+            exec = ''
+              makoctl list | jq --unbuffered --compact-output '
+                .data[0] as $notifications
+                | if ($notifications|length) > 0 then
+                    { "alt": "notification", "tooltip": ($notifications[0].summary + ":\n" + $notifications[0].body) }
+                  else
+                    { "alt": "none", "tooltip": "" }
+                  end
+              '
+            '';
             on-click = "makoctl invoke";
             on-click-right = "sleep 0.1 && makoctl dismiss";
             escape = false;
