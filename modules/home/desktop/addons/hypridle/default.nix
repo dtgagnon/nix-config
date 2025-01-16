@@ -15,7 +15,7 @@ in
     timeouts = {
       screen = mkOpt int 180 "Seconds until screen dims.";
       lock = mkOpt int 300 "Seconds until screen locks.";
-      suspend = mkOpt int 1800 "Seconds until system suspends.";
+      # suspend = mkOpt int 1800 "Seconds until system suspends.";
     };
   };
 
