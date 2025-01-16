@@ -25,7 +25,7 @@
                 # extraOpenArgs = [ ];
                 settings = {
                   #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  keyFile = "/tmp/root-crypt.key";
+                  # keyFile = "/tmp/root-crypt.key";
                   allowDiscards = true;
                 };
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
@@ -52,7 +52,7 @@
                 # extraOpenArgs = [ ];
                 settings = {
                   #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  keyFile = "/tmp/data-crypt.key";
+                  # keyFile = "/tmp/data-crypt.key";
                   allowDiscards = true;
                 };
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
