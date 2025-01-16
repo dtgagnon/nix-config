@@ -75,12 +75,16 @@ in
       slurp
       hyprshot
       swappy
+      ## monitor controls
+			ddcutil
+      linuxKernel.packages.linux_6_6.ddcci-driver
+      brightnessctl
 
       # misc
       wl-clipboard
       swww
       playerctl
-      brightnessctl
+
     ];
   };
 }
