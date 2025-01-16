@@ -59,11 +59,11 @@ in
           }
 
           # Enter suspended system state
-          {
-            timeout = cfg.timeouts.suspend;
-            on-timeout = "notify-send 'System Suspend' 'System will suspend in 30 seconds' -t 3000 && sleep 30 && systemctl suspend";
-            on-resume = "hyprctl dispatch dpms on";
-          }
+          # {
+          #   timeout = cfg.timeouts.suspend;
+          #   on-timeout = "notify-send 'System Suspend' 'System will suspend in 30 seconds' -t 3000 && sleep 30 && systemctl suspend";
+          #   on-resume = "hyprctl dispatch dpms on";
+          # }
         ];
       };
     };
