@@ -46,14 +46,11 @@ in
           name = "Bibata-Modern_Ice";
           size = 24;
         };
-        theme = "catppuccin-frappe";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
       };
       styling.stylix = {
         enable = true;
         polarity = "dark";
       };
-      styling.wallpapers = enabled;
     };
   };
   home.stateVersion = "24.11";
