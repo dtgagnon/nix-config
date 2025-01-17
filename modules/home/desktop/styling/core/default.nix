@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.desktop.styling.core = {
     enable = mkBoolOpt false "Whether to enable core styling configuration.";
-    wallpaper = mkOpt (types.package) pkgs.spirenix.wallpapers.wallpapers.nord-rainbow-dark-nix "The wallpaper to use.";
+    wallpaper = mkOpt (types.package) pkgs.spirenix.wallpapers.wallpapers.nord.rainbow-dark-nix "The wallpaper to use.";
     theme = mkOpt (types.nullOr types.str) null "The theme to use.";
 
     cursor = {
