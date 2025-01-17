@@ -19,9 +19,16 @@ in
       networking = enabled;
     };
 
+    apps = {
+      proton = enabled;
+      proton-cloud = enabled;
+      ea-games = enabled;
+    };
+
     desktop = {
       fonts = enabled;
-      gnome = enabled;
+      hyprland = enabled;
+      stylix = enabled;
     };
 
     hardware = {
@@ -37,14 +44,8 @@ in
       sops-nix = enabled;
     };
 
-    services = {
-      openssh = enabled;
-      tailscale = enabled;
-    };
-
     system = {
       enable = true;
-      # impermanence = enabled;
     };
 
     tools = {

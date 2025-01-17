@@ -20,7 +20,7 @@
   spirenix.services = {
     openssh = {
       enable = true;
-      ports = [ 22 22022 ];
+      port = [ 22 22022 ];
     };
     tailscale.enable = true;
   };

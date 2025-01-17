@@ -19,7 +19,7 @@ in
       enable = true;
       wheelNeedsPassword = false;
       extraRules = [{
-        users = [ "dtgagnon" ];
+        users = [ "dtgagnon" "admin" ];
         groups = [ "wheel" ];
         commands = [{
           command = "ALL";
@@ -27,8 +27,8 @@ in
         }];
       }];
       extraConfig = ''
-        Defaults env_keep += "*"
-				Defaults env_keep -= "HOME"
+                Defaults env_keep += "*"
+        				Defaults env_keep -= "HOME"
       '';
     };
   };

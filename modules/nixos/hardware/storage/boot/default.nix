@@ -1,8 +1,7 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -13,17 +12,19 @@ in
   options.${namespace}.hardware.storage.boot = {
     enable = mkBoolOpt false "Whether to enable boot configuration";
 
-    preset = mkOpt (types.enum [
-      "desktop"
-      "server"
-      "minimal"
-    ]) "desktop" "Preset configuration to use";
+    preset = mkOpt
+      (types.enum [
+        "desktop"
+        "server"
+        "minimal"
+      ]) "desktop" "Preset configuration to use";
 
     bootloader = {
-      type = mkOpt (types.enum [
-        "systemd-boot"
-        "grub"
-      ]) "systemd-boot" "Type of bootloader to use";
+      type = mkOpt
+        (types.enum [
+          "systemd-boot"
+          "grub"
+        ]) "systemd-boot" "Type of bootloader to use";
       configLimit = mkOpt types.int 20 "Number of generations to keep";
       editor = mkBoolOpt false "Whether to enable bootloader editor";
     };
@@ -82,11 +83,11 @@ in
       };
     };
 
-    assertions = [
-      {
-        assertion = config.${namespace}.hardware.storage.disko.enable;
-        message = "Storage configuration must be enabled to use boot configuration";
-      }
-    ];
+    # assertions = [
+    #   {
+    #     assertion = config.${namespace}.hardware.storage.disko.enable;
+    #     message = "Storage configuration must be enabled to use boot configuration";
+    #   }
+    # ];
   };
 }

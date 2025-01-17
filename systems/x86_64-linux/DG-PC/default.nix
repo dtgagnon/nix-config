@@ -1,14 +1,16 @@
-{
-  lib,
-  host,
-  namespace,
-  ...
+{ lib
+, host
+, namespace
+, ...
 }:
 let
   inherit (lib.${namespace}) enabled;
 in
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./hardware.nix
+    ./disk-config.nix
+  ];
 
   networking.hostName = host;
 
@@ -21,7 +23,7 @@ in
     apps = {
       proton = enabled;
       proton-cloud = enabled;
-			ea-games = enabled;
+      ea-games = enabled;
     };
 
     desktop = {
@@ -35,7 +37,7 @@ in
       graphics = { enable = true; manufacturer = "nvidia"; };
       storage = {
         boot.enable = true;
-        disko = { enable = true; device = "/dev/nvme0n1"; };
+        # disko = { enable = true; device = "/dev/nvme0n1"; };
       };
     };
 
