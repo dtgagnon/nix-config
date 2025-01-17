@@ -160,7 +160,8 @@ function nixos_anywhere() {
 	###
 	# nixos-anywhere installation
 	###
-	cd nixos-installer
+	# cd into flake location for installation, I don't have a separate flake so this isn't needed v v v
+	# cd nixos-installer
 
 	# when using luks, disko expects a passphrase on /tmp/disko-password, so we set it for now and will update the passphrase later
 	# via the config
