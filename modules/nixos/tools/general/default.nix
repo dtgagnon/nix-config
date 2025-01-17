@@ -37,6 +37,7 @@ in
 
       ## Misc Utilities
       clac
+      just
     ];
   };
 }
