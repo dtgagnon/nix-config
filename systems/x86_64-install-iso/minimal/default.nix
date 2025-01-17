@@ -14,35 +14,14 @@ in
 
   spirenix = {
     nix = enabled;
-
-    # apps.wezterm = enabled; #need to make sys module?
-
-    tools = {
-      general = enabled;
-    };
-
-    hardware = {
-      networking = enabled;
-    };
-
-    services = {
-      openssh = enabled;
-    };
-
+    apps.terminals.ghostty = enabled; #need to make sys module?
+    tools.general = enabled;
+    hardware.networking = enabled;
     security = {
       age = enabled;
       sops-nix = enabled;
       sudo = enabled;
     };
-
     suites.networking = enabled;
-
-    system = {
-      boot = enabled; #need to make module
-      fonts = enabled;
-      locale = enabled;
-      time = enabled;
-      xkb = enabled;
-    };
   };
 }
