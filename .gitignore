@@ -1,4 +1,6 @@
-.sops.yaml
-secrets.yaml
 modules/home/tools/ssh
 .aider*
+.direnv
+tmp
+result
+.pre-copmmit-config.yaml
