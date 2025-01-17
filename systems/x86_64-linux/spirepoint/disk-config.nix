@@ -1,7 +1,8 @@
+{ host, ... }:
 {
   disko.devices = {
     disk = {
-      main = {
+      primary = {
         type = "disk";
         device = "/dev/disk/by-id/ata-PNY_CS1311_120GB_SSD_PNY36162191600102D3B";
         content = {
@@ -37,7 +38,7 @@
           };
         };
       };
-      storageHDD1 = {
+      storage-hdd1 = {
         type = "disk";
         device = "/dev/disk/by-id/ata-Hitachi_HDS721010CLA632_JP2940J82WE5TV";
         content = {
@@ -49,13 +50,14 @@
                 type = "luks";
                 name = "data-crypt";
                 askPassword = true;
-								passwordFile = "/tmp/secret.key";
-                # extraOpenArgs = [ ];
+                passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 settings = {
-                  # keyFile = "/persist/data-crypt.key";
                   allowDiscards = true;
                 };
-                # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
+                # Whether to add a boot.initrd.luks.devices entry for the this disk.
+                # We only want to unlock cryptroot interactively.
+                # You must have a /etc/crypttab entry set up to auto unlock the drive using a key on cryptroot (see /hosts/nixos/ghost/default.nix)
+                initrdUnlock = if "${host}" == "generic" then true else false;
                 content = {
                   type = "lvm_pv";
                   vg = "data-pool";
@@ -110,6 +112,4 @@
       };
     };
   };
-
-  fileSystems."/persist".neededForBoot = true;
 }
