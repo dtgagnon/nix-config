@@ -22,13 +22,12 @@
               content = {
                 type = "luks";
                 name = "root-crypt";
+                askPassword = true;
                 # extraOpenArgs = [ ];
                 settings = {
                   #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  keyFile = "/persist/tmp/root-crypt.key";
                   allowDiscards = true;
                 };
-                # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
                 content = {
                   type = "lvm_pv";
                   vg = "root-pool";
@@ -49,10 +48,11 @@
               content = {
                 type = "luks";
                 name = "data-crypt";
+                askPassword = true;
+								passwordFile = "/tmp/secret.key";
                 # extraOpenArgs = [ ];
                 settings = {
-                  #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  keyFile = "/persist/tmp/data-crypt.key";
+                  # keyFile = "/persist/data-crypt.key";
                   allowDiscards = true;
                 };
                 # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
