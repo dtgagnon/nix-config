@@ -1,4 +1,4 @@
-{ host, ... }:
+{ ... }:
 {
   disko.devices = {
     disk = {
@@ -57,7 +57,7 @@
                 # Whether to add a boot.initrd.luks.devices entry for the this disk.
                 # We only want to unlock cryptroot interactively.
                 # You must have a /etc/crypttab entry set up to auto unlock the drive using a key on cryptroot (see /hosts/nixos/ghost/default.nix)
-                initrdUnlock = if "${host}" == "generic" then true else false;
+                initrdUnlock = true;
                 content = {
                   type = "lvm_pv";
                   vg = "data-pool";

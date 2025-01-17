@@ -14,7 +14,6 @@
   fileSystems."/boot".options = [ "umask=0077" ];
   boot.loader = {
     efi.canTouchEfiVariables = true;
-    efiInstallAsRemovable = true;
     systemd-boot = {
       enable = true;
       configurationLimit = lib.mkDefault 10;

@@ -332,25 +332,25 @@ if yes_or_no "Do you want to copy your full nix-config and nix-secrets to $targe
 	green "Adding ssh host fingerprint at $target_destination to ~/.ssh/known_hosts"
 	ssh-keyscan -p "$ssh_port" "$target_destination" 2>/dev/null | grep -v '^#' >>~/.ssh/known_hosts || true
 	green "Copying full nix-config to $target_hostname"
-	sync "$target_user" "${git_root}"/../nix-config
+	sync "$target_user" "${git_root}"/../nixos
 	green "Copying full nix-secrets to $target_hostname"
 	sync "$target_user" "${git_root}"/../nix-secrets
 
 	if yes_or_no "Do you want to rebuild immediately?"; then
 		green "Rebuilding nix-config on $target_hostname"
 		#FIXME:(bootstrap) there are still a gitlab fingerprint request happening during the rebuild
-		$ssh_cmd -oForwardAgent=yes "cd nix-config && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
+		$ssh_cmd -oForwardAgent=yes "cd nixos && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
 		#FIXME:(bootstrap) This fails because `just rebuild` tries to run `nix flake update nix-secrets` but the flake registry doesn't exist yet
-		# $ssh_cmd -oForwardAgent=yes "cd nix-config && just rebuild"
+		# $ssh_cmd -oForwardAgent=yes "cd nixos && just rebuild"
 	fi
 else
 	echo
 	green "NixOS was successfully installed!"
 	echo "Post-install config build instructions:"
-	echo "To copy nix-config from this machine to the $target_hostname, run the following command from ~/nix-config"
+	echo "To copy nix-config from this machine to the $target_hostname, run the following command from ~/nixos"
 	echo "just sync $target_user $target_destination"
-	echo "To rebuild, sign into $target_hostname and run the following command from ~/nix-config"
-	echo "cd nix-config"
+	echo "To rebuild, sign into $target_hostname and run the following command from ~/nixos"
+	echo "cd nixos"
 	# see above FIXME:(bootstrap)
 	echo "sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
 	# echo "just rebuild"

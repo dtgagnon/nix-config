@@ -24,7 +24,7 @@ in
 
     cli = {
       bat = enabled;
-      direnv = enabled;
+      # direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
       fzf = enabled;

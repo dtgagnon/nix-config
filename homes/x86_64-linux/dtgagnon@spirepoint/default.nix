@@ -34,7 +34,7 @@ in
       bottom = enabled;
       broot = enabled;
       carapace = enabled;
-      direnv = enabled;
+      # direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
       fzf = enabled;
