@@ -1,7 +1,8 @@
+{ host, ... }:
 {
   disko.devices = {
     disk = {
-      main = {
+      primary = {
         type = "disk";
         device = "/dev/disk/by-id/ata-PNY_CS1311_120GB_SSD_PNY36162191600102D3B";
         content = {
@@ -22,13 +23,12 @@
               content = {
                 type = "luks";
                 name = "root-crypt";
+                askPassword = true;
                 # extraOpenArgs = [ ];
                 settings = {
                   #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  # keyFile = "/tmp/root-crypt.key";
                   allowDiscards = true;
                 };
-                # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
                 content = {
                   type = "lvm_pv";
                   vg = "root-pool";
@@ -38,7 +38,7 @@
           };
         };
       };
-      storageHDD1 = {
+      storage-hdd1 = {
         type = "disk";
         device = "/dev/disk/by-id/ata-Hitachi_HDS721010CLA632_JP2940J82WE5TV";
         content = {
@@ -49,13 +49,15 @@
               content = {
                 type = "luks";
                 name = "data-crypt";
-                # extraOpenArgs = [ ];
+                askPassword = true;
+                # passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 settings = {
-                  #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  # keyFile = "/tmp/data-crypt.key";
                   allowDiscards = true;
                 };
-                # additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
+                # Whether to add a boot.initrd.luks.devices entry for the this disk.
+                # We only want to unlock cryptroot interactively.
+                # You must have a /etc/crypttab entry set up to auto unlock the drive using a key on cryptroot (see /hosts/nixos/ghost/default.nix)
+                initrdUnlock = true;
                 content = {
                   type = "lvm_pv";
                   vg = "data-pool";

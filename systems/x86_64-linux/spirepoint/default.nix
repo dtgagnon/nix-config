@@ -34,7 +34,7 @@ in
     hardware = {
       audio = enabled;
       graphics = { enable = true; manufacturer = "nvidia"; };
-      # storage.boot.enable = true;
+      storage.boot.enable = true;
     };
 
     security = {

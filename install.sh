@@ -173,12 +173,17 @@ function nixos_anywhere() {
 	else
 		$ssh_root_cmd "/bin/sh -c 'echo passphrase > /tmp/disko-password'"
 	fi
-	green "Generating hardware-config.nix for $target_hostname and adding it to the nix-config."
-	$ssh_root_cmd "nixos-generate-config --no-filesystems --root /mnt"
-	$scp_cmd root@"$target_destination":/mnt/etc/nixos/hardware-configuration.nix "${git_root}"/hosts/nixos/"$target_hostname"/hardware-configuration.nix
+	if [ -n "${git_root}"/systems/x86_64-linux/"$target_hostname"/hardware.nix ];
+	then
+		echo "Found hardware.nix for $target_hostname already declared."
+	else
+		green "Generating hardware-config.nix for $target_hostname and adding it to the nix-config."
+		$ssh_root_cmd "nixos-generate-config --no-filesystems --root /mnt"
+		$scp_cmd root@"$target_destination":/mnt/etc/nixos/hardware-configuration.nix "${git_root}"/systems/x86_64-linux/"$target_hostname"/hardware.nix
+	fi
 
 	# --extra-files here picks up the ssh host key we generated earlier and puts it onto the target machine
-	#
+
 	SHELL=/bin/sh nix run nixpkgs#nixos-anywhere -- --ssh-port "$ssh_port" --extra-files "$temp" --flake .#"$target_hostname" root@"$target_destination"
 
 # --disk-encryption-keys /home/dtgagnon/.ssh/dtgagnon-key /home/dtgagnon/.ssh/dtgagnon-key --disk-encryption-keys /home/dtgagnon/.ssh/dtgagnon-key.pub /home/dtgagnon/.ssh/dtgagnon-key.pub --disk-encryption-keys /persist/root-crypt.key /tmp/root-crypt.key --disk-encryption-keys /persist/data-crypt.key /tmp/data-crypt.key --disk-encryption-keys /home/dtgagnon/.config/sops/age/keys.txt/ /home/dtgagnon/.config/sops/age/keys.txt/ --generate-hardware-config nixos-generate-config ./systems/x86_64-linux/${system_config}/hardware.nix --flake .#${system_config} --target-host root@${target_ip}
