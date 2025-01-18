@@ -22,6 +22,7 @@ in
 		open = false;
 		nvidiaSetting = true;
 		package = config.boot.kernelPackages.nvidiaPackages.stable;
+	};
 
   spirenix = {
     suites = {
