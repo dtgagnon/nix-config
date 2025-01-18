@@ -50,7 +50,7 @@ in
     desktop = {
       hyprland = {
         enable = true;
-        monitors = [ ", preferred, auto, 1" ];
+        monitors = [ ",1920x1080@60,0x0,1" ];
         extraConfig = ''
           general {
             col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}
@@ -71,8 +71,8 @@ in
       styling.stylix = {
         enable = true;
         polarity = "dark";
-
       };
+
       styling.wallpapers = enabled;
     };
 
