@@ -15,14 +15,14 @@ in
   ];
 
   networking.hostName = host;
-	hardware.nvidia = {
-		modesetting = true;
-		powerManagement.enable = false;
-		powerManagement.fiegrained = false;
-		open = false;
-		nvidiaSetting = true;
-		package = config.boot.kernelPackages.nvidiaPackages.stable;
-	};
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.fiegrained = false;
+    open = false;
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
 
   spirenix = {
     suites = {
