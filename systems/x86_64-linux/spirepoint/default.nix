@@ -15,10 +15,9 @@ in
 
   networking.hostName = host;
 
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-
   spirenix = {
     suites = {
+      gaming = enabled;
       networking = enabled;
     };
 
