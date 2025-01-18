@@ -27,7 +27,7 @@ in
 
     desktop = {
       fonts = enabled;
-			gnome = enabled;
+      hyprland = enabled;
       stylix = enabled;
     };
 
