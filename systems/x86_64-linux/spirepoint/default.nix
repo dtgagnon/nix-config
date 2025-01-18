@@ -16,7 +16,7 @@ in
   networking.hostName = host;
 
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  
+
   spirenix = {
     suites = {
       networking = enabled;
@@ -30,6 +30,7 @@ in
 
     desktop = {
       fonts = enabled;
+      gnome = enabled;
       hyprland = enabled;
       stylix = enabled;
     };
