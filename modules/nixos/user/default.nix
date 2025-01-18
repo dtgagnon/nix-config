@@ -1,10 +1,9 @@
-{
-  lib,
-  pkgs,
-  config,
-  options,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, options
+, namespace
+, ...
 }:
 let
   inherit (lib) mkAliasDefinitions types;
@@ -23,9 +22,10 @@ in
     prompt-init = mkBoolOpt false "Whether or not to show an initial message when opening a new shell";
 
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
-    mkAdmin = mkBoolOpt (
-      if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false
-    ) "Declare if the user should be added to wheel group automatically";
+    mkAdmin = mkBoolOpt
+      (
+        if "${cfg.name}" == "dtgagnon" || "admin" || "root" || "tmp-admin" then true else false
+      ) "Declare if the user should be added to wheel group automatically";
 
     home.file = mkOpt types.attrs { } "A set of files to be managed by home-manager `home.file`";
     home.configFile = mkOpt attrs { } "An set of files to be managed by home-manager xdg.configFile";
@@ -33,10 +33,18 @@ in
   };
 
   config = {
+    users.users.tmp-admin = {
+      isNormalUser = true;
+      home = "/home/tmp-admin";
+      group = "users";
+      extraGroups = [ "wheel" ];
+    } // cfg.extraOptions;
+
     users.users.${cfg.name} = {
       isNormalUser = true;
       inherit (cfg) extraGroups initialPassword shell;
-      hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
+      password = "n!xos";
+      # hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
       home = "/home/${cfg.name}";
       group = "users";
     } // cfg.extraOptions;
