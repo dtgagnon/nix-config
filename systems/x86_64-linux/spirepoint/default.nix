@@ -17,7 +17,7 @@ in
   networking.hostName = host;
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = false;
+    powerManagement.enable = lib.mkForce false;
     powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = true;
