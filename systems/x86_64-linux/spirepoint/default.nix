@@ -27,7 +27,7 @@ in
 
     desktop = {
       fonts = enabled;
-      hyprland = enabled;
+			gnome = enabled;
       stylix = enabled;
     };
 
@@ -51,13 +51,6 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
-    };
-
-    # topology.self.hardware.info = "DG-PC";
-
-    virtualisation = {
-      podman = enabled;
-      kvm = enabled;
     };
   };
 

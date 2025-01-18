@@ -22,10 +22,7 @@ in
     prompt-init = mkBoolOpt false "Whether or not to show an initial message when opening a new shell";
 
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
-    mkAdmin = mkBoolOpt
-      (
-        if "${cfg.name}" == "dtgagnon" || "admin" || "root" || "tmp-admin" then true else false
-      ) "Declare if the user should be added to wheel group automatically";
+    mkAdmin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
 
     home.file = mkOpt types.attrs { } "A set of files to be managed by home-manager `home.file`";
     home.configFile = mkOpt attrs { } "An set of files to be managed by home-manager xdg.configFile";

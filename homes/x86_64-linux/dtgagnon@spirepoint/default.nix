@@ -41,23 +41,23 @@ in
       git = enabled;
       neovim = enabled;
       network-tools = enabled;
-      shells.zsh = enabled;
+      shells.nushell = enabled;
       ssh = enabled;
       yazi = enabled;
       zoxide = enabled;
     };
 
     desktop = {
-      hyprland = {
-        enable = true;
-        # monitors = [ "DP-5,3440x1440@144,0x0,1" ];
-        # extraConfig = ''
-        #   general {
-        #     col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}
-        #     col.inactive_border = ${mkRGBA { hex = "#${colors.base03}"; alpha = 0.6; }}
-        #   }
-        # '';
-      };
+      # hyprland = {
+      #   enable = true;
+      #   monitors = [ ", preferred, auto, 1" ];
+      #   extraConfig = ''
+      #     general {
+      #       col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}
+      #       col.inactive_border = ${mkRGBA { hex = "#${colors.base03}"; alpha = 0.6; }}
+      #     }
+      #   '';
+      # };
       styling.core = {
         enable = true;
         cursor = {

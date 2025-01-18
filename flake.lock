@@ -1892,17 +1892,14 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1736821945,
-        "narHash": "sha256-+08BWa+KzN0Bm7fu4vJSmY51NYg4Z+P/UKGkowrNnZE=",
-        "ref": "refs/heads/main",
-        "rev": "09940796ec8000591809f82dabe6fb290d3ed4c2",
-        "revCount": 13,
-        "type": "git",
-        "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
+        "lastModified": 1737172743,
+        "narHash": "sha256-zA00onSkspuf/d0z7cu9LmO6+x+3rxA/AWFZomdAM8w=",
+        "path": "/home/dtgagnon/nix-config/nix-secrets",
+        "type": "path"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
+        "path": "/home/dtgagnon/nix-config/nix-secrets",
+        "type": "path"
       }
     },
     "nix-topology": {

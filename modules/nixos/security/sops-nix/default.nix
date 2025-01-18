@@ -38,11 +38,11 @@ in
       secrets = {
         "ssh-keys/${username}-key" = {
           owner = "${username}";
-          path = "/persist/home/${username}/.ssh/${username}-key";
+          path = "/home/${username}/.ssh/${username}-key";
         };
         "ssh-keys/${username}-key.pub" = {
           owner = "${username}";
-          path = "/persist/home/${username}/.ssh/${username}-key.pub";
+          path = "/home/${username}/.ssh/${username}-key.pub";
         };
         # "syncthing/webui-password" = { owner = "dtgagnon"; };
         # "syncthing/key" = { };

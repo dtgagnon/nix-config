@@ -133,7 +133,8 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "stablepkgs";
     nix-secrets = {
-      url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git";
+#     url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git";
+      url = "/home/dtgagnon/nix-config/nix-secrets";
       flake = false;
     };
 
