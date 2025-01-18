@@ -40,8 +40,8 @@ in
     users.users.${cfg.name} = {
       isNormalUser = true;
       inherit (cfg) extraGroups initialPassword shell;
-      password = "n!xos";
-      # hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
+      # password = "n!xos";
+      hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
       home = "/home/${cfg.name}";
       group = "users";
     } // cfg.extraOptions;
