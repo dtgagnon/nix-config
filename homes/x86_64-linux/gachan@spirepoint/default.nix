@@ -43,16 +43,6 @@ in
     };
 
     desktop = {
-      hyprland = {
-        enable = true;
-        # monitors = [ ", preferred, auto, 1" ];
-        # extraConfig = ''
-        #   general {
-        #     col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}
-        #     col.inactive_border = ${mkRGBA { hex = "#${colors.base03}"; alpha = 0.6; }}
-        #   }
-        # '';
-      };
       styling.core = {
         enable = true;
         cursor = {
