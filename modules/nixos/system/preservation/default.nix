@@ -77,7 +77,6 @@ in
         };
       };
     };
-  };
 
   # Create some directories with custom permissions.
   #
@@ -92,10 +91,11 @@ in
   # Note that immediate parent directories of persisted files can also be
   # configured with ownership and permissions from the `parent` settings if
   # `configureParent = true` is set for the file.
-  systemd.tmpfiles.settings.preservation = {
-    "/home/${username}/.config".d = { user = "${username}"; group = "users"; mode = "0755"; };
-    "/home/${username}/.local".d = { user = "${username}"; group = "users"; mode = "0755"; };
-    "/home/${username}/.local/share".d = { user = "${username}"; group = "users"; mode = "0755"; };
-    "/home/${username}/.local/state".d = { user = "${username}"; group = "users"; mode = "0755"; };
+    systemd.tmpfiles.settings.preservation = {
+      "/home/${username}/.config".d = { user = "${username}"; group = "users"; mode = "0755"; };
+      "/home/${username}/.local".d = { user = "${username}"; group = "users"; mode = "0755"; };
+      "/home/${username}/.local/share".d = { user = "${username}"; group = "users"; mode = "0755"; };
+      "/home/${username}/.local/state".d = { user = "${username}"; group = "users"; mode = "0755"; };
+    };
   };
 }
