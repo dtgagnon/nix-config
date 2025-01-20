@@ -21,7 +21,7 @@ in
     services.xserver.videoDrivers = [ "nvidia" ]; #idk if this exists
     hardware = {
       nvidia = {
-        open = lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
+        open = true; # lib.mkOverride 990 config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware
         powerManagement.enable = true; #enabled to address sleep/suspend failures
         nvidiaSettings = true;
       };

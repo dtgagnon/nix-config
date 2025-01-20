@@ -166,6 +166,9 @@
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
 
+    nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
+    nixos-conf-editor.inputs.nixpkgs.follows = "nixpkgs";
+
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
 

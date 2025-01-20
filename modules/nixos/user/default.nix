@@ -9,34 +9,27 @@ let
   inherit (lib) mkAliasDefinitions types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
+
+	userList = builtins.nameAttrs config.users.users;
 in
 {
   options.${namespace}.user = with types; {
     name = mkOpt str "dtgagnon" "The name to use for the user account";
-    initialPassword =
-      mkOpt str "n!xos"
-        "The default password for the user account if sops fails to import";
+    initialPassword = mkOpt str "n!xos" "The default password for the user account if sops fails to import";
     extraOptions = mkOpt attrs { } "Extra options passed to `users.users.<name>`";
 
     shell = mkOpt package pkgs.nushell "The user's default shell";
     prompt-init = mkBoolOpt false "Whether or not to show an initial message when opening a new shell";
 
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
-    mkAdmin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
+    admin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
 
     home.file = mkOpt types.attrs { } "A set of files to be managed by home-manager `home.file`";
     home.configFile = mkOpt attrs { } "An set of files to be managed by home-manager xdg.configFile";
     home.extraOptions = mkOpt attrs { } "Extra options passed to home-manager";
   };
 
-  config = {
-    users.users.tmp-admin = {
-      isNormalUser = true;
-      home = "/home/tmp-admin";
-      group = "users";
-      extraGroups = [ "wheel" ];
-    } // cfg.extraOptions;
-
+  config = rec {
     users.users.${cfg.name} = {
       isNormalUser = true;
       inherit (cfg) extraGroups initialPassword shell;
@@ -60,7 +53,7 @@ in
       } // cfg.home.extraOptions;
 
       # User security
-      admin = cfg.mkAdmin;
+      inherit (cfg) admin;
     };
 
     # User security
