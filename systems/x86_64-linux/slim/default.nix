@@ -1,14 +1,16 @@
-{
-  lib,
-  host,
-  namespace,
-  ...
+{ lib
+, host
+, namespace
+, ...
 }:
 let
-  inherit (lib.${namespace}) enabled disabled;
+  inherit (lib.${namespace}) enabled;
 in
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./disk-config.nix
+    ./hardware.nix
+  ];
 
   networking.hostName = host;
 
@@ -25,10 +27,6 @@ in
       keyboard = enabled; # xkb stuff
       storage = {
         boot.enable = true;
-        disko = {
-          enable = true;
-          device = "/dev/sda";
-        };
       };
     };
 
@@ -38,15 +36,10 @@ in
     };
 
     services = {
-      jellyfin = enabled;
-
       openssh = enabled;
     };
 
-    system = {
-      enable = true;
-      impermanence = enabled;
-    };
+    system.enable = true;
 
     tools = {
       comma = enabled;
@@ -56,8 +49,6 @@ in
     };
 
     # topology.self.hardware.info = "DG-PC";
-
-    virtualisation.podman = enabled;
   };
 
   system.stateVersion = "24.05";
