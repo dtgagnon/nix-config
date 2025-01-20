@@ -55,6 +55,10 @@
           proxmox-nixos.nixosModules.proxmox-ve
         ];
 
+        systems.hosts.spirepoint.modules = with inputs; [
+          plane-nix.nixosModules."services/plane"
+        ];
+
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
         ];
@@ -168,6 +172,9 @@
 
     nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
     nixos-conf-editor.inputs.nixpkgs.follows = "nixpkgs";
+
+    plane-nix.url = "github:jakehamilton/plane.nix";
+    plane-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";

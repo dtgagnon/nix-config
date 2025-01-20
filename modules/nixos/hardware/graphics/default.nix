@@ -22,8 +22,12 @@ in
     hardware = {
       nvidia = {
         open = true; # lib.mkOverride 990 config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware
-        powerManagement.enable = true; #enabled to address sleep/suspend failures
+        modesetting.enable = true;
         nvidiaSettings = true;
+        powerManagement = {
+          enable = false; #enabled to address sleep/suspend failures
+          finegrained = false;
+        };
       };
       graphics = {
         enable = true;
@@ -38,5 +42,6 @@ in
     };
 
     environment.systemPackages = [ pkgs.vulkan-tools ];
+    # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
   };
 }
