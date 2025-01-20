@@ -9,7 +9,7 @@ in
 {
   imports = [
     ./hardware.nix
-    ./disk-config.nix
+    # ./disk-config.nix
   ];
 
   networking.hostName = host;
@@ -37,7 +37,7 @@ in
       graphics = { enable = true; manufacturer = "nvidia"; };
       storage = {
         boot.enable = true;
-        # disko = { enable = true; device = "/dev/nvme0n1"; };
+        disko = { enable = true; device = "/dev/nvme0n1"; };
       };
     };
 
