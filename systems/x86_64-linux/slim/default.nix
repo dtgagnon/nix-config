@@ -18,8 +18,9 @@ in
     suites.networking = enabled;
 
     desktop = {
-      gnome = enabled;
+      hyprland = enabled;
       fonts = enabled;
+      stylix = enabled;
     };
 
     hardware = {
@@ -33,10 +34,6 @@ in
     security = {
       sudo = enabled;
       sops-nix = enabled;
-    };
-
-    services = {
-      openssh = enabled;
     };
 
     system.enable = true;
