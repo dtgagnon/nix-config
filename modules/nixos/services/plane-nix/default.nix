@@ -15,30 +15,30 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.plane = {
-      enable = true;
-      domain = "example.com";
+    # services.plane = {
+    #   enable = true;
+    #   domain = "example.com";
 
-      # A file containing the secret key used by the Plane api server
-      secretKeyFile = "";
+    #   # A file containing the secret key used by the Plane api server
+    #   secretKeyFile = "";
 
-      database = {
-        local = true;
-        passwordFile = ""; # File containing the postgres password used by Plane.
-      };
+    #   database = {
+    #     local = true;
+    #     passwordFile = ""; # File containing the postgres password used by Plane.
+    #   };
 
-      storage = {
-        local = true;
-        credentialsFile = ""; # File containing the minio-style credentials used by Plane. See services.minio.rootCredentialsFile for formatting.
-      };
+    #   storage = {
+    #     local = true;
+    #     credentialsFile = ""; # File containing the minio-style credentials used by Plane. See services.minio.rootCredentialsFile for formatting.
+    #   };
 
-      cache = {
-        local = true;
-      };
+    #   cache = {
+    #     local = true;
+    #   };
 
-      acme = {
-        enable = true;
-      };
-    };
+    #   acme = {
+    #     enable = true;
+    #   };
+    # };
   };
 }
