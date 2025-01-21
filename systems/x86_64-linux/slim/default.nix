@@ -12,7 +12,10 @@ in
     ./hardware.nix
   ];
 
-  networking.hostName = host;
+  networking = {
+    hostName = host;
+    useDHCP = lib.mkDefault true;
+  };
 
   spirenix = {
     suites.networking = enabled;
@@ -26,9 +29,9 @@ in
     hardware = {
       audio = enabled;
       keyboard = enabled; # xkb stuff
-      storage = {
-        boot.enable = true;
-      };
+      # storage = {
+      #   boot.enable = true;
+      # };
     };
 
     security = {
@@ -44,8 +47,23 @@ in
       monitoring = enabled;
       nix-ld = enabled;
     };
+  };
 
-    # topology.self.hardware.info = "DG-PC";
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+        editor = false;
+      };
+    };
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
+      kernelModules = [ "dm-snapshot" ];
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
   };
 
   system.stateVersion = "24.11";
