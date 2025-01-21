@@ -10,7 +10,7 @@ let
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
 
-	userList = builtins.nameAttrs config.users.users;
+  # userList = builtins.nameAttrs config.users.users;
 in
 {
   options.${namespace}.user = with types; {
@@ -29,7 +29,7 @@ in
     home.extraOptions = mkOpt attrs { } "Extra options passed to home-manager";
   };
 
-  config = rec {
+  config = {
     users.users.${cfg.name} = {
       isNormalUser = true;
       inherit (cfg) extraGroups initialPassword shell;
