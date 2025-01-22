@@ -83,14 +83,12 @@
   };
 
   snowfallorg.users =
-    lib.listToAttrs
-      (map
-        (username: {
-          ${username} = {
-            create = false;
-            home.enable = false;
-          };
-        }) [ "dtgagnon" "gachan" "admin" ]);
+    builtins.mapAttrs
+      (username: config: {
+        create = false;
+        home.enable = false;
+      })
+      { dtgagnon = null; gachan = null; admin = null; };
 
 
   system.stateVersion = "24.11";
