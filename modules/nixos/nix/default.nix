@@ -53,7 +53,7 @@ in
 
         settings =
           {
-            experimental-features = "nix-command flakes pipe-operators";
+            experimental-features = lib.mkDefault "nix-command flakes pipe-operators";
             allowed-uris = [ "ssh://git@github.com" ];
             http-connections = 50;
             warn-dirty = false;
