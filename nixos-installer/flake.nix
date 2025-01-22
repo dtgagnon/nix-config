@@ -23,6 +23,7 @@
 
         systems.hosts.generic.modules = [
           inputs.disko.nixosModules
+          inputs.home-manager.nixosModules.home-manager
         ];
       }
     // { self = inputs.self; };
@@ -38,5 +39,8 @@
     # disko partitioning and declaration
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 }
