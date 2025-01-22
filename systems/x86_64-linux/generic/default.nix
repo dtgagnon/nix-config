@@ -82,5 +82,16 @@
     ]; # Replace "KEY" with your public key
   };
 
+  snowfallorg.users =
+    lib.mergeAll
+      (map
+        (username: {
+          ${username} = {
+            create = false;
+            home.enable = false;
+          };
+        }) [ "dtgagnon" "gachan" "admin" ]);
+
+
   system.stateVersion = "24.11";
 }
