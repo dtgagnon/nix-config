@@ -19,7 +19,8 @@
     lib.mkFlake
       {
         inherit inputs;
-        src = ../.; # maybe make this point to a directory
+        src = ./.; # maybe make this point to a directory
+        snowfall.root = ../.;
 
         systems.hosts.generic.modules = [
           inputs.disko.nixosModules
