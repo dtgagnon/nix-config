@@ -7,20 +7,28 @@
 
 {
   imports = [
-    ./disk-config.nix
-    ./hardware.nix
+    ../slim/disk-config.nix
+    ../slim/hardware.nix
   ];
 
   fileSystems."/boot".options = [ "umask=0077" ];
-  boot.loader = {
-    efi.canTouchEfiVariables = true;
-    systemd-boot = {
-      enable = true;
-      configurationLimit = lib.mkDefault 10;
-      consoleMode = lib.mkDefault "max";
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+        editor = false;
+      };
     };
+    initrd = {
+      systemd.enable = true;
+      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
+      kernelModules = [ "dm-snapshot" ];
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
   };
-  boot.initrd.systemd.enable = true;
 
   networking.networkmanager.enable = true;
 

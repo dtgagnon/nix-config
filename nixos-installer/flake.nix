@@ -1,12 +1,12 @@
 {
-  description = "Minimal NixOS Installer Flake";
+  description = "Generic, lightweight NixOS Installer Flake";
 
   outputs =
     inputs:
     let
       lib = inputs.snowfall-lib.mkLib {
         inherit inputs;
-        src = ./.;
+        src = ../.;
         snowfall = {
           meta = {
             name = "NixOS-Installer";
@@ -21,9 +21,8 @@
         inherit inputs;
         src = ../.; # maybe make this point to a directory
 
-        systems.hosts.minimal.modules = with inputs; [
-          disko.nixosModules
-          home-manager.nixosModules.home-manager
+        systems.hosts.generic.modules = [
+          inputs.disko.nixosModules
         ];
       }
     // { self = inputs.self; };
@@ -39,13 +38,5 @@
     # disko partitioning and declaration
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-
-    ## security
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "stablepkgs";
-    nix-secrets = {
-      url = "git+ssh://git@github.com/dtgagnon/nix-secrets.git";
-      flake = false;
-    };
   };
 }
