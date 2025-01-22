@@ -23,7 +23,6 @@
               content = {
                 type = "luks";
                 name = "root-crypt";
-                askPassword = true;
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 # extraOpenArgs = [ ];
                 settings = {
