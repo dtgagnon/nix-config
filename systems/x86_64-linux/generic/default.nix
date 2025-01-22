@@ -89,7 +89,7 @@
         create = false;
         home.enable = false;
       })
-      { dtgagnon = null; gachan = null; admin = null; };
+      { gachan = null; admin = null; };
 
   # same thing just using pipe for practice
   # snowfallorg.users =
