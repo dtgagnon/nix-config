@@ -82,6 +82,7 @@
     ]; # Replace "KEY" with your public key
   };
 
+  # map user disabling across the Attrs of usernames
   snowfallorg.users =
     builtins.mapAttrs
       (username: config: {
@@ -89,6 +90,13 @@
         home.enable = false;
       })
       { dtgagnon = null; gachan = null; admin = null; };
+
+  # same thing just using pipe for practice
+  # snowfallorg.users =
+  #   builtins.pipe { dtgagnon = null; } [
+  #     { create = false; }
+  #     { home.enable = false; }
+  #   ];
 
 
   system.stateVersion = "24.11";
