@@ -1,22 +1,23 @@
 { lib
-, pkgs
 , config
 , namespace
 , ...
 }:
-let 
+let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.spirenix.system.preservation;
+  cfg = config.${namespace}.system.preservation;
 
   username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.system.preservation = {
     enable = mkBoolOpt false "Enable the preservation impermanence framework";
-    extraUser = mkOpt types.str "" "Declare additional users";
+    extra = {
+      user = mkOpt types.str "" "Declare additional users";
       homeDirs = mkOpt (types.listOf types.str) [ ] "Declare extra user home directories to persist";
       homeFiles = mkOpt (types.listOf types.str) [ ] "Declare extra user home files to persist";
+    };
     extraSysDirs = mkOpt (types.listOf types.str) [ ] "Declare additional system directories to persist";
     extraSysFiles = mkOpt (types.listOf types.str) [ ] "Declare additional system files to persist";
     extraHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
@@ -99,19 +100,19 @@ in
       };
     };
 
-  # Create some directories with custom permissions.
-  #
-  # In this configuration the path `/home/butz/.local` is not an immediate parent
-  # of any persisted file, so it would be created with the systemd-tmpfiles default
-  # ownership `root:root` and mode `0755`. This would mean that the user `butz`
-  # could not create other files or directories inside `/home/butz/.local`.
-  #
-  # Therefore systemd-tmpfiles is used to prepare such directories with
-  # appropriate permissions.
-  #
-  # Note that immediate parent directories of persisted files can also be
-  # configured with ownership and permissions from the `parent` settings if
-  # `configureParent = true` is set for the file.
+    # Create some directories with custom permissions.
+    #
+    # In this configuration the path `/home/butz/.local` is not an immediate parent
+    # of any persisted file, so it would be created with the systemd-tmpfiles default
+    # ownership `root:root` and mode `0755`. This would mean that the user `butz`
+    # could not create other files or directories inside `/home/butz/.local`.
+    #
+    # Therefore systemd-tmpfiles is used to prepare such directories with
+    # appropriate permissions.
+    #
+    # Note that immediate parent directories of persisted files can also be
+    # configured with ownership and permissions from the `parent` settings if
+    # `configureParent = true` is set for the file.
     systemd.tmpfiles.settings.preservation = {
       "/home/${username}/.config".d = { user = "${username}"; group = "users"; mode = "0755"; };
       "/home/${username}/.local".d = { user = "${username}"; group = "users"; mode = "0755"; };

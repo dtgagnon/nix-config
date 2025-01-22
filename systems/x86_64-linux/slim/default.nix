@@ -39,8 +39,8 @@ in
       sops-nix = enabled;
     };
 
-    system.enable = true;
-    system.preservation = true;
+    system.enable = true; # gneral system config
+    system.preservation = enabled;
 
     tools = {
       comma = enabled;
