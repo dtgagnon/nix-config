@@ -38,7 +38,9 @@ in
         allUsers = lib.attrNames (lib.filterAttrs (n: v: v.isNormalUser) config.users.users);
         users = [ "root" ] ++ allUsers ++ optional config.services.hydra.enable "hydra";
 
-        isHomeManagerDirenvEnabled = config.home-manager.users.${user}.${namespace}.cli.direnv.enable;
+        isHomeManagerDirenvEnabled = if config.home-manager.users ? ${user}
+          then config.home-manager.users.${user}.${namespace}.cli.direnv.enable
+          else false;
       in
       {
         package = cfg.package;

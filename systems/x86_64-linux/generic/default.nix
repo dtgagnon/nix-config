@@ -7,8 +7,8 @@
 
 {
   imports = [
-    ../slim/disk-config.nix
-    ../slim/hardware.nix
+    ./disk-config.nix
+    ./hardware.nix
   ];
 
   fileSystems."/boot".options = [ "umask=0077" ];
