@@ -83,7 +83,7 @@
   };
 
   snowfallorg.users =
-    lib.mergeAll
+    lib.listToAttrs
       (map
         (username: {
           ${username} = {
