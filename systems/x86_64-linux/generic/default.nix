@@ -76,7 +76,7 @@
   };
 
   users.users.root = {
-    initialPassword = "1";
+    password = "1";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 dtgagnon"
     ]; # Replace "KEY" with your public key
