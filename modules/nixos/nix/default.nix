@@ -35,12 +35,10 @@ in
     nix =
       let
         user = config.${namespace}.user.name;
-        users = [
-          "root"
-          user
-        ] ++ optional config.services.hydra.enable "hydra";
-        isHomeManagerDirenvEnabled = config.home-manager.users.${user}.${namespace}.cli.direnv.enable;
+        allUsers = lib.attrNames (lib.filterAttrs (n: v: v.isNormalUser) config.users.users);
+        users = [ "root" ] ++ allUsers ++ optional config.services.hydra.enable "hydra";
 
+        isHomeManagerDirenvEnabled = config.home-manager.users.${user}.${namespace}.cli.direnv.enable;
       in
       {
         package = cfg.package;

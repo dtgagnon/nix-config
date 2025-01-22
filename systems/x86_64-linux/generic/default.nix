@@ -93,10 +93,8 @@
 
   # same thing just using pipe for practice
   # snowfallorg.users =
-  #   builtins.pipe { dtgagnon = null; } [
-  #     { create = false; }
-  #     { home.enable = false; }
-  #   ];
+  #   { dtgagnon = null; gachan = null; admin = null; }
+  #     |> builtins.mapAttrs { create = false; home.enable = false; }
 
 
   system.stateVersion = "24.11";
