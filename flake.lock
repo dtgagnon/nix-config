@@ -1935,11 +1935,11 @@
         "snowfall-lib": "snowfall-lib"
       },
       "locked": {
-        "lastModified": 1737570138,
-        "narHash": "sha256-bXglf7Q4Khv5Y21fa6Lriu3UIEFfh9h7AMg1zeSygCM=",
+        "lastModified": 1737570728,
+        "narHash": "sha256-KooOGAAr9arDVT4ldteGIEprN26pTuGLuRDsqBiipN8=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "bc95abdf39332ff8aacc9354d83370a857ca2c01",
+        "rev": "90133fd0c53f246dabc08ee8dc02ff8afee8b837",
         "type": "github"
       },
       "original": {
