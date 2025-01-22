@@ -40,6 +40,7 @@ in
     };
 
     system.enable = true;
+    system.preservation = true;
 
     tools = {
       comma = enabled;
