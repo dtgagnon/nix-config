@@ -23,7 +23,7 @@
         snowfall.root = ../.;
 
         systems.hosts.generic.modules = [
-          inputs.disko.nixosModules
+          inputs.disko.nixosModules.disko
           inputs.home-manager.nixosModules.home-manager
         ];
       }
