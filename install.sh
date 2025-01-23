@@ -233,7 +233,7 @@ function nixos_anywhere() {
 	fi
 	cd -
 }
-#NOTE: FINISH REVIEWING THE SCRIPT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-----------------------------------------------
+
 # Updates the .sops.yaml file with a new host or user age key.
 # Assumptions:
 # - a secrets folder containing .sops.yaml is located at ../nix-secrets from the git root
