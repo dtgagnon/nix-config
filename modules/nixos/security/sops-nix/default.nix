@@ -6,11 +6,10 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkMerge;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops-nix;
   secretsPath = builtins.toString inputs.nix-secrets;
-  username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.security.sops-nix = {
@@ -33,17 +32,11 @@ in
         generateKey = true;
       };
 
-      # NOTE: Secrets will be output to /run/secrets (e.g. /run/secrets/dtgagnon-password)
-      # Secrets required for user creation are handled in respective ./users/<username>.nix files because they will be output to /run/secrets-for-users and only when the user is assigned to a host.
+      #NOTE See modules/nixos/users/default.nix for user secrets.
       secrets = {
-        "ssh-keys/${username}-key" = {
-          owner = "${username}";
-          path = "/persist/home/${username}/.ssh/${username}-key";
-        };
-        "ssh-keys/${username}-key.pub" = {
-          owner = "${username}";
-          path = "/persist/home/${username}/.ssh/${username}-key.pub";
-        };
+        #NOTE Secrets will be output to /run/secrets.
+        # General secrets declarations. Most will/should be in their respective modules.
+
         # "syncthing/webui-password" = { owner = "dtgagnon"; };
         # "syncthing/key" = { };
         tailscale-authKey = { };

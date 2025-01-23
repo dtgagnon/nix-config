@@ -57,8 +57,30 @@ in
     };
 
     # User security
-    ## Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
-    sops.secrets."${cfg.name}-password".neededForUsers = true;
+    #NOTE: secrets which are needed for ALL created users are dynamically declared through the functions below. Any additional secrets that fit this criteria need to be added inside the function.
+
+    # sops.secrets."${cfg.name}-password".neededForUsers = true;
+    sops.secrets =
+      (builtins.foldl' lib.recursiveUpdate { }
+        (map
+          (user: {
+
+            # Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
+            "${user}-password".neededForUsers = true;
+
+            # SSH Key deposits
+            "ssh-keys/${user}-key" = {
+              owner = user;
+              path = "/persist/home/${user}/.ssh/${user}-key";
+            };
+            "ssh-keys/${user}-key.pub" = {
+              owner = user;
+              path = "/persist/home/${user}/.ssh/${user}-key.pub";
+            };
+
+            # Add more generic user secrets here..
+          })
+          (lib.attrNames (lib.filterAttrs (_n: v: v.isNormalUser) config.users.users))));
     users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
   };
 }
