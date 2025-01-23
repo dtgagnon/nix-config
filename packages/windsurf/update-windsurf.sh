@@ -61,7 +61,7 @@ update_package() {
     local default_nix="$SCRIPT_DIR/default.nix"
     sed -i "s/version = \".*\"/version = \"$version\"/" "$default_nix"
     sed -i "s|/stable/[a-f0-9]\{40\}/|/stable/$commit_hash/|" "$default_nix"
-		sed -i "s/x86_64-linux = \".*\"/x86_64-linux = \"$sha256_hashes\"/" "$default_nix"
+		sed -i "s/x86_64-linux = \".*\"/x86_64-linux = \"$sha256_hash\"/" "$default_nix"
 
     echo "Update complete!"
 }
