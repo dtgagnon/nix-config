@@ -82,6 +82,7 @@
     ]; # Replace "KEY" with your public key
   };
   users.users.dtgagnon = {
+    isNormalUser = true;
     password = "1";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 user=dtgagnon"
