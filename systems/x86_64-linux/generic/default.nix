@@ -78,8 +78,14 @@
   users.users.root = {
     password = "1";
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 dtgagnon"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 user=dtgagnon"
     ]; # Replace "KEY" with your public key
+  };
+  users.users.dtgagnon = {
+    password = "1";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 user=dtgagnon"
+    ];
   };
 
   # map user disabling across the Attrs of usernames
@@ -89,7 +95,7 @@
         create = false;
         home.enable = false;
       })
-      { gachan = null; admin = null; };
+      { dtgagnon = null; gachan = null; admin = null; };
 
   # same thing just using pipe for practice
   # snowfallorg.users =
