@@ -81,7 +81,8 @@ in
             # Add more generic user secrets here..
           };
         })
-        snowfallUserList ++ cfg.extraUsers))
+        snowfallUserList))
+    # ++ cfg.extraUsers is causing infinite recursion issues somehow >_>
 
     {
       home-manager = {
