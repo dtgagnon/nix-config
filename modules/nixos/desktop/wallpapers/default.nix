@@ -36,7 +36,7 @@ in
   config = mkIf cfg.enable (builtins.foldl' lib.recursiveUpdate { }
     (map
       (user: {
-        snowfallorg.users.${user}.home.file = lib.foldr lib.recursiveUpdate { }
+        snowfallorg.users.${user}.home.config.home.file = lib.foldr lib.recursiveUpdate { }
           (mkWallpaperEntries "Pictures/wallpapers" wallpapers);
       })
       snowfallUserList));
