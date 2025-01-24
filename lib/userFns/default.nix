@@ -2,14 +2,14 @@
 , ...
 }:
 let
-  homes = lib.snowfall.home.get-target-homes-metadata ./homes;
+  homes = lib.snowfall.home.get-target-homes-metadata ../../homes/x86_64-linux;
 in
 {
-  snowfallUserList = map
+  snowfallUserList = lib.lists.unique (map
     (home:
       (lib.snowfall.home.split-user-and-host home.name).user
     )
-    homes;
+    homes);
 
   # sysToHomeUser = { self, namespace, ... }:
   #   let
