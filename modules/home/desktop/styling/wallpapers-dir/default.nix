@@ -1,5 +1,6 @@
 # This module only outputs an organized directory of the wallpapers included in pkgs.spirenix.wallpapers.wallpapers.
 { lib
+, host
 , pkgs
 , config
 , namespace
@@ -7,8 +8,8 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt snowfallUserList;
-  cfg = config.${namespace}.desktop.wallpapers;
+  inherit (lib.${namespace}) mkBoolOpt;
+  cfg = config.${namespace}.desktop.styling.wallpapers-dir;
 
   inherit (pkgs.spirenix.wallpapers) wallpapers;
 
@@ -26,18 +27,14 @@ let
         )
         set
     );
-
 in
 {
-  options.${namespace}.desktop.wallpapers = {
+  options.${namespace}.desktop.styling.wallpapers-dir = {
     enable = mkBoolOpt false "Whether or not to add wallpapers to ~/Pictures/wallpapers.";
   };
 
-  config = mkIf cfg.enable (builtins.foldl' lib.recursiveUpdate { }
-    (map
-      (user: {
-        snowfallorg.users.${user}.home.config.home.file = lib.foldr lib.recursiveUpdate { }
-          (mkWallpaperEntries "Pictures/wallpapers" wallpapers);
-      })
-      snowfallUserList));
+  config = mkIf cfg.enable {
+    home.file = lib.foldr lib.recursiveUpdate { }
+      (mkWallpaperEntries "Pictures/wallpapers" wallpapers);
+  };
 }

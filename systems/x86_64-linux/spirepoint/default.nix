@@ -40,7 +40,6 @@ in
       fonts = enabled;
       gnome = enabled;
       stylix = enabled;
-      wallpapers = enabled;
     };
 
     hardware = {

@@ -64,22 +64,24 @@ in
           }
         '';
       };
-      styling.core = {
-        enable = true;
-        cursor = {
-          package = pkgs.bibata-cursors;
-          name = "Bibata-Modern-Ice";
-          size = 24;
+      styling = {
+        core = {
+          enable = true;
+          cursor = {
+            package = pkgs.bibata-cursors;
+            name = "Bibata-Modern-Ice";
+            size = 24;
+          };
+          theme = "catppuccin-frappe";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
         };
-        theme = "catppuccin-frappe";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
+        stylix = {
+          enable = true;
+          polarity = "dark";
+        };
+        wallpapers-dir = enabled;
       };
-      styling.stylix = {
-        enable = true;
-        polarity = "dark";
-      };
+      services.syncthing = enabled;
     };
-    services.syncthing = enabled;
-  };
-  home.stateVersion = "24.05";
-}
+    home.stateVersion = "24.05";
+  }

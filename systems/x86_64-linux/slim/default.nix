@@ -24,7 +24,6 @@ in
       hyprland = enabled;
       fonts = enabled;
       stylix = enabled;
-      wallpapers = enabled;
     };
 
     hardware = {

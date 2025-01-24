@@ -1,4 +1,5 @@
 { lib
+, host
 , pkgs
 , config
 , options
@@ -7,7 +8,7 @@
 }:
 let
   inherit (lib) mkAliasDefinitions mkMerge types;
-  inherit (lib.${namespace}) mkOpt mkBoolOpt snowfallUserList;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt snowfallHostUserList;
   cfg = config.${namespace}.user;
 in
 {
@@ -81,7 +82,9 @@ in
             # Add more generic user secrets here..
           };
         })
-        snowfallUserList))
+        (snowfallHostUserList host)
+      )
+    )
     # ++ cfg.extraUsers is causing infinite recursion issues somehow >_>
 
     {
