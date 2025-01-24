@@ -6,11 +6,9 @@
 , ...
 }:
 let
-  inherit (lib) mkAliasDefinitions types;
-  inherit (lib.${namespace}) mkOpt mkBoolOpt;
+  inherit (lib) mkAliasDefinitions mkMerge types;
+  inherit (lib.${namespace}) mkOpt mkBoolOpt snowfallUserList;
   cfg = config.${namespace}.user;
-
-  # userList = builtins.nameAttrs config.users.users;
 in
 {
   options.${namespace}.user = with types; {
@@ -21,6 +19,7 @@ in
     shell = mkOpt package pkgs.nushell "The user's default shell";
     prompt-init = mkBoolOpt false "Whether or not to show an initial message when opening a new shell";
 
+    extraUsers = mkOpt (listOf str) [ ] "Additional users to declare for a specific host";
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
     admin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
 
@@ -29,43 +28,43 @@ in
     home.extraOptions = mkOpt attrs { } "Extra options passed to home-manager";
   };
 
-  config = {
-    users.users.${cfg.name} = {
-      isNormalUser = true;
-      inherit (cfg) extraGroups initialPassword shell;
-      # password = "n!xos";
-      hashedPasswordFile = config.sops.secrets."${cfg.name}-password".path;
-      home = "/home/${cfg.name}";
-      group = "users";
-    } // cfg.extraOptions;
+  config = mkMerge [
+    (builtins.foldl' lib.recursiveUpdate { }
+      (map
+        (user: {
+          users.users.${user} = {
+            isNormalUser = true;
+            inherit (cfg) extraGroups initialPassword shell;
+            # password = "n!xos";
+            hashedPasswordFile = config.sops.secrets."${user}-password".path;
+            home = "/home/${user}";
+            group = "users";
+          } // cfg.extraOptions;
 
-    # System level home-manager stuff + sys->home passthrough
-    home-manager = {
-      useGlobalPkgs = true;
-      backupFileExtension = "backup";
-    };
-    snowfallorg.users.${cfg.name} = {
-      home.config = {
-        home.stateVersion = config.system.stateVersion;
-        home.file = mkAliasDefinitions options.${namespace}.user.home.file;
-        xdg.enable = true;
-        xdg.configFile = mkAliasDefinitions options.${namespace}.user.home.configFile;
-      } // cfg.home.extraOptions;
+          # System level home-manager stuff + sys->home passthrough
 
-      # User security
-      inherit (cfg) admin;
-    };
+          snowfallorg.users.${user} = {
+            home.config = {
+              home.stateVersion = config.system.stateVersion;
+              home.file = mkAliasDefinitions options.${namespace}.user.home.file;
+              xdg.enable = true;
+              xdg.configFile = mkAliasDefinitions options.${namespace}.user.home.configFile;
+            } // cfg.home.extraOptions;
 
-    # User security
-    #NOTE: secrets which are needed for ALL created users are dynamically declared through the functions below. Any additional secrets that fit this criteria need to be added inside the function.
+            # User security
+            inherit (cfg) admin;
+          };
 
-    # sops.secrets."${cfg.name}-password".neededForUsers = true;
-    sops.secrets =
-      (builtins.foldl' lib.recursiveUpdate { }
-        (map
-          (user: {
+          # User security
+          #NOTE: secrets which are needed for ALL created users are dynamically declared through the functions below. Any additional secrets that fit this criteria need to be added inside the function.
+          # sops.secrets."${cfg.name}-password".neededForUsers = true;
+          sops.secrets = {
+            # (builtins.foldl' lib.recursiveUpdate { }
+            # 	(map
+            # 		(user: {
 
             # Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
+            # sops.secrets = {
             "${user}-password".neededForUsers = true;
 
             # SSH Key deposits
@@ -77,10 +76,20 @@ in
               owner = user;
               path = "/persist/home/${user}/.ssh/${user}-key.pub";
             };
+            # };
 
             # Add more generic user secrets here..
-          })
-          (lib.attrNames (lib.filterAttrs (_n: v: v.isNormalUser) config.users.users))));
-    users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
-  };
+          };
+        })
+        snowfallUserList))
+    # gotta add ++ cfg.extraUsers to whatever list of users I end up with that gets pulled from snowfall-lib doing it's thing.
+
+    {
+      home-manager = {
+        useGlobalPkgs = true;
+        backupFileExtension = "backup";
+      };
+      users.mutableUsers = false; # Required for password to be set via sops during system activation. Forces user settings to be declared via config exclusively
+    }
+  ];
 }
