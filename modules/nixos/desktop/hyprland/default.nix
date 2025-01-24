@@ -1,10 +1,10 @@
-{
-  lib,
-  config,
-  inputs,
-  system,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, inputs
+, system
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -32,5 +32,7 @@ in
       thunar = enabled;
       xdg-portal = enabled;
     };
+
+    environment.systemPackages = pkgs.kitty; #default for when no home configuration has been established
   };
 }
