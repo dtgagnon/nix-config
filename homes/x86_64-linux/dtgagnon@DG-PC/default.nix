@@ -81,8 +81,8 @@ in
         };
         wallpapers-dir = enabled;
       };
-      services.syncthing = enabled;
     };
+    services.syncthing = enabled;
     home.stateVersion = "24.05";
   };
 }
