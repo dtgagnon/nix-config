@@ -1,19 +1,20 @@
 { lib
+, host
 , config
 , namespace
 , ...
 }:
 let
-  inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib) mkIf mkMerge types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt snowfallHostUserList;
   cfg = config.${namespace}.system.preservation;
 
-  username = config.${namespace}.user.name;
+  users = snowfallHostUserList host;
 in
 {
   options.${namespace}.system.preservation = {
     enable = mkBoolOpt false "Enable the preservation impermanence framework";
-    extra = {
+    extraUser = {
       user = mkOpt types.str "" "Declare additional users";
       homeDirs = mkOpt (types.listOf types.str) [ ] "Declare extra user home directories to persist";
       homeFiles = mkOpt (types.listOf types.str) [ ] "Declare extra user home files to persist";
@@ -61,42 +62,87 @@ in
         ] ++ cfg.extraSysFiles;
 
         # preserve user-specific files, implies ownership
-        users = {
-          ${username} = {
-            directories = [
-              { directory = ".ssh"; mode = "0700"; }
-              "Apps"
-              "nix-config"
-              ".config/github-copilot"
-              ".config/obsidian"
-              ".config/syncthing"
-              ".config/VSCodium"
-              ".local/share/direnv"
-              ".local/share/zoxide"
-              ".local/state/nix"
-              ".local/state/nvim"
-              ".local/state/syncthing"
-              ".local/state/wireplumber"
-              ".codeium"
-              ".mozilla"
-              ".zen"
-            ] ++ cfg.extraHomeDirs;
-            files = [
-              ".histfile"
-            ] ++ cfg.extraHomeFiles;
-          };
-          ${cfg.extraUser} = {
-            directories = [ ] ++ cfg.extraUser.homeDirs;
-            files = [ ] ++ cfg.extraUser.homeFiles;
-          };
-          root = {
-            # specify user home when it is not `/home/${user}`
-            home = "/root";
-            directories = [
-              { directory = ".ssh"; mode = "0700"; }
-            ];
-          };
-        };
+        users = mkMerge [
+          # Persisting directories and files to apply to all users.
+          (builtins.foldl' lib.recursiveUpdate { }
+            (map
+              (user: {
+                ${user} = {
+                  directories = [
+                    { directory = ".ssh"; mode = "0700"; }
+                    "Apps"
+                    ".config/syncthing"
+                    ".local/state/nix"
+                    ".local/state/nvim"
+                    ".local/state/syncthing"
+                    ".local/state/wireplumber"
+                    ".mozilla"
+                    ".zen"
+                  ] ++ cfg.extraHomeDirs;
+                  files = [
+                    ".histfile"
+                  ] ++ cfg.extraHomeFiles;
+                };
+              })
+              (snowfallHostUserList host)
+            )
+          )
+
+          # Additional persisting directories and files to be defined for each user.
+          {
+            admin = {
+              directories = [
+                "Apps"
+                "nix-config"
+                ".config/github-copilot"
+                ".config/obsidian"
+                ".config/syncthing"
+                ".config/VSCodium"
+                ".local/share/direnv"
+                ".local/share/zoxide"
+                ".local/state/nix"
+                ".local/state/nvim"
+                ".local/state/syncthing"
+                ".local/state/wireplumber"
+                ".codeium"
+                ".mozilla"
+                ".zen"
+              ] ++ cfg.extraHomeDirs;
+              files = [ ] ++ cfg.extraHomeFiles;
+            };
+            dtgagnon = {
+              directories = [
+                "Apps"
+                "nix-config"
+                ".config/github-copilot"
+                ".config/obsidian"
+                ".config/syncthing"
+                ".config/VSCodium"
+                ".local/share/direnv"
+                ".local/share/zoxide"
+                ".local/state/nix"
+                ".local/state/nvim"
+                ".local/state/syncthing"
+                ".local/state/wireplumber"
+                ".codeium"
+                ".mozilla"
+                ".zen"
+              ] ++ cfg.extraHomeDirs;
+              files = [ ] ++ cfg.extraHomeFiles;
+            };
+            root = {
+              # specify user home when it is not `/home/${user}`
+              home = "/root";
+              directories = [
+                { directory = ".ssh"; mode = "0700"; }
+              ];
+            };
+            ${cfg.extraUser.user} = {
+              directories = [ ] ++ cfg.extraUser.homeDirs;
+              files = [ ] ++ cfg.extraUser.homeFiles;
+            };
+          }
+        ];
       };
     };
 
@@ -113,11 +159,17 @@ in
     # Note that immediate parent directories of persisted files can also be
     # configured with ownership and permissions from the `parent` settings if
     # `configureParent = true` is set for the file.
-    systemd.tmpfiles.settings.preservation = {
-      "/home/${username}/.config".d = { user = "${username}"; group = "users"; mode = "0755"; };
-      "/home/${username}/.local".d = { user = "${username}"; group = "users"; mode = "0755"; };
-      "/home/${username}/.local/share".d = { user = "${username}"; group = "users"; mode = "0755"; };
-      "/home/${username}/.local/state".d = { user = "${username}"; group = "users"; mode = "0755"; };
-    };
+    systemd.tmpfiles.settings.preservation =
+      (builtins.foldl' lib.recursiveUpdate { }
+        (map
+          (username: {
+            "/home/${username}/.config".d = { user = "${username}"; group = "users"; mode = "0755"; };
+            "/home/${username}/.local".d = { user = "${username}"; group = "users"; mode = "0755"; };
+            "/home/${username}/.local/share".d = { user = "${username}"; group = "users"; mode = "0755"; };
+            "/home/${username}/.local/state".d = { user = "${username}"; group = "users"; mode = "0755"; };
+          })
+          (snowfallHostUserList host)
+        )
+      );
   };
 }

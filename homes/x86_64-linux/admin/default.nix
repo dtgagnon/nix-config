@@ -12,7 +12,7 @@ in
 {
   spirenix = {
     user = {
-      name = "admin";
+      name = "dtgagnon";
       fullName = "";
       email = "gagnon.derek@gmail.com";
     };
@@ -26,7 +26,6 @@ in
       bat = enabled;
       # direnv = enabled;
       eza = enabled;
-      fastfetch = enabled;
       fzf = enabled;
       git = enabled;
       neovim = enabled;
