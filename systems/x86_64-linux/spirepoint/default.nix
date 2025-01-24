@@ -40,6 +40,7 @@ in
       fonts = enabled;
       gnome = enabled;
       stylix = enabled;
+      wallpapers = enabled;
     };
 
     hardware = {
@@ -53,10 +54,10 @@ in
       sops-nix = enabled;
     };
 
-		services = {
+    services = {
       jellyfin = enabled;
-			plane-nix = enabled;
-		};
+      plane-nix = enabled;
+    };
 
     system = {
       enable = true;

@@ -30,6 +30,7 @@ in
       fonts = enabled;
       hyprland = enabled;
       stylix = enabled;
+      wallpapers = enabled;
     };
 
     hardware = {

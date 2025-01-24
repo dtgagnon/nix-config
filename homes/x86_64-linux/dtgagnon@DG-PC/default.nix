@@ -78,7 +78,6 @@ in
         enable = true;
         polarity = "dark";
       };
-      styling.wallpapers = enabled;
     };
     services.syncthing = enabled;
   };

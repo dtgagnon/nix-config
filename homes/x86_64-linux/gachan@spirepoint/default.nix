@@ -57,7 +57,6 @@ in
         enable = true;
         polarity = "either";
       };
-      styling.wallpapers = enabled;
     };
   };
   home.stateVersion = "24.11";

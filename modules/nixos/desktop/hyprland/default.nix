@@ -33,6 +33,6 @@ in
       xdg-portal = enabled;
     };
 
-    environment.systemPackages = pkgs.kitty; #default for when no home configuration has been established
+    environment.systemPackages = [ pkgs.kitty ]; #default for when no home configuration has been established
   };
 }
