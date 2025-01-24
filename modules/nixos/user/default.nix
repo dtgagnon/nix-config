@@ -81,8 +81,7 @@ in
             # Add more generic user secrets here..
           };
         })
-        snowfallUserList))
-    # gotta add ++ cfg.extraUsers to whatever list of users I end up with that gets pulled from snowfall-lib doing it's thing.
+        snowfallUserList ++ cfg.extraUsers))
 
     {
       home-manager = {
