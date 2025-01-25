@@ -79,11 +79,11 @@ build-host HOST:
 
 # Update all keys in sops/*.yaml files in nix-secrets to match the creation rules keys
 rekey:
-  cd ../nix-secrets && for file in $(ls *.yaml); do \
+  cd ../nix-secrets && for file in $(ls ./*.yaml); do \
     sops updatekeys -y $file; \
   done && \
     (pre-commit run --all-files || true) && \
-    git add -u && (git commit -nm "chore: rekey" || true) && git push
+    git add -u && (git commit -m "chore: rekey" || true) && git push
 
 # Update an age key anchor or add a new one
 update-age-key FIELD KEYNAME KEY:
