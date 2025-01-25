@@ -23,7 +23,6 @@
               content = {
                 type = "luks";
                 name = "root-crypt";
-                askPassword = true;
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 # extraOpenArgs = [ ];
                 settings = {
@@ -50,7 +49,6 @@
               content = {
                 type = "luks";
                 name = "data-crypt";
-                askPassword = true;
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 settings = {
                   allowDiscards = true;
@@ -79,7 +77,6 @@
               content = {
                 type = "luks";
                 name = "bak-crypt";
-                askPassword = true;
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 settings = {
                   allowDiscards = true;
