@@ -1,1 +1,1 @@
-../slim/disk-config.nix
+../spirepoint/disk-config.nix

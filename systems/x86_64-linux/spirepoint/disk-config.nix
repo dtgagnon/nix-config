@@ -39,9 +39,9 @@
           };
         };
       };
-      storage-hdd1 = {
+      srv-hdd1 = {
         type = "disk";
-        device = "/dev/disk/by-id/ata-Hitachi_HDS721010CLA632_JP2940J82WE5TV";
+        device = "/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV2KBYD";
         content = {
           type = "gpt";
           partitions = {
@@ -49,7 +49,7 @@
               size = "100%";
               content = {
                 type = "luks";
-                name = "data-crypt";
+                name = "srv-crypt";
                 askPassword = true;
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 settings = {
@@ -61,7 +61,7 @@
                 initrdUnlock = true;
                 content = {
                   type = "lvm_pv";
-                  vg = "data-pool";
+                  vg = "srv-pool";
                 };
               };
             };
@@ -96,14 +96,14 @@
           };
         };
       };
-      data-pool = {
+      srv-pool = {
         type = "lvm_vg";
         lvs = {
           srv = {
             size = "100%";
             content = {
               type = "btrfs";
-              extraArgs = [ "-L" "services" "-f" ];
+              extraArgs = [ "-L" "server" "-f" ];
               subvolumes = {
                 "/srv" = { mountpoint = "/srv"; mountOptions = [ "subvol=srv" "compress=zstd" "noatime" ]; };
               };

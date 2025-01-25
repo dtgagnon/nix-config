@@ -1,1 +1,1 @@
-../slim/hardware.nix
+../spirepoint/hardware.nix
