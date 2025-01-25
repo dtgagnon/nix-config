@@ -225,7 +225,7 @@ function nixos_anywhere() {
 	green "Adding $target_destination's ssh host fingerprint to ~/.ssh/known_hosts"
 	ssh-keyscan -p "$ssh_port" "$target_destination" 2>/dev/null | grep -v '^#' >>~/.ssh/known_hosts || true
 
-	$ssh_root_cmd "chown $target_user:users /home/$target_user/.ssh && chmod 700 /home/$target_user/.ssh"
+	$ssh_root_cmd "mkdir -p /home/$target_user/.ssh && chown $target_user:users /home/$target_user/.ssh && chmod 700 /home/$target_user/.ssh"
 
 	if [ -n "$persist_dir" ]; then
 		$ssh_root_cmd "cp /etc/machine-id $persist_dir/etc/machine-id || true"
@@ -292,7 +292,7 @@ function generate_user_age_key() {
 
 	# FIXME:(starter-repo) remove old secrets.yaml line once starter repo is completed
 	secret_file="${git_root}"/../nix-secrets/secrets.yaml
-	#	secret_file="${git_root}"/../nix-secrets/sops/${target_hostname}.yaml
+	#	secret_file="${git_root}"/../nix-secrets/${target_hostname}.yaml
 
 	if [ ! -f "$secret_file" ]; then
 		red "Secret file does not exist. Exiting."
@@ -381,7 +381,7 @@ if yes_or_no "Do you want to copy your full nix-config and nix-secrets to $targe
 		green "Rebuilding nix-config on $target_hostname"
 		$ssh_cmd -oForwardAgent=yes "cd nixos && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
 		#FIXME:(bootstrap) This fails because `just rebuild` tries to run `nix flake update nix-secrets` but the flake registry doesn't exist yet
-		#$ssh_cmd -oForwardAgent=yes "cd nix-config && just rebuild"
+		#$ssh_cmd -oForwardAgent=yes "cd nixos && just rebuild"
 	fi
 else
 	echo
@@ -390,7 +390,7 @@ else
 	echo "To copy nix-config from this machine to the $target_hostname, run the following command"
 	echo "just sync $target_user $target_destination"
 	echo "To rebuild, sign into $target_hostname and run the following command"
-	echo "cd nix-config"
+	echo "cd nixos"
 	# FIXME:(bootstrap) see above FIXME
 	echo "sudo nixos-rebuild --show-trace --flake .#$target_hostname switch"
 	# echo "just rebuild"
