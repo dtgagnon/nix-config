@@ -68,7 +68,7 @@
       };
       data-hdd2-bak = {
         type = "disk";
-        device = "/dev/disk/by-id/";
+        device = "/dev/disk/by-id/ata-WDC_WD2500JD-98HBC0_WD-WCAL74932597";
         content = {
           type = "gpt";
           partitions = {
