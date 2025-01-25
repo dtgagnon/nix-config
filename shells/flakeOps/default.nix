@@ -3,7 +3,7 @@
 , ...
 }:
 mkShell {
-  NIX_CONFIG = "extra-experimental-features = nix-command flakes";
+  NIX_CONFIG = "extra-experimental-features = nix-command flakes pipe-operators";
 
   nativeBuildInputs = builtins.attrValues {
     inherit (pkgs)
@@ -19,4 +19,8 @@ mkShell {
       sops
       ;
   };
+  shellHook = ''
+    		export PATH=$PATH:$PATH
+    		export OTHER_VAR=''${OTHER_VAR:-$OTHER_VAR}
+    	'';
 }

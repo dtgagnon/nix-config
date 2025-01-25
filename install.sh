@@ -202,10 +202,10 @@ function nixos_anywhere() {
 	if no_or_yes "Manually set luks encryption passphrase? (Default: \"$temp_luks_passphrase\")"; then
 		blue "Enter your luks encryption passphrase:"
 		read -rs luks_passphrase
-		$ssh_root_cmd "/bin/sh -c 'echo $luks_passphrase > /tmp/disko-password'"
+		$ssh_root_cmd "/bin/sh -c 'echo $luks_passphrase >| /tmp/disko-password'"
 	else
 		green "Using '$temp_luks_passphrase' as the luks encryption passphrase. Change after installation."
-		$ssh_root_cmd "/bin/sh -c 'echo $temp_luks_passphrase > /tmp/disko-password'"
+		$ssh_root_cmd "/bin/sh -c 'echo $temp_luks_passphrase >| /tmp/disko-password'"
 	fi
 
 	# If you are rebuilding a machine without any hardware changes, this is likely unneeded or even possibly disruptive
