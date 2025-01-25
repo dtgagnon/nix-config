@@ -79,7 +79,7 @@ build-host HOST:
 
 # Update all keys in sops/*.yaml files in nix-secrets to match the creation rules keys
 rekey:
-  cd ../nix-secrets && for file in $(ls ./*.yaml); do \
+  cd ../nix-secrets && for file in $(ls *.yaml); do \
     sops updatekeys -y $file; \
   done && \
     (pre-commit run --all-files || true) && \
