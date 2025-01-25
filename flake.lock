@@ -2041,11 +2041,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1737759675,
-        "narHash": "sha256-XNo3lDTNCxX1RTQey1e2rIfPx9bJvSwWSw/ITBBdH1U=",
+        "lastModified": 1737810605,
+        "narHash": "sha256-RVR/hlioLRKIL24jEMp6+fdYZD1gdt3odkcP7Q/sNKA=",
         "ref": "refs/heads/main",
-        "rev": "8a1ae20aa7ad2bbeaf2a724b6cb8f55052ad8bb9",
-        "revCount": 21,
+        "rev": "9eb02723fe54795400b937365cadd91f49db73e3",
+        "revCount": 22,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },

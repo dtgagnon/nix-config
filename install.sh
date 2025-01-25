@@ -372,14 +372,14 @@ if yes_or_no "Do you want to copy your full nix-config and nix-secrets to $targe
 	green "Adding ssh host fingerprint at $target_destination to ~/.ssh/known_hosts"
 	ssh-keyscan -p "$ssh_port" "$target_destination" 2>/dev/null | grep -v '^#' >>~/.ssh/known_hosts || true
 	green "Copying full nix-config to $target_hostname"
-	sync "$target_user" "${git_root}"/../nix-config
+	sync "$target_user" "${git_root}"/../nixos
 	green "Copying full nix-secrets to $target_hostname"
 	sync "$target_user" "${git_root}"/../nix-secrets
 
 	# FIXME: Add some sort of key access from the target to download the config (if it's a cloud system)
 	if yes_or_no "Do you want to rebuild immediately? (requires yubikey-agent)"; then
 		green "Rebuilding nix-config on $target_hostname"
-		$ssh_cmd -oForwardAgent=yes "cd nix-config && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
+		$ssh_cmd -oForwardAgent=yes "cd nixos && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
 		#FIXME:(bootstrap) This fails because `just rebuild` tries to run `nix flake update nix-secrets` but the flake registry doesn't exist yet
 		#$ssh_cmd -oForwardAgent=yes "cd nix-config && just rebuild"
 	fi
