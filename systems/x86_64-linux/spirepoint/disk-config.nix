@@ -39,7 +39,7 @@
           };
         };
       };
-      srv-hdd1 = {
+      data-hdd1 = {
         type = "disk";
         device = "/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV2KBYD";
         content = {
@@ -49,7 +49,7 @@
               size = "100%";
               content = {
                 type = "luks";
-                name = "srv-crypt";
+                name = "data-crypt";
                 askPassword = true;
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 settings = {
@@ -61,7 +61,36 @@
                 initrdUnlock = true;
                 content = {
                   type = "lvm_pv";
-                  vg = "srv-pool";
+                  vg = "data-pool";
+                };
+              };
+            };
+          };
+        };
+      };
+      data-hdd2-bak = {
+        type = "disk";
+        device = "/dev/disk/by-id/";
+        content = {
+          type = "gpt";
+          partitions = {
+            luks = {
+              size = "100%";
+              content = {
+                type = "luks";
+                name = "bak-crypt";
+                askPassword = true;
+                passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
+                settings = {
+                  allowDiscards = true;
+                };
+                # Whether to add a boot.initrd.luks.devices entry for the this disk.
+                # We only want to unlock cryptroot interactively.
+                # You must have a /etc/crypttab entry set up to auto unlock the drive using a key on cryptroot (see /hosts/nixos/ghost/default.nix)
+                initrdUnlock = true;
+                content = {
+                  type = "lvm_pv";
+                  vg = "backup-pool";
                 };
               };
             };
@@ -88,15 +117,9 @@
               };
             };
           };
-          swap = {
-            size = "16GB";
-            content = {
-              type = "swap";
-            };
-          };
         };
       };
-      srv-pool = {
+      data-pool = {
         type = "lvm_vg";
         lvs = {
           srv = {
@@ -106,6 +129,21 @@
               extraArgs = [ "-L" "server" "-f" ];
               subvolumes = {
                 "/srv" = { mountpoint = "/srv"; mountOptions = [ "subvol=srv" "compress=zstd" "noatime" ]; };
+              };
+            };
+          };
+        };
+      };
+      backup-pool = {
+        type = "lvm_vg";
+        lvs = {
+          bak = {
+            size = "100%";
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-L" "backups" "-f" ];
+              subvolumes = {
+                "/bak" = { mountpoint = "/bak"; mountOptions = [ "subvol=bak" "compress=zstd" "noatime" ]; };
               };
             };
           };
