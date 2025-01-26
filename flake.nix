@@ -28,7 +28,7 @@
         };
 
         alias = {
-          shells.default = "flakeOps";
+          shells.default = "installer";
         };
 
         overlays = with inputs; [
