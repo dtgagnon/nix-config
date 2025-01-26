@@ -11,6 +11,12 @@ in
 
   # TODO: I have no idea what the below settings actually do, so I need to read up on that before enabling all this stuff.
   config = mkIf cfg.enable {
+    security.pam = {
+      rssh.enable = true;
+      services.sudo = {
+        rssh = true;
+      };
+    };
     # rules.auth.rssh = {
     #   order = config.rules.auth.ssh_agent_auth.order - 1;
     #   control = "sufficient";

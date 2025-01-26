@@ -1,5 +1,4 @@
 { lib
-, host
 , namespace
 , ...
 }:
@@ -11,11 +10,6 @@ in
     ./disk-config.nix
     ./hardware.nix
   ];
-
-  networking = {
-    hostName = host;
-    useDHCP = lib.mkDefault true;
-  };
 
   spirenix = {
     suites.networking = enabled;
@@ -35,6 +29,7 @@ in
     };
 
     security = {
+      pam = enabled;
       sudo = enabled;
       sops-nix = enabled;
     };
@@ -50,16 +45,28 @@ in
     };
   };
 
+  users.users.root = {
+    password = "1";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 user=dtgagnon"
+    ];
+  };
+
+  fileSystems."/boot".options = [ "umask=0077" ];
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
         enable = true;
-        configurationLimit = 10;
+        configurationLimit = lib.mkDefault 3;
+        consoleMode = lib.mkDefault "max";
         editor = false;
       };
     };
     initrd = {
+      systemd.enable = true;
+      systemd.emergencyAccess = true;
+      luks.forceLuksSupportInInitrd = true;
       availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
       kernelModules = [ "dm-snapshot" ];
     };

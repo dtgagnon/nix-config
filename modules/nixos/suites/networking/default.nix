@@ -1,9 +1,9 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, host
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -20,6 +20,12 @@ in
       wget
       curl
     ];
+
+    networking = {
+      hostName = host;
+      networkmanager.enable = true;
+      useDHCP = lib.mkDefault true;
+    };
 
     spirenix = {
       security.vpn = enabled;
