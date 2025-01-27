@@ -1,6 +1,4 @@
 { lib
-, pkgs
-, host
 , config
 , namespace
 , ...
@@ -14,7 +12,6 @@ in
     ./disk-config.nix
   ];
 
-  networking.hostName = host;
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = lib.mkForce false;
