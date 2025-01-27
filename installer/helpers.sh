@@ -108,10 +108,11 @@ function sops_add_host_creation_rules() {
 	w="\"$(whoami)_$(hostname)\"" # quoted whoami_hostname for yaml
 	n="\"$(hostname)\""           # quoted hostname for yaml
 
-	host_selector=".creation_rules[] | select(.path_regex | contains(\"${host}\.yaml\"))"
+	# host_selector=".creation_rules[] | select(.path_regex | contains(\"${host}\.yaml\"))"
+	host_selector=".creation_rules[] | select(.path_regex | contains(\".yaml\"))"
 	if [[ -z $(yq "$host_selector" "${SOPS_FILE}") ]]; then
 		green "Adding new host file creation rule"
-		yq -i ".creation_rules += {\"path_regex\": \"${host}\\.yaml$\", \"key_groups\": [{\"age\": [$u, $h]}]}" "$SOPS_FILE"
+		yq -i ".creation_rules += {\"path_regex\": \".yaml$\", \"key_groups\": [{\"age\": [$u, $h]}]}" "$SOPS_FILE"
 		# Add aliases one by one
 		yq -i "($host_selector).key_groups[].age[0] alias = $u" "$SOPS_FILE"
 		yq -i "($host_selector).key_groups[].age[1] alias = $h" "$SOPS_FILE"
