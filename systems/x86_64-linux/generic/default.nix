@@ -59,6 +59,7 @@
     pkgs.curl
     pkgs.gitMinimal
     pkgs.vim
+    pkgs.neovim
     pkgs.age
     pkgs.sops
     pkgs.rsync
