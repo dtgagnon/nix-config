@@ -13,12 +13,11 @@ in
   ];
 
   hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = lib.mkForce false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    modesetting.enable = lib.mkForce true;
+    powerManagement.enable = lib.mkForce true;
+    powerManagement.finegrained = lib.mkForce false;
+    open = lib.mkForce false;
+    package = lib.mkForce config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   spirenix = {
@@ -50,10 +49,10 @@ in
       sops-nix = enabled;
     };
 
-    services = {
-      jellyfin = enabled;
-      plane-nix = enabled;
-    };
+    # services = {
+    #   jellyfin = enabled;
+    #   plane-nix = enabled;
+    # };
 
     system = {
       enable = true;
