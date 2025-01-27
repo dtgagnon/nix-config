@@ -52,6 +52,11 @@ in
     ];
   };
 
+  services.openssh = {
+    settings.PermitRootLogin = lib.mkForce "yes";
+    authorizedKeysFiles = lib.mkForce [ "/persist/etc/ssh/authorized_keys.d/%u" ];
+  };
+
   fileSystems."/boot".options = [ "umask=0077" ];
   boot = {
     loader = {

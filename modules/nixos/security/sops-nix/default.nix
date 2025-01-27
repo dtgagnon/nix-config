@@ -1,4 +1,5 @@
 { lib
+, host
 , pkgs
 , inputs
 , config
@@ -20,7 +21,7 @@ in
     environment.systemPackages = [ pkgs.sops ];
 
     sops = {
-      defaultSopsFile = "${secretsPath}/secrets.yaml";
+      defaultSopsFile = "${secretsPath}/sops/${host}.yaml";
       validateSopsFiles = false;
 
       age = {
