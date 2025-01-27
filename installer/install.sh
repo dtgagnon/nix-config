@@ -159,7 +159,7 @@ function nixos_anywhere() {
 	###
 	# nixos-anywhere installation - Core NixOS installation process
 	###
-	cd nixos-installer
+	cd installer
 	# Set temporary LUKS passphrase for disko (will be updated later).
 	temp_luks_passphrase="passphrase"
 	if no_or_yes "Manually set luks encryption passphrase? (Default: \"$temp_luks_passphrase\")"; then
