@@ -219,8 +219,8 @@ function generate_user_age_key() {
 
 function generate_user_age_key_and_file() {
 	# FIXME(starter-repo): remove old secrets.yaml line once starter repo is completed
-	#secret_file="${git_root}"/../nix-secrets/secrets.yaml
-	secret_file="${git_root}"/../nix-secrets/sops/${target_hostname}.yaml
+	secret_file="${git_root}"/../nix-secrets/secrets.yaml
+	# secret_file="${git_root}"/../nix-secrets/sops/${target_hostname}.yaml
 	config="${git_root}"/../nix-secrets/.sops.yaml
 	# If the secret file doesn't exist, it means we're generating a new user key as well
 	if [ ! -f "$secret_file" ]; then
@@ -303,14 +303,14 @@ if yes_or_no "Do you want to copy your full nix-config and nix-secrets to $targe
 	green "Adding ssh host fingerprint at $target_destination to ~/.ssh/known_hosts"
 	ssh-keyscan -p "$ssh_port" "$target_destination" 2>/dev/null | grep -v '^#' >>~/.ssh/known_hosts || true
 	green "Copying full nix-config to $target_hostname"
-	sync "$target_user" "${git_root}"/../nix-config
+	sync "$target_user" "${git_root}"/../nixos
 	green "Copying full nix-secrets to $target_hostname"
 	sync "$target_user" "${git_root}"/../nix-secrets
 
 	# FIXME(bootstrap): Add some sort of key access from the target to download the config (if it's a cloud system)
 	if yes_or_no "Do you want to rebuild immediately? (requires yubikey-agent)"; then
 		green "Rebuilding nix-config on $target_hostname"
-		$ssh_cmd "cd nix-config && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
+		$ssh_cmd "cd nixos && sudo nixos-rebuild --impure --show-trace --flake .#$target_hostname switch"
 	fi
 else
 	echo
@@ -319,7 +319,7 @@ else
 	echo "To copy nix-config from this machine to the $target_hostname, run the following command"
 	echo "just sync $target_user $target_destination"
 	echo "To rebuild, sign into $target_hostname and run the following command"
-	echo "cd nix-config"
+	echo "cd nixos"
 	echo "sudo nixos-rebuild --show-trace --flake .#$target_hostname switch"
 	echo
 fi
