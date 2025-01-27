@@ -143,7 +143,7 @@ function nixos_anywhere() {
 	###
 	# nixos-anywhere installation
 	###
-	cd nixos-installer
+	cd installer
 	# when using luks, disko expects a passphrase on /tmp/disko-password, so we set it for now and will update the passphrase later
 	temp_luks_passphrase="passphrase"
 	if no_or_yes "Manually set luks encryption passphrase? (Default: \"$temp_luks_passphrase\")"; then
