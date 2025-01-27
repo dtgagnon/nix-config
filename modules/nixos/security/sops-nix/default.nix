@@ -32,11 +32,10 @@ in
         generateKey = true;
       };
 
+      #NOTE Secrets will be output to /run/secrets.
       #NOTE See modules/nixos/users/default.nix for user secrets.
+      # v General secrets declarations. Most will/should be in their respective modules.
       secrets = {
-        #NOTE Secrets will be output to /run/secrets.
-        # General secrets declarations. Most will/should be in their respective modules.
-
         # "syncthing/webui-password" = { owner = "dtgagnon"; };
         # "syncthing/key" = { };
         tailscale-authKey = { };
