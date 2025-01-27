@@ -58,14 +58,7 @@ in
 
           # User security
           #NOTE: secrets which are needed for ALL created users are dynamically declared through the functions below. Any additional secrets that fit this criteria need to be added inside the function.
-          # sops.secrets."${cfg.name}-password".neededForUsers = true;
           sops.secrets = {
-            # (builtins.foldl' lib.recursiveUpdate { }
-            # 	(map
-            # 		(user: {
-
-            # Decrypts user's password from secrets.yaml to /run/secrets-for-users/ so it can be used to create users
-            # sops.secrets = {
             "${user}-password".neededForUsers = true;
 
             # SSH Key deposits
@@ -77,10 +70,9 @@ in
               owner = user;
               path = "/persist/home/${user}/.ssh/${user}-key.pub";
             };
-            # };
-
-            # Add more generic user secrets here..
           };
+
+          # Add more generic user secrets here..
         })
         (snowfallHostUserList host)
       )
