@@ -143,7 +143,7 @@ function nixos_anywhere() {
 	###
 	# nixos-anywhere installation
 	###
-	cd installer
+	cd nixos-installer
 	# when using luks, disko expects a passphrase on /tmp/disko-password, so we set it for now and will update the passphrase later
 	temp_luks_passphrase="passphrase"
 	if no_or_yes "Manually set luks encryption passphrase? (Default: \"$temp_luks_passphrase\")"; then
@@ -159,7 +159,7 @@ function nixos_anywhere() {
 	if no_or_yes "Generate a new hardware config for this host?\nSay yes only if you don't already have a local hardware-configuration.nix for the target host in your repo."; then
 		green "Generating hardware-configuration.nix on $target_hostname and adding it to the local nix-config."
 		$ssh_root_cmd "nixos-generate-config --no-filesystems --root /mnt"
-		$scp_cmd root@"$target_destination":/mnt/etc/nixos/hardware-configuration.nix "${git_root}"/hosts/nixos/"$target_hostname"/hardware-configuration.nix
+		$scp_cmd root@"$target_destination":/mnt/etc/nixos/hardware-configuration.nix "${git_root}"/hosts/nixos/"$target_hostname"/hardware.nix
 		generated_hardware_config=1
 	fi
 
@@ -219,8 +219,8 @@ function generate_user_age_key() {
 
 function generate_user_age_key_and_file() {
 	# FIXME(starter-repo): remove old secrets.yaml line once starter repo is completed
-	secret_file="${git_root}"/../nix-secrets/secrets.yaml
-	# secret_file="${git_root}"/../nix-secrets/sops/${target_hostname}.yaml
+	#secret_file="${git_root}"/../nix-secrets/secrets.yaml
+	secret_file="${git_root}"/../nix-secrets/sops/${target_hostname}.yaml
 	config="${git_root}"/../nix-secrets/.sops.yaml
 	# If the secret file doesn't exist, it means we're generating a new user key as well
 	if [ ! -f "$secret_file" ]; then
