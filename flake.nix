@@ -28,7 +28,7 @@
         };
 
         alias = {
-          shells.default = "installer";
+          shells.default = "flake";
         };
 
         overlays = with inputs; [
