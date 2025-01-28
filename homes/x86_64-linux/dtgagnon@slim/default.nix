@@ -7,8 +7,8 @@
 , ...
 }:
 let
-  inherit (lib.${namespace}) enabled mkRGBA;
-  inherit (config.lib.stylix) colors;
+  inherit (lib.${namespace}) enabled;
+  # inherit (config.lib.stylix) colors;
 in
 {
   spirenix = {
@@ -48,7 +48,6 @@ in
     };
 
     desktop = {
-      hyprland = enabled;
       styling.core = {
         enable = true;
         cursor = {
@@ -57,7 +56,7 @@ in
           size = 24;
         };
         theme = "catppuccin-frappe";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
+        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.skull-popcolor;
       };
       styling.stylix = {
         enable = true;

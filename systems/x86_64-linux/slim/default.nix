@@ -37,7 +37,7 @@ in
     suites.networking = enabled;
 
     desktop = {
-      hyprland = enabled;
+      gnome = enabled;
       fonts = enabled;
       stylix = enabled;
     };
