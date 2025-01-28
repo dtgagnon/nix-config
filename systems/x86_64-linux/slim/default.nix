@@ -67,5 +67,30 @@ in
     };
   };
 
+<<<<<<< HEAD
+=======
+  fileSystems."/boot".options = [ "umask=0077" ];
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = lib.mkDefault 3;
+        consoleMode = lib.mkDefault "max";
+        editor = false;
+      };
+    };
+    initrd = {
+      systemd.enable = true;
+      systemd.emergencyAccess = true;
+      luks.forceLuksSupportInInitrd = true;
+      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
+      kernelModules = [ "dm-snapshot" ];
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
+  };
+
+>>>>>>> 55cf08f (tweaking xdg-portals to get hyprland to not crash on slim)
   system.stateVersion = "24.11";
 }
