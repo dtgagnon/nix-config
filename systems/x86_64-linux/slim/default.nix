@@ -11,6 +11,28 @@ in
     ./hardware.nix
   ];
 
+  fileSystems."/boot".options = [ "umask=0077" ];
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = lib.mkDefault 3;
+        consoleMode = lib.mkDefault "max";
+        editor = false;
+      };
+    };
+    initrd = {
+      systemd.enable = true;
+      systemd.emergencyAccess = true;
+      luks.forceLuksSupportInInitrd = true;
+      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
+      kernelModules = [ "dm-snapshot" ];
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
+  };
+
   spirenix = {
     suites.networking = enabled;
 
@@ -43,40 +65,6 @@ in
       monitoring = enabled;
       nix-ld = enabled;
     };
-  };
-
-  users.users.root = {
-    password = "1";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 user=dtgagnon"
-    ];
-  };
-
-  services.openssh = {
-    settings.PermitRootLogin = lib.mkForce "yes";
-    authorizedKeysFiles = lib.mkForce [ "/persist/etc/ssh/authorized_keys.d/%u" ];
-  };
-
-  fileSystems."/boot".options = [ "umask=0077" ];
-  boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        enable = true;
-        configurationLimit = lib.mkDefault 3;
-        consoleMode = lib.mkDefault "max";
-        editor = false;
-      };
-    };
-    initrd = {
-      systemd.enable = true;
-      systemd.emergencyAccess = true;
-      luks.forceLuksSupportInInitrd = true;
-      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
-      kernelModules = [ "dm-snapshot" ];
-    };
-    kernelModules = [ "kvm-intel" ];
-    extraModulePackages = [ ];
   };
 
   system.stateVersion = "24.11";

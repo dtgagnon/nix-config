@@ -12,13 +12,6 @@ in
     ./disk-config.nix
   ];
 
-  hardware.nvidia = {
-    modesetting.enable = lib.mkForce true;
-    powerManagement.enable = lib.mkForce true;
-    powerManagement.finegrained = lib.mkForce false;
-    open = lib.mkForce false;
-    package = lib.mkForce config.boot.kernelPackages.nvidiaPackages.stable;
-  };
 
   fileSystems."/boot".options = [ "umask=0077" ];
   boot = {
@@ -48,6 +41,14 @@ in
     ];
   };
 
+  hardware.nvidia = {
+    modesetting.enable = lib.mkForce true;
+    powerManagement.enable = lib.mkForce true;
+    powerManagement.finegrained = lib.mkForce false;
+    open = lib.mkForce false;
+    package = lib.mkForce config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = lib.mkForce "yes";
@@ -64,7 +65,7 @@ in
   users.users.root = {
     password = "1";
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9zKXOt7YQW0NK0+GsUQh4cgmcLyurpeTzYXMYysUH1 user=dtgagnon"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAkkyCzK0fKyp0+gCR48AV3pq9XOggryd8dXS/7uobUi user=dtgagnon"
     ]; # Replace "KEY" with your public key
   };
 
@@ -93,6 +94,7 @@ in
     };
 
     security = {
+      pam = enabled;
       sudo = enabled;
       sops-nix = enabled;
     };
@@ -104,6 +106,7 @@ in
 
     system = {
       enable = true;
+      preservation = enabled;
     };
 
     tools = {

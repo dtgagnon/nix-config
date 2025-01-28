@@ -25,10 +25,8 @@
                 name = "root-crypt";
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
                 # extraOpenArgs = [ ];
-                settings = {
-                  #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  allowDiscards = true;
-                };
+                settings.allowDiscards = true;
+                initrdUnlock = true;
                 content = {
                   type = "lvm_pv";
                   vg = "root-pool";
@@ -50,13 +48,7 @@
                 type = "luks";
                 name = "data-crypt";
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
-                settings = {
-                  allowDiscards = true;
-                };
-                # Whether to add a boot.initrd.luks.devices entry for the this disk.
-                # We only want to unlock cryptroot interactively.
-                # You must have a /etc/crypttab entry set up to auto unlock the drive using a key on cryptroot (see /hosts/nixos/ghost/default.nix)
-                initrdUnlock = true;
+                settings.allowDiscards = true;
                 content = {
                   type = "lvm_pv";
                   vg = "data-pool";
@@ -78,13 +70,7 @@
                 type = "luks";
                 name = "bak-crypt";
                 passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
-                settings = {
-                  allowDiscards = true;
-                };
-                # Whether to add a boot.initrd.luks.devices entry for the this disk.
-                # We only want to unlock cryptroot interactively.
-                # You must have a /etc/crypttab entry set up to auto unlock the drive using a key on cryptroot (see /hosts/nixos/ghost/default.nix)
-                initrdUnlock = true;
+                settings.allowDiscards = true;
                 content = {
                   type = "lvm_pv";
                   vg = "backup-pool";
