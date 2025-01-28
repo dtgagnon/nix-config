@@ -1,11 +1,7 @@
-{
-  lib,
-  config,
-  pkgs,
-  host ? null,
-  format ? "unknown",
-  namespace,
-  ...
+{ lib
+, host ? null
+, namespace
+, ...
 }:
 let
   inherit (lib) types;
