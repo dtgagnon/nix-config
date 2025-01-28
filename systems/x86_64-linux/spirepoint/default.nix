@@ -99,10 +99,12 @@ in
       sops-nix = enabled;
     };
 
-    # services = {
-    #   jellyfin = enabled;
-    #   plane-nix = enabled;
-    # };
+    services = {
+      media = {
+        jellyfin = enabled;
+      };
+      plane-nix = enabled;
+    };
 
     system = {
       enable = true;
