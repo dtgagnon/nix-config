@@ -18,6 +18,7 @@ in
     };
 
     apps = {
+      discord = enabled;
       office.okular-pdf = enabled;
       terminals = {
         ghostty = {
