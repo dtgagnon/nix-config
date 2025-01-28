@@ -67,8 +67,6 @@ in
     };
   };
 
-<<<<<<< HEAD
-=======
   fileSystems."/boot".options = [ "umask=0077" ];
   boot = {
     loader = {
@@ -90,7 +88,5 @@ in
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
   };
-
->>>>>>> 55cf08f (tweaking xdg-portals to get hyprland to not crash on slim)
   system.stateVersion = "24.11";
 }
