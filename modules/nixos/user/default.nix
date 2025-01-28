@@ -14,7 +14,6 @@ in
 {
   options.${namespace}.user = with types; {
     name = mkOpt str "dtgagnon" "The name to use for the user account";
-    initialPassword = mkOpt str "n!xos" "The default password for the user account if sops fails to import";
     extraOptions = mkOpt attrs { } "Extra options passed to `users.users.<name>`";
 
     shell = mkOpt package pkgs.nushell "The user's default shell";
@@ -35,8 +34,7 @@ in
         (user: {
           users.users.${user} = {
             isNormalUser = true;
-            inherit (cfg) extraGroups initialPassword shell;
-            # password = "n!xos";
+            inherit (cfg) extraGroups shell;
             hashedPasswordFile = config.sops.secrets."${user}-password".path;
             home = "/home/${user}";
             group = "users";
