@@ -76,7 +76,7 @@ in
       hyprshot
       swappy
       ## monitor controls
-			ddcutil
+      ddcutil
       linuxKernel.packages.linux_6_6.ddcci-driver
       brightnessctl
 

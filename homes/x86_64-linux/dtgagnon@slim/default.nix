@@ -48,6 +48,7 @@ in
     };
 
     desktop = {
+      hyprland = enabled;
       styling.core = {
         enable = true;
         cursor = {
