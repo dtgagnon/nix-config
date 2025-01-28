@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce types;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.audio;
 in
@@ -31,6 +31,6 @@ in
 
     spirenix.user.extraGroups = [ "audio" ];
 
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio.enable = false;
   };
 }
