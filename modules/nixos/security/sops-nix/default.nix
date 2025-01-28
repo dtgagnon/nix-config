@@ -10,7 +10,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.security.sops-nix;
-  secretsPath = "/home/dtgagnon/nix-config/nix-secrets"; #builtins.toString inputs.nix-secrets;
+  secretsPath = builtins.toString inputs.nix-secrets;
 in
 {
   options.${namespace}.security.sops-nix = {
