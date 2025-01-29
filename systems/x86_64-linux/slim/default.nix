@@ -41,7 +41,7 @@ in
       fonts = enabled;
       stylix = {
         enable = true;
-        wallpaper = "skull-popcolor";
+        wallpaper = "catppuccin.skull-popcolor";
       };
     };
 
