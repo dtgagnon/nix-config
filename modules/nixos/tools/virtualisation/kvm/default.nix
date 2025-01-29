@@ -23,10 +23,14 @@ in
     boot = {
       kernelModules = [
         "kvm-${cfg.platform}"
+        "vfio"
         "vfio_virqfd"
         "vfio_pci"
         "vfio_iommu_type1"
-        "vfio"
+        "vhost"
+        "vhost_net"
+        "vhost_vsock"
+        "vhost_scsi"
       ];
       kernelParams = [
         "${cfg.platform}_iommu=on"
@@ -56,15 +60,34 @@ in
         enable = true;
         extraConfig = ''
           user = "${user.name}"
+          group = "qemu-libvirtd"
+
         '';
 
+        allowedBridges =  [ "virbr0" "br0" ];
         onBoot = "ignore";
         onShutdown = "shutdown";
 
         qemu = {
           package = pkgs.qemu_kvm;
-          ovmf = enabled;
+          runAsRoot = false;
+          ovmf = {
+            enable = true;
+            packages = [
+              # (pkgs.OVMF.override {
+              #   secureBoot = true;
+              #   tpmSupport = true;
+              # })
+              pkgs.OVMFFull.fd
+            ];
+          };
           swtpm = enabled;
+          verbatimConfig = ''
+            namespaces = []
+            user = "+${builtins.toString config.users.users.${user.name}.uid}"
+            group = "qemu-libvirtd"
+
+          '';
         };
       };
     };
