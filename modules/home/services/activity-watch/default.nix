@@ -67,7 +67,7 @@ in {
       # };
     };
 
-    home.systemPackages = with pkgs; [
+    home.packages = with pkgs; [
       aw-qt
     ];
   };
