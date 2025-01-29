@@ -11,7 +11,7 @@ let
   cfg = config.${namespace}.services.activity-watch;
 in {
   options.${namespace}.services.activity-watch = {
-    enable = mkBoolOpt false "Enable ActivityWatch service";
+    enable = mkBoolOpt false "Enable ActivityWatch service for the user";
   };
 
   config = mkIf cfg.enable {
@@ -70,12 +70,5 @@ in {
     environment.systemPackages = with pkgs; [
       aw-qt
     ];
-
-    # Add any additional configuration here, such as:
-    # - System service configuration
-    # - Required packages
-    # - File permissions
-    # - Port configurations
-    # - Dependencies
   };
 }

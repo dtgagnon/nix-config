@@ -1,8 +1,8 @@
 { lib
 , pkgs
 , config
-, osConfig ? { }
-, format ? "unknown"
+# , osConfig ? { }
+# , format ? "unknown"
 , namespace
 , ...
 }:
@@ -82,7 +82,12 @@ in
         wallpapers-dir = enabled;
       };
     };
-    services.syncthing = enabled;
+
+    services = {
+      activity-watch = enabled;
+      syncthing = enabled;
+    };
   };
+
   home.stateVersion = "24.05";
 }
