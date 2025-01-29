@@ -66,6 +66,7 @@ in
         #   settingsFilename = "config.toml";
         # };
         aw-watcher-window-wayland = mkIf config.wayland.windowManager.hyprland.enable {
+          package = pkgs.activitywatch;
           settings.poll_time = 1;
         };
       };
