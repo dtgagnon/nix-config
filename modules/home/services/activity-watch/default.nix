@@ -48,7 +48,9 @@ in
           package = pkgs.activitywatch;
         };
 
-        aw-watcher-input = { };
+        aw-watcher-input = {
+          package = pkgs.activitywatch;
+        };
 
         # name-of-watcher = {
         #   executable = "";
