@@ -5,14 +5,14 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types;
+  inherit (lib) mkIf types getAttrFromPath splitString;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.stylix;
 in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
-    wallpaper = mkOpt types.str "desaturated-grey-flowers" "Set the system-wide default wallpaper";
+    wallpaper = mkOpt (types.either types.str (types.attrsOf types.str)) "desaturated-grey-flowers" "Set the system-wide default wallpaper";
   };
 
   config = mkIf cfg.enable {
@@ -30,7 +30,7 @@ in
 
       polarity = "dark"; # "light" || "dark" || "either"
 
-      image = pkgs.spirenix.wallpapers.wallpapers.${cfg.wallpaper};
+      image = getAttrFromPath (splitString "." cfg.wallpaper) pkgs.spirenix.wallpapers.wallpapers;
 
       cursor = {
         package = pkgs.bibata-cursors;
