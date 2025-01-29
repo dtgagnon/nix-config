@@ -27,7 +27,7 @@ in
       gnome-text-editor
       cheese # webcam tool
       gnome-music
-      # gnome-terminal
+      gnome-terminal
       epiphany # web browser
       geary # email reader
       evince # document viewer

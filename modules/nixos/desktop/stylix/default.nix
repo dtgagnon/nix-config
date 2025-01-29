@@ -1,33 +1,27 @@
-{
-  lib,
-  pkgs,
-  config,
-  system,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.stylix;
 in
 {
   options.${namespace}.desktop.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
+    wallpaper = mkOpt types.str "desaturated-grey-flowers" "Set the system-wide default wallpaper";
   };
 
   config = mkIf cfg.enable {
-    # environment.systemPackages = [
-    #   pkgs.spirenix.wallpapers
-    #   pkgs.bibata-cursors
-    # ];
-
     # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
     stylix = {
       enable = true;
       homeManagerIntegration.followSystem = false;
 
-      targets.nixvim = { 
+      targets.nixvim = {
         enable = false;
         plugin = pkgs.base16-nvim;
         transparentBackground.main = true;
@@ -36,7 +30,7 @@ in
 
       polarity = "dark"; # "light" || "dark" || "either"
 
-      image = pkgs.spirenix.wallpapers.wallpapers.desaturated-grey-flowers;
+      image = pkgs.spirenix.wallpapers.wallpapers.${cfg.wallpaper};
 
       cursor = {
         package = pkgs.bibata-cursors;

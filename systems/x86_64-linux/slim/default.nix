@@ -39,7 +39,10 @@ in
     desktop = {
       gnome = enabled;
       fonts = enabled;
-      stylix = enabled;
+      stylix = {
+        enable = true;
+        wallpaper = "skull-popcolor";
+      };
     };
 
     hardware = {
