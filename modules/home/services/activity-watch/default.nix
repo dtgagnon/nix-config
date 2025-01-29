@@ -9,12 +9,14 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.services.activity-watch;
-in {
+in
+{
   options.${namespace}.services.activity-watch = {
     enable = mkBoolOpt false "Enable ActivityWatch service for the user";
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ pkgs.aw-qt ];
     services.activitywatch = {
       enable = true;
       package = pkgs.aw-server-rust;
@@ -25,50 +27,37 @@ in {
       #     aw-keywatcher = "${pkgs.aw-keywatcher}/share/aw-keywatcher/static";
       #   };
       # };
-      # watchers = {
-      #   <name> = {
-      #     executable = "";
-      #     extraOptions = [ "" ];
-      #     name = "";
-      #     package = pkgs.activitywatch;
-      #     settings = { # in TOML
-      #       poll_time = 2;
-      #       timeout = 300;
-      #     };
-      #     settingsFilename = "<name>.toml";
-      #   };
+      watchers = {
+        aw-watcher-afk = {
+          package = pkgs.activitywatch;
+          settings = {
+            timeout = 300;
+            poll_time = 2;
+          };
+        };
 
-      #   aw-watcher-afk = {
-      #     package = pkgs.activitywatch;
-      #     settings = {
-      #       timeout = 300;
-      #       poll_time = 2;
-      #     };
-      #   };
+        aw-watcher-windows = {
+          package = pkgs.activitywatch;
+          settings = {
+            poll_time = 1;
+            exclude_title = true;
+          };
+        };
 
-      #   aw-watcher-windows = {
-      #     package = pkgs.activitywatch;
-      #     settings = {
-      #       poll_time = 1;
-      #       exclude_title = true;
-      #     };
-      #   };
-
-      #   my-custom-watcher = {
-      #     package = pkgs.my-custom-watcher;
-      #     executable = "mcw";
-      #     settings = {
-      #       hello = "there";
-      #       enable_greetings = true;
-      #       poll_time = 5;
-      #     };
-      #     settingsFilename = "config.toml";
-      #   };
-      # };
+        # name-of-watcher = {
+        #   executable = "";
+        #   extraOptions = [ "" ];
+        #   name = "";
+        #   package = pkgs.activitywatch;
+        #   settings = {
+        #     # in TOML
+        #     enable_greetings = true;
+        #     poll_time = 2;
+        #     timeout = 300;
+        #   };
+        #   settingsFilename = "config.toml";
+        # };
+      };
     };
-
-    home.packages = with pkgs; [
-      aw-qt
-    ];
   };
 }
