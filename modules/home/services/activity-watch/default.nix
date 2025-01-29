@@ -65,6 +65,10 @@ in
         #   };
         #   settingsFilename = "config.toml";
         # };
+        aw-watcher-vscode = mkIf config.spirenix.apps.vscode.enable {
+          package = pkgs.activitywatch;
+          settings.poll_time = 2;
+        };
         aw-watcher-window-wayland = mkIf config.wayland.windowManager.hyprland.enable {
           package = pkgs.activitywatch;
           settings.poll_time = 1;
