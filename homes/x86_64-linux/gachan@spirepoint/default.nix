@@ -23,7 +23,7 @@ in
         ghostty = {
           enable = true;
           dark-theme = "catppuccin-frappe";
-          light-theme = "catppuccin-latte";
+          light-theme = "catppuccin-frappe";
         };
       };
       zen = enabled;
@@ -50,7 +50,7 @@ in
           name = "Bibata-Modern-Ice";
           size = 24;
         };
-        theme = "catppuccin-frappe";
+        theme = "brushtrees-dark";
         wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
       };
       styling.stylix = {

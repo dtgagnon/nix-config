@@ -49,26 +49,6 @@ in
     package = lib.mkForce config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = lib.mkForce "yes";
-    authorizedKeysFiles = lib.mkForce [ "/etc/ssh/authorized_keys.d/%u" ];
-  };
-
-  security.pam = {
-    rssh.enable = true;
-    services.sudo = {
-      rssh = true;
-    };
-  };
-
-  users.users.root = {
-    password = "1";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAkkyCzK0fKyp0+gCR48AV3pq9XOggryd8dXS/7uobUi user=dtgagnon"
-    ]; # Replace "KEY" with your public key
-  };
-
   spirenix = {
     suites = {
       gaming = enabled;
@@ -84,7 +64,10 @@ in
     desktop = {
       fonts = enabled;
       gnome = enabled;
-      stylix = enabled;
+      stylix = {
+        enable = true;
+        wallpaper = "oceanwaves-turqoise";
+      };
     };
 
     hardware = {
