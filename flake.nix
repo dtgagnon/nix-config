@@ -52,21 +52,15 @@
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
           NixVirt.nixosModules.default
-          proxmox-nixos.nixosModules.proxmox-ve
         ];
 
         systems.hosts.spirepoint.modules = with inputs; [
           plane-nix.nixosModules."services/plane"
+          proxmox-nixos.nixosModules.proxmox-ve
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
-        ];
-
-        # For nixos-anywhere deployments run command:
-        # nix run nixpkgs#nixos-anywhere -- --flake .#generic --generate-hardware-config nixos-generate-config ./systems/x86_64-linux/generic/hardware.nix <user@hostIP>
-        systems.hosts.generic.modules = with inputs; [
-          disko.nixosModules.disko
         ];
 
         homes.modules = with inputs; [

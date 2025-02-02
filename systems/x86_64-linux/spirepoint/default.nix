@@ -86,7 +86,12 @@ in
       media = {
         jellyfin = enabled;
       };
-      plane-nix = enabled;
+      project-mgmt.plane = {
+        enable = true;
+        database.local = true;
+        storage.local = true;
+        cache.local = true;
+      };
     };
 
     system = {

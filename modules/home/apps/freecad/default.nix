@@ -1,20 +1,23 @@
-{ 
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.freecad;
-in {
+in
+{
   options.${namespace}.apps.freecad = {
     enable = mkBoolOpt false "Enable FreeCAD";
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.freecad-wayland ];
+    home.packages = with pkgs; [
+			freecad-wayland
+			spacenavd
+		];
   };
 }
