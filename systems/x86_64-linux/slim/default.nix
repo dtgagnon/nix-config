@@ -59,6 +59,8 @@ in
       sops-nix = enabled;
     };
 
+    services = { };
+
     system.enable = true; # gneral system config
     system.preservation = enabled;
 
