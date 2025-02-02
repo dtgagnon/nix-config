@@ -25,11 +25,11 @@ let
     REDIS_URL = "redis://${cfg.cache.host}:${toString cfg.cache.port}";
 
     USE_MINIO = if cfg.storage.local then "1" else "0";
-    AWS_REGION = cfg.storage.region;
-    AWS_ACCESS_KEY_ID = cfg.storage.accessKey;
-    AWS_SECRET_ACCESS_KEY = cfg.storage.secretKey;
-    AWS_S3_ENDPOINT_URL = "${cfg.storage.protocol}://${cfg.storage.host}:${toString cfg.storage.port}";
-    AWS_S3_BUCKET_NAME = cfg.storage.bucket;
+    # AWS_REGION = cfg.storage.region;
+    # AWS_ACCESS_KEY_ID = cfg.storage.accessKey;
+    # AWS_SECRET_ACCESS_KEY = cfg.storage.secretKey;
+    # AWS_S3_ENDPOINT_URL = "${cfg.storage.protocol}://${cfg.storage.host}:${toString cfg.storage.port}";
+    # AWS_S3_BUCKET_NAME = cfg.storage.bucket;
 
     APP_BASE_URL = "${url}/api";
     ADMIN_BASE_URL = "${url}/admin";
@@ -49,10 +49,10 @@ in
     enable = mkBoolOpt false "Enable Plane project management platform service";
     package = mkOpt types.package pkgs.plane "The Plane package to use";
     domain = mkOpt types.str "" "The domain to use for hosting Plane";
-    user = lib.mkOpt types.str "plane" "The user to use for the Plane service";
+    user = mkOpt types.str "plane" "The user to use for the Plane service";
     group = mkOpt lib.types.str "plane" "The group to use for the Plane service";
     stateDir = mkOpt types.str "/var/lib/plane" "The state directory for the Plane service";
-    secretKey = lib.mkOption { type = lib.types.str; default = "CHANGEME"; description = "The secret key to use for the Plane service."; };
+    secretKey = mkOpt { type = lib.types.str; default = "CHANGEME"; description = "The secret key to use for the Plane service."; };
     web.port = mkOpt types.port 3101 "The port to use for the Plane web service";
     admin.port = mkOpt types.port 3102 "The port to use for the Plane admin service";
     api = {
