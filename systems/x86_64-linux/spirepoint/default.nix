@@ -66,7 +66,7 @@ in
       gnome = enabled;
       stylix = {
         enable = true;
-        wallpaper = "oceanwaves-turqoise";
+        wallpaper = "greens.oceanwaves-turqoise";
       };
     };
 
@@ -83,6 +83,12 @@ in
     };
 
     services = {
+      immich = {
+        enable = true;
+        mediaLocation = "/srv/immich";
+        secretsFile = config.sops.secrets.immich.path;
+        uploadLimit = "50mb";
+      };
       media = {
         jellyfin = enabled;
       };

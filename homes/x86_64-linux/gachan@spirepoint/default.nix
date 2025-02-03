@@ -51,7 +51,7 @@ in
           size = 24;
         };
         theme = "brushtrees-dark";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
+        wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turqoise;
       };
       styling.stylix = {
         enable = true;
