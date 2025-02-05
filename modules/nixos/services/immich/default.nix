@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , namespace
 , ...
@@ -7,28 +6,28 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.services.immich;
+  cfg = config.${namespace}.services.immich;
 in
 {
-  options.services.immich = {
+  options.${namespace}.services.immich = {
     enable = mkBoolOpt false "Enable the Immich media server";
     port = mkOpt types.port 2283 "Port on which Immich will listen";
     mediaLocation = mkOpt types.path "/var/lib/immich" "Directory where Immich stores its data";
     secretsFile = mkOpt (types.nullOr types.path) null "Environment file containing secrets for Immich";
     openFirewall = mkBoolOpt false "Open ports in the firewall for Immich";
     uploadLimit = mkOpt types.str "50mb" "Maximum upload size for media files";
-    machine-learning = mkBoolOpt true "Enable machine learning features";
+    ml = mkBoolOpt true "Enable machine learning features";
+    redis = mkBoolOpt true "Enable Redis for caching";
   };
 
   config = mkIf cfg.enable {
     services.immich = {
       enable = true;
-      # package = pkgs.immich;
-      inherit (cfg) 
+      inherit (cfg)
         mediaLocation
         port
         secretsFile
-      ;
+        ;
 
       user = "immich";
       group = "immich";
@@ -39,8 +38,8 @@ in
       };
 
       settings = {
-        server = ""; #Domain for publicly shared links, including http(s)://
-        newVersionCheck = false;
+        server.externalDomain = ""; #Domain for publicly shared links, including http(s)://
+        newVersionCheck.enabled = false;
       };
 
       database = {
@@ -53,7 +52,7 @@ in
       };
 
       machine-learning = {
-        enable = cfg.machine-learning;
+        enable = cfg.ml;
         # environment = {
         #   MACHINE_LEARNING_MODEL_TTL = "600";
         # };

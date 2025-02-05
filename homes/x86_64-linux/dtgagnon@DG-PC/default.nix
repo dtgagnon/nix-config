@@ -1,8 +1,8 @@
 { lib
 , pkgs
 , config
-# , osConfig ? { }
-# , format ? "unknown"
+  # , osConfig ? { }
+  # , format ? "unknown"
 , namespace
 , ...
 }:
@@ -54,6 +54,7 @@ in
     };
 
     desktop = {
+      addons.kde-connect = enabled;
       hyprland = {
         enable = true;
         monitors = [ "DP-5,3440x1440@144,0x0,1" ];

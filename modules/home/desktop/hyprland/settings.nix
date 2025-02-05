@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , ...
 }:
@@ -16,10 +15,9 @@ in
         "gnome-keyring-daemon --start --components=secrets"
         "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
         "nm-applet"
-        "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
         "swww init ; sleep 1; setwall"
         "playerctld daemon"
-      ];
+      ] ++ cfg.extraExec;
 
       monitor = cfg.monitors ++ [
         ",preferred,auto,1"

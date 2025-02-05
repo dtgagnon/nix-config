@@ -1,15 +1,15 @@
-{
-  stdenv,
-  lib,
-  fetchurl,
-  appimageTools,
-  makeWrapper,
-  electron,
+{ stdenv
+, lib
+, fetchurl
+, appimageTools
+, makeWrapper
+, electron
+,
 }:
 
 stdenv.mkDerivation rec {
   pname = "super-productivity";
-  version = "10.0.11";
+  version = "11.1.2";
 
   src = fetchurl {
     url = "https://github.com/johannesjo/super-productivity/releases/download/v${version}/superProductivity-${version}.AppImage";

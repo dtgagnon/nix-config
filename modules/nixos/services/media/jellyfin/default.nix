@@ -29,6 +29,8 @@ in
       jellyfin-ffmpeg
     ];
 
+    users.groups.media = { };
+
     #caddy reverse-proxy for jellyfin here something like spirenix.services.caddy.<option (port, origin, etc).
   };
 }

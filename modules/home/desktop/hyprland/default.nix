@@ -28,6 +28,7 @@ in
     extraSettings = mkOpt (types.attrsOf types.anything) { } "Additional settings to add to the Hyprland config";
     extraWinRules = mkOpt (types.attrsOf types.anything) { } "Window rules for Hyprland";
     extraAddons = mkOpt (types.attrsOf types.anything) { } "Additional addons to enable";
+    extraExec = mkOpt (types.listOf types.str) [ ] "Use for conditional exec-once additions in other modules";
   };
 
   config = mkIf cfg.enable {

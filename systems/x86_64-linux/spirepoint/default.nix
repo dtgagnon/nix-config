@@ -92,12 +92,12 @@ in
       media = {
         jellyfin = enabled;
       };
-      project-mgmt.plane = {
-        enable = true;
-        database.local = true;
-        storage.local = true;
-        cache.local = true;
-      };
+      # project-mgmt.plane = {
+      #   enable = true;
+      #   database.local = true;
+      #   storage.local = true;
+      #   cache.local = true;
+      # };
     };
 
     system = {

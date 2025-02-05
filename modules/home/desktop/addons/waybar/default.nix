@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -25,5 +24,7 @@ in
       hyprpanel
       ags
     ];
+
+    spirenix.desktop.hyprland.extraExec = [ "waybar" ];
   };
 }
