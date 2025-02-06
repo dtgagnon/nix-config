@@ -24,7 +24,5 @@ in
       hyprpanel
       ags
     ];
-
-    spirenix.desktop.hyprland.extraExec = [ "waybar" ];
   };
 }
