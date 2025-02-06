@@ -114,10 +114,6 @@ in
           "disk"
         ];
       };
-
-      apps = {
-        looking-glass-client = enabled;
-      };
     };
   };
 }
