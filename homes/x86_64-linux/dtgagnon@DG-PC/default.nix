@@ -75,7 +75,7 @@ in
             size = 24;
           };
           theme = "brushtrees-dark";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turquois;
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turquoise;
         };
         stylix = {
           enable = true;
