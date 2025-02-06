@@ -27,7 +27,7 @@ in
       terminals = {
         ghostty = {
           enable = true;
-          dark-theme = "catppuccin-frappe";
+          dark-theme = "Everforest Dark - Hard";
           light-theme = "catppuccin-latte";
         };
       };
@@ -74,8 +74,8 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          theme = "brushtrees-dark";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turquoise;
+          # theme = "everforest";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.leafwall-womansback;
         };
         stylix = {
           enable = true;
