@@ -44,15 +44,11 @@ in
       '';
     };
 
-    systemd.tmpfiles.rules = [
-      "f /dev/shm/looking-glass 0660 ${user.name} qemu-libvirtd -"
-      "f /dev/shm/scream 0660 ${user.name} qemu-libvirtd -"
-    ];
-
     environment.systemPackages = with pkgs; [
       virt-manager
       quickemu
       bridge-utils
+      virt-viewer
     ];
 
     virtualisation = {
@@ -64,7 +60,7 @@ in
 
         '';
 
-        allowedBridges =  [ "virbr0" "br0" ];
+        allowedBridges = [ "virbr0" "br0" ];
         onBoot = "ignore";
         onShutdown = "shutdown";
 
