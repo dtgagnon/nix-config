@@ -74,8 +74,8 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          theme = "catppuccin-frappe";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
+          theme = "brushtrees-dark";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turqois;
         };
         stylix = {
           enable = true;
