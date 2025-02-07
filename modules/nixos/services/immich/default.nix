@@ -53,9 +53,9 @@ in
 
       machine-learning = {
         enable = cfg.ml;
-        # environment = {
-        #   MACHINE_LEARNING_MODEL_TTL = "600";
-        # };
+        environment = {
+          MACHINE_LEARNING_MODEL_TTL = "600";
+        };
       };
 
       redis = {
