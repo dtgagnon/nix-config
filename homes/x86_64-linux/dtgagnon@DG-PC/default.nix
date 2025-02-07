@@ -28,7 +28,7 @@ in
         ghostty = {
           enable = true;
           dark-theme = "Everforest Dark - Hard";
-          light-theme = "catppuccin-latte";
+          light-theme = "Everforest Dark - Hard";
         };
       };
       thunderbird = enabled;
@@ -74,7 +74,7 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          # theme = "everforest";
+          theme = "everforest";
           wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.leafwall-womansback;
         };
         stylix = {
