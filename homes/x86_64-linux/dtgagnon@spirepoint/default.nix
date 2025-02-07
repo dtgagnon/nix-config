@@ -22,8 +22,8 @@ in
       terminals = {
         ghostty = {
           enable = true;
-          dark-theme = "catppuccin-frappe";
-          light-theme = "catppuccin-latte";
+          dark-theme = "Everforest Dark - Hard";
+          light-theme = "Everforest Dark - Hard";
         };
       };
       zen = enabled;
@@ -56,7 +56,7 @@ in
           size = 24;
         };
         theme = "catppuccin-frappe";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.flying-comets-clouds;
+        wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turquoise;
       };
       styling.stylix = {
         enable = true;
