@@ -86,8 +86,6 @@ in
       immich = {
         enable = true;
         mediaLocation = "/srv/immich";
-        secretsFile = config.sops.secrets.immich.path;
-        uploadLimit = "50mb";
       };
       media = {
         jellyfin = enabled;
