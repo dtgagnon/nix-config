@@ -51,7 +51,7 @@ in
 
         # preserve system files
         files = [
-          { file = "/etc/machine-id"; inInitrd = true; }
+          { file = "/etc/machine-id"; inInitrd = true; how = "symlink"; configureParent = true; }
           { file = "/etc/ssh/ssh_host_ed25519_key"; how = "symlink"; configureParent = true; }
           "/var/lib/usbguard/rules.conf"
 
