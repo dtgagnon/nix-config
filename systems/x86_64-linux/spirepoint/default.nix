@@ -66,7 +66,7 @@ in
       gnome = enabled;
       stylix = {
         enable = true;
-        wallpaper = "greens.oceanwaves-turqoise";
+        wallpaper = "greens.oceanwaves-turquoise";
       };
     };
 
