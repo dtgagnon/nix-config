@@ -19,7 +19,7 @@ in
   config = mkIf cfg.enable {
     services.jellyseer = {
       enable = true;
-      package = pkgs.jellyseer;
+      package = pkgs.jellyseerr;
 
       inherit (cfg) port configDir;
 
