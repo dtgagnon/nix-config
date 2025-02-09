@@ -16,7 +16,7 @@ in
     port = mkOpt types.int 2283 "Port on which Immich will listen";
     openFirewall = mkBoolOpt false "Open ports in the firewall for Immich";
 
-    mediaLocation = mkOpt types.path "/var/lib/immich" "Directory where Immich stores its data";
+    mediaLocation = mkOpt types.path "/srv/immich" "Directory where Immich stores its data";
     secretsFile = mkOpt (types.nullOr types.path) null "Environment file containing secrets for Immich";
 
     ml = mkBoolOpt true "Enable machine learning features";

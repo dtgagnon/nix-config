@@ -53,6 +53,7 @@ in
     suites = {
       gaming = enabled;
       networking = enabled;
+      self-host = enabled;
     };
 
     apps = {
@@ -80,29 +81,6 @@ in
       pam = enabled;
       sudo = enabled;
       sops-nix = enabled;
-    };
-
-    services = {
-      immich = {
-        enable = true;
-        mediaLocation = "/srv/immich";
-      };
-      media = {
-        audiobookshelf = enabled;
-        bazarr = enabled;
-        jellyfin = enabled;
-        lidarr = enabled;
-        prowlarr = enabled;
-        radarr = enabled;
-        readarr = enabled;
-        sonarr = enabled;
-      };
-      # project-mgmt.plane = {
-      #   enable = true;
-      #   database.local = true;
-      #   storage.local = true;
-      #   cache.local = true;
-      # };
     };
 
     system = {
