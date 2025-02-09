@@ -4,11 +4,11 @@
 , namespace
 , ...
 }:
-let 
+let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.media.jellyseerr;
-in 
+in
 {
   options.${namespace}.services.media.jellyseerr = {
     enable = mkBoolOpt false "Enable Jellyseerr service";
@@ -17,7 +17,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.jellyseer = {
+    services.jellyseerr = {
       enable = true;
       package = pkgs.jellyseerr;
 
