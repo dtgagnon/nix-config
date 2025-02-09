@@ -24,7 +24,9 @@
 
         channels-config = {
           allowUnfree = true;
-          permittedInsecurePackages = [ ];
+          permittedInsecurePackages = [
+            "dotnet-sdk-6.0.428"
+          ];
         };
 
         alias = {
