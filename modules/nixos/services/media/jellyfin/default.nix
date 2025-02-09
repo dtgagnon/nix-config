@@ -36,7 +36,7 @@ in
 
       #caddy reverse-proxy for jellyfin here something like spirenix.services.caddy.<option (port, origin, etc).
     }
-    mkIf (cfg.enable && cfg.jellyseerr) {
+    mkIf cfg.jellyseerr {
       services.jellyseer = {
         enable = true;
         package = pkgs.jellyseer;
