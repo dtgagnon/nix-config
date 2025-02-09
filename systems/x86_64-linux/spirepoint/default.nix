@@ -58,7 +58,7 @@ in
     apps = {
       proton = enabled;
       proton-cloud = enabled;
-      ea-games = enabled;
+      qbittorrent = enabled;
     };
 
     desktop = {
@@ -88,7 +88,14 @@ in
         mediaLocation = "/srv/immich";
       };
       media = {
+        audiobookshelf = enabled;
+        bazarr = enabled;
         jellyfin = enabled;
+        lidarr = enabled;
+        prowlarr = enabled;
+        radarr = enabled;
+        readarr = enabled;
+        sonarr = enabled;
       };
       # project-mgmt.plane = {
       #   enable = true;

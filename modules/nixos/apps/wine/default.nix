@@ -18,6 +18,7 @@ in
     environment.systemPackages = [
       pkgs.wine-wayland
       pkgs.winetricks
+      pkgs.geckodriver
     ];
   };
 }
