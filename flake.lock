@@ -1929,11 +1929,11 @@
     },
     "masterpkgs": {
       "locked": {
-        "lastModified": 1739138025,
-        "narHash": "sha256-M4ilIfGxzbBZuURokv24aqJTbdjPA9K+DtKUzrJaES4=",
+        "lastModified": 1739139028,
+        "narHash": "sha256-MwiPlsGUlXgwUZ0QDKY1JO4CG5cDBfX81c82Htl36l8=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b2243f41e860ac85c0b446eadc6930359b294e79",
+        "rev": "28dac497f768bc0f73bf5203ee8aacae4bf299cd",
         "type": "github"
       },
       "original": {
@@ -1975,11 +1975,11 @@
         "snowfall-lib": "snowfall-lib"
       },
       "locked": {
-        "lastModified": 1739138704,
-        "narHash": "sha256-pmnl+4kfWEBzKChYVt/4kPyIaPXo3LkYPGZMrPhal1A=",
+        "lastModified": 1739139636,
+        "narHash": "sha256-RgW4sdiGUpX2eH7gdCzzLsgU/Xsp/VevA4hHZuFfPps=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "89c3b671ccd6cb00783052679945871267f84d0e",
+        "rev": "8a1d5d18d565bd6ea314c29c435cbb3e1ea5c12f",
         "type": "github"
       },
       "original": {
