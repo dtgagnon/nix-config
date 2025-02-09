@@ -63,7 +63,7 @@ in
       redis = {
         enable = cfg.redis;
         host = "localhost";
-        port = 0; # Set to 0 to disable TCP
+        port = 6379; # Set to 0 to disable TCP
       };
     };
 
@@ -72,5 +72,7 @@ in
       group = "immich";
       mode = "0600";
     };
+
+    users.groups.immich = { };
   };
 }
