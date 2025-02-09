@@ -31,11 +31,10 @@ in
 
       user = "immich";
       group = "immich";
-      host = "100.100.1.2";
+      host = "0.0.0.0";
 
       environment = {
         IMMICH_LOG_LEVEL = "log";
-        IMMICH_HOST = "0.0.0.0";
         IMMICH_PORT = "2283";
       };
 
