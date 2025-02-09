@@ -34,7 +34,9 @@ in
       host = "localhost";
 
       environment = {
-        IMMICH_LOG_LEVEL = "info";
+        IMMICH_LOG_LEVEL = "log";
+        IMMICH_HOST = "0.0.0.0";
+        IMMICH_PORT = "2283";
       };
 
       settings = {

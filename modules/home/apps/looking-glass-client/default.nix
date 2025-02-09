@@ -26,13 +26,31 @@ in
         };
         win = {
           size = "1920x1080";
-          autoResive = "yes";
-          quickSpace = "yes";
+          autoResize = "yes";
+          borderless = "no";
+          don'tUpscale = "yes";
+          fullScreen = "no";
+          keepAspect = "yes";
+          maximize = "no";
+          noScreensaver = "yes";
+          quickSplash = "yes";
+          uiSize = 16; #huh? idk why
         };
         input = {
-          escapeKey = 56;
+          autoCapture = "yes";
+          escapeKey = "KEY_ESC";
+          grabKeyboardOnFocus = "yes";
           rawMouse = "yes";
-          mouseSens = 6;
+          releaseKeysOnFocusLoss = "yes";
+        };
+        spice = {
+          enable = "yes";
+          audio = true;
+          clipboard = "yes";
+        };
+        wayland = {
+          warpSupport = "yes";
+          fractionScaleudo = "no";
         };
       };
     };
