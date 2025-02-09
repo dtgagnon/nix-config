@@ -7,7 +7,8 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) enabled mkBoolOpt;
   cfg = config.${namespace}.suites.self-host;
-in {
+in
+{
   options.${namespace}.suites.self-host = {
     enable = mkBoolOpt false "Enable the self-hosted suite.";
   };
@@ -18,11 +19,9 @@ in {
       services = {
         immich = enabled;
         media = {
-          audiobookshelf.enable = true;
-          jellyfin = {
-            enable = true;
-            jellyseerr = true;
-          };
+          audiobookshelf = enabled;
+          jellyfin = enabled;
+          jellyseerr = enabled;
         };
       };
       suites.arr = enabled;
