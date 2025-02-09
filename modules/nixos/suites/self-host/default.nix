@@ -18,7 +18,10 @@ in {
       services = {
         immich = enabled;
         media.audiobookshelf = enabled;
-        media.jellyfin = enabled;
+        media.jellyfin = {
+          enable = true;
+          jellyseerr = true;
+        };
       };
       suites.arr = enabled;
     };
