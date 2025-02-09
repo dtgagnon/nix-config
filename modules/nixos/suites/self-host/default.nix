@@ -17,10 +17,12 @@ in {
       apps.qbittorrent = enabled;
       services = {
         immich = enabled;
-        media.audiobookshelf = enabled;
-        media.jellyfin = {
-          enable = true;
-          jellyseerr = true;
+        media = {
+          audiobookshelf = enabled;
+          jellyfin = {
+            enable = true;
+            jellyseerr = true;
+          };
         };
       };
       suites.arr = enabled;
