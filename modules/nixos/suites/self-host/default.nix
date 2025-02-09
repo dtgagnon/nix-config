@@ -18,7 +18,7 @@ in {
       services = {
         immich = enabled;
         media = {
-          audiobookshelf = enabled;
+          audiobookshelf.enable = true;
           jellyfin = {
             enable = true;
             jellyseerr = true;
