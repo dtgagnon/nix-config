@@ -25,8 +25,11 @@
         channels-config = {
           allowUnfree = true;
           permittedInsecurePackages = [
-            "dotnet-sdk-6.0.428"
+            # Below 4 for sonarr until they update to .NET 8
             "aspnetcore-runtime-6.0.36"
+            "aspnetcore-runtime-wrapped-6.0.36"
+            "dotnet-sdk-6.0.428"
+            "dotnet-sdk-wrapped-6.0.428"
           ];
         };
 
