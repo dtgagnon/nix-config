@@ -31,7 +31,7 @@ in
 
       user = "immich";
       group = "immich";
-      host = "localhost";
+      host = "100.100.1.2";
 
       environment = {
         IMMICH_LOG_LEVEL = "log";
