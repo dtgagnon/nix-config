@@ -27,7 +27,7 @@ in
 
     users.users.prowlarr = {
       isSystemUser = true;
-      group = [ "media" ];
+      group = "media";
     };
   };
 }
