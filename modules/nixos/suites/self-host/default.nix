@@ -21,7 +21,7 @@ in
         media = {
           audiobookshelf = enabled;
           jellyfin = enabled;
-          jellyseerr = enabled;
+          # jellyseerr = enabled;
         };
       };
       suites.arr = enabled;

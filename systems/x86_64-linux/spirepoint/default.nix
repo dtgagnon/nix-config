@@ -12,7 +12,6 @@ in
     ./disk-config.nix
   ];
 
-
   fileSystems."/boot".options = [ "umask=0077" ];
   boot = {
     loader = {

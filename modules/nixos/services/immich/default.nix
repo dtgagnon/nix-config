@@ -13,7 +13,7 @@ in
     enable = mkBoolOpt false "Enable the Immich media server";
 
     host = mkOpt types.str "0.0.0.0" "IPv4 address which Immich will bind to";
-    port = mkOpt types.int 2283 "Port on which Immich will listen";
+    port = mkOpt types.str "2283" "Port on which Immich will listen";
     openFirewall = mkBoolOpt false "Open ports in the firewall for Immich";
 
     mediaLocation = mkOpt types.path "/srv/immich" "Directory where Immich stores its data";
@@ -28,7 +28,6 @@ in
       enable = true;
       inherit (cfg)
         host
-        port
         mediaLocation
         secretsFile
         ;
@@ -39,6 +38,7 @@ in
       # IMMICH_PORT = "2283";
       environment = {
         IMMICH_LOG_LEVEL = "log";
+        IMMICH_PORT = "${cfg.port}";
       };
 
       database = {

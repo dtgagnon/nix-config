@@ -13,8 +13,6 @@ in
   options.${namespace}.services.media.jellyfin = {
     enable = mkBoolOpt false "Enable Jellyfin service";
     dataDir = mkOpt types.path "/srv/apps/jellyfin" "Data directory for Jellyfin";
-
-    jellyseerr = mkBoolOpt false "Enable Jellyseerr media request manager and coordinator";
   };
 
   config = mkIf cfg.enable {
