@@ -35,7 +35,6 @@ in
       user = "immich";
       group = "immich";
 
-      # IMMICH_PORT = "2283";
       environment = {
         IMMICH_LOG_LEVEL = "log";
         IMMICH_PORT = "${cfg.port}";
@@ -185,7 +184,7 @@ in
             "modelName" = "buffalo_l";
           };
           "urls" = [
-            "http =//localhost:3003"
+            "http://localhost:3003"
           ];
         };
         "map" = {
