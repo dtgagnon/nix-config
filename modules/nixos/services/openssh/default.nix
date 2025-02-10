@@ -47,11 +47,11 @@ let
             '';
       in
       ''
-        Host ${name}
-          User ${remote-user-name}
-          ForwardAgent yes
-          Port ${builtins.toString cfg.port}
-          ${forward-gpg}
+        				Host ${name}
+        					User ${remote-user-name}
+        					ForwardAgent yes
+        					Port ${builtins.toString cfg.port}
+        					${forward-gpg}
       ''
     )
     (builtins.attrNames other-hosts);
