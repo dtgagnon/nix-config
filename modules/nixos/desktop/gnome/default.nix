@@ -17,7 +17,10 @@ in
   config = mkIf cfg.enable {
     services.xserver = {
       enable = true;
-      displayManager.gdm.enable = true;
+      displayManager.gdm = {
+        enable = true;
+        autoSuspend = false;
+      };
       desktopManager.gnome.enable = true;
       xkb.layout = "us";
     };
