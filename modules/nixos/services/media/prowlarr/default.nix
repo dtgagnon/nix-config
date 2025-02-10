@@ -25,6 +25,9 @@ in
         ;
     };
 
-    users.users.prowlarr.extraGroups = [ "media" ];
+    users.users.prowlarr = {
+      isSystemUser = true;
+      group = [ "media" ];
+    };
   };
 }
