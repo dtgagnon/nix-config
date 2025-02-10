@@ -8,7 +8,8 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.media.readarr;
-in {
+in
+{
   options.${namespace}.services.media.readarr = {
     enable = mkBoolOpt false "Enable Readarr";
     openFirewall = mkOpt types.bool false "Open firewall ports for Readarr.";
@@ -20,7 +21,7 @@ in {
       enable = true;
       package = pkgs.readarr;
       user = "readarr";
-      group = "readarr";
+      group = "media";
       inherit (cfg) openFirewall dataDir;
     };
   };

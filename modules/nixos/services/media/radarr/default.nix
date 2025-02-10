@@ -16,7 +16,7 @@ in
       enable = true;
       package = pkgs.radarr;
       user = "radarr";
-      group = "radarr";
+      group = "media";
       inherit (cfg)
         openFirewall
         dataDir;

@@ -16,7 +16,7 @@ in
       enable = true;
       package = pkgs.sonarr;
       user = "sonarr";
-      group = "sonarr";
+      group = "media";
       inherit (cfg)
         openFirewall
         dataDir

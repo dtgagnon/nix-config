@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -24,11 +23,11 @@ in
       enable = true;
       package = pkgs.audiobookshelf;
       user = "audiobookshelf";
-      group = "audiobookshelf";
-      inherit (cfg) 
-        host 
-        port 
-        openFirewall 
+      group = "media";
+      inherit (cfg)
+        host
+        port
+        openFirewall
         dataDir
         ;
     };

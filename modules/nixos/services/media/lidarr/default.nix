@@ -8,7 +8,8 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.media.lidarr;
-in {
+in
+{
   options.${namespace}.services.media.lidarr = {
     enable = mkBoolOpt false "Enable Lidarr";
     openFirewall = mkOpt types.bool false "Open firewall ports for Lidarr.";
@@ -20,7 +21,7 @@ in {
       enable = true;
       package = pkgs.lidarr;
       user = "lidarr";
-      group = "lidarr";
+      group = "media";
       inherit (cfg) openFirewall dataDir;
     };
   };

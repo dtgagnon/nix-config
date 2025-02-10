@@ -19,10 +19,12 @@ in
   config = mkIf cfg.enable {
     services.prowlarr = {
       enable = true;
-      inherit (cfg) 
+      inherit (cfg)
         package
         openFirewall
         ;
     };
+
+    users.users.prowlarr.extraGroups = [ "media" ];
   };
 }

@@ -19,7 +19,7 @@ in
     services.jellyfin = {
       enable = true;
       user = "jellyfin";
-      group = "jellyfin";
+      group = "media";
       inherit (cfg) dataDir;
     };
 
@@ -28,8 +28,6 @@ in
       jellyfin-web
       jellyfin-ffmpeg
     ];
-
-    users.groups.jellyfin = { };
 
     #caddy reverse-proxy for jellyfin here something like spirenix.services.caddy.<option (port, origin, etc).
   };

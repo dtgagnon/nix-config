@@ -16,7 +16,7 @@ in
       enable = true;
       package = pkgs.bazarr;
       user = "bazarr";
-      group = "bazarr";
+      group = "media";
       listenPort = cfg.port;
       inherit (cfg) openFirewall;
     };
