@@ -22,10 +22,11 @@ in
     hardware = {
       nvidia = {
         open = true; # lib.mkOverride 990 config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware
+        package = null;
         modesetting.enable = true;
         nvidiaSettings = true;
         powerManagement = {
-          enable = false; #enabled to address sleep/suspend failures
+          enable = true; #enabled to address sleep/suspend failures
           finegrained = false;
         };
       };
@@ -36,12 +37,23 @@ in
           libva
           libva-utils
           libva-vdpau-driver
+          nvidia-vaapi-driver
+          vaapiVdpau
           vdpauinfo
         ];
       };
     };
 
-    environment.systemPackages = [ pkgs.vulkan-tools ];
+    environment.systemPackages = with pkgs; [
+      nvtop
+      nvidia_oc
+      vulkan-tools
+    ];
+
+    envidonrment.variables = {
+      NVD_BACKEND = "direct";
+      LIBVA_DRIVER_NAME = "nvidia";
+    };
     # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
   };
 }
