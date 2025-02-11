@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
@@ -24,6 +25,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.immich-go ];
     services.immich = {
       enable = true;
       inherit (cfg)
@@ -272,7 +274,5 @@ in
       group = "immich";
       mode = "0600";
     };
-
-    users.groups.immich = { };
   };
 }
