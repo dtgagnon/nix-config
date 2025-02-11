@@ -15,8 +15,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ 
-      pkgs.qbittorrent
+    environment.systemPackages = [
+      pkgs.qbittorrent-nox
     ];
   };
 }
