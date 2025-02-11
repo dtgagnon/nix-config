@@ -33,7 +33,7 @@ in
 
     hardware = {
       audio = enabled;
-      graphics = { enable = true; manufacturer = "nvidia"; };
+      graphics = { enable = true; manufacturer = "nvidia"; nvidiaChannel = "beta"; };
       storage = {
         boot.enable = true;
         disko = { enable = true; device = "/dev/nvme0n1"; };

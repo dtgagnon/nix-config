@@ -13,7 +13,7 @@ in
   options.${namespace}.hardware.graphics = {
     enable = mkBoolOpt false "Enable hardware configuration for basic nvidia gpu settings";
     manufacturer = mkOpt (types.enum [ "nvidia" "intel" "amd" ]) "nvidia" "Choose graphics card manufacturer";
-    extraPackages = mkOpt (types.listOf types.str) [ ] "Create a list of pkgs to include under hardware.graphics";
+    nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "production" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
   };
 
   config = mkIf (cfg.enable && cfg.manufacturer == "nvidia") {
@@ -21,36 +21,25 @@ in
     services.xserver.videoDrivers = [ "nvidia" ]; #idk if this exists
     hardware = {
       nvidia = {
-        open = true; # lib.mkOverride 990 config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware
-        package = null;
+        package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
-        nvidiaSettings = true;
         powerManagement = {
-          enable = true; #enabled to address sleep/suspend failures
+          enable = false; #enabled to address sleep/suspend failures
           finegrained = false;
         };
       };
       graphics = {
         enable = true;
         enable32Bit = true;
-        extraPackages = with pkgs; [
-          libva
-          libva-utils
-          libva-vdpau-driver
-          nvidia-vaapi-driver
-          vaapiVdpau
-          vdpauinfo
-        ];
       };
     };
 
     environment.systemPackages = with pkgs; [
-      nvtop
-      nvidia_oc
+      nvtopPackages.full
       vulkan-tools
     ];
 
-    envidonrment.variables = {
+    environment.variables = {
       NVD_BACKEND = "direct";
       LIBVA_DRIVER_NAME = "nvidia";
     };

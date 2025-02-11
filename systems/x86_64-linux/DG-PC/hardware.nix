@@ -1,6 +1,4 @@
-{ lib
-, config
-, inputs
+{ inputs
 , modulesPath
 , ...
 }:
@@ -20,7 +18,6 @@ in
   hardware = {
     #   enableAllFirmware = true;
     enableRedistributableFirmware = true;
-    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     bluetooth.enable = true;
 
