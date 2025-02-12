@@ -32,6 +32,7 @@ in
         };
       };
       thunderbird = enabled;
+      todoist = enabled;
       vscode = enabled;
       zen = enabled;
     };
