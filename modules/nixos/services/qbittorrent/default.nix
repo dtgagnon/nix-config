@@ -28,21 +28,22 @@ in
       QBT_ADD_STOPPED = "FALSE";
     };
 
-    systemd-tmpfiles.rules = [
-      "d ${cfg.dataDir} 0750 ${cfg.user} ${cfg.group} -"
-      "d ${cfg.downDir} 0750 ${cfg.user} ${cfg.group} -"
-    ];
-
-    systemd.services.qbittorrent = {
-      description = "qBittorrent-nox daemon";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "notify";
-        User = "qbittorrent";
-        ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
-        WorkingDirectory = "${cfg.dataDir}";
-        Restart = "on-failure";
+    systemd = {
+      tmpfiles.rules = [
+        "d ${cfg.dataDir} 0750 ${cfg.user} ${cfg.group} -"
+        "d ${cfg.downDir} 0750 ${cfg.user} ${cfg.group} -"
+      ];
+      services.qbittorrent = {
+        description = "qBittorrent-nox daemon";
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "notify";
+          User = "qbittorrent";
+          ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox";
+          WorkingDirectory = "${cfg.dataDir}";
+          Restart = "on-failure";
+        };
       };
     };
 
