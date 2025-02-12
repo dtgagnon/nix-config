@@ -12,8 +12,8 @@ in
 {
   options.${namespace}.apps.qbittorrent = {
     enable = mkBoolOpt false "Enable qBittorrent";
-    port = mkOpt types.int "8080" "Declare the webui port";
-    dataDir = mkOpt types.int "/var/lib/qbittorrent" "Declare the application working directory";
+    port = mkOpt types.str "8080" "Declare the webui port";
+    dataDir = mkOpt types.str "/var/lib/qbittorrent" "Declare the application working directory";
   };
 
   config = mkIf cfg.enable {
@@ -21,7 +21,7 @@ in
 
     systemd.services.qbittorrent = {
       description = "qBittorrent-nox daemon";
-      after = [ "network-onlinetarget" ];
+      after = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         # Run as dedicated 'qbittorrent' user
