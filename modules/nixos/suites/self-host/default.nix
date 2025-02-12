@@ -15,7 +15,6 @@ in
 
   config = mkIf cfg.enable {
     spirenix = {
-      apps.qbittorrent = enabled;
       services = {
         immich = enabled;
         media = {
