@@ -21,10 +21,11 @@ in
     services.xserver.videoDrivers = [ "nvidia" ]; #idk if this exists
     hardware = {
       nvidia = {
+        open = lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
         package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
         powerManagement = {
-          enable = false; #enabled to address sleep/suspend failures
+          enable = true; #enabled to address sleep/suspend failures
           finegrained = false;
         };
       };
