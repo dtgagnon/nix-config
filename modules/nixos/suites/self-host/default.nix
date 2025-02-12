@@ -23,6 +23,7 @@ in
           jellyfin = enabled;
           # jellyseerr = enabled;
         };
+        qbittorrent = enabled;
       };
       suites.arr = enabled;
     };

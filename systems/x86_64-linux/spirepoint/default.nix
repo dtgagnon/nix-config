@@ -58,7 +58,6 @@ in
     apps = {
       proton = enabled;
       proton-cloud = enabled;
-      qbittorrent = enabled;
     };
 
     desktop = {
