@@ -25,7 +25,7 @@ in
         package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
         powerManagement = {
-          enable = true; #enabled to address sleep/suspend failures
+          enable = false; #enabled to address sleep/suspend failures
           finegrained = false;
         };
       };
