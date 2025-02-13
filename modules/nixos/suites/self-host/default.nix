@@ -23,6 +23,7 @@ in
           # jellyseerr = enabled;
         };
         qbittorrent = enabled;
+        sabnzbd = enabled;
       };
       suites.arr = enabled;
     };

@@ -13,8 +13,9 @@ in
   options.${namespace}.services.qbittorrent = {
     enable = mkBoolOpt false "Enable qBittorrent";
     port = mkOpt types.str "8080" "Declare the webui port";
+    configDir = mkOpt types.str "/etc/qbittorrent" "The default configuration directory";
     dataDir = mkOpt types.str "/var/lib/qbittorrent" "Declare the application working directory";
-    downDir = mkOpt types.str "/srv/media/downloads" "Declare the application working directory";
+    downDir = mkOpt types.str "/srv/media/downloads" "Declare the default torrent downlaod directory";
     user = mkOpt types.str "qbittorrent" "User the service runs as";
     group = mkOpt types.str "media" "Group the service user belongs to";
   };
@@ -24,8 +25,12 @@ in
 
     environment.variables = {
       QBT_WEBUI_PORT = "${cfg.port}";
+      QBT_PROFILE = "${cfg.configDir}";
+
       QBT_SAVE_PATH = "${cfg.downDir}";
+
       QBT_ADD_STOPPED = "FALSE";
+      QBT_CONFIRM_LEGAL_NOTICE = "TRUE";
     };
 
     systemd = {
@@ -53,6 +58,46 @@ in
       home = "${cfg.dataDir}";
     };
 
-    # No firewall permissions since this will only be accessed via tailscale
+    sops.secrets.qbittorrent-webui = {
+      owner = "${cfg.user}";
+      mode = "0750";
+    };
+
+    environment.etc."qbittorrent/.config/qBittorrent/qBittorrent.conf".text = ''
+      [Application]
+      FileLogger\Age=1
+      FileLogger\AgeType=1
+      FileLogger\Backup=true
+      FileLogger\DeleteOld=true
+      FileLogger\Enabled=true
+      FileLogger\MaxSizeBytes=66560
+      FileLogger\Path=/var/lib/qbittorrent/.local/share/qBittorrent/logs
+
+      [BitTorrent]
+      Session\ExcludedFileNames=
+      Session\Port=61496
+      Session\QueueingSystemEnabled=false
+      Session\SSL\Port=25650
+
+      [Core]
+      AutoDeleteAddedTorrentFile=Never
+
+      [Meta]
+      MigrationVersion=8
+
+      [Network]
+      Cookies=@Invalid()
+
+      [Preferences]
+      General\Locale=en
+      MailNotification\req_auth=true
+      WebUI\AuthSubnetWhitelist=100.100.0.0/16
+      WebUI\AuthSubnetWhitelistEnabled=true
+      WebUI\Password_PBKDF2="@ByteArray(W7Gxyc/YUtjij7+F/OuVjw==:43NrfiEa5KlXXYuxWSK7uozQZx7Qnp2AUYWU7B4FLI/8VmN0AqwqL/2cxtdqxxL/bVxII0/ZoVu5G29HQydqWg==)"
+
+      [RSS]
+      AutoDownloader\DownloadRepacks=true
+      AutoDownloader\SmartEpisodeFilter=s(\\d+)e(\\d+), (\\d+)x(\\d+), "(\\d{4}[.\\-]\\d{1,2}[.\\-]\\d{1,2})", "(\\d{1,2}[.\\-]\\d{1,2}[.\\-]\\d{4})"
+    '';
   };
 }
