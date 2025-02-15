@@ -74,10 +74,22 @@ in
       FileLogger\Path=/var/lib/qbittorrent/.local/share/qBittorrent/logs
 
       [BitTorrent]
+      Session\AnonymousModeEnabled=true
+      Session\BandwidthSchedulerEnabled=true
+      Session\DefaultSavePath=/srv/media/downloads
       Session\ExcludedFileNames=
+      Session\FinishedTorrentExportDirectory=/srv/media/downloads/.torrent/done
+      Session\GlobalMaxInactiveSeedingMinutes=4321
+      Session\GlobalMaxRatio=3
+      Session\GlobalMaxSeedingMinutes=4321
       Session\Port=61496
       Session\QueueingSystemEnabled=false
       Session\SSL\Port=25650
+      Session\SubcategoriesEnabled=true
+      Session\TempPath=/srv/media/downloads/dl
+      Session\TempPathEnabled=true
+      Session\TorrentExportDirectory=/srv/media/downloads/.torrent/dl
+      Session\UseAlternativeGlobalSpeedLimit=false
 
       [Core]
       AutoDeleteAddedTorrentFile=Never
@@ -87,10 +99,12 @@ in
 
       [Network]
       Cookies=@Invalid()
+      PortForwardingEnabled=false
 
       [Preferences]
       General\Locale=en
       MailNotification\req_auth=true
+      Scheduler\end_time=@Variant(\0\0\0\xf\x4\xb8\x7f\0)
       WebUI\AuthSubnetWhitelist=100.100.0.0/16
       WebUI\AuthSubnetWhitelistEnabled=true
       WebUI\Password_PBKDF2="@ByteArray(W7Gxyc/YUtjij7+F/OuVjw==:43NrfiEa5KlXXYuxWSK7uozQZx7Qnp2AUYWU7B4FLI/8VmN0AqwqL/2cxtdqxxL/bVxII0/ZoVu5G29HQydqWg==)"

@@ -25,5 +25,4 @@ in
       inherit (cfg) configFile;
     };
   };
-
 }
