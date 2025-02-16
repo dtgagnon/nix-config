@@ -38,7 +38,7 @@
         };
 
         overlays = with inputs; [
-          neovim.overlays.default # provided via spirenix-nvim namespace from custom neovim flake
+          neovim.overlays.default
           nix-topology.overlays.default
           nur.overlays.default
           proxmox-nixos.overlays.x86_64-linux

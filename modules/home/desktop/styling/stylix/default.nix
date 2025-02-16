@@ -30,8 +30,6 @@ in
         image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
         imageScalingMode = "stretch";
 
-        # base16Scheme = mkIf (core.theme != null) "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
-
         override =
           { }
           // cfg.override;
@@ -82,13 +80,13 @@ in
             { }
             cfg.excludedTargets
           // {
-            neovim.enable = false;
-            nixvim = {
-              enable = false;
-              plugin = pkgs.base16-nvim;
-              transparentBackground.main = true;
-              transparentBackground.signColumn = true;
-            };
+            # neovim.enable = false;
+            # nixvim = {
+            #   enable = false;
+            #   plugin = pkgs.base16-nvim;
+            #   transparentBackground.main = true;
+            #   transparentBackground.signColumn = true;
+            # };
           };
       };
     })

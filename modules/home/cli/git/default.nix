@@ -1,8 +1,7 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 
 let
@@ -18,7 +17,7 @@ in
     userName = mkOpt types.str user.name "The name to configure git with.";
     userEmail = mkOpt types.str user.email "The email to configure git with.";
     signingKey =
-      mkOpt types.str "/home/dtgagnon/.ssh/${user.name}-key.pub"
+      mkOpt types.str "/home/${user.name}/.ssh/${user.name}-key.pub"
         "The key ID to sign commits with.";
     signByDefault = mkOpt types.bool true "Whether to sign commits by default.";
   };
@@ -32,6 +31,7 @@ in
       signing = {
         key = cfg.signingKey;
         inherit (cfg) signByDefault;
+        format = "ssh";
       };
 
       extraConfig = {
@@ -46,7 +46,6 @@ in
           "ssh://git@gitlab.com".insteadOf = "https://gitlab.com";
         };
         commit.gpgsign = true;
-        gpg.format = "ssh";
         user.signing.key = "${cfg.signingKey}";
       };
     };
