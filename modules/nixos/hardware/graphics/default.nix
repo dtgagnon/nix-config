@@ -13,7 +13,7 @@ in
   options.${namespace}.hardware.graphics = {
     enable = mkBoolOpt false "Enable hardware configuration for basic nvidia gpu settings";
     manufacturer = mkOpt (types.enum [ "nvidia" "intel" "amd" ]) "nvidia" "Choose graphics card manufacturer";
-    nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "production" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
+    nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
   };
 
   config = mkIf (cfg.enable && cfg.manufacturer == "nvidia") {
@@ -25,7 +25,7 @@ in
         package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
         powerManagement = {
-          enable = false; #enabled to address sleep/suspend failures
+          enable = false;
           finegrained = false;
         };
       };
@@ -34,6 +34,9 @@ in
         enable32Bit = true;
       };
     };
+
+    systemd.services.nvidia-suspend.enable = true;
+    systemd.services.nvidia-resume.enable = true;
 
     environment.systemPackages = with pkgs; [
       nvtopPackages.full

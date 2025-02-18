@@ -47,11 +47,14 @@ in
     environment.systemPackages = with pkgs; [
       virt-manager
       quickemu
+      spice
+      spice-gtk
       bridge-utils
       virt-viewer
     ];
 
     virtualisation = {
+      spiceUSBRedirection.enable = true;
       libvirtd = {
         enable = true;
         extraConfig = ''
