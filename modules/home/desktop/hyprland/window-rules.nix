@@ -5,7 +5,7 @@
 let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
-  
+
   # floatWindow =
   #   { windowSizeX
   #   , windowSizeY
@@ -20,7 +20,7 @@ let
 
   #     anchorX = windowSizeX * windowAnchorX;
   #     anchorY = windowSizeY * windowAnchorY;
-      
+
   #     moveX = buildPos { windowAnchor = anchorX; screenAnchor = screenAnchorX; dimensionLetter = "w"; };
   #     moveY = buildPos { windowAnchor = anchorY; screenAnchor = screenAnchorY; dimensionLetter = "h"; };
   #   in
@@ -54,6 +54,9 @@ in
         # "float,title:^(Yazi)$"
         # "center,floating:1,title:^(Yazi)$"
         # "size 1200 725,floating:1,title:^(Yazi)$"
+
+        # VMs
+        "workspace 6, fullscreen, class:^(.qemu-system-x86_64-wrapped)$"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"

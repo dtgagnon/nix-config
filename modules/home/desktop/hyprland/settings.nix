@@ -20,6 +20,7 @@ in
       ] ++ cfg.extraExec;
 
       monitor = cfg.monitors ++ [
+        "Virtual-1,3440x1440,0x0,1"
         ",preferred,auto,1"
       ];
 
