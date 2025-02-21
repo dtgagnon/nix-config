@@ -46,11 +46,14 @@ in
 
     environment.systemPackages = with pkgs; [
       virt-manager
+      virt-viewer
       quickemu
       spice
       spice-gtk
+      spice-protocol
       bridge-utils
-      virt-viewer
+      win-virtio
+      win-spice
     ];
 
     virtualisation = {
