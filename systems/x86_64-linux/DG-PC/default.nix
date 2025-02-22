@@ -45,6 +45,8 @@ in
       sops-nix = enabled;
     };
 
+    services.davfs = enabled;
+
     system = {
       enable = true;
       impermanence = enabled;

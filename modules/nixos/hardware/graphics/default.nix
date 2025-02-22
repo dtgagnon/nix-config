@@ -21,7 +21,7 @@ in
     services.xserver.videoDrivers = [ "nvidia" ]; #idk if this exists
     hardware = {
       nvidia = {
-        open = lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
+        open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
         package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
         powerManagement = {
@@ -32,6 +32,10 @@ in
       graphics = {
         enable = true;
         enable32Bit = true;
+        extraPackages = with pkgs; [
+          libvdpau-va-gl
+          nvidia-vaapi-driver
+        ];
       };
     };
 
