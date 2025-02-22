@@ -23,10 +23,10 @@ in
     boot = {
       kernelModules = [
         "kvm-${cfg.platform}"
-        "vfio"
-        "vfio_virqfd"
         "vfio_pci"
         "vfio_iommu_type1"
+        "vfio_virqfd"
+        "vfio"
         "vhost"
         "vhost_net"
         "vhost_vsock"
@@ -36,7 +36,7 @@ in
         "${cfg.platform}_iommu=on"
         "${cfg.platform}_iommu=pt"
         "kvm.ignore_msrs=1"
-        # "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
+        "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
       ];
       extraModprobeConfig = optionalString (length cfg.vfioIds > 0) ''
         softdep amdgpu pre: vfio vfio-pci
@@ -46,13 +46,15 @@ in
 
     environment.systemPackages = with pkgs; [
       virt-manager
+      rustdesk
+      rustdesk-server
       virt-viewer
       quickemu
       spice
       spice-gtk
       spice-protocol
       bridge-utils
-      win-virtio
+      virtio-win
       win-spice
     ];
 
@@ -63,7 +65,6 @@ in
         extraConfig = ''
           user = "${user.name}"
           group = "qemu-libvirtd"
-
         '';
 
         allowedBridges = [ "virbr0" "br0" ];
