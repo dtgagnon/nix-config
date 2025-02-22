@@ -40,7 +40,8 @@ in
         "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
       ];
       extraModprobeConfig = optionalString (length cfg.vfioIds > 0) ''
-        softdep amdgpu pre: vfio vfio-pci
+        softdep nvidia pre: vfio vfio-pci
+        softdep nvidia* pre: vfio vfio-pci
         options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
         options kvmfr static_size_mb=64
       '';

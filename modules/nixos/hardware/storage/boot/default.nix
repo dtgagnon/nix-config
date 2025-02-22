@@ -75,7 +75,6 @@ in
         kernelModules = cfg.kernel.initrd.modules;
         availableKernelModules = cfg.kernel.initrd.availableKernelModules;
       };
-      blacklistedKernelModules = [ "nouveau" ];
     };
 
     # assertions = [

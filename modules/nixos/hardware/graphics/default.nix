@@ -22,7 +22,7 @@ in
     hardware = {
       nvidia = {
         open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
-        package = null; # config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
+        package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
         powerManagement = {
           enable = false;
@@ -52,5 +52,13 @@ in
       LIBVA_DRIVER_NAME = "nvidia";
     };
     # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
+
+    boot = {
+      blacklistedKernelModules = [ "nouveau" ];
+      kernelParams = [
+        "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+        "nvidia-drm.modeset=1"
+      ];
+    };
   };
 }
