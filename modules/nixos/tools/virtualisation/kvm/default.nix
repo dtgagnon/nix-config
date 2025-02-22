@@ -28,10 +28,10 @@ in
         "vfio_iommu_type1"
         "vfio"
         "kvmfr"
-        # "vhost"
-        # "vhost_net"
-        # "vhost_vsock"
-        # "vhost_scsi"
+        "vhost"
+        "vhost_net"
+        "vhost_vsock"
+        "vhost_scsi"
       ];
       kernelParams = [
         "${cfg.platform}_iommu=on"
@@ -68,6 +68,7 @@ in
       virglrenderer
       bridge-utils
 
+      virtiofsd
       virtio-win
       win-spice
 
@@ -105,7 +106,7 @@ in
             cgroup_device_acl = [
             "/dev/null", "/dev/full", "/dev/zero",
             "/dev/random", "urandom",
-            /dev/ptmx", "/dev/kvm", "/dev/kqemu",
+            "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
             "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
             "/dev/kvmfr0"
             ]
