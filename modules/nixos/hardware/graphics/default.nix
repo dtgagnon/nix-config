@@ -22,7 +22,7 @@ in
     hardware = {
       nvidia = {
         open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
-        package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
+        package = null; # config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
         modesetting.enable = true;
         powerManagement = {
           enable = false;

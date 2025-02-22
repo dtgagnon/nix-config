@@ -25,10 +25,10 @@ in
           shmFile = "/dev/kvmfr0";
         };
         win = {
-          size = "1920x1080";
+          size = "3440x1440";
           autoResize = "yes";
           borderless = "no";
-          don'tUpscale = "yes";
+          dontUpscale = "yes";
           fullScreen = "no";
           keepAspect = "yes";
           maximize = "no";

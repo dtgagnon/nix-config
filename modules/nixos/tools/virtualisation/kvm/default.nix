@@ -23,14 +23,15 @@ in
     boot = {
       kernelModules = [
         "kvm-${cfg.platform}"
+        "vfio_virqfd"
         "vfio_pci"
         "vfio_iommu_type1"
-        "vfio_virqfd"
         "vfio"
-        "vhost"
-        "vhost_net"
-        "vhost_vsock"
-        "vhost_scsi"
+        "kvmfr"
+        # "vhost"
+        # "vhost_net"
+        # "vhost_vsock"
+        # "vhost_scsi"
       ];
       kernelParams = [
         "${cfg.platform}_iommu=on"
@@ -41,8 +42,18 @@ in
       extraModprobeConfig = optionalString (length cfg.vfioIds > 0) ''
         softdep amdgpu pre: vfio vfio-pci
         options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
+        options kvmfr static_size_mb=64
       '';
+      extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
     };
+
+    services.udev.extraRules = ''
+      SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
+    '';
+
+    systemd.tmpfiles.rules = [
+      "f /dev/shm/looking-glass 0600 ${user.name} qemu-libvirtd -"
+    ];
 
     environment.systemPackages = with pkgs; [
       virt-manager
@@ -74,6 +85,7 @@ in
         '';
 
         allowedBridges = [ "virbr0" "br0" ];
+
         onBoot = "ignore";
         onShutdown = "shutdown";
 
@@ -82,20 +94,20 @@ in
           runAsRoot = false;
           ovmf = {
             enable = true;
-            packages = [
-              # (pkgs.OVMF.override {
-              #   secureBoot = true;
-              #   tpmSupport = true;
-              # })
-              pkgs.OVMFFull.fd
-            ];
+            packages = [ pkgs.OVMFFull.fd ];
           };
           swtpm = enabled;
           verbatimConfig = ''
             namespaces = []
             user = "+${builtins.toString config.users.users.${user.name}.uid}"
             group = "qemu-libvirtd"
-
+            cgroup_device_acl = [
+            "/dev/null", "/dev/full", "/dev/zero",
+            "/dev/random", "urandom",
+            /dev/ptmx", "/dev/kvm", "/dev/kqemu",
+            "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
+            "/dev/kvmfr0"
+            ]
           '';
         };
       };
@@ -103,24 +115,6 @@ in
 
     spirenix = {
       user = {
-        home = {
-          extraOptions = {
-            systemd.user.services.scream = {
-              Unit.Description = "Scream";
-              Unit.After = [
-                "libvirtd.service"
-                "pipewire-pulse.service"
-                "pipewire.service"
-                "sound.target"
-              ] ++ cfg.machineUnits;
-              Service.ExecStart = "${pkgs.scream}/bin/scream -n scream -o pulse -m /dev/shm/scream";
-              Service.Restart = "always";
-              Service.StartLimitIntervalSec = "5";
-              Service.StartLimitBurst = "1";
-              Install.RequiredBy = cfg.machineUnits;
-            };
-          };
-        };
         extraGroups = [
           "qemu-libvirtd"
           "libvirtd"

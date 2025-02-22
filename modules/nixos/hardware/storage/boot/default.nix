@@ -30,15 +30,11 @@ in
     };
 
     kernel = {
-      modules = mkOpt (types.listOf types.str) [
-        "kvm-intel"
-      ] "List of kernel modules to load";
+      modules = mkOpt (types.listOf types.str) [ "kvm-intel" ] "List of kernel modules to load";
 
       initrd = {
         enable = mkBoolOpt true "Whether to enable initrd configuration";
-        modules = mkOpt (types.listOf types.str) [
-          "dm-snapshot"
-        ] "List of initrd modules";
+        modules = mkOpt (types.listOf types.str) [ "dm-snapshot" ] "List of initrd modules";
         availableKernelModules = mkOpt (types.listOf types.str) [
           "xhci_pci"
           "ahci"
@@ -49,9 +45,7 @@ in
         ] "List of kernel modules available in initrd";
       };
 
-      extraModulePackages =
-        mkOpt (types.listOf types.package) [ ]
-          "List of additional kernel module packages";
+      extraModulePackages = mkOpt (types.listOf types.package) [ ] "List of additional kernel module packages";
     };
   };
 
@@ -81,6 +75,7 @@ in
         kernelModules = cfg.kernel.initrd.modules;
         availableKernelModules = cfg.kernel.initrd.availableKernelModules;
       };
+      blacklistedKernelModules = [ "nouveau" ];
     };
 
     # assertions = [
