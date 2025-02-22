@@ -46,16 +46,22 @@ in
 
     environment.systemPackages = with pkgs; [
       virt-manager
-      rustdesk
-      rustdesk-server
       virt-viewer
-      quickemu
+
       spice
       spice-gtk
+      spice-vdagent
       spice-protocol
+
+      virglrenderer
       bridge-utils
+
       virtio-win
       win-spice
+
+      quickemu
+      # rustdesk # dont think this is used related to VMs
+      # rustdesk-server # dont think this is ued related to VMs
     ];
 
     virtualisation = {
