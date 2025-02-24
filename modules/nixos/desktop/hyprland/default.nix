@@ -35,8 +35,8 @@ in
 
     environment.systemPackages = [ pkgs.kitty ]; #default for when no home configuration has been established
     environment.variables = {
-      GBM_BACKEND = "nvidia-drm";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      #   GBM_BACKEND = "nvidia-drm";
+      #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       EGL_PLATFORM = "wayland";
     };
   };

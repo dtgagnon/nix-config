@@ -51,6 +51,8 @@ in
       environment.variables = {
         NVD_BACKEND = "direct";
         LIBVA_DRIVER_NAME = "nvidia";
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       };
       # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
 
@@ -69,11 +71,24 @@ in
         enable = mkDefault true;
         enable32Bit = mkDefault true;
         extraPackages = with pkgs; [
-          libvdpau-va-gl
-          libva-vdpau-driver
+          # libvdpau-va-gl
+          # libva-vdpau-driver
           intel-vaapi-driver
           intel-media-driver
+          mesa
         ];
+      };
+      boot = {
+        kernelModules = [
+          "i915"
+        ];
+        kernelParams = [
+          "i915.modeset=1"
+        ];
+      };
+      environment.variables = {
+        WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.1-card:/dev/dri/by-path/pci-0000:01:00.0-card";
+        AQ_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.1-card:/dev/dri/by-path/pci-0000:01:00.0-card";
       };
     })
   ];

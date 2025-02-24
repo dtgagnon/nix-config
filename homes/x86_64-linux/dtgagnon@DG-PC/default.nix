@@ -59,10 +59,10 @@ in
       addons.kde-connect = enabled;
       hyprland = {
         enable = true;
-        monitors = [
-          # ",preferred,0x0,1"
-          # "DP-5,3440x1440@144,0x0,1"
-        ];
+        # monitors = [
+        #   ",preferred,0x0,1"
+        #   "DP-5,3440x1440@144,0x0,1"
+        # ];
         extraConfig = ''
           general {
             col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}

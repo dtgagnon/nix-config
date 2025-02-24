@@ -22,7 +22,7 @@ in
     programs.vscode = {
       enable = true;
       package = pkgs.vscodium;
-      extensions = with pkgs.vscode-extensions; [
+      profiles.default.extensions = with pkgs.vscode-extensions; [
         vscodevim.vim
         sainnhe.gruvbox-material
 
@@ -36,7 +36,7 @@ in
 
       ] ++ cfg.extensions;
     };
-    
+
     # For compatibility with Hyprland, to tell it the keyring to use.
     home.file.".vscode-oss/argv.json".text = ''
       // This configuration file allows you to pass permanent command line arguments to VS Code.
