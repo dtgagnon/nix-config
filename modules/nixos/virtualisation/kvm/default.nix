@@ -23,10 +23,11 @@ in
     boot = {
       kernelModules = [
         "kvm-${cfg.platform}"
-        "vfio_virqfd"
-        "vfio_pci"
-        "vfio_iommu_type1"
+				"i915"
         "vfio"
+        "vfio_pci"
+        "vfio_virqfd"
+        "vfio_iommu_type1"
         "kvmfr"
         "vhost"
         "vhost_net"
@@ -35,7 +36,7 @@ in
       ];
       kernelParams = [
         "${cfg.platform}_iommu=on"
-        "${cfg.platform}_iommu=pt"
+        "iommu=pt"
         "kvm.ignore_msrs=1"
         "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
       ];
@@ -43,6 +44,8 @@ in
         softdep nvidia pre: vfio vfio-pci
         softdep nvidia* pre: vfio vfio-pci
         options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
+				options kvm ignore_msrs=1
+				options kvm report_ignored_msrs=0
         options kvmfr static_size_mb=64
       '';
       extraModulePackages = [ config.boot.kernelPackages.kvmfr ];

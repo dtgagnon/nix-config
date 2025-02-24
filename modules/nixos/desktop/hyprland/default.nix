@@ -38,6 +38,8 @@ in
       #   GBM_BACKEND = "nvidia-drm";
       #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       EGL_PLATFORM = "wayland";
+      WLR_DRM_DEVICES = "";
+      AQ_DRM_DEVICES = if (config.spirenix.hardware.gpu.iGPU != null) then "/dev/dri/by-path/pci-0000:00:02.0-card:/dev/dri/by-path/pci-0000:01:00.0-card" else "";
     };
   };
 }

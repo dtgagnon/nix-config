@@ -13,12 +13,12 @@ in
   options.${namespace}.hardware.gpu = {
     enable = mkBoolOpt false "Enable hardware configuration for basic nvidia gpu settings";
     iGPU = mkOpt (types.nullOr (types.enum [ "intel" "amd" ])) null "Choose the iGPU CPU manufacturer";
-    manufacturer = mkOpt (types.nullOr (types.enum [ "nvidia" "intel" "amd" ])) null "Choose graphics card manufacturer";
+    dGPU = mkOpt (types.nullOr (types.enum [ "nvidia" "intel" "amd" ])) null "Choose the dGPU manufacturer";
     nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
   };
 
   config = mkMerge [
-    (mkIf (cfg.enable && cfg.manufacturer == "nvidia") {
+    (mkIf (cfg.enable && cfg.dGPU == "nvidia") {
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
@@ -48,9 +48,10 @@ in
         vulkan-tools
       ];
 
+
       environment.variables = {
         NVD_BACKEND = "direct";
-        LIBVA_DRIVER_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = if (cfg.iGPU == null) then "nvidia" else (mkDefault "");
         GBM_BACKEND = "nvidia-drm";
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       };
@@ -69,26 +70,28 @@ in
       services.xserver.videoDrivers = [ "modesetting" ];
       hardware.graphics = {
         enable = mkDefault true;
+        #driSupport ?
         enable32Bit = mkDefault true;
         extraPackages = with pkgs; [
-          # libvdpau-va-gl
-          # libva-vdpau-driver
-          intel-vaapi-driver
           intel-media-driver
-          mesa
+          intel-vaapi-driver
+          vaapiVdpau
+          libvdpau-va-gl
         ];
       };
       boot = {
-        kernelModules = [
-          "i915"
-        ];
+        kernelModules = [ "i915" ];
         kernelParams = [
+          "i915.enable_fbc=1"
+          "i915.enable_psr=2"
           "i915.modeset=1"
         ];
+        kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
       };
       environment.variables = {
-        WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.1-card:/dev/dri/by-path/pci-0000:01:00.0-card";
-        AQ_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.1-card:/dev/dri/by-path/pci-0000:01:00.0-card";
+        LIBVA_DRIVER_NAME = "iHD";
+        VDPAU_DRIVER = "va_gl";
+        MOZ_DISABLE_RDD_SANDBOX = "1";
       };
     })
   ];
