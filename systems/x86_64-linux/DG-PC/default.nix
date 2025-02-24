@@ -33,7 +33,7 @@ in
 
     hardware = {
       audio = enabled;
-      graphics = { enable = true; manufacturer = "nvidia"; nvidiaChannel = "latest"; };
+      gpu = { enable = true; iGPU = "intel"; manufacturer = "nvidia"; nvidiaChannel = "latest"; };
       storage = {
         boot.enable = true;
         disko = { enable = true; device = "/dev/nvme0n1"; };
@@ -63,7 +63,13 @@ in
 
     virtualisation = {
       podman = enabled;
-      kvm = enabled;
+      kvm = {
+        enable = true;
+        vfioIds = [
+          "10de:2684" #RTX4090 ID
+          "10de:22ba" #RTX4090 audio controller ID
+        ];
+      };
     };
   };
 

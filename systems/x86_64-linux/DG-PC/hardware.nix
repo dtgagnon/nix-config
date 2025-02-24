@@ -14,6 +14,9 @@ in
     common-pc-ssd
   ];
 
+  #TODO: Update fans module with fancontrol config - config is not correct and the service won't start
+  # spirenix.hardware.fans.enable = true;
+
   #other hardware
   hardware = {
     #   enableAllFirmware = true;
@@ -25,5 +28,7 @@ in
       enable = true;
       enableGraphical = true;
     };
+
+    spacenavd.enable = true;
   };
 }

@@ -71,7 +71,7 @@ in
 
     hardware = {
       audio = enabled;
-      graphics = { enable = true; manufacturer = "nvidia"; };
+      gpu = { enable = true; manufacturer = "nvidia"; };
       storage.boot.enable = true;
     };
 

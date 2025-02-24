@@ -16,8 +16,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-			freecad-wayland
-			spacenavd
-		];
+      freecad-wayland
+    ];
   };
 }

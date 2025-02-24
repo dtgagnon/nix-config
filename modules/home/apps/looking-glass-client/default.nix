@@ -50,7 +50,7 @@ in
         };
         wayland = {
           warpSupport = "yes";
-          fractionScaleudo = "no";
+          fractionScale = "no";
         };
       };
     };

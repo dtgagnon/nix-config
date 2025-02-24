@@ -14,6 +14,7 @@ in
 
   options.${namespace}.desktop.addons.waybar = {
     enable = mkBoolOpt false "Enable waybar";
+    settings = mkOpt (types.listOf types.attrs) [ ] "Configuration for the layout of waybar";
     presetLayout = mkOpt (types.nullOr types.str) "top-isolated-islands-centeredWorkspaces" "The waybar layout to use";
     presetStyle = mkOpt (types.nullOr types.str) "top-isolated-islands-centeredWorkspaces" "The waybar style to use";
     extraStyle = mkOpt types.str "" "Additional style to add to waybar";
@@ -24,5 +25,13 @@ in
       hyprpanel
       ags
     ];
+    programs.waybar = {
+      enable = true;
+      systemd = {
+        enable = true;
+        target = "hyprland-session.target";
+      };
+      inherit (cfg) settings;
+    };
   };
 }

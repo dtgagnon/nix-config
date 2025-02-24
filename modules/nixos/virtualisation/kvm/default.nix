@@ -48,6 +48,8 @@ in
       extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
     };
 
+    services.qemuGuest.enable = true;
+
     services.udev.extraRules = ''
       SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
     '';
@@ -104,11 +106,11 @@ in
             user = "+${builtins.toString config.users.users.${user.name}.uid}"
             group = "qemu-libvirtd"
             cgroup_device_acl = [
-            "/dev/null", "/dev/full", "/dev/zero",
-            "/dev/random", "urandom",
-            "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-            "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
-            "/dev/kvmfr0"
+              "/dev/null", "/dev/full", "/dev/zero",
+              "/dev/random", "urandom",
+              "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+              "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
+              "/dev/kvmfr0"
             ]
           '';
         };
