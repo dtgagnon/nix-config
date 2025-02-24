@@ -65,10 +65,10 @@ in
       podman = enabled;
       kvm = {
         enable = true;
-        vfioIds = [
-          "10de:2684" #RTX4090 ID
-          "10de:22ba" #RTX4090 audio controller ID
-        ];
+        # vfioIds = [
+        #   "10de:2684" #RTX4090 ID
+        #   "10de:22ba" #RTX4090 audio controller ID
+        # ];
       };
     };
   };
