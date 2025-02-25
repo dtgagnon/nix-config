@@ -50,7 +50,7 @@ in
 
       kernelParams = [
         "${cfg-kvm.platform}_iommu=on"
-        "${cfg.platform}_iommu=igfx_off"
+        "${cfg-kvm.platform}_iommu=igfx_off"
         "iommu=pt"
         # "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
         "video=efifb:off"
