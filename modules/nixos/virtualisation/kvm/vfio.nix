@@ -23,8 +23,8 @@ in
 
   config = mkIf (cfg-kvm.enable && cfg.enable) {
     services.udev.extraRules = ''
-      			SUBSYSTEM=="vfio", OWNER="${user.name}", GROUP="qemu-libvirt", MODE="0660"
-      		'';
+      SUBSYSTEM=="vfio", OWNER="${user.name}", GROUP="qemu-libvirt", MODE="0660"
+    '';
     # NOT USED B/C NEW LOOKING GLASS RC1 PREFERS KVMFR DEVICE APPROACH OVER SHM FILE
     # systemd.tmpfiles.rules = [
     #   "f /dev/shm/looking-glass 0600 ${user.name} qemu-libvirtd -"
