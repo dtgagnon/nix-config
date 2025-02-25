@@ -23,7 +23,7 @@ in
 
   config = mkIf (cfg-kvm.enable && cfg.enable) {
     services.udev.extraRules = ''
-      SUBSYSTEM=="vfio", OWNER="${user.name}", GROUP="qemu-libvirt", MODE="0660"
+      SUBSYSTEM=="vfio", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
     '';
     # NOT USED B/C NEW LOOKING GLASS RC1 PREFERS KVMFR DEVICE APPROACH OVER SHM FILE
     # systemd.tmpfiles.rules = [
@@ -33,11 +33,7 @@ in
     boot = {
       extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
 
-      blacklistedKernelModules =
-        if cfg.blacklistNvidia then [
-          "nvidia"
-          "nouveau"
-        ] else [ ];
+      blacklistedKernelModules = [ "nvidia" "nouveau" ];
 
       kernelModules = [
         "kvmfr"
@@ -54,9 +50,9 @@ in
 
       kernelParams = [
         "${cfg-kvm.platform}_iommu=on"
-        # "${cfg.platform}_iommu=igfx_off"
+        "${cfg.platform}_iommu=igfx_off"
         "iommu=pt"
-        "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
+        # "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
         "video=efifb:off"
         "pcie_aspm=off"
         "kvm.ignore_msrs=1"

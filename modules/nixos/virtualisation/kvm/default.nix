@@ -97,6 +97,7 @@ in
         extraGroups = [
           "qemu-libvirtd"
           "libvirtd"
+          "kvm"
           "disk"
         ];
       };
