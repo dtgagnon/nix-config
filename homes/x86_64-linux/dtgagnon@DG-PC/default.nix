@@ -42,6 +42,7 @@ in
       bottom = enabled;
       broot = enabled;
       carapace = enabled;
+      claude-code = enabled;
       direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
