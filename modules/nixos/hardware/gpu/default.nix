@@ -48,7 +48,6 @@ in
         vulkan-tools
       ];
 
-
       environment.variables = if (cfg.iGPU != null) then { } else {
         NVD_BACKEND = "direct";
         LIBVA_DRIVER_NAME = "nvidia";
@@ -92,7 +91,7 @@ in
       environment.variables = {
         LIBVA_DRIVER_NAME = "iHD";
         VDPAU_DRIVER = "va_gl";
-        # MOZ_DISABLE_RDD_SANDBOX = "1";
+        MOZ_DISABLE_RDD_SANDBOX = "1";
       };
     })
   ];
