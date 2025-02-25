@@ -181,7 +181,7 @@
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "stablepkgs";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.nixpkgs.follows = "hyprland";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";

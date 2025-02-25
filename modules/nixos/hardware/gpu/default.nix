@@ -19,7 +19,7 @@ in
 
   config = mkMerge [
     (mkIf (cfg.enable && cfg.dGPU == "nvidia") {
-      services.xserver.videoDrivers = [ "nvidia" ];
+      # services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
           open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
@@ -49,9 +49,9 @@ in
       ];
 
 
-      environment.variables = {
+      environment.variables = if (cfg.iGPU != null) then { } else {
         NVD_BACKEND = "direct";
-        LIBVA_DRIVER_NAME = if (cfg.iGPU == null) then "nvidia" else (mkDefault "");
+        LIBVA_DRIVER_NAME = "nvidia";
         GBM_BACKEND = "nvidia-drm";
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       };
@@ -59,7 +59,7 @@ in
 
       boot = {
         blacklistedKernelModules = [ "nouveau" ];
-        kernelParams = [
+        kernelParams = if (cfg.iGPU != null) then [ ] else [
           "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
           "nvidia-drm.modeset=1"
         ];
@@ -70,11 +70,11 @@ in
       services.xserver.videoDrivers = [ "modesetting" ];
       hardware.graphics = {
         enable = mkDefault true;
-        #driSupport ?
         enable32Bit = mkDefault true;
         extraPackages = with pkgs; [
           intel-media-driver
           intel-vaapi-driver
+          vpl-gpu-rt
           vaapiVdpau
           libvdpau-va-gl
         ];
@@ -82,16 +82,17 @@ in
       boot = {
         kernelModules = [ "i915" ];
         kernelParams = [
+          "i915.force_probe=a780"
           "i915.enable_fbc=1"
           "i915.enable_psr=2"
           "i915.modeset=1"
         ];
-        kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
+        # kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
       };
       environment.variables = {
         LIBVA_DRIVER_NAME = "iHD";
         VDPAU_DRIVER = "va_gl";
-        MOZ_DISABLE_RDD_SANDBOX = "1";
+        # MOZ_DISABLE_RDD_SANDBOX = "1";
       };
     })
   ];

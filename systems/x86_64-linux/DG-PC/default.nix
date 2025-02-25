@@ -33,7 +33,7 @@ in
 
     hardware = {
       audio = enabled;
-      gpu = { enable = true; iGPU = "intel"; dGPU = "nvidia"; nvidiaChannel = "latest"; };
+      gpu = { enable = true; iGPU = "intel"; dGPU = "nvidia"; nvidiaChannel = "stable"; };
       storage = {
         boot.enable = true;
         disko = { enable = true; device = "/dev/nvme0n1"; };
