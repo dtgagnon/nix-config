@@ -19,7 +19,7 @@ in
 
   config = mkMerge [
     (mkIf (cfg.enable && cfg.dGPU == "nvidia") {
-      # services.xserver.videoDrivers = [ "nvidia" ];
+      services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
           open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);

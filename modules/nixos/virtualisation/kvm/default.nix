@@ -22,9 +22,8 @@ in
 
   config = mkIf cfg.enable {
     boot = {
+      initrd.kernelModules = [ "kvm-${cfg.platform}" "i915" ];
       kernelModules = [
-        "kvm-${cfg.platform}"
-        "i915"
         "vhost"
         "vhost_net"
         "vhost_vsock"
@@ -32,36 +31,12 @@ in
       ];
     };
 
-    services.qemuGuest.enable = true;
-
-    environment.systemPackages = with pkgs; [
-      virt-manager
-      virt-viewer
-
-      spice
-      spice-gtk
-      spice-vdagent
-      spice-protocol
-
-      virglrenderer
-      bridge-utils
-
-      virtiofsd
-      virtio-win
-      win-spice
-
-      quickemu
-      # rustdesk # dont think this is used related to VMs
-      # rustdesk-server # dont think this is ued related to VMs
-    ];
-
     virtualisation = {
-      spiceUSBRedirection.enable = true;
       libvirtd = {
         enable = true;
         onBoot = "ignore";
         onShutdown = "shutdown";
-        allowedBridges = [ "virbr0" "br0" ];
+        # allowedBridges = [ "virbr0" "br0" ];
         extraConfig = ''
           user = "${user.name}"
           group = "qemu-libvirtd"
@@ -75,22 +50,23 @@ in
             packages = [ pkgs.OVMFFull.fd ];
           };
           swtpm = enabled;
-          vhostUserPackages = [ pkgs.virtiofsd ];
           verbatimConfig = ''
-            namespaces = []
-            user = "+${builtins.toString config.users.users.${user.name}.uid}"
+            user = "${user.name}"
             group = "qemu-libvirtd"
             cgroup_device_acl = [
+              "/dev/kvmfr0",
+              "/dev/vfio/vfio", "/dev/vfio/11", "/dev/vfio/12",
               "/dev/null", "/dev/full", "/dev/zero",
               "/dev/random", "urandom",
               "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-              "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
-              "/dev/kvmfr0"
             ]
           '';
         };
       };
+      spiceUSBRedirection.enable = true;
     };
+
+    services.qemuGuest.enable = true;
 
     spirenix = {
       user = {
@@ -102,5 +78,29 @@ in
         ];
       };
     };
+
+    environment.systemPackages = with pkgs; [
+      virt-manager
+      virt-viewer
+
+      spice
+      spice-gtk
+      spice-vdagent
+      spice-protocol
+
+      virglrenderer
+      bridge-utils
+      OVMF
+      gvfs
+      swtpm
+
+      virtiofsd
+      virtio-win
+      win-spice
+
+      quickemu
+      # rustdesk # dont think this is used related to VMs
+      # rustdesk-server # dont think this is ued related to VMs
+    ];
   };
 }

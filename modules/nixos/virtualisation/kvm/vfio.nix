@@ -15,6 +15,7 @@ in
     enable = mkBoolOpt false "Enable VFIO Configuration";
     vfioIds = mkOpt (types.listOf types.str) [ ] "The hardware IDs to pass through to the VM";
     blacklistNvidia = mkBoolOpt false "Add Nvidia GPU modules to blacklist";
+    passGpuAtBoot = mkBoolOpt true "Pass the GPU to VFIO at boot";
 
     # disableEFIfb = mkOpt types.bool false "Disables the usage of the EFI framebuffer on boot.";
     # ignoreMSRs = mkBoolOpt false "Disable kvm guest access to model-specific registers";
@@ -23,50 +24,50 @@ in
 
   config = mkIf (cfg-kvm.enable && cfg.enable) {
     services.udev.extraRules = ''
-      SUBSYSTEM=="vfio", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
+      SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
     '';
-    # NOT USED B/C NEW LOOKING GLASS RC1 PREFERS KVMFR DEVICE APPROACH OVER SHM FILE
-    # systemd.tmpfiles.rules = [
-    #   "f /dev/shm/looking-glass 0600 ${user.name} qemu-libvirtd -"
-    # ];
 
     boot = {
-      extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
-
-      blacklistedKernelModules = [ "nvidia" "nouveau" ];
-
-      kernelModules = [
-        "kvmfr"
+      initrd.kernelModules = mkIf cfg.passGpuAtBoot [
         "vfio_pci"
         "vfio_iommu_type1"
         "vfio"
       ];
-      initrd.kernelModules = [
-        "kvmfr"
-        "vfio_pci"
-        "vfio_iommu_type1"
+
+      initrd.availableKernelModules = mkIf (!cfg.passGpuAtBoot) [
         "vfio"
+        "vfio_iommu_type1"
+        "vfio_pci"
+      ];
+
+      kernelModules = [
+        "vhost-net"
+        "kvmfr"
       ];
 
       kernelParams = [
         "${cfg-kvm.platform}_iommu=on"
-        "${cfg-kvm.platform}_iommu=igfx_off"
+        # "${cfg-kvm.platform}_iommu=igfx_off"
         "iommu=pt"
-        # "vfio-pci.ids=${concatStringsSep "," cfg.vfioIds}"
-        "video=efifb:off"
-        "pcie_aspm=off"
-        "kvm.ignore_msrs=1"
-        "kvm.report_ignored_msrs=0"
       ];
+      #NOTE: belongs above, testing without
+      # "video=efifb:off"
+      # "pcie_aspm=off"
 
-      extraModprobeConfig = optionalString (length cfg.vfioIds > 0) ''
-        				softdep nvidia pre: vfio vfio-pci
-        				softdep nvidia* pre: vfio vfio-pci
-        				options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
-        				options kvm ignore_msrs=1
-        				options kvm report_ignored_msrs=0
-        				options kvmfr static_size_mb=64
-        			'';
+      #NOTE: belongs below, testing without
+      # softdep nvidia pre: vfio vfio-pci
+      # softdep nvidia* pre: vfio vfio-pci
+      extraModprobeConfig = ''
+        options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
+        options kvm ignore_msrs=1
+        options kvm report_ignored_msrs=0
+        options kvmfr static_size_mb=64
+        softdep nvidia pre: vfio-pci
+      '';
+
+      extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
+
+      blacklistedKernelModules = [ "nvidia" "nouveau" ];
     };
   };
 }
