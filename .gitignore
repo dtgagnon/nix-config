@@ -4,3 +4,4 @@ modules/home/tools/ssh
 tmp
 result
 .pre-copmmit-config.yaml
+CLAUDE.md
