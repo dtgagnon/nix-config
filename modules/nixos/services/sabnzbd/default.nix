@@ -22,7 +22,7 @@ in
       user = "sabnzbd";
       group = "media";
       openFirewall = false;
-      inherit (cfg) configFile;
+      # inherit (cfg) configFile;
     };
   };
 }
