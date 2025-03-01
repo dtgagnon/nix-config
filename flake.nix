@@ -57,12 +57,16 @@
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
+        ];
+
+        systems.hosts.DG-PC.modules = with inputs; [
           NixVirt.nixosModules.default
         ];
 
         systems.hosts.spirepoint.modules = with inputs; [
           plane-nix.nixosModules."services/plane"
           proxmox-nixos.nixosModules.proxmox-ve
+          NixVirt.nixosModules.default
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
@@ -163,6 +167,9 @@
 
     NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
     NixVirt.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-vfio.url = "github:j-brn/nixos-vfio";
+    nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications
     ghostty.url = "github:ghostty-org/ghostty"; #NOTE: already follows nixos-unstable and 24.11 where needed

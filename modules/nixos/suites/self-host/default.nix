@@ -20,7 +20,7 @@ in
         media = {
           audiobookshelf = enabled;
           jellyfin = enabled;
-          # jellyseerr = enabled;
+          jellyseerr = enabled;
         };
         qbittorrent = enabled;
         sabnzbd = enabled;

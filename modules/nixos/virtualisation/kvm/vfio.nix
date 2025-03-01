@@ -47,11 +47,10 @@ in
 
       kernelParams = [
         "${cfg-kvm.platform}_iommu=on"
-        # "${cfg-kvm.platform}_iommu=igfx_off"
         "iommu=pt"
+        "video=efifb:off"
       ];
       #NOTE: belongs above, testing without
-      # "video=efifb:off"
       # "pcie_aspm=off"
 
       #NOTE: belongs below, testing without
