@@ -8,7 +8,6 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.looking-glass-client;
-  user = config.${namespace}.user;
 in
 {
   options.${namespace}.apps.looking-glass-client = {
@@ -37,11 +36,14 @@ in
           uiSize = 16; #huh? idk why
         };
         input = {
-          autoCapture = "yes";
-          escapeKey = "KEY_ESC";
+          autoCapture = "no";
+          escapeKey = "KEY_113";
           grabKeyboardOnFocus = "yes";
           rawMouse = "yes";
           releaseKeysOnFocusLoss = "yes";
+        };
+        audio = {
+          micDefault = "allow";
         };
         spice = {
           enable = "yes";
