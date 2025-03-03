@@ -9,7 +9,7 @@ in
 {
   imports = [
     ./hardware.nix
-    # ./disk-config.nix
+    ./disk-config.nix
   ];
 
   networking.hostName = host;
@@ -36,7 +36,6 @@ in
       gpu = { enable = true; iGPU = "intel"; };
       storage = {
         boot.enable = true;
-        disko = { enable = true; device = "/dev/nvme0n1"; };
       };
     };
 
@@ -49,7 +48,7 @@ in
 
     system = {
       enable = true;
-      impermanence = enabled;
+      preservation = enabled;
     };
 
     tools = {
@@ -77,5 +76,5 @@ in
     };
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }

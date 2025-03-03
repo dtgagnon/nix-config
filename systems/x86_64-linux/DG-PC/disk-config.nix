@@ -3,7 +3,7 @@
     disk = {
       primary = {
         type = "disk";
-        device = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_1000GB_22292W803385";
+        device = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23280Q800651";
         content = {
           type = "gpt";
           partitions = {
@@ -17,22 +17,6 @@
                 mountOptions = [ "umask=0077" ];
               };
             };
-            root = {
-              size = "100%";
-              content = {
-                type = "lvm_pv";
-                vg = "root-pool";
-              };
-            };
-          };
-        };
-      };
-      secondary = {
-        type = "disk";
-        device = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_4000GB_23280Q800651";
-        content = {
-          type = "gpt";
-          partitions = {
             root = {
               size = "100%";
               content = {
