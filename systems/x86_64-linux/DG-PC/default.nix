@@ -48,7 +48,6 @@ in
 
     system = {
       enable = true;
-      preservation = enabled;
     };
 
     tools = {

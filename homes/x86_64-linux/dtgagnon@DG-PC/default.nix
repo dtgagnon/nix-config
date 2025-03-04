@@ -18,12 +18,12 @@ in
     };
 
     apps = {
-#      discord = enabled;
-#      freecad = enabled;
+      discord = enabled;
+      freecad = enabled;
       looking-glass-client = enabled;
-#      obsidian = enabled;
-#      office.okular-pdf = enabled;
-#      super-productivity = enabled;
+      obsidian = enabled;
+      office.okular-pdf = enabled;
+      super-productivity = enabled;
       terminals = {
         ghostty = {
           enable = true;
@@ -31,18 +31,17 @@ in
           light-theme = "Everforest Dark - Hard";
         };
       };
-#      thunderbird = enabled;
-#      todoist = enabled;
-#      vscode = enabled;
-#      zen = enabled;
+      todoist = enabled;
+      vscode = enabled;
+      zen = enabled;
     };
 
     cli = {
       bat = enabled;
-#      bottom = enabled;
-#      broot = enabled;
-#      carapace = enabled;
-#      claude-code = enabled;
+      bottom = enabled;
+      broot = enabled;
+      carapace = enabled;
+      claude-code = enabled;
       direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
@@ -61,7 +60,7 @@ in
       hyprland = {
         enable = true;
         monitors = [
-          "DP-1,3440x1440@144,0x0,1"
+          "DP-1,3440x1440@100,0x0,1"
         ];
         extraConfig = ''
           general {
@@ -90,7 +89,7 @@ in
     };
 
     services = {
-#      activity-watch = enabled;
+      activity-watch = enabled;
       syncthing = enabled;
     };
   };
