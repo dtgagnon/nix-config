@@ -22,109 +22,112 @@ in
     programs.vscode = {
       enable = true;
       package = pkgs.vscodium;
-      profiles.default.extensions = with pkgs.vscode-extensions; [
-        vscodevim.vim
-        sainnhe.gruvbox-material
+      profiles.default = {
+        extensions = with pkgs.vscode-extensions; [
+          vscodevim.vim
+          sainnhe.gruvbox-material
 
-        github.copilot
-        github.copilot-chat
-        continue.continue
+          github.copilot
+          github.copilot-chat
+          continue.continue
 
-        mkhl.direnv
-        jnoortheen.nix-ide
-        arrterian.nix-env-selector
+          mkhl.direnv
+          jnoortheen.nix-ide
+          arrterian.nix-env-selector
 
-      ] ++ cfg.extensions;
+        ] ++ cfg.extensions;
+      };
     };
 
     # For compatibility with Hyprland, to tell it the keyring to use.
     home.file.".vscode-oss/argv.json".text = ''
-      // This configuration file allows you to pass permanent command line arguments to VS Code.
-      {
-        // For compatibility with Hyprland, to tell it the keyring to use.
-        "password-store": "gnome-libsecret",
+      // This configuration file allows you to pass permanent command line arguments to VS
+        Code.{
+        // For
+        compatibility with Hyprland, to tell it the keyring to use.
+      "password-store": "gnome-libsecret",
 
-        // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
-        // "disable-hardware-acceleration": true,
+      // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
+      // "disable-hardware-acceleration": true,
 
-        // Allows to disable crash reporting. Should restart the app if the value is changed.
-        "enable-crash-reporter": false,
+      // Allows to disable crash reporting. Should restart the app if the value is changed.
+      "enable-crash-reporter": false,
 
-        // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
-        "crash-reporter-id": "b24b470f-e40a-4d0d-85e4-fcb22afc5576"
+      // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
+      "crash-reporter-id": "b24b470f-e40a-4d0d-85e4-fcb22afc5576"
       }
     '';
 
     xdg.configFile."VSCodium/User/starter-for-settings.json".text = ''
       {
-        // Chat settings
-        "chat.editor.fontFamily": "JetBrainsMono Nerd Font Mono",
-        "chat.editor.fontSize": 16,
+      // Chat settings
+      "chat.editor.fontFamily": "JetBrainsMono Nerd Font Mono",
+      "chat.editor.fontSize": 16,
 
-        // Debug console settings
-        "debug.console.fontFamily": "JetBrainsMono Nerd Font Mono",
-        "debug.console.fontSize": 16,
+      // Debug console settings
+      "debug.console.fontFamily": "JetBrainsMono Nerd Font Mono",
+      "debug.console.fontSize": 16,
 
-        // Markdown preview settings
-        "markdown.preview.fontFamily": "DejaVu Sans",
-        "markdown.preview.fontSize": 16,
+      // Markdown preview settings
+      "markdown.preview.fontFamily": "DejaVu Sans",
+      "markdown.preview.fontSize": 16,
 
-        // SCM settings
-        "scm.inputFontFamily": "JetBrainsMono Nerd Font Mono",
-        "scm.inputFontSize": 16,
+      // SCM settings
+      "scm.inputFontFamily": "JetBrainsMono Nerd Font Mono",
+      "scm.inputFontSize": 16,
 
-        // Screencast mode settings
-        "screencastMode.fontSize": 80,
+      // Screencast mode settings
+      "screencastMode.fontSize": 80,
 
-        // Terminal settings
-        "terminal.integrated.fontSize": 16,
-        "terminal.external.linuxExec": "nu",
+      // Terminal settings
+      "terminal.integrated.fontSize": 16,
+      "terminal.external.linuxExec": "nu",
 
-        // Workbench settings
-        "workbench.colorTheme": "Gruvbox Material Dark",
-        "workbench.iconTheme": "gruvbox-material-icon-theme",
-        "workbench.productIconTheme": "material-product-icons",
-        "workbench.sideBar.location": "right",
-        "workbench.tips.enabled": false,
+      // Workbench settings
+      "workbench.colorTheme": "Gruvbox Material Dark",
+      "workbench.iconTheme": "gruvbox-material-icon-theme",
+      "workbench.productIconTheme": "material-product-icons",
+      "workbench.sideBar.location": "right",
+      "workbench.tips.enabled": false,
 
-        // Editor settings
-        "editor.indentSize": 2,
-        "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
-        "editor.fontSize": 16,
-        "editor.inlayHints.fontFamily": "JetBrainsMono Nerd Font Mono",
-        "editor.inlineSuggest.fontFamily": "JetBrainsMono Nerd Font Mono",
-        "editor.minimap.sectionHeaderFontSize": 16,
-        "editor.wordWrap": "on",
+      // Editor settings
+      "editor.indentSize": 2,
+      "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
+      "editor.fontSize": 16,
+      "editor.inlayHints.fontFamily": "JetBrainsMono Nerd Font Mono",
+      "editor.inlineSuggest.fontFamily": "JetBrainsMono Nerd Font Mono",
+      "editor.minimap.sectionHeaderFontSize": 16,
+      "editor.wordWrap": "on",
 
-        // Git settings
-        "git.openRepositoryInParentFolders": "always",
-        "git.enableSmartCommit": true,
-        "git.confirmSync": false,
+      // Git settings
+      "git.openRepositoryInParentFolders": "always",
+      "git.enableSmartCommit": true,
+      "git.confirmSync": false,
 
-        // Nix settings
-        "[nix]": {
-          "editor.tabSize": 2
-        },
-        "nix.enableLanguageServer": true,
-        "nix.formatterPath": "nixfmt",
-        "nix.serverPath": "nixd",
-        "nix.serverSettings": {},
+      // Nix settings
+      "[nix]": {
+      "editor.tabSize": 2
+      },
+      "nix.enableLanguageServer": true,
+      "nix.formatterPath": "nixfmt",
+      "nix.serverPath": "nixd",
+      "nix.serverSettings": {},
 
-        // GitHub Copilot settings
-        "github.copilot.advanced": {},
-        "github.copilot.chat.scopeSelection": true,
-        "github.copilot.chat.terminalChatLocation": "terminal",
-        "github.copilot.chat.search.semanticTextResults": true,
-        "github.copilot.chat.experimental.inlineChatCompletionTrigger.enabled": true,
-        "github.copilot.chat.experimental.inlineChatHint.enabled": true,
-        "github.copilot.chat.temporalContext.enabled": true,
+      // GitHub Copilot settings
+      "github.copilot.advanced": {},
+      "github.copilot.chat.scopeSelection": true,
+      "github.copilot.chat.terminalChatLocation": "terminal",
+      "github.copilot.chat.search.semanticTextResults": true,
+      "github.copilot.chat.experimental.inlineChatCompletionTrigger.enabled": true,
+      "github.copilot.chat.experimental.inlineChatHint.enabled": true,
+      "github.copilot.chat.temporalContext.enabled": true,
 
-        // Window settings
-        "window.customTitleBarVisibility": "auto",
-        "window.menuBarVisibility": "toggle",
+      // Window settings
+      "window.customTitleBarVisibility": "auto",
+      "window.menuBarVisibility": "toggle",
 
-        // Continue settings
-        "continue.enableTabAutocomplete": false
+      // Continue settings
+      "continue.enableTabAutocomplete": false
       }
     '';
   };

@@ -75,6 +75,7 @@
 
         homes.modules = with inputs; [
           ags.homeManagerModules.default
+          sops-nix.homeManagerModules.sops
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };

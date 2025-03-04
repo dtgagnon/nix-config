@@ -19,11 +19,10 @@ in
 
     apps = {
       discord = enabled;
-      freecad = enabled;
       looking-glass-client = enabled;
       obsidian = enabled;
       office.okular-pdf = enabled;
-      super-productivity = enabled;
+      # super-productivity = enabled;
       terminals = {
         ghostty = {
           enable = true;
@@ -60,7 +59,7 @@ in
       hyprland = {
         enable = true;
         monitors = [
-          "DP-1,3440x1440@100,0x0,1"
+          "DP-1,3440x1440@144,0x0,1"
         ];
         extraConfig = ''
           general {
@@ -78,7 +77,7 @@ in
             size = 24;
           };
           theme = "everforest";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.leafwall-womansback;
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.cherryblossoms-greentint;
         };
         stylix = {
           enable = true;
@@ -87,6 +86,8 @@ in
         wallpapers-dir = enabled;
       };
     };
+
+    security.sops-nix = enabled;
 
     services = {
       activity-watch = enabled;
