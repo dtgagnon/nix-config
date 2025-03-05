@@ -1,10 +1,9 @@
-{
-  lib,
-  config,
-  pkgs,
-  namespace,
-  osConfig ? { },
-  ...
+{ lib
+, config
+, pkgs
+, namespace
+, osConfig ? { }
+, ...
 }:
 
 let
@@ -37,28 +36,10 @@ in
 
     fullName = mkOpt types.str "${cfg.name}" "The full name of the user.";
     email = mkOpt types.str "${cfg.name}@email.com" "The email of the user.";
-
-    persistHomeDirs =
-      mkOpt (types.listOf types.str) [ ]
-        "Declare additional user home directories to persist";
-    persistHomeFiles =
-      mkOpt (types.listOf types.str) [ ]
-        "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable (mkMerge [
     {
-      assertions = [
-        {
-          assertion = cfg.name != null;
-          message = "${namespace}.user.name must be set";
-        }
-        {
-          assertion = cfg.home != null;
-          message = "${namespace}.user.home must be set";
-        }
-      ];
-
       programs.home-manager.enable = true;
       home = {
         preferXdgDirectories = true;

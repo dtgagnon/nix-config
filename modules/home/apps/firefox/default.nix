@@ -45,9 +45,5 @@ in
     };
 
     home.sessionVariables.BROWSER = "firefox";
-
-    spirenix.user.persistHomeDirs = [
-      ".mozilla/firefox"  # Contains all user profiles, extensions, and settings
-    ];
   };
 }

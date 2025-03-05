@@ -15,7 +15,7 @@ in
   options.${namespace}.desktop.styling.stylix = {
     enable = mkBoolOpt false "Enable stylix dynamic theming";
     wallpaper = mkOpt (types.nullOr types.package) null "Designate the name of the source image";
-    polarity = mkOpt (types.nullOr types.str) null "Choose automatic theme polarity [`either`, `light`, `dark`]";
+    polarity = mkOpt (types.str) "either" "Choose automatic theme polarity [`either`, `light`, `dark`]";
     override = mkOpt (types.attrsOf types.str) { } "Designate the base16 target to override";
     excludedTargets = mkOpt (types.listOf types.str) [ ] "Declare a list of targets to exclude from Stylix theming";
   };
@@ -23,9 +23,9 @@ in
   config = mkMerge [
     (mkIf cfg.enable {
       # Go to https://stylix.danth.me/options/nixos.html for more Stylix options
-      stylix = {
+      stylix = lib.mkDefault {
         enable = true;
-        polarity = mkIf (cfg.polarity != null) cfg.polarity;
+        polarity = cfg.polarity;
 
         image = if (cfg.wallpaper == null) then core.wallpaper else cfg.wallpaper;
         imageScalingMode = "stretch";
@@ -91,7 +91,7 @@ in
       };
     })
     (mkIf (core.theme != null) {
-      stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
+      stylix.base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/${core.theme}.yaml";
     })
   ];
 }

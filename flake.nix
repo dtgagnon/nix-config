@@ -76,6 +76,7 @@
         homes.modules = with inputs; [
           ags.homeManagerModules.default
           sops-nix.homeManagerModules.sops
+          stylix.homeManagerModules.stylix
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };

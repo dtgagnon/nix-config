@@ -34,10 +34,10 @@ in
             }
       		'';
 
-    spirenix.user.persistHomeDirs = [
-      ".config/Windsurf" # Future XDG config location
-      ".windsurf" # Current data directory
-      ".codeium" # Codeium data directory
-    ];
+    # spirenix.user.persistHomeDirs = [
+    #   ".config/Windsurf" # Future XDG config location
+    #   ".windsurf" # Current data directory
+    #   ".codeium" # Codeium data directory
+    # ];
   };
 }

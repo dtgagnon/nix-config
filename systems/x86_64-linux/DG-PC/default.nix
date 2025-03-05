@@ -48,6 +48,7 @@ in
 
     system = {
       enable = true;
+      preservation = true;
     };
 
     tools = {
@@ -74,6 +75,5 @@ in
       };
     };
   };
-  fileSystems."/persist".neededForBoot = true;
   system.stateVersion = "24.11";
 }

@@ -21,7 +21,6 @@ in
 
     extraUsers = mkOpt (listOf str) [ ] "Additional users to declare for a specific host";
     extraGroups = mkOpt (listOf str) [ ] "Groups for the user to be assigned";
-    admin = mkBoolOpt (if "${cfg.name}" == "dtgagnon" || "admin" || "root" then true else false) "Declare if the user should be added to wheel group automatically";
 
     home.file = mkOpt types.attrs { } "A set of files to be managed by home-manager `home.file`";
     home.configFile = mkOpt attrs { } "An set of files to be managed by home-manager xdg.configFile";
@@ -50,8 +49,8 @@ in
               xdg.configFile = mkAliasDefinitions options.${namespace}.user.home.configFile;
             } // cfg.home.extraOptions;
 
-            # User security
-            inherit (cfg) admin;
+            # User admin permissions (add to wheel)
+            admin = if ("${user}" == "dtgagnon" || "admin" || "root") then true else false;
           };
 
           # User security

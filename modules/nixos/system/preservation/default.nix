@@ -39,7 +39,8 @@ in
           "/var/lib/bluetooth"
           "/var/lib/fprint"
           "/var/lib/fwupd"
-          "/var/lib/libvirt"
+          { directory = "/var/lib/libvirt"; user = "qemu-libvirtd"; group = "qemu-libvirtd"; mode = "0750"; }
+          { directory = "/var/lib/qemu"; user = "qemu-libvirtd"; group = "qemu-libvirtd"; mode = "0750"; }
           "/var/lib/power-profiles-daemon"
           "/var/lib/systemd/coredump"
           "/var/lib/systemd/rfkill"
@@ -71,6 +72,13 @@ in
                   directories = [
                     { directory = ".ssh"; mode = "0700"; }
                     "Apps"
+                    "Documents"
+                    "Downloads"
+                    "Games"
+                    "Music"
+                    "Pictures"
+                    "Sync"
+                    "Videos"
                     ".config/syncthing"
                     ".local/state/nix"
                     ".local/state/nvim"
@@ -113,7 +121,9 @@ in
             dtgagnon = {
               directories = [
                 "Apps"
+                "myVMs"
                 "nix-config"
+                "proj"
                 ".config/github-copilot"
                 ".config/obsidian"
                 ".config/syncthing"
@@ -144,6 +154,24 @@ in
           }
         ];
       };
+    };
+
+    # systemd-machine-id-commit.service would fail, but it is not relevant
+    # in this specific setup for a persistent machine-id so we disable it
+    #
+    # see the firstboot example below for an alternative approach
+    systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
+
+    # let the service commit the transient ID to the persistent volume
+    systemd.services.systemd-machine-id-commit = {
+      unitConfig.ConditionPathIsMountPoint = [
+        ""
+        "/persistent/etc/machine-id"
+      ];
+      serviceConfig.ExecStart = [
+        ""
+        "systemd-machine-id-setup --commit --root /persistent"
+      ];
     };
 
     # Create some directories with custom permissions.
