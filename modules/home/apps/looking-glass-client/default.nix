@@ -37,7 +37,7 @@ in
         };
         input = {
           autoCapture = "no";
-          escapeKey = "KEY_113";
+          escapeKey = "KEY_RIGHTCTRL";
           grabKeyboardOnFocus = "yes";
           rawMouse = "yes";
           releaseKeysOnFocusLoss = "yes";

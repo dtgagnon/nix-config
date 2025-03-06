@@ -102,5 +102,9 @@ in
       # rustdesk # dont think this is used related to VMs
       # rustdesk-server # dont think this is ued related to VMs
     ];
+
+    # spirenix.system.preservation.extraSysDirs = [
+    #   { directory = "/var/lib/libvirt"; user = "${user.name}"; group = "qemu-libvirtd"; }
+    # ];
   };
 }

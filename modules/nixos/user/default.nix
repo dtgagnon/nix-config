@@ -7,7 +7,7 @@
 , ...
 }:
 let
-  inherit (lib) mkAliasDefinitions mkMerge types;
+  inherit (lib) mkAliasDefinitions mkMerge mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt snowfallHostUserList;
   cfg = config.${namespace}.user;
 in
@@ -50,7 +50,7 @@ in
             } // cfg.home.extraOptions;
 
             # User admin permissions (add to wheel)
-            admin = if ("${user}" == "dtgagnon" || "admin" || "root") then true else false;
+            admin = mkIf (!builtins.elem "${user}" [ "dtgagnon" "admin" "root" ]) false;
           };
 
           # User security

@@ -35,6 +35,7 @@ in
         # Preserve system directories
         directories = [
           "/etc/secureboot"
+          "/etc/ssh"
           "/etc/greetd"
           "/var/lib/bluetooth"
           "/var/lib/fprint"
@@ -53,7 +54,8 @@ in
         # preserve system files
         files = [
           { file = "/etc/machine-id"; inInitrd = true; how = "symlink"; configureParent = true; }
-          { file = "/etc/ssh/ssh_host_ed25519_key"; how = "symlink"; configureParent = true; }
+          { file = "/etc/ssh/ssh_host_ed25519_key"; mode = "0600"; how = "symlink"; configureParent = true; }
+          { file = "/etc/ssh/ssh_host_ed25519_key.pub"; mode = "0644"; how = "symlink"; configureParent = true; }
           "/var/lib/usbguard/rules.conf"
 
           # creates a symlink on the volatile root
@@ -70,7 +72,6 @@ in
               (user: {
                 ${user} = {
                   directories = [
-                    { directory = ".ssh"; mode = "0700"; }
                     "Apps"
                     "Documents"
                     "Downloads"
@@ -84,8 +85,9 @@ in
                     ".local/state/nvim"
                     ".local/state/syncthing"
                     ".local/state/wireplumber"
-                    ".mozilla"
-                    ".zen"
+                    { directory = ".pki"; mode = "0700"; }
+                    { directory = ".ssh"; mode = "0700"; }
+                    { directory = ".zen"; mode = "0700"; }
                   ] ++ cfg.extraHomeDirs;
                   files = [
                     ".histfile"
@@ -100,45 +102,39 @@ in
           {
             admin = {
               directories = [
-                "Apps"
-                "nix-config"
-                ".config/github-copilot"
-                ".config/obsidian"
-                ".config/syncthing"
-                ".config/VSCodium"
                 ".local/share/direnv"
                 ".local/share/zoxide"
-                ".local/state/nix"
-                ".local/state/nvim"
-                ".local/state/syncthing"
-                ".local/state/wireplumber"
-                ".codeium"
-                ".mozilla"
-                ".zen"
               ] ++ cfg.extraHomeDirs;
               files = [ ] ++ cfg.extraHomeFiles;
             };
             dtgagnon = {
               directories = [
-                "Apps"
                 "myVMs"
                 "nix-config"
                 "proj"
-                ".config/github-copilot"
+                ".config"
+                ".config/discord"
+                ".config/hypr"
                 ".config/obsidian"
+                ".config/rofi"
                 ".config/syncthing"
                 ".config/VSCodium"
+                ".local/share/activitywatch"
+                ".local/share/bottles"
                 ".local/share/direnv"
+                # ".local/share/fish"
+                ".local/share/keyrings"
+                ".local/share/rofi"
                 ".local/share/zoxide"
-                ".local/state/nix"
-                ".local/state/nvim"
-                ".local/state/syncthing"
-                ".local/state/wireplumber"
-                ".codeium"
-                ".mozilla"
-                ".zen"
+                ## Testing the below if I want to keep them
+                ".claude"
+                { directory = ".gnupg"; mode = "0700"; }
+                ".icons"
+                ".vscode-oss"
+                "vm-share"
+                "vfio-vm-info"
               ] ++ cfg.extraHomeDirs;
-              files = [ ] ++ cfg.extraHomeFiles;
+              files = [ ".claude.json" ] ++ cfg.extraHomeFiles;
             };
             root = {
               # specify user home when it is not `/home/${user}`
@@ -158,11 +154,9 @@ in
 
     # systemd-machine-id-commit.service would fail, but it is not relevant
     # in this specific setup for a persistent machine-id so we disable it
-    #
-    # see the firstboot example below for an alternative approach
     systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
 
-    # let the service commit the transient ID to the persistent volume
+    # change default systemd-machine-id-commit service to commit the transient ID to the persistent volume instead
     systemd.services.systemd-machine-id-commit = {
       unitConfig.ConditionPathIsMountPoint = [
         ""
@@ -170,7 +164,7 @@ in
       ];
       serviceConfig.ExecStart = [
         ""
-        "systemd-machine-id-setup --commit --root /persistent"
+        "systemd-machine-id-setup --commit --root /persist"
       ];
     };
 

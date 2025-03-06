@@ -72,6 +72,7 @@ in
       extraModulePackages = cfg.kernel.extraModulePackages;
 
       initrd = mkIf cfg.kernel.initrd.enable {
+        systemd.enable = true;
         kernelModules = cfg.kernel.initrd.modules;
         availableKernelModules = cfg.kernel.initrd.availableKernelModules;
       };

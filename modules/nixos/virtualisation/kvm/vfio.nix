@@ -53,9 +53,6 @@ in
       #NOTE: belongs above, testing without
       # "pcie_aspm=off"
 
-      #NOTE: belongs below, testing without
-      # softdep nvidia pre: vfio vfio-pci
-      # softdep nvidia* pre: vfio vfio-pci
       extraModprobeConfig = ''
         options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
         options kvm ignore_msrs=1

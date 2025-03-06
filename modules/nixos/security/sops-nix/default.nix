@@ -44,5 +44,9 @@ in
         anthropic_api = { };
       };
     };
+    spirenix.system.preservation = {
+      extraSysDirs = [ "var/lib/sops-nix" ];
+      extraSysFiles = [ "etc/ssh/ssh_host_ed25519_key" ];
+    };
   };
 }
