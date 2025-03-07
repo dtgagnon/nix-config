@@ -27,6 +27,22 @@
           };
         };
       };
+      secondary = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-WD_BLACK_SN850X_1000GB_22292W803385";
+        content = {
+          type = "gpt";
+          partitions = {
+            root2 = {
+              size = "100%";
+              content = {
+                type = "lvm_pv";
+                vg = "root-pool";
+              };
+            };
+          };
+        };
+      };
     };
     lvm_vg = {
       root-pool = {
