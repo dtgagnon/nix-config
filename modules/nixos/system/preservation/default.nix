@@ -35,7 +35,6 @@ in
         # Preserve system directories
         directories = [
           "/etc/secureboot"
-          "/etc/ssh"
           "/etc/greetd"
           "/var/lib/bluetooth"
           "/var/lib/fprint"
