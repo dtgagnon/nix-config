@@ -12,34 +12,6 @@ in
     ./disk-config.nix
   ];
 
-  fileSystems."/boot".options = [ "umask=0077" ];
-  boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot = {
-        enable = true;
-        configurationLimit = lib.mkDefault 3;
-        consoleMode = lib.mkDefault "max";
-        editor = false;
-      };
-    };
-    initrd = {
-      systemd.enable = true;
-      systemd.emergencyAccess = true; # don't need to enter password in emergency mode
-      luks.forceLuksSupportInInitrd = true;
-      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
-      kernelModules = [ "dm-snapshot" ];
-    };
-    kernelModules = [ "kvm-intel" ];
-    extraModulePackages = [ ];
-    kernelParams = [
-      "systemd.setenv=SYSTEMD_SULOGIN_FORCE=1"
-      "systemd.show_status=true"
-      "systemd.log_target=console"
-      "systemd.journald.forward_to_console=1"
-    ];
-  };
-
   hardware.nvidia = {
     modesetting.enable = lib.mkForce true;
     powerManagement.enable = lib.mkForce true;
@@ -71,8 +43,26 @@ in
 
     hardware = {
       audio = enabled;
-      gpu = { enable = true; dGPU = "nvidia"; };
-      storage.boot.enable = true;
+      gpu = { enable = true; dGPU = "nvidia"; iGPU = "intel"; };
+      storage.boot = {
+        enable = true;
+        kernel.params = [
+          "systemd.setenv=SYSTEMD_SULOGIN_FORCE=1"
+          "systemd.show_status=true"
+          "systemd.log_target=console"
+          "systemd.journald.forward_to_console=1"
+        ];
+        kernel.initrd = {
+          forceLuks = true;
+          availableKernelModules = [
+            "xhci_pci"
+            "ehci_pci"
+            "ahci"
+            "sd_mod"
+            "rtsx_usb_sdmmc"
+          ];
+        };
+      };
     };
 
     security = {
@@ -91,6 +81,20 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
+    };
+
+    virtualisation = {
+      kvm = {
+        enable = true;
+        vfio = {
+          enable = true;
+          blacklistNvidia = true;
+          vfioIds = [
+            "10de:1c02" #GTX1060 ID
+            "10de:10f1" #GTX1060 audio controller ID
+          ];
+        };
+      };
     };
   };
 

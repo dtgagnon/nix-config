@@ -20,20 +20,18 @@ in
       ]) "desktop" "Preset configuration to use";
 
     bootloader = {
-      type = mkOpt
-        (types.enum [
-          "systemd-boot"
-          "grub"
-        ]) "systemd-boot" "Type of bootloader to use";
+      type = mkOpt (types.enum [ "systemd-boot" "grub" ]) "systemd-boot" "Type of bootloader to use";
       configLimit = mkOpt types.int 5 "Number of generations to keep";
       editor = mkBoolOpt false "Whether to enable bootloader editor";
     };
 
     kernel = {
       modules = mkOpt (types.listOf types.str) [ "kvm-intel" ] "List of kernel modules to load";
+      params = mkOpt (types.listOf types.str) [ ] "List of kernel parameters to apply to kernel modules at boot";
 
       initrd = {
         enable = mkBoolOpt true "Whether to enable initrd configuration";
+        forceLuks = mkBoolOpt false "Force LUKS support in initrd";
         modules = mkOpt (types.listOf types.str) [ "dm-snapshot" ] "List of initrd modules";
         availableKernelModules = mkOpt (types.listOf types.str) [
           "xhci_pci"
@@ -57,6 +55,7 @@ in
         systemd-boot = mkIf (cfg.bootloader.type == "systemd-boot") {
           enable = true;
           configurationLimit = cfg.bootloader.configLimit;
+          consoleMode = lib.mkDefault "max";
           editor = cfg.bootloader.editor;
         };
 
@@ -69,20 +68,16 @@ in
       };
 
       kernelModules = cfg.kernel.modules;
+      kernelParams = cfg.kernel.params;
       extraModulePackages = cfg.kernel.extraModulePackages;
 
       initrd = mkIf cfg.kernel.initrd.enable {
+        luks.forceLuksSupportInInitrd = cfg.kernel.initrd.forceLuks;
         systemd.enable = true;
+        systemd.emergencyAccess = true;
         kernelModules = cfg.kernel.initrd.modules;
         availableKernelModules = cfg.kernel.initrd.availableKernelModules;
       };
     };
-
-    # assertions = [
-    #   {
-    #     assertion = config.${namespace}.hardware.storage.disko.enable;
-    #     message = "Storage configuration must be enabled to use boot configuration";
-    #   }
-    # ];
   };
 }
