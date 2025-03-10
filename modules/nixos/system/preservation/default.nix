@@ -130,7 +130,6 @@ in
                 { directory = ".gnupg"; mode = "0700"; }
                 ".icons"
                 ".vscode-oss"
-                "vm-share"
                 "vfio-vm-info"
               ] ++ cfg.extraHomeDirs;
               files = [ ".claude.json" ] ++ cfg.extraHomeFiles;
