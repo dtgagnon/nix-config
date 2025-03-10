@@ -29,32 +29,33 @@ let
     )
     ((inputs.self.nixosConfigurations or { }) // (inputs.self.darwinConfigurations or { }));
 
+  #NOTE: Right now, just using tailscale on all my devices for ssh connections - uncomment when regular openssh is needed
   # Generate SSH configurations for other hosts within the namespace, with an established user, excluding the current host
-  other-hosts-config = lib.concatMapStringsSep "\n"
-    (
-      name:
-      let
-        remote = other-hosts.${name};
-        remote-user-name = remote.config.${namespace}.user.name;
-        remote-user-id = builtins.toString remote.config.users.users.${remote-user-name}.uid;
-
-        #NOTE: Don't need to use forward-gpg for age keys, but will need to refer to them statically somehow. I'm using age keys only so far.
-        forward-gpg =
-          optionalString (config.programs.gnupg.agent.enable && remote.config.programs.gnupg.agent.enable)
-            ''
-              RemoteForward /run/user/${remote-user-id}/gnupg/S.gpg-agent /run/user/${user-id}/gnupg/S.gpg-agent.extra
-              RemoteForward /run/user/${remote-user-id}/gnupg/S.gpg-agent.ssh /run/user/${user-id}/gnupg/S.gpg-agent.ssh
-            '';
-      in
-      ''
-        				Host ${name}
-        					User ${remote-user-name}
-        					ForwardAgent yes
-        					Port ${builtins.toString cfg.port}
-        					${forward-gpg}
-      ''
-    )
-    (builtins.attrNames other-hosts);
+  # other-hosts-config = lib.concatMapStringsSep "\n"
+  #   (
+  #     name:
+  #     let
+  #       remote = other-hosts.${name};
+  #       remote-user-name = remote.config.${namespace}.user.name;
+  #       remote-user-id = builtins.toString remote.config.users.users.${remote-user-name}.uid;
+  #
+  #       #NOTE: Don't need to use forward-gpg for age keys, but will need to refer to them statically somehow. I'm using age keys only so far.
+  #       forward-gpg =
+  #         optionalString (config.programs.gnupg.agent.enable && remote.config.programs.gnupg.agent.enable)
+  #           ''
+  #             RemoteForward /run/user/${remote-user-id}/gnupg/S.gpg-agent /run/user/${user-id}/gnupg/S.gpg-agent.extra
+  #             RemoteForward /run/user/${remote-user-id}/gnupg/S.gpg-agent.ssh /run/user/${user-id}/gnupg/S.gpg-agent.ssh
+  #           '';
+  #     in
+  #     ''
+  #       				Host ${name}
+  #       					User ${remote-user-name}
+  #       					ForwardAgent yes
+  #       					Port ${builtins.toString cfg.port}
+  #       					${forward-gpg}
+  #     ''
+  #   )
+  #   (builtins.attrNames other-hosts);
 in
 {
   options.${namespace}.services.openssh = {
@@ -91,24 +92,7 @@ in
     '';
 
     spirenix.user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
-
-    spirenix.user.home.extraOptions = {
-      programs.nushell.shellAliases = foldl
-        (
-          aliases: system: aliases // { "ssh-${system}" = "ssh ${system} -t tmux a"; }
-        )
-        { }
-        (builtins.attrNames other-hosts);
-      programs.zsh.shellAliases = foldl
-        (
-          aliases: system: aliases // { "ssh-${system}" = "ssh ${system} -t tmux a"; }
-        )
-        { }
-        (builtins.attrNames other-hosts);
-    };
-
     networking.firewall.allowedTCPPorts = [ cfg.port ];
-
     security.pam.sshAgentAuth = {
       enable = true;
       authorizedKeysFiles = [ "/persist/etc/ssh/authorized_keys.d/%u" ];
