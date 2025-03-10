@@ -121,7 +121,6 @@ in
                 ".local/share/activitywatch"
                 ".local/share/bottles"
                 ".local/share/direnv"
-                # ".local/share/fish"
                 ".local/share/keyrings"
                 ".local/share/rofi"
                 ".local/share/zoxide"

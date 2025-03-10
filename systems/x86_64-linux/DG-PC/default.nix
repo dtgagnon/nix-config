@@ -44,7 +44,10 @@ in
       sops-nix = enabled;
     };
 
-    services.davfs = enabled;
+    services = {
+      davfs = enabled;
+      openssh.manage-other-hosts = false;
+    };
 
     system = {
       enable = true;

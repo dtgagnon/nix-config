@@ -26,6 +26,7 @@ in
         sabnzbd = enabled;
       };
       suites.arr = enabled;
+      user.extraGroups = [ "media" ];
     };
   };
 }
