@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.services.sabnzbd = {
     enable = mkBoolOpt false "Enable the sabnzbd service";
-    configFile = mkOpt types.str "/var/lib/sabnzbd/sabnzbd.ini" "Path to the config file";
+    configFile = mkOpt types.str "/etc/sabnzbd/sabnzbd.ini" "Path to the config file";
   };
 
   config = mkIf cfg.enable {
@@ -25,11 +25,12 @@ in
       inherit (cfg) configFile;
     };
 
-    spirenix.user.home.file = ''
-      __version__=19
-      [misc]
-      [logging]
+    sops.secrets = {
+      "newshosting/username".owner = config.services.sabnzbd.user;
+      "newshosting/password".owner = config.services.sabnzbd.user;
+    };
 
+    environment.etc."sabnzbd/sabnzbd.ini".text = ''
       __version__ = 19
       [misc]
       host = 0.0.0.0
@@ -62,8 +63,8 @@ in
 
       [servers]
       [[newshosting]]
-      username = 94jc77rc
-      password = tempAdmin
+      username = "cat ${config.sops.secrets."newshosting/username".path}"
+      password = "cat ${config.sops.secrets."newshosting/password".path}"
       enable = 1
       name = newshosting
       fillserver = 0
