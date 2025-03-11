@@ -53,8 +53,8 @@ in
         # preserve system files
         files = [
           { file = "/etc/machine-id"; inInitrd = true; how = "symlink"; configureParent = true; }
-          { file = "/etc/ssh/ssh_host_ed25519_key"; mode = "0600"; how = "symlink"; createLinkTarget = "true"; }
-          { file = "/etc/ssh/ssh_host_ed25519_key.pub"; mode = "0644"; how = "symlink"; createLinkTarget = "true"; }
+          { file = "/etc/ssh/ssh_host_ed25519_key"; mode = "0600"; how = "symlink"; createLinkTarget = true; }
+          { file = "/etc/ssh/ssh_host_ed25519_key.pub"; mode = "0644"; how = "symlink"; createLinkTarget = true; }
           "/var/lib/usbguard/rules.conf"
 
           # creates a symlink on the volatile root
