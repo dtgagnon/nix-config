@@ -2,13 +2,13 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
-  cfg = config.${namespace}.services.media.radarr;
+  cfg = config.${namespace}.services.arrs.radarr;
 in
 {
-  options.${namespace}.services.media.radarr = {
+  options.${namespace}.services.arrs.radarr = {
     enable = mkBoolOpt false "Enable Radarr";
     openFirewall = mkBoolOpt false "Open ports in the firewall for Radarr.";
-    dataDir = mkOpt types.str "/srv/apps/radarr" "Directory for Radarr data";
+    dataDir = mkOpt types.str "${config.spirenix.services.arrs.dataDir}/radarr" "Directory for Radarr data";
   };
 
   config = mkIf cfg.enable {

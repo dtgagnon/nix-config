@@ -2,13 +2,13 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
-  cfg = config.${namespace}.services.media.sonarr;
+  cfg = config.${namespace}.services.arrs.sonarr;
 in
 {
-  options.${namespace}.services.media.sonarr = {
+  options.${namespace}.services.arrs.sonarr = {
     enable = mkBoolOpt false "Enable Sonarr";
     openFirewall = mkBoolOpt false "Open ports in the firewall for Sonarr.";
-    dataDir = mkOpt types.str "/srv/apps/sonarr" "Directory for Sonarr data";
+    dataDir = mkOpt types.str "${config.spirenix.services.arrs.dataDir}/sonarr" "Directory for Sonarr data";
   };
 
   config = mkIf cfg.enable {

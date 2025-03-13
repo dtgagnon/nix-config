@@ -78,5 +78,11 @@ in
       };
     };
   };
+
+  sops.secrets = {
+    openai_api = { };
+    anthropic_api = { };
+  };
+
   system.stateVersion = "24.11";
 }

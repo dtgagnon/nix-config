@@ -14,19 +14,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix = {
-      services = {
-        immich = enabled;
-        media = {
-          audiobookshelf = enabled;
-          jellyfin = enabled;
-          jellyseerr = enabled;
-        };
-        qbittorrent = enabled;
-        sabnzbd = enabled;
-      };
-      suites.arr = enabled;
-      user.extraGroups = [ "media" ];
-    };
+    spirenix.services.immich = enabled;
+    spirenix.services.audiobookshelf = enabled;
   };
 }

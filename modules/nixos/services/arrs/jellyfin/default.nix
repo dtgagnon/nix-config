@@ -7,12 +7,12 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.services.media.jellyfin;
+  cfg = config.${namespace}.services.arrs.jellyfin;
 in
 {
-  options.${namespace}.services.media.jellyfin = {
+  options.${namespace}.services.arrs.jellyfin = {
     enable = mkBoolOpt false "Enable Jellyfin service";
-    dataDir = mkOpt types.path "/srv/apps/jellyfin" "Data directory for Jellyfin";
+    dataDir = mkOpt types.path "${config.spirenix.services.arrs.dataDir}/jellyfin" "Data directory for Jellyfin";
   };
 
   config = mkIf cfg.enable {

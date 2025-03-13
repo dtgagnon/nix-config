@@ -66,6 +66,7 @@
         systems.hosts.spirepoint.modules = with inputs; [
           plane-nix.nixosModules."services/plane"
           proxmox-nixos.nixosModules.proxmox-ve
+          nixarr.nixosModules.default
           NixVirt.nixosModules.default
         ];
 
@@ -173,11 +174,13 @@
     nixos-vfio.url = "github:j-brn/nixos-vfio";
     nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
-    ## applications
+    ## applications+services
     ghostty.url = "github:ghostty-org/ghostty"; #NOTE: already follows nixos-unstable and 24.11 where needed
 
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixarr.url = "github:rasmus-kirk/nixarr";
 
     nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
     nixos-conf-editor.inputs.nixpkgs.follows = "nixpkgs";

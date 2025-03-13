@@ -40,12 +40,15 @@ in
         # "syncthing/webui-password" = { owner = "dtgagnon"; };
         # "syncthing/key" = { };
         tailscale-authKey = { };
-        openai_api = { };
-        anthropic_api = { };
       };
     };
+
     spirenix.system.preservation = {
       extraSysDirs = [ "var/lib/sops-nix" ];
+      extraSysFiles = [
+        { file = "/home/dtgagnon/.config/sops/age/keys.txt"; how = "symlink"; mode = "0600"; }
+        { file = "/home/admin/.config/sops/age/keys.txt"; how = "symlink"; mode = "0600"; }
+      ];
     };
   };
 }

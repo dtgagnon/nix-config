@@ -7,13 +7,13 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.services.media.lidarr;
+  cfg = config.${namespace}.services.arrs.lidarr;
 in
 {
-  options.${namespace}.services.media.lidarr = {
+  options.${namespace}.services.arrs.lidarr = {
     enable = mkBoolOpt false "Enable Lidarr";
     openFirewall = mkOpt types.bool false "Open firewall ports for Lidarr.";
-    dataDir = mkOpt types.str "/srv/apps/lidarr" "Directory for Lidarr data.";
+    dataDir = mkOpt types.str "${config.spirenix.services.arrs.dataDir}/lidarr" "Directory for Lidarr data.";
   };
 
   config = mkIf cfg.enable {

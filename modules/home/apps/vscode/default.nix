@@ -39,11 +39,10 @@ in
       };
     };
 
-    # For compatibility with Hyprland, to tell it the keyring to use.
+    # This configuration file allows you to pass permanent command line arguments to VSCode. 
     home.file.".vscode-oss/argv.json".text = ''
-      // This configuration file allows you to pass permanent command line arguments to VS
-        Code.{
-        // For compatibility with Hyprland, to tell it the keyring to use.
+      {
+      // For compatibility with Hyprland, to tell it the keyring to use.
       "password-store": "gnome-libsecret",
 
       // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.

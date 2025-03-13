@@ -12,17 +12,17 @@ let
   users = snowfallHostUserList host;
 in
 {
-  options.${namespace}.system.preservation = {
+  options.${namespace}.system.preservation = with types; {
     enable = mkBoolOpt false "Enable the preservation impermanence framework";
     extraUser = {
-      user = mkOpt types.str "" "Declare additional users";
-      homeDirs = mkOpt (types.listOf types.str) [ ] "Declare extra user home directories to persist";
-      homeFiles = mkOpt (types.listOf types.str) [ ] "Declare extra user home files to persist";
+      user = mkOpt str "" "Declare additional users";
+      homeDirs = mkOpt (listOf str) [ ] "Declare extra user home directories to persist";
+      homeFiles = mkOpt (listOf str) [ ] "Declare extra user home files to persist";
     };
-    extraSysDirs = mkOpt (types.listOf types.str) [ ] "Declare additional system directories to persist";
-    extraSysFiles = mkOpt (types.listOf types.str) [ ] "Declare additional system files to persist";
-    extraHomeDirs = mkOpt (types.listOf types.str) [ ] "Declare additional user home directories to persist";
-    extraHomeFiles = mkOpt (types.listOf types.str) [ ] "Declare additional user home files to persist";
+    extraSysDirs = mkOpt (listOf str) [ ] "Declare additional system directories to persist";
+    extraSysFiles = mkOpt (listOf (either str attrs)) [ ] "Declare additional system files to persist";
+    extraHomeDirs = mkOpt (listOf str) [ ] "Declare additional user home directories to persist";
+    extraHomeFiles = mkOpt (listOf str) [ ] "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable {

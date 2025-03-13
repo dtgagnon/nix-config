@@ -7,10 +7,10 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
-  cfg = config.${namespace}.services.media.prowlarr;
+  cfg = config.${namespace}.services.arrs.prowlarr;
 in
 {
-  options.${namespace}.services.media.prowlarr = {
+  options.${namespace}.services.arrs.prowlarr = {
     enable = mkBoolOpt false "Enable Prowlarr";
     package = mkOpt types.package pkgs.prowlarr "Prowlarr package to use";
     openFirewall = mkBoolOpt false "Open ports in the firewall for Prowlarr.";

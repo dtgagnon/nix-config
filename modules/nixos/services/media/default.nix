@@ -1,4 +1,0 @@
-{ ... }:
-{
-  config.users.groups.media = { };
-}
