@@ -2123,11 +2123,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1741789451,
-        "narHash": "sha256-TI3/hmZu1oX95Zrn2XwRMAezprAlHCbUPQyMMle4LCE=",
+        "lastModified": 1742160270,
+        "narHash": "sha256-FiM0KSKjye76SAHgpgUci3CGwSEiN+88MK5swM/i7sk=",
         "ref": "refs/heads/main",
-        "rev": "53056f822a8df524c304c5ec8becd2a4d5881822",
-        "revCount": 54,
+        "rev": "79f6e79b93d64543b3b425235d0afc106d426662",
+        "revCount": 55,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -3697,11 +3697,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1740390943,
-        "narHash": "sha256-F8EuAkiLuDZlJ+jKaSJENVZnLz0/9T2rq7qB7vuUIak=",
+        "lastModified": 1742152409,
+        "narHash": "sha256-4SzEgAF/kPwReFVVHmXIAyTjjVmEj9bn0yPixXPvF4k=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "e8ac7b958a121a4fdb7daf14894c9c029054b9f6",
+        "rev": "d6a8c61396f9e010f0799574ea67c01a211cbf41",
         "type": "github"
       },
       "original": {

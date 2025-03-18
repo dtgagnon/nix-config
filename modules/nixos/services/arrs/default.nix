@@ -7,7 +7,7 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.services.arrs;
-in 
+in
 {
   options.${namespace}.services.arrs = {
     enable = mkBoolOpt false "Enable ARR services";
@@ -16,10 +16,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    spirenix.user.extraGroups = [ "media" ];
     users.groups.media = { };
 
     systemd.tmpfiles.rules = [
-      "d ${cfg.dataDir} 0755 root media -"
+      "d ${cfg.dataDir} 0775 root media -"
     ];
   };
 }
