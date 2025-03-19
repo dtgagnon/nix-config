@@ -25,7 +25,10 @@ in
       radarr = enabled;
       readarr = enabled;
       sabnzbd = enabled;
-      sonarr = enabled;
+      sonarr = {
+        enable = true;
+        enableAnimeServer = true;
+      };
     };
   };
 }
