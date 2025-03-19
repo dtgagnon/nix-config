@@ -78,16 +78,7 @@ in
                 }
             )
             { }
-            cfg.excludedTargets
-          // {
-            # neovim.enable = false;
-            # nixvim = {
-            #   enable = false;
-            #   plugin = pkgs.base16-nvim;
-            #   transparentBackground.main = true;
-            #   transparentBackground.signColumn = true;
-            # };
-          };
+            cfg.excludedTargets;
       };
     })
     (mkIf (core.theme != null) {
