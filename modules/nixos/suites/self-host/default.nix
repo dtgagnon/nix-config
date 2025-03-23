@@ -14,7 +14,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.services.immich = enabled;
     spirenix.services.audiobookshelf = enabled;
+    spirenix.services.hoarder = enabled;
+    spirenix.services.immich = enabled;
   };
 }
