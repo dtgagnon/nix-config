@@ -1,6 +1,8 @@
 { lib
 , pkgs
 , config
+, inputs
+, system
 , namespace
 , ...
 }:
@@ -15,7 +17,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.spirenix.windsurf pkgs.nixd ];
+    home.packages = [ pkgs.windsurf inputs.nixd.packages.${system}.nixd ];
 
     home.file.".windsurf/argv.json".text = ''
             // This configuration file allows you to pass permanent command line arguments to VS Code.

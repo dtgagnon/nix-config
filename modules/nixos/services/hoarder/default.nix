@@ -24,23 +24,26 @@ in
         "d ${cfg.dataDir} 0750 ${cfg.user} ${cfg.group} -"
       ];
       services.hoarder = {
-        description = "Hoarder background service";
+        description = "Hoarder bookmarking service";
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
-          Type = "notify"; #TODO: identify the correct type
+          Type = "simple"; #TODO: identify the correct type
           User = "${cfg.user}";
-          ExecStart = "${pkgs.hoarder}/bin/hoarder";
+          ExecStart = "${pkgs.hoarder}/bin/hoarder-cli";
           WorkingDirectory = "${cfg.dataDir}";
           Restart = "on-failure";
         };
       };
     };
 
-    users.users.${cfg.user} = {
-      group = cfg.group;
-      isSystemUser = true;
-      home = cfg.dataDir;
+    users = {
+      users.${cfg.user} = {
+        group = cfg.group;
+        isSystemUser = true;
+        home = cfg.dataDir;
+      };
+      groups."hoarder" = { };
     };
   };
 }

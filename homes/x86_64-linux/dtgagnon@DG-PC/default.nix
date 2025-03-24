@@ -32,6 +32,7 @@ in
       };
       todoist = enabled;
       vscode = enabled;
+      windsurf = enabled;
       zen = enabled;
     };
 

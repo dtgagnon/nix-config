@@ -1,6 +1,8 @@
 { lib
 , pkgs
 , config
+, inputs
+, system
 , namespace
 , ...
 }:
@@ -17,7 +19,7 @@ in
 
   config = mkIf cfg.enable {
     spirenix.desktop.styling.stylix.excludedTargets = [ "vscode" ];
-    home.packages = [ pkgs.nixd ]; # for nix LSP
+    home.packages = [ inputs.nixd.packages.${system}.nixd ]; # for nix LSP
 
     programs.vscode = {
       enable = true;
@@ -39,7 +41,7 @@ in
       };
     };
 
-    # This configuration file allows you to pass permanent command line arguments to VSCode. 
+    # This configuration file allows you to pass permanent command line arguments to VSCode.
     home.file.".vscode-oss/argv.json".text = ''
       {
       // For compatibility with Hyprland, to tell it the keyring to use.

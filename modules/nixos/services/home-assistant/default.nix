@@ -23,30 +23,7 @@ in
 
       extraArgs = [ ];
 
-      defaultIntegrations = [
-        "application_credentials"
-        "frontend"
-        "hardware"
-        "logger"
-        "network"
-        "system_health"
-        "automation"
-        "person"
-        "scene"
-        "script"
-        "tag"
-        "zone"
-        "counter"
-        "input_boolean"
-        "input_button"
-        "input_datetime"
-        "input_number"
-        "input_select"
-        "input_text"
-        "schedule"
-        "timer"
-        "backup"
-      ];
+      # defaultIntegrations = [ ];
 
       extraPackages = python3Packages: with python3Packages; [
         # Packages to add to propagatedBuildInputs
@@ -54,30 +31,75 @@ in
         ## psycopg2 for example
       ];
 
-      extraComponents = [ ];
+      extraComponents = [
+        "met"
+        "openweathermap"
+        "radio_browser"
+        "sonarr"
+        "radarr"
+        "glances"
+        "lifx"
+      ];
       customComponents = [ ];
 
       inherit (cfg) configDir;
-      configWritable = false;
+      configWritable = true;
       config = {
         homeassistant = {
           name = "Home";
-          latitude = ""; # it's a good idea to have location information encrypted and managed with sops
-          longitude = "";
-          elevation = "";
-          unit_system = "";
-          time_zone = "";
+          country = "US";
+          currency = "USD";
+          latitude = config.sops.secrets."home-assistant/latitude".path;
+          longitude = config.sops.secrets."home-assistant/longitude".path;
+          elevation = config.sops.secrets."home-assistant/elevation".path;
+          unit_system = "us_customary";
+          temperature_unit = "F";
+          time_zone = "America/Detroit";
         };
         frontend = {
           themes = "";
         };
-        http = { };
+        http = {
+          server_host = [ "100.100.1.2" ];
+          server_port = 8123;
+        };
         feedreader.urls = [ "https://nixos.org/blogs.xml" ];
       };
 
       customLovelaceModules = [ ];
       lovelaceConfigWritable = false;
-      lovelaceConfig = { };
+      lovelaceConfig = {
+        title = "Home";
+        views = [
+          {
+            path = "default_view";
+            title = "Home";
+            cards = [
+              {
+                type = "light";
+                entity = "";
+                name = "";
+              }
+              {
+                type = "sensor";
+                entity = "";
+                graph = "line";
+              }
+              {
+                type = "weather-forecast";
+                entity = "weather.home";
+                show_forecast = true;
+              }
+            ];
+          }
+        ];
+      };
+    };
+
+    sops.secrets = {
+      "home-assistant/latitude".owner = "hass";
+      "home-assistant/longitude".owner = "hass";
+      "home-assistant/elevation".owner = "hass";
     };
   };
 }

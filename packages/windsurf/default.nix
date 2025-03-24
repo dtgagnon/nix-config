@@ -1,57 +1,60 @@
-{ stdenv
-, inputs
+{ lib
+, stdenv
 , callPackage
+, vscode-generic
 , fetchurl
 , nixosTests
 , commandLineArgs ? ""
-, useVSCodeRipgrep ? stdenv.hostPlatform.isLinux
-, ...
+, useVSCodeRipgrep ? stdenv.hostPlatform.isDarwin
+,
 }:
 let
-  inherit (stdenv.hostPlatform) system;
-  throwSystem = throw "Unsupported system: ${system}";
-
-  plat =
-    {
-      x86_64-linux = "linux-x64";
-      # Pretty sure these below aren't currently supported.
-      # x86_64-darwin = "macos-x64";
-      # aarch64-linux = "linux-arm64";
-      # aarch64-darwin = "macos-arm64";
-      # armv7l-linux = "linux-armhf";
-    }.${system} or throwSystem;
-
-  archive_fmt = if stdenv.hostPlatform.isDarwin then "zip" else "tar.gz";
-
-  sha256 = {
-    x86_64-linux = "4007aad772ba0a7a7d605fdb704946d5a9dc8732ef1991d4822f4c5a58b2d6ef";
-  }.${system} or throwSystem;
-
+  info =
+    (lib.importJSON ./info.json)."${stdenv.hostPlatform.system}"
+      or (throw "windsurf: unsupported system ${stdenv.hostPlatform.system}");
 in
-# https://windsurf-stable.codeium.com/api/update/linux-x64/stable/latest
-callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" rec {
+callPackage vscode-generic {
   inherit commandLineArgs useVSCodeRipgrep;
 
-  version = "1.1.2";
+  inherit (info) version vscodeVersion;
   pname = "windsurf";
 
   executableName = "windsurf";
   longName = "Windsurf";
   shortName = "windsurf";
+  libraryName = "windsurf";
+  iconName = "windsurf";
 
-  src = fetchurl {
-    url = "https://windsurf-stable.codeiumdata.com/${plat}/stable/599ce698a84d43160da884347f22f6b77d0c8415/Windsurf-${plat}-${version}.${archive_fmt}";
-    inherit sha256;
-  };
+  sourceRoot = if stdenv.hostPlatform.isDarwin then "Windsurf.app" else "Windsurf";
 
-  sourceRoot = "Windsurf";
+  src = fetchurl { inherit (info) url sha256; };
 
   tests = nixosTests.vscodium;
 
-  updateScript = "nil";
+  updateScript = ./update/update.mts;
+
+  # Editing the `codium` binary (and shell scripts) within the app bundle causes the bundle's signature
+  # to be invalidated, which prevents launching starting with macOS Ventura, because VSCodium is notarized.
+  # See https://eclecticlight.co/2022/06/17/app-security-changes-coming-in-ventura/ for more information.
+  dontFixup = stdenv.hostPlatform.isDarwin;
 
   meta = {
-    description = "Windsurf - A vsCodium fork + AI features";
-    platforms = [ "x86_64-linux" ];
+    description = "Agentic IDE powered by AI Flow paradigm";
+    longDescription = ''
+      The first agentic IDE, and then some.
+      The Windsurf Editor is where the work of developers and AI truly flow together, allowing for a coding experience that feels like literal magic.
+    '';
+    homepage = "https://codeium.com/windsurf";
+    license = lib.licenses.unfree;
+    maintainers = with lib.maintainers; [
+      sarahec
+      xiaoxiangmoe
+    ];
+    platforms = [
+      "aarch64-darwin"
+      "x86_64-darwin"
+      "x86_64-linux"
+    ];
+    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
   };
 }
