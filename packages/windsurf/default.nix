@@ -1,19 +1,20 @@
 { lib
+, inputs
 , stdenv
 , callPackage
-, vscode-generic
 , fetchurl
 , nixosTests
 , commandLineArgs ? ""
 , useVSCodeRipgrep ? stdenv.hostPlatform.isDarwin
 ,
 }:
+
 let
   info =
     (lib.importJSON ./info.json)."${stdenv.hostPlatform.system}"
       or (throw "windsurf: unsupported system ${stdenv.hostPlatform.system}");
 in
-callPackage vscode-generic {
+callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" {
   inherit commandLineArgs useVSCodeRipgrep;
 
   inherit (info) version vscodeVersion;
