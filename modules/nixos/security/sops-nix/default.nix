@@ -7,21 +7,22 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.security.sops-nix;
   secretsPath = builtins.toString inputs.nix-secrets;
 in
 {
   options.${namespace}.security.sops-nix = {
     enable = mkBoolOpt true "Enable sops secrets management";
+    targetHost = mkOpt types.str "${host}" "Define the configuration's target host";
   };
 
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.sops ];
 
     sops = {
-      defaultSopsFile = "${secretsPath}/sops/${host}.yaml";
+      defaultSopsFile = "${secretsPath}/sops/${cfg.targetHost}.yaml";
       validateSopsFiles = false;
 
       age = {

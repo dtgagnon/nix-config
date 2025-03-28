@@ -69,7 +69,10 @@ in
     security = {
       pam = enabled;
       sudo = enabled;
-      sops-nix = enabled;
+      sops-nix = {
+        enable = true;
+        targetHost = "spirepoint";
+      };
     };
 
     system = {

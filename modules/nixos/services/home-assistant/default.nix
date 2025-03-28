@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , namespace
 , ...
@@ -15,91 +14,96 @@ in
     configDir = mkOpt types.str "/var/lib/hass" "The home assistant (hass) configuration directory";
   };
 
-  config = mkIf cfg.enable {
-    services.home-assistant = {
-      enable = true;
-      package = pkgs.home-assistant.overrideAttrs (_oldAttrs: { doInstalLCheck = false; });
-      openFirewall = false;
+  config = lib.mkMerge [
+    (mkIf cfg.enable {
+      services.home-assistant = {
+        enable = true;
+        openFirewall = false;
+        inherit (cfg) configDir;
+        configWritable = true;
 
-      extraArgs = [ ];
+        # extraComponents = [
+        #   "met"
+        #   "openweathermap"
+        #   "radio_browser"
+        #   "sonarr"
+        #   "radarr"
+        #   "glances"
+        #   "lifx"
+        # ];
+        # customComponents = [ ];
 
-      # defaultIntegrations = [ ];
-
-      extraPackages = python3Packages: with python3Packages; [
-        # Packages to add to propagatedBuildInputs
-        # postgresql support
-        ## psycopg2 for example
-      ];
-
-      extraComponents = [
-        "met"
-        "openweathermap"
-        "radio_browser"
-        "sonarr"
-        "radarr"
-        "glances"
-        "lifx"
-      ];
-      customComponents = [ ];
-
-      inherit (cfg) configDir;
-      configWritable = true;
-      config = {
-        homeassistant = {
-          name = "Home";
-          country = "US";
-          currency = "USD";
-          latitude = config.sops.secrets."home-assistant/latitude".path;
-          longitude = config.sops.secrets."home-assistant/longitude".path;
-          elevation = config.sops.secrets."home-assistant/elevation".path;
-          unit_system = "us_customary";
-          temperature_unit = "F";
-          time_zone = "America/Detroit";
+        config = {
+          homeassistant = {
+            name = "Home";
+            country = "US";
+            currency = "USD";
+            latitude = "$(cat ${config.sops.secrets."home-assistant/latitude".path})";
+            longitude = "$(cat ${config.sops.secrets."home-assistant/longitude".path})";
+            elevation = "$(cat ${config.sops.secrets."home-assistant/elevation".path})";
+            unit_system = "us_customary";
+            temperature_unit = "F";
+            time_zone = "US/Eastern";
+          };
+          # frontend = {
+          #   themes = "";
+          # };
+          http = {
+            server_host = [ "100.100.1.2" ];
+            server_port = 8123;
+          };
+          feedreader.urls = [ "https://nixos.org/blogs.xml" ];
         };
-        frontend = {
-          themes = "";
-        };
-        http = {
-          server_host = [ "100.100.1.2" ];
-          server_port = 8123;
-        };
-        feedreader.urls = [ "https://nixos.org/blogs.xml" ];
+        #   customLovelaceModules = [ ];
+        #   lovelaceConfigWritable = false;
+        #   lovelaceConfig = {
+        #     title = "Home";
+        #     views = [
+        #       {
+        #         path = "default_view";
+        #         title = "Home";
+        #         cards = [
+        #           {
+        #             type = "light";
+        #             entity = "";
+        #             name = "";
+        #           }
+        #           {
+        #             type = "sensor";
+        #             entity = "";
+        #             graph = "line";
+        #           }
+        #           {
+        #             type = "weather-forecast";
+        #             entity = "weather.home";
+        #             show_forecast = true;
+        #           }
+        #         ];
+        #       }
+        #     ];
+        #   };
       };
 
-      customLovelaceModules = [ ];
-      lovelaceConfigWritable = false;
-      lovelaceConfig = {
-        title = "Home";
-        views = [
-          {
-            path = "default_view";
-            title = "Home";
-            cards = [
-              {
-                type = "light";
-                entity = "";
-                name = "";
-              }
-              {
-                type = "sensor";
-                entity = "";
-                graph = "line";
-              }
-              {
-                type = "weather-forecast";
-                entity = "weather.home";
-                show_forecast = true;
-              }
-            ];
-          }
-        ];
+      sops.secrets = {
+        "home-assistant/latitude".owner = "hass";
+        "home-assistant/longitude".owner = "hass";
+        "home-assistant/elevation".owner = "hass";
       };
-    };
+    })
 
-    sops.secrets = {
-      "home-assistant/latitude".owner = "hass";
-      "home-assistant/longitude".owner = "hass";
-      "home-assistant/elevation".owner = "hass";
-    };
-  };
+    {
+      services.home-assistant.systemd.services."home-assistant" = lib.mkMerge [
+        config.services.home-assistant.systemd.services."home-assistant"
+        {
+          preStart = ''
+            ${config.services.home-assistant.systemd.services."home-assistant".preStart}
+
+            # Process the additional commands for handling secrets at runtime
+            envsubst < /etc/home-assistant/configuration.yaml > /etc/home-assistant/configuration.final.yaml
+            mv /etc/home-assistant/configuration.final.yaml /etc/home-assistant/configuration.yaml
+          '';
+        }
+      ];
+    }
+  ];
 }
