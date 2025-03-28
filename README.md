@@ -25,7 +25,7 @@
 - [X]❄️ Flakes -- for precise dependency management of the entire system.
 - [X]🏡 Home Manager -- to configure all used software for the user.
 - [X]💽 Disko -- for declarative disk management: luks + lvm + btrfs.
-- [X]⚠️ Impermanence -- to remove junk files and directories that are not specified in the config.
+- [X]💽 Preservation -- Impermanence alternative that is more strictly declared. Only retains root files that are explicitly declared.
 - [X]💈 Stylix -- to customize the theme for the entire system and the software you use.
 - [ ]🍎 NixDarwin -- to declaratively customize MacOS.
 - [ ]🔐 Lanzaboot -- to securely boot the system.
@@ -60,19 +60,19 @@
  - Terminal - [**`Ghostty`**](https://https://ghostty.org/)
  - Shell - [**`Nushell`**](https://https://www.nushell.sh/)
  - Prompt - [**`Starship`**](https://starship.rs/)
- - Filemanager - [**`Yazi`**](https://github.com/sxyazi/yazi)
+ - File Manager - [**`Yazi`**](https://github.com/sxyazi/yazi)
 
 ## 🖥️ Hosts description
 
-| Hostname | Board | CPU | RAM | GPU | OS | State |
+| Host | Board | CPU | RAM | GPU | OS | State |
 | --- | --- | --- | --- | --- | --- | --- |
 | DG-PC | MSI Z790 TOMAHAWK WIFI | i7-13700K | 64GB | NVIDIA RTX 4090 | NixOS | OK |
-| Spirepoint | MSI Something | i7-somethingK | 16GB | NVIDIA GTX 1050 Ti | NixOS | WIP |
-| Slim | Asus Zenbook 1st Gen | i5-something | 8GB | iGPU | NixOS | WIP |
+| spirepoint | MSI Something | i7-somethingK | 16GB | NVIDIA GTX 1050 Ti | NixOS | WIP |
+| slim | Asus Zenbook 1st Gen | i5-something | 8GB | iGPU | NixOS | WIP |
 
 ## ⌨️ Keyboard
 
-I use a QK65 with a standard QWERTY layout. Dreams to move to a modified Corne split with using a modified [miryoku](https://github.com/manna-harbour/miryoku) layout.
+I use a QK65 with a standard QWERTY layout. Dreams to move to a modified Corne split using a modified [miryoku](https://github.com/manna-harbour/miryoku) layout.
 
 - Switches: Zakus
 - Keycaps: 8008 Double-shot PBT
