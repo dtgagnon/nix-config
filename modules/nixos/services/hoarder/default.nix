@@ -87,7 +87,7 @@ in
           content = ''
             HOARDER_SERVER_ADDR=${cfg.serverAddress}:${cfg.port}
             HOARDER_API_KEY=
-            DATA_DIR=${cfg.dataDir}
+            DATA_DIR="${cfg.dataDir}"
 
             NEXTAUTH_URL=http://localhost:3003
             NEXTAUTH_SECRET=${config.sops.placeholder."hoarder/nextauth-seed"}
