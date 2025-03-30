@@ -1,23 +1,19 @@
-{ fetchFromGitHub, ... }: final: prev:
-let
-  version = "0.23.0";
-  gitRev = "v${version}";
-  srcHash = "";
-  pnpmDepsHash = "";
-in
+{ channels, inputs, ... }: _: prev:
 {
-  hoarder = prev.hoarder.overrideAttrs (oldAttrs: {
-    version = version;
-    src = fetchFromGitHub prev.src // {
-      tag = gitRev;
-      hash = srcHash;
+  hoarder =
+  let
+    newVersion = "0.23.0";
+    newSrcHash = "sha256-SYcJfobuDl2iPXy5qGGG8ukBX/CSboSo/hF2e/8ixVw=";
+    newPnpmDepsHash = "sha256-4MSNh2lyl0PFUoG29Tmk3WOZSRnW8NBE3xoppJr8ZNY=";
+  in
+  prev.hoarder.overrideAttrs (oldAttrs: {
+    version = newVersion;
+    src = oldAttrs.src.override {
+      tag = "v${newVersion}";
+      hash = newSrcHash;
     };
-    pnpmDeps = final.pnpm_9.fetchDeps prev.pnpmDeps // {
-      inherit version;
-      src = final.stdenv.mkDerivation prev.pnpmDeps.src // {
-        src = final.hoarder.src;
-      };
-      hash = pnpmDepsHash;
-    };
+    pnpmDeps = oldAttrs.pnpmDeps.overrideAttrs (oldAttrs: {
+      hash = newPnpmDepsHash;
+    });
   });
 }
