@@ -48,9 +48,7 @@ in
     hardware = {
       audio = enabled;
       keyboard = enabled; # xkb stuff
-      # storage = {
-      #   boot.enable = true;
-      # };
+      laptop = enabled; # battery, lid, etc.
     };
 
     security = {
