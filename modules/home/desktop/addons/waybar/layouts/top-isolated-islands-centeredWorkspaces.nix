@@ -9,9 +9,9 @@ let
   cfg = config.${namespace}.desktop.addons.waybar;
 
   core = config.spirenix.desktop.styling.core;
-  spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="24pt">${icon}</span>'';
+  spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="20pt">${icon}</span>'';
   spanWrapText =
-    text: ''<span face="${core.fonts.sansSerif.name}" size="14pt" rise="5pt">${text}</span>'';
+    text: ''<span face="${core.fonts.sansSerif.name}" size="12pt" rise="5pt">${text}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -69,13 +69,11 @@ in
         "hyprland/workspaces#odds" = {
           persistent-workspaces = {
             "1" = spanWrapIcon "";
-            "3" = spanWrapIcon "";
-            "5" = spanWrapIcon "󰎞";
           };
           format = "{icon}";
           format-icons = {
             "1" = spanWrapIcon "";
-            "3" = spanWrapIcon "";
+            "3" = spanWrapIcon "";
             "5" = spanWrapIcon "󰎞";
             "default" = spanWrapIcon "󰝦";
             "urgent" = spanWrapIcon "";
@@ -88,19 +86,19 @@ in
             "8"
             "10"
           ];
+          "sort-by" = "number";
+          "sort-desc" = true;
         };
 
         "hyprland/workspaces#evens" = {
           persistent-workspaces = {
             "2" = spanWrapIcon "";
-            "4" = spanWrapIcon "";
-            "6" = spanWrapIcon "󰺵";
           };
           format = "{icon}";
           format-icons = {
             "2" = spanWrapIcon "";
             "4" = spanWrapIcon "";
-            "6" = spanWrapIcon "󰺵";
+            "6" = spanWrapIcon "";
             "default" = spanWrapIcon "󰝦";
             "urgent" = spanWrapIcon "";
           };
@@ -112,6 +110,7 @@ in
             "7"
             "9"
           ];
+          "sort-by" = "number";
         };
 
         ### v--- Individual module configuration ---v ###
@@ -142,8 +141,7 @@ in
         };
 
         temperature = {
-          "hwmon-path-abs" = "/sys/devices/platform/coretemp.0/hwmon/hwmon3";
-          "input-filename" = "temp2_input";
+          "thermal-zone" = 0;
           interval = 5;
           format = spanWrapText "{temperatureC}°";
           tooltip = false;
@@ -278,12 +276,12 @@ in
           exec-if = "which makoctl";
           exec = ''
             makoctl list | jq --unbuffered --compact-output '
-              .data[0] as $notifications
-              | if ($notifications|length) > 0 then
-                  { "alt": "notification", "tooltip": ($notifications[0].summary + ":\n" + $notifications[0].body) }
-                else
-                  { "alt": "none", "tooltip": "" }
-                end
+            .data[0] as $notifications
+            | if ($notifications|length) > 0 then
+            { "alt": "notification", "tooltip": ($notifications[0].summary + ":\n" + $notifications[0].body) }
+            else
+            { "alt": "none", "tooltip": "" }
+            end
             '
           '';
           on-click = "makoctl invoke";

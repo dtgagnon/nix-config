@@ -56,7 +56,8 @@ in
         # "size 1200 725,floating:1,title:^(Yazi)$"
 
         # VMs
-        "workspace 6, fullscreen, class:^(.qemu-system-x86_64-wrapped)$"
+        ## Looking Glass
+        "workspace 6, fullscreen, class:^(looking-glass-client)$"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"

@@ -18,13 +18,13 @@ in
 
       bind = [
         # Open
-        "$mod, Return, exec, [float; center; size 900 600] $terminal"
+        "$mod, Return, exec, [float; center; size 1200 800] $terminal"
         "$mod_ALT, Return, exec, $terminal"
         "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
-        "$mod, B, exec, zen"
-        "$mod_ALT, V, exec, [workspace 1] codium"
+        "$mod, B, exec, zen-beta"
+        "$mod_ALT, V, exec, [workspace 1] windsurf"
         "$mod_SHIFT, S, exec, hyprshot -z -m region -t 2000 --clipboard-only"
 
         # Window Control
@@ -67,6 +67,18 @@ in
         "$mod_SHIFT, 8, movetoworkspacesilent, 08"
         "$mod_SHIFT, 9, movetoworkspacesilent, 09"
         "$mod_SHIFT, 0, movetoworkspacesilent, 10"
+
+        # Special Workspaces
+        # Move active window to special workspace (minimize)
+        "$mod, S, movetoworkspace, special:min" # General minimize to single special workspace
+        "$mod_SHIFT, S, togglespecialworkspace, min" # Toggle general minimized workspace
+
+        # Dynamic Minimize Function
+        # Minimize to special workspace based on current numbered workspace
+        "$mod, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch movetoworkspace special:min$WORKSPACE; else hyprctl dispatch movetoworkspace special:min; fi"
+
+        # Toggle the special workspace for the current numbered workspace
+        "$mod_ALT, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch togglespecialworkspace min$WORKSPACE; else hyprctl dispatch togglespecialworkspace min; fi"
 
         # General Desktop
         "$mod_SHIFT_CTRL, L, exec, $lock"

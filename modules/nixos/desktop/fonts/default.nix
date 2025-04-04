@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf types;
@@ -13,7 +12,7 @@ in
 {
   options.${namespace}.desktop.fonts = {
     enable = mkBoolOpt false "Whether or not to manage fonts.";
-    fonts = mkOpt (types.listOf types.package) [ ] "Custom font packages to install.";
+    extraFonts = mkOpt (types.listOf types.package) [ ] "Custom font packages to install.";
   };
 
   config = mkIf cfg.enable {
@@ -25,6 +24,8 @@ in
     };
 
     fonts.packages = with pkgs; [
+      font-awesome
+
       nerd-fonts._0xproto
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
@@ -37,6 +38,6 @@ in
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
       noto-fonts-emoji
-    ] ++ cfg.fonts;
+    ] ++ cfg.extraFonts;
   };
 }
