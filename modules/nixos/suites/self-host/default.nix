@@ -19,6 +19,7 @@ in
       hoarder = enabled;
       home-assistant = enabled;
       immich = enabled;
+			ntfy = enabled;
     };
   };
 }

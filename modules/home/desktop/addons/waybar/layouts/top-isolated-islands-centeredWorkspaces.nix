@@ -10,8 +10,7 @@ let
 
   core = config.spirenix.desktop.styling.core;
   spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="20pt">${icon}</span>'';
-  spanWrapText =
-    text: ''<span face="${core.fonts.sansSerif.name}" size="12pt" rise="5pt">${text}</span>'';
+  spanWrapText = text: ''<span face="${core.fonts.sansSerif.name}" size="12pt" rise="5pt">${text}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
