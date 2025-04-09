@@ -122,7 +122,7 @@ in
       			#workspaces.odds button {
       				background: transparent;
       				opacity: 0.30;
-      				padding: 10px 8px;
+      				padding: 0px 8px;
       				margin: 0;
       				border-radius: 4px;
       			}
@@ -163,7 +163,7 @@ in
       			#workspaces.evens button {
       				background: transparent;
       				opacity: 0.30;
-      				padding: 10px 8px;
+      				padding: 0px 8px;
       				margin: 0;
       				border-radius: 4px;
       			}
