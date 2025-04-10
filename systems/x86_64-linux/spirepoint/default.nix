@@ -88,19 +88,20 @@ in
     };
 
     #TODO: Enable again when VMs are declared
-    # virtualisation = {
-    #   kvm = {
-    #     enable = true;
-    #     vfio = {
-    #       enable = true;
-    #       blacklistNvidia = true;
-    #       vfioIds = [
-    #         "10de:1c02" #GTX1060 ID
-    #         "10de:10f1" #GTX1060 audio controller ID
-    #       ];
-    #     };
-    #   };
-    # };
+    virtualisation = {
+      podman = enabled;
+      #   kvm = {
+      #     enable = true;
+      #     vfio = {
+      #       enable = true;
+      #       blacklistNvidia = true;
+      #       vfioIds = [
+      #         "10de:1c02" #GTX1060 ID
+      #         "10de:10f1" #GTX1060 audio controller ID
+      #       ];
+      #     };
+      #   };
+    };
   };
 
   system.stateVersion = "24.11";

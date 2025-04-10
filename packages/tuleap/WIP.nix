@@ -41,42 +41,41 @@ let
   });
 
   # Define the PHP environment based on php-base.nix and build-tools-php.nix
-  phpForTuleap = pkgs.php82.withExtensions ({ enabled, all }: enabled ++ [
-    # Using pkgs.php82
-    all.ffi
-    all.bcmath
-    all.curl
-    all.ctype
-    all.dom
-    all.fileinfo
-    all.filter
-    all.gd
-    all.gettext
-    all.iconv
-    all.intl
-    all.ldap
-    all.mbstring
-    all.mysqli
-    all.mysqlnd
-    all.opcache
-    all.openssl
-    all.pcntl
-    all.pdo_mysql
-    all.posix
-    all.readline
-    all.session
-    all.simplexml
-    all.sodium
-    all.tokenizer
-    all.xmlreader
-    all.xmlwriter
-    all.zip
-    all.zlib
-    all.mailparse
-    all.imagick
-    all.sysvsem
-    all.redis
-    all.xsl
+  phpForTuleap = pkgs.php82.withExtensions ({ enabled, all }: with all; enabled ++ [
+    ffi
+    bcmath
+    curl
+    ctype
+    dom
+    fileinfo
+    filter
+    gd
+    gettext
+    iconv
+    intl
+    ldap
+    mbstring
+    mysqli
+    mysqlnd
+    opcache
+    openssl
+    pcntl
+    pdo_mysql
+    posix
+    readline
+    session
+    simplexml
+    sodium
+    tokenizer
+    xmlreader
+    xmlwriter
+    zip
+    zlib
+    mailparse
+    imagick
+    sysvsem
+    redis
+    xsl
   ]
     # Ensure necessary libraries for extensions are implicitly included by Nixpkgs PHP infra
     # Or add explicit pkgs here if build fails (e.g., pkgs.imagemagick)
@@ -89,24 +88,28 @@ let
 
 in
 pkgs.php.buildComposerProject rec {
-  pname = "tuleap-code";
+  pname = "tuleap-bin";
   version = tuleapVersion;
 
   src = fetchFromGitHub {
     owner = "Enalean";
     repo = "tuleap";
     rev = "refs/tags/${version}";
-    #TODO: TASK 5: Calculate the correct hash.
-    # Run build with lib.fakeSha256, copy hash from error, replace here.
     hash = "sha256-5Oija93j1m8FHzheGIaC7WM/DF+7yCUzDAvjIyKx1XI=";
   };
 
-  composerLock = "src/composer.lock";
-  vendorHash = "";
+  php = php82.buildEnv {
+    extensions = ({ enabled, all }: enabled );
+  };
+  composerLock = "composer.lock";
+  vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
   nativeBuildInputs = with pkgs; [
     # General Build Tools
+    cacert
+    cachix
     coreutils
+    cosign
     gnugrep
     gnused
     gnumake
@@ -115,7 +118,6 @@ pkgs.php.buildComposerProject rec {
     gettext
     bash
     which
-    cacert
 
     # Other Build Packages
     file
@@ -135,8 +137,11 @@ pkgs.php.buildComposerProject rec {
     # Add others like pkgs.imagemagick, pkgs.cyrus_sasl if needed
   ];
 
-  # Configure environment for sandboxed builds
   preConfigure = ''
+    # Ensure composer.lock exists and is valid
+    if [ ! -f composer.lock ]; then
+      ${composerForTuleap}/bin/composer install --no-dev --no-scripts
+    fi
     export HOME=$(mktemp -d)
     export COMPOSER_CACHE_DIR="$TMPDIR/composer-cache"
     mkdir -p $COMPOSER_CACHE_DIR
@@ -180,6 +185,14 @@ pkgs.php.buildComposerProject rec {
     # Consider other exclusions: tests/, docs/, .github/, etc.
 
     runHook postInstall
+  '';
+
+  postPatch = ''
+    # Only copy composer.lock if src/composer.lock exists and is different
+    if [ -f src/composer.lock ] && ! cmp -s src/composer.lock composer.lock; then
+      echo "Copying composer.lock to source root"
+      cp src/composer.lock composer.lock
+    fi
   '';
 
   # Pass useful components to the module later

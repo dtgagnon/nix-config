@@ -201,7 +201,7 @@
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
-    ## programming langs
+    ## programming langs/lsps
     astal.url = "github:Aylur/astal";
     astal.inputs.nixpkgs.follows = "nixpkgs";
     ags.url = "github:Aylur/ags";
