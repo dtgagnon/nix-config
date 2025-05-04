@@ -50,9 +50,10 @@ in
         wlsunset = enabled; # color temperature manager
 
         # Basic functionality
+        ags = enabled;
         hypridle = enabled;
         hyprlock = enabled;
-        waybar = enabled;
+        # waybar = enabled;
         wlogout = enabled;
       };
       styling = {
@@ -85,7 +86,6 @@ in
       wl-clipboard
       swww
       playerctl
-
     ];
   };
 }
