@@ -23,19 +23,21 @@ There is an existing `/modules/home/desktop/addons/ags/bar` structure with a Nix
 nixos/modules/home/desktop/addons/ags/bar/
 ├── default.nix        # Already exists
 └── src/
-    ├── config.js     # Main config entry point
+    ├── config.ts     # Main config entry point
     ├── lib/          # Utility functions
     ├── modules/      # Individual widget modules
-    │   ├── workspaces.js
-    │   ├── clock.js
-    │   ├── calendar.js
-    │   ├── system.js   # CPU, memory, temp
-    │   ├── network.js
-    │   └── audio.js
+    │   ├── workspaces.ts
+    │   ├── clock.ts
+    │   ├── calendar.ts
+    │   ├── system.ts   # CPU, memory, temp
+    │   ├── network.ts
+    │   └── audio.ts
     ├── widgets/     # Widget composition
-    │   ├── left.js     # Left section modules
-    │   ├── center.js   # Center section modules
-    │   └── right.js    # Right section modules
+    │   ├── left.ts     # Left section modules
+    │   ├── center.ts   # Center section modules
+    │   └── right.ts    # Right section modules
+    ├── types/       # TypeScript type definitions
+    │   └── index.ts    # Exported types and interfaces
     └── sass/
         ├── index.scss
         └── _variables.scss
@@ -44,8 +46,8 @@ nixos/modules/home/desktop/addons/ags/bar/
 ### 2.2 Detailed Implementation Tasks
 
 1. **Core Configuration**
-   - Create base `config.js` to initialize the bar
-   - Setup proper JavaScript module structure
+   - Create base `config.ts` to initialize the bar
+   - Setup proper TypeScript module structure with type definitions
    - Create utility functions for formatting and icons
 
 2. **Workspace Module**
@@ -86,16 +88,17 @@ nixos/modules/home/desktop/addons/ags/bar/
 ### 2.3 Technical Implementation Notes
 
 #### Core Bar Setup
-```javascript
-// config.js
+```typescript
+// config.ts
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
 import App from 'resource:///com/github/Aylur/ags/app.js';
-import Left from './widgets/left.js';
-import Center from './widgets/center.js';
-import Right from './widgets/right.js';
+import { Left } from './widgets/left';
+import { Center } from './widgets/center';
+import { Right } from './widgets/right';
+import { BarConfig } from './types';
 import './sass/index.scss';
 
-const Bar = () => Widget.Window({
+const Bar = (): Widget => Widget.Window({
   name: 'bar',
   anchor: ['top', 'left', 'right'],
   exclusive: true,
@@ -106,26 +109,37 @@ const Bar = () => Widget.Window({
   }),
 });
 
-export default {
+const config: BarConfig = {
   style: './css/index.css',
   windows: [Bar()],
 };
+
+export default config;
 ```
 
 #### Workspace Implementation
-```javascript
-// modules/workspaces.js
+```typescript
+// modules/workspaces.ts
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
 import Hyprland from 'resource:///com/github/Aylur/ags/service/hyprland.js';
-import { spanWrapIcon } from '../lib/formatting.js';
+import { spanWrapIcon } from '../lib/formatting';
+import { WorkspaceInfo } from '../types';
 
-export const OddWorkspaces = () => {
-  const workspaceButton = id => Widget.Button({
+/**
+ * Get the appropriate icon for a workspace based on its ID
+ */
+const getIconForWorkspace = (id: number): string => {
+  // Implementation details here
+  return ''; // Placeholder
+};
+
+export const OddWorkspaces = (): Widget => {
+  const workspaceButton = (id: number): Widget => Widget.Button({
     onClicked: () => Hyprland.sendMessage(`dispatch workspace ${id}`),
     child: Widget.Label({
       label: spanWrapIcon(getIconForWorkspace(id)),
     }),
-    className: Hyprland.active.workspace.bind().transform(ws => 
+    className: Hyprland.active.workspace.bind().transform((ws: WorkspaceInfo) => 
       ws.id === id ? 'workspace-button active' : 'workspace-button'),
   });
 
@@ -142,7 +156,7 @@ export const OddWorkspaces = () => {
 
 ### 3.1 Flake Configuration
 
-The development environment will be managed through the existing Nix flake:
+The development environment will be managed through the existing Nix flake with TypeScript support:
 
 ```nix
 # In flake.nix
@@ -153,6 +167,14 @@ inputs = {
 
 outputs = { self, nixpkgs, ags, ... }: {
   # ... existing outputs
+  devShells.${system}.default = pkgs.mkShell {
+    buildInputs = with pkgs; [
+      nodejs
+      nodePackages.typescript
+      nodePackages.typescript-language-server
+      ags.packages.${system}.default
+    ];
+  };
 };
 ```
 
@@ -163,6 +185,7 @@ The development environment will use direnv to automatically load the Nix flake 
 ```shell
 # .envrc in the ags development directory
 use flake
+# TypeScript environment will be loaded from the flake
 ```
 
 ### 3.3 Module Configuration
@@ -182,14 +205,64 @@ The existing module will be updated to support the new implementation:
     home.packages = [ cfg.package ];
     spirenix = {
       desktop.hyprland.extraConfig = {
-        exec-once = [ "${getExe cfg.package} --config ${bar}/config.js" ];
+        exec-once = [ "${getExe cfg.package} --config ${bar}/config.ts" ];
       };
     };
   };
 }
 ```
 
-## 4. Testing and Validation
+## 4. TypeScript Setup
+
+1. **TypeScript Configuration**
+   - Create `tsconfig.json` file in the project root
+   - Configure module resolution for AGS imports
+   - Setup type checking and compilation options
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "resource:///com/github/Aylur/ags/*": ["./node_modules/@types/ags/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+```
+
+2. **Types Directory Structure**
+   - Create type definitions for all components
+   - Define interfaces for widget properties
+   - Add type declarations for AGS modules
+
+```typescript
+// types/index.ts
+export interface BarConfig {
+  style: string;
+  windows: Array<any>; // Replace with proper type once available
+}
+
+export interface WorkspaceInfo {
+  id: number;
+  name: string;
+  monitor: string;
+  windows: number;
+  // Add other properties as needed
+}
+```
+
+## 5. Testing and Validation
 
 1. **Component Testing**
    - Test each module independently
