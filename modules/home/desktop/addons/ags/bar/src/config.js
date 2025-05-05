@@ -19,12 +19,9 @@ const create = (monitor) => {
   let bar;
   let reservation;
 
-  switch (name) {
-    default:
-    case "framework-builtin":
-      [bar, reservation] = VerticalBar(monitor);
-      break;
-  }
+  // Create a vertical bar for any monitor type
+  [bar, reservation] = VerticalBar(monitor);
+  console.log(`Creating bar for monitor: ${name}`); // Add logging for debugging
 
   if (reservation) {
     reservations.set(monitor.name, reservation);

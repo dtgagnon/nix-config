@@ -76,6 +76,7 @@
 
         homes.modules = with inputs; [
           ags.homeManagerModules.default
+          hyprpanel.homeManagerModules.hyprpanel
           sops-nix.homeManagerModules.sops
           stylix.homeManagerModules.stylix
         ];

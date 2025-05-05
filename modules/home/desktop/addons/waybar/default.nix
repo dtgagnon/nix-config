@@ -21,10 +21,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      hyprpanel
-      ags
-    ];
     programs.waybar = {
       enable = true;
       systemd = {

@@ -11,13 +11,26 @@ let
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.ags.bar;
 
-  bar = pkgs.runCommandNoCC "spirenix-ags-bar" { } ''
-    mkdir -p $out
-    cp -r ${./src}/* $out/
-    rm -rf $out/css/index.css
+  bar = pkgs.runCommandNoCC "spirenix-ags-bar" {
+    nativeBuildInputs = [ pkgs.sassc ];
+  } ''
+    # Create output structure
     mkdir -p $out/css
-    ${lib.getExe pkgs.sassc}/bin/sassc $out/sass/index.scss $out/css/index.css
-    rm -rf $out/styles/sass
+    
+    # Copy config.js and necessary files
+    cp ${./src}/config.js $out/
+    
+    # Ensure assets directory is copied
+    mkdir -p $out/assets
+    cp -r ${./src}/assets/* $out/assets/
+    
+    # Copy components and util directories
+    mkdir -p $out/components $out/util
+    cp -r ${./src}/components/* $out/components/
+    cp -r ${./src}/util/* $out/util/
+    
+    # Compile SASS to CSS
+    sassc ${./src}/sass/index.scss $out/css/index.css
   '';
 in
 {
@@ -29,9 +42,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
     spirenix = {
-      desktop.hyprland.extraConfig = {
-        exec-once = [ "${getExe cfg.package} --config ${bar}/config.js" ];
-      };
+      desktop.hyprland.extraExec = [ "${getExe cfg.package} --config ${bar}/config.js" ];
     };
   };
 }
