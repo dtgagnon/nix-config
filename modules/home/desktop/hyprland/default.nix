@@ -44,7 +44,7 @@ in
     spirenix.desktop = {
       addons = {
         # Utilities
-        # mako = enabled; # notifications
+        mako = enabled; # notifications
         rofi = enabled; # launcher
         fuzzel = enabled; # app launcher
         wlsunset = enabled; # color temperature manager
@@ -53,8 +53,7 @@ in
         # ags.bar = enabled;
         hypridle = enabled;
         hyprlock = enabled;
-        hyprpanel = enabled;
-        # waybar = enabled;
+        waybar = enabled;
         wlogout = enabled;
       };
       styling = {
