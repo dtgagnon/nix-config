@@ -14,9 +14,9 @@ in
       exec-once = [
         "gnome-keyring-daemon --start --components=secrets"
         # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
-        # "nm-applet"
-        # "swww init ; sleep 1; setwall"
-        # "playerctld daemon"
+        "nm-applet"
+        "swww init ; sleep 1; setwall"
+        "playerctld daemon"
       ] ++ cfg.extraExec;
 
       monitor = cfg.monitors ++ [

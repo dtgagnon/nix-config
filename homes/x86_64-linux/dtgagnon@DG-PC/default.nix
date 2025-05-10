@@ -57,7 +57,11 @@ in
     };
 
     desktop = {
-      addons.kde-connect = enabled;
+      addons = {
+        hellwal = enabled;
+        kde-connect = enabled;
+        weylus = enabled;
+      };
       hyprland = {
         enable = true;
         monitors = [
