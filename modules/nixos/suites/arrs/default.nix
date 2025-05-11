@@ -27,7 +27,7 @@ in
       sabnzbd = enabled;
       sonarr = {
         enable = true;
-        enableAnimeServer = true;
+        enableAnimeServer = false;
       };
     };
   };

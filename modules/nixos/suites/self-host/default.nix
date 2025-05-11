@@ -16,10 +16,10 @@ in
   config = mkIf cfg.enable {
     spirenix.services = {
       audiobookshelf = enabled;
-      hoarder = enabled;
+      karakeep = enabled;
       home-assistant = enabled;
       immich = enabled;
-			ntfy = enabled;
+      ntfy = enabled;
     };
   };
 }

@@ -36,6 +36,22 @@
           };
         };
       };
+      secondary = {
+        type = "disk";
+        device = "/dev/disk/by-id/ata-Samsung_SSD_850_EVO_120GB_S21TNWAG411729E";
+        content = {
+          type = "gpt";
+          partitions = {
+            root2 = {
+              size = "100%";
+              content = {
+                type = "lvm_pv";
+                vg = "root-pool";
+              };
+            };
+          };
+        };
+      };
       data-hdd1 = {
         type = "disk";
         device = "/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV2KBYD";

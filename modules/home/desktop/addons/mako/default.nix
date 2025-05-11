@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf mkForce;
@@ -46,10 +45,6 @@ in
       # borderColor = "${colors.base03}";
       # progressColor = "over ${colors.base0E}";
       # iconPath = "${pkgs.catppuccin-papirus}/share/icons/Papirus-Dark";
-
-      extraConfig = ''
-        text-alignment=center
-      '';
     };
   };
 }
