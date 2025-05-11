@@ -87,20 +87,19 @@ in
       nix-ld = enabled;
     };
 
-    #TODO: Enable again when VMs are declared
     virtualisation = {
       podman = enabled;
-      #   kvm = {
-      #     enable = true;
-      #     vfio = {
-      #       enable = true;
-      #       blacklistNvidia = true;
-      #       vfioIds = [
-      #         "10de:1c02" #GTX1060 ID
-      #         "10de:10f1" #GTX1060 audio controller ID
-      #       ];
-      #     };
-      #   };
+      kvm = {
+        enable = true;
+        vfio = {
+          enable = true; #config'd for looking glass
+          blacklistNvidia = true;
+          vfioIds = [
+            "10de:1c02" #GTX1060 ID
+            "10de:10f1" #GTX1060 audio controller ID
+          ];
+        };
+      };
     };
   };
 
