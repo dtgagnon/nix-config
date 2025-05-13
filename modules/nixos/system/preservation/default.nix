@@ -156,11 +156,9 @@ in
     # change default systemd-machine-id-commit service to commit the transient ID to the persistent volume instead
     systemd.services.systemd-machine-id-commit = {
       unitConfig.ConditionPathIsMountPoint = [
-        ""
-        "/persistent/etc/machine-id"
+        "/persist/etc/machine-id"
       ];
       serviceConfig.ExecStart = [
-        ""
         "systemd-machine-id-setup --commit --root /persist"
       ];
     };
