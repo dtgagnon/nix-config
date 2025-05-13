@@ -37,7 +37,6 @@ in
       };
 
       gtk3 = {
-        extraCss = config.gtk.gtk4.extraCss;
         extraConfig = {
           gtk-decoration-layout = "appmenu:none";
           gtk-enable-event-sounds = 0;
@@ -52,7 +51,6 @@ in
       };
 
       gtk4 = {
-        extraCss = builtins.readFile ./gtk.css;
         extraConfig = {
           gtk-decoration-layout = "appmenu:none";
           gtk-enable-event-sounds = 0;

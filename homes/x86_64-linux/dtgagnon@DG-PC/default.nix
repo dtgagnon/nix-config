@@ -20,6 +20,7 @@ in
     apps = {
       discord = enabled;
       gimp = enabled;
+      inkscape = enabled;
       looking-glass-client = enabled;
       obsidian = enabled;
       office.okular-pdf = enabled;

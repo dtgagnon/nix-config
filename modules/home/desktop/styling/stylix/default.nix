@@ -77,7 +77,9 @@ in
                   ${target}.enable = false;
                 }
             )
-            { }
+            {
+              gtk.extraCss = builtins.readFile ../gtk/gtk.css;
+            }
             cfg.excludedTargets;
       };
     })

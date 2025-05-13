@@ -96,7 +96,7 @@ in
         # Application aliases
         vi = "vim";
       };
-      initExtra = ''
+      initContent = ''
         eval "$(zoxide init zsh)"
         eval "$(direnv hook zsh)"
       '';
