@@ -44,7 +44,7 @@ in
 
     hardware = {
       audio = enabled;
-      gpu = { enable = true; dGPU = "nvidia"; };
+      gpu = { enable = true; dGPU = "nvidia"; iGPU = "intel"; };
       storage.boot = {
         enable = true;
         kernel.params = [
