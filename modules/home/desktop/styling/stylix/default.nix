@@ -77,8 +77,11 @@ in
                   ${target}.enable = false;
                 }
             )
-            {
-              gtk.extraCss = builtins.readFile ../gtk/gtk.css;
+            { 
+              gtk = { 
+                enable = true;
+                # extraCss = builtins.readFile ../gtk/gtk.css; 
+              }; 
             }
             cfg.excludedTargets;
       };
