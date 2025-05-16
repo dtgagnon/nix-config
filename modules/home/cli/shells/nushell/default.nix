@@ -73,7 +73,7 @@ in
         # Flake Stuff
         rebuild = "nixos-rebuild switch --use-remote-sudo --flake .#${host}";
         test = "nixos-rebuild test --use-remote-sudo --flake .#${host}";
-        update = "nix flake update --use-remote-sudo";
+        update = "nix flake update";
         nixdev = "nix develop --command nushell";
 
         # Navigate Shell
