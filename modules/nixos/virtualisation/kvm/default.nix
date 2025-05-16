@@ -50,6 +50,7 @@ in
             packages = [ pkgs.OVMFFull.fd ];
           };
           swtpm = enabled;
+					vhostUserPackages = [ pkgs.virtiofsd ];
           verbatimConfig = ''
             user = "${user.name}"
             group = "qemu-libvirtd"
@@ -94,7 +95,7 @@ in
       gvfs
       swtpm
 
-      virtiofsd
+      # virtiofsd
       virtio-win
       win-spice
 
