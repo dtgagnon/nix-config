@@ -78,7 +78,7 @@
           ags.homeManagerModules.default
           hyprpanel.homeManagerModules.hyprpanel
           sops-nix.homeManagerModules.sops
-          stylix.homeManagerModules.stylix
+          stylix.homeModules.stylix
         ];
 
         deploy = lib.mkDeploy { inherit (inputs) self; };
