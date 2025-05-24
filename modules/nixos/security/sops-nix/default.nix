@@ -50,6 +50,9 @@ in
         { file = "/home/dtgagnon/.config/sops/age/keys.txt"; how = "symlink"; mode = "0600"; }
         { file = "/home/admin/.config/sops/age/keys.txt"; how = "symlink"; mode = "0600"; }
       ];
+      extraHomeFiles = [
+        { file = ".config/sops/age/keys.txt"; how = "symlink"; mode = "0600"; }
+      ];
     };
   };
 }
