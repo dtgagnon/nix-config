@@ -15,6 +15,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.spirenix.claude-code ];
+    home.packages = [ pkgs.claude-code ];
   };
 }
