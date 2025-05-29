@@ -176,7 +176,7 @@
     nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications+services
-    ghostty.url = "github:ghostty-org/ghostty"; #NOTE: already follows nixos-unstable and 24.11 where needed
+    ghostty.url = "github:ghostty-org/ghostty/7f9bb3c0e54f585e11259bc0c9064813d061929c"; #TODO: re-pin the main flake once they fix the esc:caps key issue
 
     neovim.url = "github:dtgagnon/nixvim/main";
     neovim.inputs.nixpkgs.follows = "nixpkgs";

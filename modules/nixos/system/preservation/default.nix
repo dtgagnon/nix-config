@@ -16,13 +16,13 @@ in
     enable = mkBoolOpt false "Enable the preservation impermanence framework";
     extraUser = {
       user = mkOpt str "" "Declare additional users";
-      homeDirs = mkOpt (listOf str) [ ] "Declare extra user home directories to persist";
-      homeFiles = mkOpt (listOf str) [ ] "Declare extra user home files to persist";
+      homeDirs = mkOpt (listOf (either str attrs)) [ ] "Declare extra user home directories to persist";
+      homeFiles = mkOpt (listOf (either str attrs)) [ ] "Declare extra user home files to persist";
     };
-    extraSysDirs = mkOpt (listOf str) [ ] "Declare additional system directories to persist";
+    extraSysDirs = mkOpt (listOf (either str attrs)) [ ] "Declare additional system directories to persist";
     extraSysFiles = mkOpt (listOf (either str attrs)) [ ] "Declare additional system files to persist";
-    extraHomeDirs = mkOpt (listOf str) [ ] "Declare additional user home directories to persist";
-    extraHomeFiles = mkOpt (listOf str) [ ] "Declare additional user home files to persist";
+    extraHomeDirs = mkOpt (listOf (either str attrs)) [ ] "Declare additional user home directories to persist";
+    extraHomeFiles = mkOpt (listOf (either str attrs)) [ ] "Declare additional user home files to persist";
   };
 
   config = mkIf cfg.enable {
