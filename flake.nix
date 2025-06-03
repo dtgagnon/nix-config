@@ -164,12 +164,12 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-topology.url = "github:oddlama/nix-topology";
-    nix-topology.inputs.nixpkgs.follows = "nixpkgs";
+
 
     ## virtualisation
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
 
-    NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
+    NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.6.0.tar.gz";
     NixVirt.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-vfio.url = "github:j-brn/nixos-vfio";

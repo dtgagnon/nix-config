@@ -18,7 +18,7 @@ in
     home.packages = [
       (pkgs.discord.override {
         withOpenASAR = true;
-        withVencord = false;
+        withVencord = true;
       })
     ];
   };
