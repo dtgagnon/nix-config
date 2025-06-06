@@ -194,8 +194,8 @@ in
     pools = [
       {
         definition = NixVirt.lib.pool.writeXML {
-          name = "images";
-          uuid = "0f2e4863-e63c-4af5-9888-29e3a92e8f2c";
+          name = "default"; #images
+          uuid = "ec93320c-83fc-4b8d-a67d-2eef519cc3fd";
           type = "dir";
           target.path = "/var/lib/libvirt/images";
         };
@@ -205,7 +205,7 @@ in
           name = "isos";
           uuid = "7f532314-d910-4237-99ed-ca3441e006a1";
           type = "dir";
-          target = { path = "/var/lib/libvirt/isos"; };
+          target.path = "/var/lib/libvirt/isos";
         };
       }
       {
@@ -213,7 +213,7 @@ in
           name = "nvram";
           uuid = "adda15d7-edf3-4b16-a968-19317c30805a";
           type = "dir";
-          target = { path = "/var/lib/libvirt/qemu/nvram"; };
+          target.path = "/var/lib/libvirt/qemu/nvram";
         };
       }
     ];
