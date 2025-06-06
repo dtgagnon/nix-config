@@ -191,7 +191,7 @@ in
     virtualisation.libvirt.verbose = true;
     virtualisation.libvirt.connections."qemu:///system" = {
       domains = [
-        { definition = NixVirt.lib.domain.writeXML (import ./win11-GPU.nix); }
+        { definition = (import ./win11-GPU.nix); }
       ];
       pools = [
         {
@@ -233,25 +233,27 @@ in
       };
     };
 
-    virtualisation.libvirtd.hooks.qemu."10-cpu-manager" = pkgs.writeShellScript "cpu-qemu-hook" ''
-      machine=$1
-      command=$2
-      # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
-      if [ "$machine" == "win11-GPU" ]; then
-        if [ "$command" == "prepare" ]; then
-          ${pkgs.coreutils-full}/bin/echo "preparing"
-          ${give_vm_dGPU}/bin/give_vm_dGPU
-        elif [ "$command" == "started" ]; then
-          ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,16-23
-          ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,16-23
-          ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-3,16-23
-        elif [ "$command" == "stopped" ]; then
-          ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
-          ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
-          ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-23
-          ${give_host_dGPU}/bin/give_host_dGPU
+    virtualisation.libvirtd.hooks.qemu."10-cpu-manager" = pkgs.writeShellScript
+      "cpu-qemu-hook"
+      ''
+        machine=$1
+        command=$2
+        # Dynamically VFIO bind/unbind the USB with the VM starting up/stopping
+        if [ "$machine" == "win11-GPU" ]; then
+          if [ "$command" == "prepare" ]; then
+            ${pkgs.coreutils-full}/bin/echo "preparing"
+            ${give_vm_dGPU}/bin/give_vm_dGPU
+          elif [ "$command" == "started" ]; then
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,16-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,16-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-3,16-23
+          elif [ "$command" == "stopped" ]; then
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-23
+            ${give_host_dGPU}/bin/give_host_dGPU
+          fi
         fi
-      fi
-    '';
+      '';
   };
 }

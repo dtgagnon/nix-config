@@ -87,18 +87,22 @@
           formatter = channels.nixpkgs.nixfmt-rfc-style;
         };
 
-        topology =
-          with inputs;
-          let
-            host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
-          in
-          import nix-topology {
-            inherit (host) pkgs;
-            modules = [
-              (import ./topology { inherit (host) config; })
-              { inherit (self) nixosConfigurations; }
-            ];
-          };
+        # topology = with inputs;
+        #   let
+        #     host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
+        #   in
+        #   import nix-topology {
+        #     inherit (host) pkgs;
+        #     modules = [
+        #       (import ./topology { inherit (host) config; })
+        #       { nixosConfigurations = builtins.mapAttrs (
+        #         name: value:
+        #           if builtins.hasAttr "kvm" (value.config or {})
+        #           then null
+        #           else value
+        #       ) self.nixosConfigurations; }
+        #     ];
+        #   };
 
         templates = {
           empty.description = "A Nix Flake using snowfall-lib";

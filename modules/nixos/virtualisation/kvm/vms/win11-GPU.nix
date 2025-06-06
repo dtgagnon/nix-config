@@ -1,13 +1,17 @@
+{ pkgs
+, ...
+}:
 {
   # Set the qemu namespace required for the custom commandline
-  attrs."xmlns:qemu" = "http://libvirt.org/schemas/domain/qemu/1.0";
+  # attrs."xmlns:qemu" = "http://libvirt.org/schemas/domain/qemu/1.0";
 
+  type = "kvm";
   name = "win11-GPU";
   uuid = "456cf1dd-e827-4162-b1d9-14dd038f963d";
 
   metadata.libosinfo = {
-    attrs."xmlns:libosinfo" = "http://libosinfo.org/xmlns/libvirt/domain/1.0";
-    os.attrs = { id = "http://microsoft.com/win/11"; };
+    "xmlns:libosinfo" = "http://libosinfo.org/xmlns/libvirt/domain/1.0";
+    os.id = "http://microsoft.com/win/11";
   };
 
   memory = { count = 32; unit = "GiB"; }; # 32804864 KiB
@@ -91,7 +95,7 @@
   };
 
   clock = {
-    attrs = { offset = "localtime"; };
+    offset = "localtime";
     timer = [
       { name = "rtc"; tickpolicy = "catchup"; }
       { name = "pit"; tickpolicy = "delay"; }

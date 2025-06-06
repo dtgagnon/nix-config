@@ -9,8 +9,12 @@ let
   inherit (lib) mkIf types mkDefault mkMerge;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.gpu;
+
+  inherit (inputs.nixos-hardware.nixosModules) common-gpu-intel common-gpu-nvidia-nonprime;
 in
 {
+  imports = [ common-gpu-intel common-gpu-nvidia-nonprime ];
+
   options.${namespace}.hardware.gpu = {
     enable = mkBoolOpt false "Enable hardware configuration for basic nvidia gpu settings";
     iGPU = mkOpt (types.nullOr (types.enum [ "intel" "amd" ])) null "Choose the iGPU CPU manufacturer";
@@ -20,7 +24,6 @@ in
 
   config = mkMerge [
     (mkIf (cfg.enable && cfg.dGPU == "nvidia") {
-      imports = with inputs.nixos-hardware.nixosModules; [ common-gpu-nvidia-nonprime ];
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
@@ -68,7 +71,6 @@ in
     })
 
     (mkIf (cfg.enable && cfg.iGPU == "intel") {
-      imports = with inputs.nixos-hardware.nixosModules; [ common-gpu-intel ];
       services.xserver.videoDrivers = [ "modesetting" ];
       hardware.graphics = {
         enable = mkDefault true;

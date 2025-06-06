@@ -31,7 +31,7 @@ in
   options.${namespace}.user = {
     enable = mkBoolOpt true "Whether to configure the user account.";
 
-    name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "admin") "The user account.";
+    name = mkOpt (types.nullOr types.str) (config.snowfallorg.user.name or "dtgagnon") "The user account.";
     home = mkOpt (types.nullOr types.str) home-directory "The user's home directory.";
 
     fullName = mkOpt types.str "${cfg.name}" "The full name of the user.";

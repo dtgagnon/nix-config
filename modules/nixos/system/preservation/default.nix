@@ -99,13 +99,6 @@ in
 
           # Additional persisting directories and files to be defined for each user.
           {
-            admin = {
-              directories = [
-                ".local/share/direnv"
-                ".local/share/zoxide"
-              ] ++ cfg.extraHomeDirs;
-              files = [ ] ++ cfg.extraHomeFiles;
-            };
             dtgagnon = {
               directories = [
                 "myVMs"

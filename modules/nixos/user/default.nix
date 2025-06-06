@@ -50,7 +50,7 @@ in
             } // cfg.home.extraOptions;
 
             # User admin permissions (add to wheel)
-            admin = mkIf (!builtins.elem "${user}" [ "dtgagnon" "admin" "root" ]) false;
+            admin = mkIf (!builtins.elem "${user}" [ "dtgagnon" "root" ]) false;
           };
 
           # User security

@@ -19,7 +19,7 @@ in
       enable = true;
       wheelNeedsPassword = false;
       extraRules = [{
-        users = [ "dtgagnon" "admin" ];
+        users = [ "dtgagnon" ];
         groups = [ "wheel" ];
         commands = [{
           command = "ALL";
