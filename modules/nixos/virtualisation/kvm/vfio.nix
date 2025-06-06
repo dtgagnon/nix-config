@@ -15,7 +15,7 @@ in
     enable = mkBoolOpt false "Enable VFIO Configuration";
     vfioIds = mkOpt (types.listOf types.str) [ ] "The hardware IDs to pass through to the VM";
     blacklistNvidia = mkBoolOpt false "Add Nvidia GPU modules to blacklist";
-    passGpuAtBoot = mkBoolOpt true "Pass the GPU to VFIO at boot";
+    passGpuAtBoot = mkBoolOpt false "Pass the GPU to VFIO at boot";
 
     # disableEFIfb = mkOpt types.bool false "Disables the usage of the EFI framebuffer on boot.";
     # ignoreMSRs = mkBoolOpt false "Disable kvm guest access to model-specific registers";
@@ -54,7 +54,7 @@ in
       # "pcie_aspm=off"
 
       extraModprobeConfig = ''
-        options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}
+        ${optionalString cfg.passGpuAtBoot "options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}"}
         options kvm ignore_msrs=1
         options kvm report_ignored_msrs=0
         options kvmfr static_size_mb=64
@@ -63,7 +63,7 @@ in
 
       extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
 
-      blacklistedKernelModules = [ "nvidia" "nouveau" ];
+      blacklistedKernelModules = mkIf cfg.blacklistNvidia [ "nvidia" "nouveau" ];
     };
   };
 }

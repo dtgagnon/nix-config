@@ -1,6 +1,7 @@
 { lib
 , pkgs
 , config
+, inputs
 , namespace
 , ...
 }:
@@ -19,6 +20,7 @@ in
 
   config = mkMerge [
     (mkIf (cfg.enable && cfg.dGPU == "nvidia") {
+      imports = with inputs.nixos-hardware.nixosModules; [ common-gpu-nvidia-nonprime ];
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
@@ -66,6 +68,7 @@ in
     })
 
     (mkIf (cfg.enable && cfg.iGPU == "intel") {
+      imports = with inputs.nixos-hardware.nixosModules; [ common-gpu-intel ];
       services.xserver.videoDrivers = [ "modesetting" ];
       hardware.graphics = {
         enable = mkDefault true;

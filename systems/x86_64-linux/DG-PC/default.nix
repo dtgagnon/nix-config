@@ -31,14 +31,6 @@ in
       stylix = enabled;
     };
 
-    hardware = {
-      audio = enabled;
-      gpu = { enable = true; iGPU = "intel"; };
-      storage = {
-        boot.enable = true;
-      };
-    };
-
     security = {
       sudo = enabled;
       sops-nix = enabled;
@@ -69,7 +61,8 @@ in
         enable = true;
         vfio = {
           enable = true; #config'd for looking glass
-          blacklistNvidia = true;
+          blacklistNvidia = false;
+          passGpuAtBoot = false;
           vfioIds = [
             "10de:2684" #RTX4090 ID
             "10de:22ba" #RTX4090 audio controller ID
