@@ -24,64 +24,51 @@ in
   };
 
   config = mkIf (kvmCfg.enable && cfg.enable) {
-    boot.kernelParams = [
-      "${kvmCfg.gpu.iGPU}_iommu=on" # Assumes iGPU platform for IOMMU
-      "iommu=pt"
-      "video=efifb:off"
-    ];
+    boot = {
 
-    # === Static Passthrough Configuration === #
-    # Only applies if mode is set to "static"
-    boot.blacklistedKernelModules = mkIf (cfg.mode == "static") [ "nvidia" "nouveau" ];
-    boot.initrd.kernelModules = mkIf (cfg.mode == "static") [ "vfio_pci" "vfio" "vfio_iommu_type1" ];
-    boot.extraModprobeConfig = mkIf (cfg.mode == "static") ''
-      options vfio-pci ids=${concatStringsSep "," cfg.deviceIds}
+      # === General === #
+      kernelParams = [
+        "${kvmCfg.gpu.iGPU}_iommu=on" # Assumes iGPU platform for IOMMU
+        "iommu=pt"
+        "video=efifb:off"
+      ];
+      #NOTE: belongs above, testing without
+      # "pcie_aspm=off"
+
+      # === Static Passthrough Configuration === #
+      # Only applies if mode is set to "static"
+      blacklistedKernelModules = mkIf (cfg.mode == "static") [ "nvidia" "nouveau" ];
+      initrd.kernelModules = mkIf (cfg.mode == "static") [ "vfio_pci" "vfio" "vfio_iommu_type1" ];
+
+      # === Dynamic Passthrough Configuration === #
+      # Only applies if mode is set to "dynamic"
+      initrd.availableKernelModules = mkIf (cfg.mode == "dynamic") [
+        "vfio"
+        "vfio_iommu_type1"
+        "vfio_pci"
+      ];
+
+      # === KVMFR Configuration for Looking Glass === #
+      # 1. Build the kvmfr module package
+      extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
+
+      # 2. Load the kvmfr module at boot
+      kernelModules = [
+        "vhost-net"
+        "kvmfr"
+      ];
+
+      # 3. Configure the kvmfr module size and other settings
+      extraModprobeConfig = ''
+        ${optionalString (cfg.mode == "static") "options vfio-pci ids=${concatStringsSep "," cfg.deviceIds}"}
+        options kvm ignore_msrs=1
+        options kvm report_ignored_msrs=0
+        options kvmfr static_size_mb=64
+        softdep nvidia pre: vfio-pci
+      '';
+    };
+    services.udev.extraRules = ''
+      SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
     '';
-
-    # === Dynamic Passthrough Configuration === #
-    # Only applies if mode is set to "dynamic"
-    boot.initrd.availableKernelModules = mkIf (cfg.mode == "dynamic") [
-      "vfio"
-      "vfio_iommu_type1"
-      "vfio_pci"
-    ];
   };
-
-  services.udev.extraRules = ''
-    SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
-  '';
-
-  boot = {
-    initrd.kernelModules = mkIf cfg.passGpuAtBoot [
-      "vfio_pci"
-      "vfio_iommu_type1"
-      "vfio"
-    ];
-
-    kernelModules = [
-      "vhost-net"
-      "kvmfr"
-    ];
-
-    kernelParams = [
-      "${kvmCfg.platform}_iommu=on"
-      "iommu=pt"
-      "video=efifb:off"
-    ];
-    #NOTE: belongs above, testing without
-    # "pcie_aspm=off"
-
-    extraModprobeConfig = ''
-      ${optionalString cfg.passGpuAtBoot "options vfio-pci ids=${concatStringsSep "," cfg.deviceIds}"}
-      options kvm ignore_msrs=1
-      options kvm report_ignored_msrs=0
-      options kvmfr static_size_mb=64
-      softdep nvidia pre: vfio-pci
-    '';
-
-    extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
-
-    blacklistedKernelModules = mkIf cfg.blacklistNvidia [ "nvidia" "nouveau" ];
-  };
-};
 }
