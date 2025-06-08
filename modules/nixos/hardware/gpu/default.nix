@@ -16,7 +16,7 @@ in
   imports = [ common-gpu-intel common-gpu-nvidia-nonprime ];
 
   options.${namespace}.hardware.gpu = {
-    enable = mkBoolOpt false "Enable hardware configuration for basic nvidia gpu settings";
+    enable = mkBoolOpt true "Enable hardware configuration for basic nvidia gpu settings";
     iGPU = mkOpt (types.nullOr (types.enum [ "intel" "amd" ])) null "Choose the iGPU CPU manufacturer";
     dGPU = mkOpt (types.nullOr (types.enum [ "nvidia" "intel" "amd" ])) null "Choose the dGPU manufacturer";
     nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
@@ -33,6 +33,11 @@ in
           powerManagement = {
             enable = false;
             finegrained = false;
+          };
+          prime = {
+            sync.enable = true;
+            intelBusId = "PCI:0:2:0";
+            nvidiaBusId = "PCI:1:00.0";
           };
         };
         graphics = {

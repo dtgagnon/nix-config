@@ -61,9 +61,8 @@ in
         enable = true;
         vfio = {
           enable = true; #config'd for looking glass
-          blacklistNvidia = false;
-          passGpuAtBoot = false;
-          vfioIds = [
+          mode = "dynamic";
+          deviceIds = [
             "10de:2684" #RTX4090 ID
             "10de:22ba" #RTX4090 audio controller ID
           ];
