@@ -6,9 +6,9 @@
 }:
 let
   inherit (lib) mkIf;
-  cfg = config.${namespace}.virtualisation;
+  cfg = config.${namespace}.virtualisation.kvm;
 
-  vfioCfg = config.${namespace}.virtualisation.vfio;
+  vfioCfg = config.${namespace}.virtualisation.kvm.vfio;
 
   give-vm-dGPU = pkgs.writeShellScriptBin "give-vm-dgpu" ''
         		set -e
@@ -47,28 +47,30 @@ in
     # Ensure the hook scripts have the tools they need
     # systemd.services.libvirtd.path = [ pkgs.bash ];
 
-    virtualisation.libvirtd.hooks.qemu = pkgs.writeShellScript "qemu-hook-dispatcher" ''
-      						#!/usr/bin/env bash
-      						set -e
+    virtualisation.libvirtd.hooks.qemu = {
+      "win11-cpu-gpu-vfio-dispatcher" = pkgs.writeShellScript "win11-cpu-gpu-vfio-dispatcher" ''
+        #!/usr/bin/env bash
+        set -e
 
-                  VM_NAME="$1"
-                  COMMAND="$2"
+        VM_NAME="$1"
+        COMMAND="$2"
 
-                  # For a specific VM, run scripts on start/stop
-                  if [ "$VM_NAME" == "win11-GPU" ]; then
-                    if [ "$COMMAND" == "prepare" ]; then
-                      ${give-vm-dGPU}/bin/give-vm-dgpu
-                    elif [ "$COMMAND" == "started" ]; then
-                      ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,16-23
-                      ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,16-23
-                      ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.slice AllowedCPUs=0-3,16-23
-                    elif [ "$COMMAND" == "release" ]; then
-                      ${give-host-dGPU}/bin/give-host-dgpu
-            					${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
-            					${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
-            					${pkgs.systemd}/bin/systemctl set-property --runtime -- init.slice AllowedCPUs=0-23
-                    fi
-                  fi
-    '';
+        # For a specific VM, run scripts on start/stop
+        if [ "$VM_NAME" == "win11-GPU" ]; then
+          if [ "$COMMAND" == "prepare" ]; then
+            ${give-vm-dGPU}/bin/give-vm-dgpu
+          elif [ "$COMMAND" == "started" ]; then
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,16-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,16-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.slice AllowedCPUs=0-3,16-23
+          elif [ "$COMMAND" == "release" ]; then
+            ${give-host-dGPU}/bin/give-host-dgpu
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
+            ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.slice AllowedCPUs=0-23
+          fi
+        fi
+      '';
+    };
   };
 }

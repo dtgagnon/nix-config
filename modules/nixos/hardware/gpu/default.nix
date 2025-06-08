@@ -10,10 +10,10 @@ let
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.gpu;
 
-  inherit (inputs.nixos-hardware.nixosModules) common-gpu-intel common-gpu-nvidia-nonprime;
+  inherit (inputs.nixos-hardware.nixosModules) common-gpu-intel common-gpu-nvidia;
 in
 {
-  imports = [ common-gpu-intel common-gpu-nvidia-nonprime ];
+  imports = [ common-gpu-intel common-gpu-nvidia ];
 
   options.${namespace}.hardware.gpu = {
     enable = mkBoolOpt true "Enable hardware configuration for basic nvidia gpu settings";
@@ -35,9 +35,13 @@ in
             finegrained = false;
           };
           prime = {
-            sync.enable = true;
-            intelBusId = "PCI:0:2:0";
-            nvidiaBusId = "PCI:1:00.0";
+            # Use only one of sync or offload
+            sync.enable = true; 
+            offload.enable = false; 
+            
+            # Bus IDs in the format expected by NixOS
+            intelBusId = "PCI:0:2:0"; 
+            nvidiaBusId = "PCI:1:0:0";
           };
         };
         graphics = {

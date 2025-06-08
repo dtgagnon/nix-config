@@ -21,7 +21,7 @@
       {
         inherit inputs;
         src = ./.;
-
+        
         channels-config = {
           allowUnfree = true;
           permittedInsecurePackages = [
@@ -173,7 +173,7 @@
     ## virtualisation
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
 
-    NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.6.0.tar.gz";
+    NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
     NixVirt.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-vfio.url = "github:j-brn/nixos-vfio";

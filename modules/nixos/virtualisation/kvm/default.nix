@@ -2,7 +2,7 @@
 , pkgs
 , config
 , namespace
-, NixVirt
+, inputs
 , ...
 }:
 let
@@ -33,6 +33,41 @@ in
     };
 
     virtualisation = {
+      libvirt = {
+        enable = true;
+        connections."qemu:///system" = {
+          domains = [
+            { definition = ./vm-definitions/win11-GPU.xml; }
+          ];
+          pools = [
+            {
+              definition = inputs.NixVirt.lib.pool.writeXML {
+                name = "default";
+                uuid = "ec93320c-83fc-4b8d-a67d-2eef519cc3fd";
+                type = "dir";
+                target.path = "/var/lib/libvirt/images";
+              };
+            }
+            {
+              definition = inputs.NixVirt.lib.pool.writeXML {
+                name = "isos";
+                uuid = "7f532314-d910-4237-99ed-ca3441e006a1";
+                type = "dir";
+                target.path = "/var/lib/libvirt/isos";
+              };
+            }
+            {
+              definition = inputs.NixVirt.lib.pool.writeXML {
+                name = "nvram";
+                uuid = "adda15d7-edf3-4b16-a968-19317c30805a";
+                type = "dir";
+                target.path = "/var/lib/libvirt/qemu/nvram";
+              };
+            }
+          ];
+        };
+      };
+
       libvirtd = {
         enable = true;
         onBoot = "ignore";
@@ -42,37 +77,6 @@ in
           user = "${user.name}"
           group = "qemu-libvirtd"
         '';
-        connections."qemu:///system" = {
-          domains = [
-            { definition = NixVirt.lib.domains.writeXML (import ./vm-definitions/win11-GPU.nix); }
-          ];
-          pools = [
-            {
-              definition = NixVirt.lib.pool.writeXML {
-                name = "default";
-                uuid = "ec93320c-83fc-4b8d-a67d-2eef519cc3fd";
-                type = "dir";
-                target.path = "/var/lib/libvirt/images";
-              };
-            }
-            {
-              definition = NixVirt.lib.pool.writeXML {
-                name = "isos";
-                uuid = "7f532314-d910-4237-99ed-ca3441e006a1";
-                type = "dir";
-                target.path = "/var/lib/libvirt/isos";
-              };
-            }
-            {
-              definition = NixVirt.lib.pool.writeXML {
-                name = "nvram";
-                uuid = "adda15d7-edf3-4b16-a968-19317c30805a";
-                type = "dir";
-                target.path = "/var/lib/libvirt/qemu/nvram";
-              };
-            }
-          ];
-        };
 
         qemu = {
           package = pkgs.qemu_kvm;
@@ -132,6 +136,7 @@ in
       win-spice
 
       quickemu
+      inputs.NixVirt.packages.x86_64-linux.default
       # rustdesk # dont think this is used related to VMs
       # rustdesk-server # dont think this is ued related to VMs
     ];
