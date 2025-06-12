@@ -33,7 +33,7 @@ in
         nvidia = {
           open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
-          # modesetting.enable = true; #FIX: Same fix attempt as below
+          modesetting.enable = if (config.${namespace}.virtualisation.kvm.vfio.enable && config.${namespace}.virtualisation.kvm.vfio.mode == "dynamic") then false else true;
           powerManagement = {
             enable = false;
             finegrained = false;

@@ -6,7 +6,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkMerge types optionalString concatStringsSep;
+  inherit (lib) mkIf mkMerge mkForce types optionalString concatStringsSep;
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
@@ -178,11 +178,17 @@ in
         options vfio-pci ids=${concatStringsSep "," config.${namespace}.hardware.gpu.dGPU.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
+      
 
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
-      boot.kernelParams = [ "vfio-pci.disable_vga=1" "video=vesafb:off,efifb:off" ];
+      boot.kernelParams = [ 
+        "vfio-pci.disable_vga=1"
+        "video=vesafb:off,efifb:off"
+        (mkForce "nvidia-drm.modeset=0")
+        (mkForce "nvidia-drm.fbdev=0")
+      ];
     })
   ];
 }
