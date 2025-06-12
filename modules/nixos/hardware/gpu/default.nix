@@ -1,7 +1,6 @@
 { lib
 , pkgs
 , config
-, inputs
 , namespace
 , ...
 }:
@@ -9,39 +8,40 @@ let
   inherit (lib) mkIf types mkDefault mkMerge;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.gpu;
-
-  inherit (inputs.nixos-hardware.nixosModules) common-gpu-intel common-gpu-nvidia;
 in
 {
-  imports = [ common-gpu-intel common-gpu-nvidia ];
-
   options.${namespace}.hardware.gpu = {
     enable = mkBoolOpt true "Enable hardware configuration for basic nvidia gpu settings";
-    iGPU = mkOpt (types.nullOr (types.enum [ "intel" "amd" ])) null "Choose the iGPU CPU manufacturer";
-    dGPU = mkOpt (types.nullOr (types.enum [ "nvidia" "intel" "amd" ])) null "Choose the dGPU manufacturer";
+    iGPU = {
+      mfg = mkOpt (types.nullOr (types.enum [ "intel" "amd" ])) null "Choose the iGPU CPU manufacturer";
+      deviceIds = mkOpt (types.listOf types.str) [ ] "The device IDs of the iGPU";
+      busId = mkOpt (types.nullOr types.str) null "The bus ID of the iGPU";
+    };
+    dGPU = {
+      mfg = mkOpt (types.nullOr (types.enum [ "nvidia" "intel" "amd" ])) null "Choose the dGPU manufacturer";
+      deviceIds = mkOpt (types.listOf types.str) [ ] "The device IDs of the dGPU";
+      busId = mkOpt (types.nullOr types.str) null "The bus ID of the dGPU";
+    };
     nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
+    nvidiaPrime = mkBoolOpt false "Whether to use nvidia's PRIME dGPU sync magic whatever";
   };
 
   config = mkMerge [
-    (mkIf (cfg.enable && cfg.dGPU == "nvidia") {
+    (mkIf (cfg.enable && cfg.dGPU.mfg == "nvidia") {
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
           open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
-          modesetting.enable = true;
+          # modesetting.enable = true; #FIX: Same fix attempt as below
           powerManagement = {
             enable = false;
             finegrained = false;
           };
-          prime = {
-            # Use only one of sync or offload
-            sync.enable = true; 
-            offload.enable = false; 
-            
-            # Bus IDs in the format expected by NixOS
-            intelBusId = "PCI:0:2:0"; 
-            nvidiaBusId = "PCI:1:0:0";
+          prime = mkIf cfg.nvidiaPrime {
+            offload = { enable = true; enableOffloadCmd = true; };
+            intelBusId = "${cfg.iGPU.busId}";
+            nvidiaBusId = "${cfg.dGPU.busId}";
           };
         };
         graphics = {
@@ -62,7 +62,7 @@ in
         vulkan-tools
       ];
 
-      environment.variables = if (cfg.iGPU != null) then { } else {
+      environment.variables = if (cfg.iGPU.mfg != null) then { } else {
         NVD_BACKEND = "direct";
         LIBVA_DRIVER_NAME = "nvidia";
         GBM_BACKEND = "nvidia-drm";
@@ -72,14 +72,13 @@ in
 
       boot = {
         blacklistedKernelModules = [ "nouveau" ];
-        kernelParams = if (cfg.iGPU != null) then [ ] else [
-          "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-          "nvidia-drm.modeset=1"
-        ];
+        kernelParams = if (cfg.iGPU.mfg != null) then [ ] else [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]
+          ++ mkIf (config.${namespace}.virtualisation.kvm.vfio.mode == "static") [ "nvidia-drm.modeset=1" ]
+          ++ mkIf (config.${namespace}.virtualisation.kvm.vfio.mode == "dynamic") [ "nvidia-drm.modeset=0" ];
       };
     })
 
-    (mkIf (cfg.enable && cfg.iGPU == "intel") {
+    (mkIf (cfg.enable && cfg.iGPU.mfg == "intel") {
       services.xserver.videoDrivers = [ "modesetting" ];
       hardware.graphics = {
         enable = mkDefault true;
@@ -99,6 +98,7 @@ in
           "i915.enable_fbc=1"
           "i915.enable_psr=2"
           "i915.modeset=1"
+          (lib.mkForce "nvidia-drm.fbdev=0")
         ];
         # kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
       };

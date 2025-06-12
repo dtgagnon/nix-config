@@ -17,8 +17,15 @@ in
     audio.enable = true;
     gpu = {
       enable = true;
-      iGPU = "intel";
-      dGPU = "nvidia";
+      iGPU = {
+        mfg = "intel";
+        busId = "PCI:0:2:0";
+      };
+      dGPU = {
+        mfg = "nvidia";
+        deviceIds = [ "10de:2684" "10de:22ba" ];
+        busId = "PCI:1:0:0";
+      };
       nvidiaChannel = "stable";
     };
     storage.boot.enable = true;

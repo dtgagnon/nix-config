@@ -59,6 +59,7 @@ in
       podman = enabled;
       kvm = {
         enable = true;
+        lookingGlass.enable = true;
         vfio = {
           enable = true; #config'd for looking glass
           mode = "dynamic";

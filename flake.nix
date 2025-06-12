@@ -21,7 +21,7 @@
       {
         inherit inputs;
         src = ./.;
-        
+
         channels-config = {
           allowUnfree = true;
           permittedInsecurePackages = [
@@ -118,7 +118,7 @@
 
   inputs = {
     ## packages
-    stablepkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    stablepkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR"; # Community package repository
