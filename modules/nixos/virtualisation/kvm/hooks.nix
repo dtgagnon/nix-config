@@ -196,6 +196,27 @@ let
     ''
     else throw "Unsupported gpu: ${gpuMfg}"
   );
+  
+  virsh-check-usb = pkgs.writeShellScriptBin "virsh-check-usb" ''
+    #!${pkgs.stdenv.shell}
+
+    usb_names=( $(${pkgs.usbutils}/bin/lsusb | cut -d' ' -f7-) )
+    usb_ports=( $(${pkgs.usbutils}/bin/lsusb | cut -d' ' -f6) )
+
+    arr=( $(virsh dumpxml ${vmDomainName} |
+        xmlstarlet sel -t -m "/domain/devices/hostdev [@type='usb']" -v "source/vendor/@id" -o ":" -v "source/product/@id" -nl |
+        sed -e 's/0x\([0-9a-f]*\)/\1/g') )
+
+    i=1
+    for usb in ''${arr[@]}; do
+      $(${pkgs.usbutils}/bin/lsusb | grep -q $usb) || {
+        echo "USB device $usb not connected right now, removing..."
+        vendor=$(echo $usb | cut -d':' -f1)
+        product=$(echo $usb | cut -d':' -f2)
+        EDITOR="virsh dumpxml ${vmDomainName} | xmlstarlet ed -O -d \"/domain/devices/hostdev[source/vendor/@id='0x$vendor'][source/product/@id='0x$product']\" > " virsh edit win10
+      }
+    done
+  '';
 
   virsh-detach-usb = pkgs.writeShellScriptBin "virsh-detach-usb" ''
     #!${pkgs.stdenv.shell}
@@ -230,26 +251,7 @@ let
     </hostdev>
     EOF
   '';
-  virsh-check-usb = pkgs.writeShellScriptBin "virsh-check-usb" ''
-    #!${pkgs.stdenv.shell}
 
-    usb_names=( $(${pkgs.usbutils}/bin/lsusb | cut -d' ' -f7-) )
-    usb_ports=( $(${pkgs.usbutils}/bin/lsusb | cut -d' ' -f6) )
-
-    arr=( $(virsh dumpxml ${vmDomainName} |
-        xmlstarlet sel -t -m "/domain/devices/hostdev [@type='usb']" -v "source/vendor/@id" -o ":" -v "source/product/@id" -nl |
-        sed -e 's/0x\([0-9a-f]*\)/\1/g') )
-
-    i=1
-    for usb in ''${arr[@]}; do
-      $(${pkgs.usbutils}/bin/lsusb | grep -q $usb) || {
-        echo "USB device $usb not connected right now, removing..."
-        vendor=$(echo $usb | cut -d':' -f1)
-        product=$(echo $usb | cut -d':' -f2)
-        EDITOR="virsh dumpxml ${vmDomainName} | xmlstarlet ed -O -d \"/domain/devices/hostdev[source/vendor/@id='0x$vendor'][source/product/@id='0x$product']\" > " virsh edit win10
-      }
-    done
-  '';
   virsh-attach-usb = pkgs.writeShellScriptBin "virsh-attach-usb" ''
     #!${pkgs.stdenv.shell}
 
