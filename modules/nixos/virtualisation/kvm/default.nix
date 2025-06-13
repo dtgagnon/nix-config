@@ -10,6 +10,7 @@ let
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
+  dGPU = config.${namespace}.hardware.gpu.dGPU;
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
@@ -171,24 +172,24 @@ in
       '';
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "static") {
-      boot.blacklistedKernelModules = mkIf (config.${namespace}.hardware.gpu.dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
+      boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
+      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" "nvidia-drm.modeset=1" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
-      boot.kernelParams = [ "video=efifb:off" ];
       boot.extraModprobeConfig = ''
-        options vfio-pci ids=${concatStringsSep "," config.${namespace}.hardware.gpu.dGPU.deviceIds}
+        options vfio-pci ids=${concatStringsSep "," dGPU.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
-      
-
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
-      boot.kernelParams = [ 
+      boot.kernelParams = [
         "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"
         (mkForce "nvidia-drm.modeset=0")
         (mkForce "nvidia-drm.fbdev=0")
       ];
+      hardware.nvidia.modesetting.enable = mkForce false;
+      services.xserver.videoDrivers = mkForce [ "modesetting" ]; # Assumes intel iGPU as host primary
     })
   ];
 }

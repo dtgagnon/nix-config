@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types mkDefault mkMerge;
+  inherit (lib) mkIf types mkDefault mkMerge optionalString;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.gpu;
 in
@@ -13,6 +13,7 @@ in
   options.${namespace}.hardware.gpu = {
     enable = mkBoolOpt true "Enable hardware configuration for basic nvidia gpu settings";
     iGPU = {
+      isPrimary = mkBoolOpt false "Designate the iGPU as the primary renderer (false defaults to dGPU)";
       mfg = mkOpt (types.nullOr (types.enum [ "intel" "amd" ])) null "Choose the iGPU CPU manufacturer";
       deviceIds = mkOpt (types.listOf types.str) [ ] "The device IDs of the iGPU";
       busId = mkOpt (types.nullOr types.str) null "The bus ID of the iGPU";
@@ -33,7 +34,7 @@ in
         nvidia = {
           open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
-          modesetting.enable = if (config.${namespace}.virtualisation.kvm.vfio.enable && config.${namespace}.virtualisation.kvm.vfio.mode == "dynamic") then false else true;
+          modesetting.enable = true;
           powerManagement = {
             enable = false;
             finegrained = false;
@@ -62,7 +63,7 @@ in
         vulkan-tools
       ];
 
-      environment.variables = if (cfg.iGPU.mfg != null) then { } else {
+      environment.variables = if cfg.iGPU.isPrimary then { } else {
         NVD_BACKEND = "direct";
         LIBVA_DRIVER_NAME = "nvidia";
         GBM_BACKEND = "nvidia-drm";
@@ -72,9 +73,7 @@ in
 
       boot = {
         blacklistedKernelModules = [ "nouveau" ];
-        kernelParams = if (cfg.iGPU.mfg != null) then [ ] else [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]
-          ++ mkIf (config.${namespace}.virtualisation.kvm.vfio.mode == "static") [ "nvidia-drm.modeset=1" ]
-          ++ mkIf (config.${namespace}.virtualisation.kvm.vfio.mode == "dynamic") [ "nvidia-drm.modeset=0" ];
+        kernelParams = if (cfg.iGPU.mfg != null) then [ ] else [ "nvidia-drm.modeset=1" "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
       };
     })
 
@@ -98,7 +97,7 @@ in
           "i915.enable_fbc=1"
           "i915.enable_psr=2"
           "i915.modeset=1"
-          (lib.mkForce "nvidia-drm.fbdev=0")
+          (optionalString (cfg.iGPU.isPrimary) lib.mkForce "nvidia-drm.fbdev=0")
         ];
         # kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
       };

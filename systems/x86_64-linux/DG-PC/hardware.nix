@@ -18,7 +18,9 @@ in
     gpu = {
       enable = true;
       iGPU = {
+        isPrimary = true;
         mfg = "intel";
+        deviceIds = [ "8086:a780" ]; # idk if iGPUs have a second device ID for the audio portion. Guessing not.
         busId = "PCI:0:2:0";
       };
       dGPU = {
@@ -27,6 +29,7 @@ in
         busId = "PCI:1:0:0";
       };
       nvidiaChannel = "stable";
+      nvidiaPrime = true;
     };
     storage.boot.enable = true;
   };
