@@ -8,6 +8,48 @@ let
   inherit (lib) mkIf types mkDefault mkMerge optionalString;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.gpu;
+
+  # Helper to convert canonical hex PCI address (0000:01:00.0) → PCI:D:B:F (PCI:0:1:0)
+  canonToPrime = canon:
+    let
+      # Drop the optional 4-digit domain (0000:)
+      noDomain = lib.removePrefix "0000:" canon;
+      # Split into "bus:device.function"
+      parts1 = lib.splitString "." noDomain; # [ "bus:dev" "func" ]
+      funcStr = builtins.elemAt parts1 1;
+      parts2 = lib.splitString ":" (builtins.elemAt parts1 0); # [ "busHex" "devHex" ]
+      busHex = builtins.elemAt parts2 0;
+      devHex = builtins.elemAt parts2 1;
+
+      # Simple hex→dec converter (lower-case input assumed)
+      hexDigits = {
+        "0" = 0;
+        "1" = 1;
+        "2" = 2;
+        "3" = 3;
+        "4" = 4;
+        "5" = 5;
+        "6" = 6;
+        "7" = 7;
+        "8" = 8;
+        "9" = 9;
+        "a" = 10;
+        "b" = 11;
+        "c" = 12;
+        "d" = 13;
+        "e" = 14;
+        "f" = 15;
+      };
+      hexToDec = hex:
+        let
+          chars = builtins.stringToCharacters (lib.toLower hex);
+        in
+        builtins.foldl' (acc: ch: acc * 16 + hexDigits.${ch}) 0 chars;
+
+      busDec = builtins.toString (hexToDec busHex);
+      devDec = builtins.toString (hexToDec devHex);
+    in
+    "PCI:${busDec}:${devDec}:${funcStr}";
 in
 {
   options.${namespace}.hardware.gpu = {
@@ -24,7 +66,7 @@ in
       busId = mkOpt (types.nullOr types.str) null "The bus ID of the dGPU";
     };
     nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
-    nvidiaPrime = mkBoolOpt false "Whether to use nvidia's PRIME dGPU sync magic whatever";
+    nvidiaPrime = mkBoolOpt false "Whether to use nvidia's PRIME dGPU offload/sync feature";
   };
 
   config = mkMerge [
@@ -32,31 +74,35 @@ in
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
+          nvidiaPersistenced = true;
+          nvidiaSettings = true;
           open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
           modesetting.enable = true;
           powerManagement = {
-            enable = false;
+            enable = true;
             finegrained = false;
           };
           prime = mkIf cfg.nvidiaPrime {
             offload = { enable = true; enableOffloadCmd = true; };
-            intelBusId = "${cfg.iGPU.busId}";
-            nvidiaBusId = "${cfg.dGPU.busId}";
+            intelBusId = canonToPrime cfg.iGPU.busId;
+            nvidiaBusId = canonToPrime cfg.dGPU.busId;
           };
+          videoAcceleration = true; # adds pkgs.nvidia-vaapi-driver
         };
         graphics = {
           enable = true;
           enable32Bit = true;
           extraPackages = with pkgs; [
             libvdpau-va-gl
-            nvidia-vaapi-driver
           ];
         };
       };
 
-      systemd.services.nvidia-suspend.enable = true;
-      systemd.services.nvidia-resume.enable = true;
+      systemd.services = {
+        nvidia-suspend.enable = true;
+        nvidia-resume.enable = true;
+      };
 
       environment.systemPackages = with pkgs; [
         nvtopPackages.full
@@ -72,8 +118,7 @@ in
       # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
 
       boot = {
-        blacklistedKernelModules = [ "nouveau" ];
-        kernelParams = if (cfg.iGPU.mfg != null) then [ ] else [ "nvidia-drm.modeset=1" "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+        blacklistedKernelModules = [ "nouveau" "nvidiafb" ];
       };
     })
 

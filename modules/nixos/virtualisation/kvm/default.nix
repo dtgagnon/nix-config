@@ -182,6 +182,7 @@ in
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
+      boot.extraModulePackages = [ config.hardware.nvidia.package ];
       boot.kernelParams = [
         "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"

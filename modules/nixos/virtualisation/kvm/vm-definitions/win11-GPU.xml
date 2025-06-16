@@ -255,13 +255,13 @@
       </source>
       <address type='usb' bus='0' port='1'/>
     </hostdev>
-    <hostdev mode='subsystem' type='usb' managed='yes'>
+    <!-- <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
         <vendor id='0x2207'/>
         <product id='0x110c'/>
       </source>
       <address type='usb' bus='0' port='5'/>
-    </hostdev>
+    </hostdev> -->
     <redirdev bus='usb' type='spicevmc'>
       <address type='usb' bus='0' port='2'/>
     </redirdev>

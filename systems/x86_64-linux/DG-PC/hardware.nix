@@ -21,12 +21,12 @@ in
         isPrimary = true;
         mfg = "intel";
         deviceIds = [ "8086:a780" ]; # idk if iGPUs have a second device ID for the audio portion. Guessing not.
-        busId = "PCI:0:2:0";
+        busId = "0000:00:02.0";
       };
       dGPU = {
         mfg = "nvidia";
         deviceIds = [ "10de:2684" "10de:22ba" ];
-        busId = "PCI:1:0:0";
+        busId = "0000:01:00.0";
       };
       nvidiaChannel = "stable";
       nvidiaPrime = true;
