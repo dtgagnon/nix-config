@@ -36,6 +36,7 @@ in
     storage.boot = {
       ## Needed?
       enable = true;
+      configLimit = 20;
       kernel.params = [
         "systemd.setenv=SYSTEMD_SULOGIN_FORCE=1"
         "systemd.show_status=true"
@@ -54,6 +55,8 @@ in
       };
     };
   };
+
+  swapDevices = [{ device = "/var/swapfile"; size = 16384; }];
 
   #other hardware
   hardware = {

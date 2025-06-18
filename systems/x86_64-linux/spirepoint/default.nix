@@ -43,8 +43,6 @@ in
       };
     };
 
-    services.karakeep.enable = lib.mkForce false;
-
     system = {
       enable = true;
       preservation = enabled;
@@ -56,6 +54,8 @@ in
       monitoring = enabled;
       nix-ld = enabled;
     };
+
+    virtualisation.kvm.enable = false;
   };
 
   system.stateVersion = "24.11";

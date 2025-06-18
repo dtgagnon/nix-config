@@ -113,7 +113,6 @@
                 "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
                 "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
                 "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
-                "/swap" = { mountpoint = "/.swapvol"; swap.swapfile.size = "16G"; };
               };
             };
           };

@@ -49,22 +49,23 @@
         ];
 
         systems.modules.nixos = with inputs; [
-          stylix.nixosModules.stylix
-          sops-nix.nixosModules.sops
           disko.nixosModules.disko
-          impermanence.nixosModules.impermanence
-          preservation.nixosModules.preservation
           home-manager.nixosModules.home-manager
+          impermanence.nixosModules.impermanence
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
+          NixVirt.nixosModules.default
+          plane-nix.nixosModules."services/plane"
+          preservation.nixosModules.preservation
+          sops-nix.nixosModules.sops
+          stylix.nixosModules.stylix
         ];
 
         systems.hosts.DG-PC.modules = with inputs; [
-          NixVirt.nixosModules.default
+
         ];
 
         systems.hosts.spirepoint.modules = with inputs; [
-          plane-nix.nixosModules."services/plane"
           proxmox-nixos.nixosModules.proxmox-ve
           nixarr.nixosModules.default
         ];
