@@ -37,6 +37,7 @@ in
         inactive_opacity = 1.0;
         blur = {
           enabled = true;
+          special = true;
           popups = true;
           size = 5;
           passes = 2;

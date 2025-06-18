@@ -50,8 +50,8 @@ in
           name = "Bibata-Modern-Ice";
           size = 24;
         };
-        theme = "brushtrees-dark";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.oceanwaves-turquoise;
+        # theme = "brushtrees-dark";
+        wallpaper = pkgs.spirenix.wallpapers.wallpapers.hazy-purple-orange-sunset-palmtrees;
       };
       styling.stylix = {
         enable = true;

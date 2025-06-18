@@ -39,11 +39,12 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50%-800 84,class:^(discord)$"
+        "move 50% 84,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Ghostty - terminal
-        "bordersize 0, class:^(ghostty)$"
+        "bordersize 0, class:^(com.mitchellh.ghostty)$"
+        "opacity 0.9 override 0.8 override, class:^(com.mitchellh.ghostty)$"
 
         # Kitty - terminal
         # "float,class:^(kitty)$"
@@ -66,9 +67,6 @@ in
 
         # Zen Browser
         ## Extensions
-        "float, title:Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser"
-        "move 0 84, title:Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser"
-        "size 300 900, title:Extension: (Bitwarden Password Manager) - Bitwarden — Zen Browser"
 
         # Force total opacity
         "opacity 1.0 override 1.0 override, title:^(Picture in Picture)$"
