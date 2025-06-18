@@ -30,7 +30,7 @@ in
       gnome = enabled;
       stylix = {
         enable = true;
-        wallpaper = "greens.oceanwaves-turquoise";
+        wallpaper = "hazy-purple-orange-sunset-palmtrees";
       };
     };
 

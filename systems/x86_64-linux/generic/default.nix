@@ -97,7 +97,7 @@
         create = false;
         home.enable = false;
       })
-      { dtgagnon = null; gachan = null; admin = null; };
+      { dtgagnon = null; gachan = null; };
 
   # same thing just using pipe for practice
   # snowfallorg.users =
