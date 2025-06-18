@@ -36,7 +36,7 @@ in
     storage.boot = {
       ## Needed?
       enable = true;
-      configLimit = 20;
+      bootloader.configLimit = 20;
       kernel.params = [
         "systemd.setenv=SYSTEMD_SULOGIN_FORCE=1"
         "systemd.show_status=true"
