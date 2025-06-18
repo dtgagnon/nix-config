@@ -7,10 +7,10 @@
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  cfg = config.${namespace}.services.project-mgmt.plane;
+  cfg = config.${namespace}.services.plane;
 in
 {
-  options.${namespace}.services.project-mgmt.plane = {
+  options.${namespace}.services.plane = {
     enable = mkBoolOpt false "Enable Plane project management platform service";
   };
 
@@ -22,7 +22,7 @@ in
       user = "plane";
       group = "plane";
       stateDir = "/var/lib/plane";
-      secretKeyFile = null;
+      secretKeyFile = config.sops.secrets."plane/apiKey".path;
 
       web.port = 3101;
       admin.port = 3102;
@@ -35,9 +35,10 @@ in
       space.port = 3104;
 
       database = {
+        # a postgres database
         local = true;
         user = "plane";
-        passwordFile = null;
+        passwordFile = config.sops.secrets."plane/dbPass".path;
         name = "plane";
         host = "localhost";
         port = 5432;
@@ -46,7 +47,7 @@ in
       storage = {
         local = true;
         region = "us-east-1";
-        credentialsFile = null;
+        credentialsFile = config.sops.secrets."plane/strCreds".path; # minio-style credentials (see: services.minio.rootCredentialsFile for formatting info)
         host = "127.0.0.1";
         port = 9000;
         bucket = "uploads";
@@ -60,6 +61,12 @@ in
       };
 
       acme.enable = false;
+    };
+
+    sops.secrets = {
+      "plane/apiKey" = { };
+      "plane/dbPass" = { };
+      "plane/strCreds" = { };
     };
   };
 }

@@ -7,7 +7,7 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.services.project-mgmt.plane;
+  cfg = config.${namespace}.services.plane;
 
   protocol = if cfg.acme.enable then "https" else "http";
   url = "${protocol}://${cfg.domain}";
@@ -45,7 +45,7 @@ let
   };
 in
 {
-  options.${namespace}.services.project-mgmt.plane = {
+  options.${namespace}.services.plane = {
     enable = mkBoolOpt false "Enable Plane project management platform service";
     package = mkOpt types.package pkgs.plane "The Plane package to use";
     domain = mkOpt types.str "" "The domain to use for hosting Plane";
