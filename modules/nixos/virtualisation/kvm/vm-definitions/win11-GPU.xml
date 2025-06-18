@@ -33,8 +33,8 @@
       <feature enabled='no' name='enrolled-keys'/>
       <feature enabled='yes' name='secure-boot'/>
     </firmware>
-    <loader readonly='yes' secure='yes' type='pflash' format='raw'>/nix/store/209iq7xp9827alnwc8h4v7hpr8i3ijz1-qemu-host-cpu-only-9.2.3/share/qemu/edk2-x86_64-secure-code.fd</loader>
-    <nvram template='/nix/store/209iq7xp9827alnwc8h4v7hpr8i3ijz1-qemu-host-cpu-only-9.2.3/share/qemu/edk2-i386-vars.fd' templateFormat='raw' format='raw'>/var/lib/libvirt/qemu/nvram/win11-GPU_VARS.fd</nvram>
+    <loader readonly='yes' secure='yes' type='pflash' format='raw'>/nix/store/qr6wbg0r11041hyxvw41ccmjgl7zad1h-qemu-host-cpu-only-9.2.3/share/qemu/edk2-x86_64-secure-code.fd</loader>
+    <nvram template='/nix/store/qr6wbg0r11041hyxvw41ccmjgl7zad1h-qemu-host-cpu-only-9.2.3/share/qemu/edk2-i386-vars.fd' templateFormat='raw' format='raw'>/var/lib/libvirt/qemu/nvram/win11-GPU_VARS.fd</nvram>
     <boot dev='hd'/>
     <smbios mode='host'/>
   </os>
@@ -254,7 +254,8 @@
         <product id='0xc635'/>
       </source>
       <address type='usb' bus='0' port='1'/>
-    </hostdev>
+		</hostdev>
+		<!-- elgato camlink 4k -->
     <!-- <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
         <vendor id='0x2207'/>

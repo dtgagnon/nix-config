@@ -67,6 +67,7 @@ in
     };
     nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
     nvidiaPrime = mkBoolOpt false "Whether to use nvidia's PRIME dGPU offload/sync feature";
+    nvidiaOpen = mkBoolOpt false "Use nvidia open-sourced kernel modules (on RTX series GPUs and newer)";
   };
 
   config = mkMerge [
@@ -76,7 +77,7 @@ in
         nvidia = {
           nvidiaPersistenced = true;
           nvidiaSettings = true;
-          open = true; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
+          open = cfg.nvidiaOpen; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
           modesetting.enable = true;
           powerManagement = {
@@ -142,12 +143,11 @@ in
           "i915.enable_fbc=1"
           "i915.enable_psr=2"
           "i915.modeset=1"
-          (optionalString (cfg.iGPU.isPrimary) lib.mkForce "nvidia-drm.fbdev=0")
-        ];
+        ] ++ lib.optional cfg.iGPU.isPrimary (lib.mkForce "nvidia-drm.fbdev=0");
         # kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
       };
       environment.variables = {
-        LIBVA_DRIVER_NAME = "iHD";
+        LIBVA_DRIVER_NAME = mkIf cfg.iGPU.isPrimary "iHD";
         VDPAU_DRIVER = "va_gl";
         MOZ_DISABLE_RDD_SANDBOX = "1";
       };

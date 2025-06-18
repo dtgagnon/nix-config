@@ -5,11 +5,11 @@
 , ...
 }:
 let
-  inherit (lib) mkIf getExe' removePrefix substring stringLength replaceStrings;
+  inherit (lib) mkIf getExe' replaceStrings;
   cfg = config.${namespace}.virtualisation.kvm;
 
   gpuBusId = config.${namespace}.hardware.gpu.dGPU.busId;
-  gpuAudioBusId = replaceStrings [".0"] [".1"] gpuBusId;
+  gpuAudioBusId = replaceStrings [ ".0" ] [ ".1" ] gpuBusId;
   gpuMfg = config.${namespace}.hardware.gpu.dGPU.mfg;
   gpuDeviceIds = config.${namespace}.hardware.gpu.dGPU.deviceIds;
   vmDomainName = "win11-GPU"; #TODO: Make this dynamic based on VMs
@@ -22,7 +22,7 @@ let
     is_using_driver() {
       local device_id=$1
       local driver=$2
-      
+
       if [ -e "/sys/bus/pci/devices/$device_id/driver" ]; then
         current_driver=$(basename $(readlink "/sys/bus/pci/devices/$device_id/driver" 2>/dev/null))
         [ "$current_driver" = "$driver" ]
@@ -35,7 +35,7 @@ let
     unbind_from_current_driver() {
       local device_id=$1
       local device_name=$2
-      
+
       if [ -e "/sys/bus/pci/devices/$device_id/driver" ]; then
         local current_driver=$(basename $(readlink "/sys/bus/pci/devices/$device_id/driver" 2>/dev/null))
         echo "[HOOK] Unbinding $device_name from $current_driver..."
@@ -56,15 +56,15 @@ let
       local device_name=$2
       local vendor_id=$3
       local product_id=$4
-      
+
       echo "[HOOK] Binding $device_name to vfio-pci..."
-      
+
       # Try new_id method first
       if [ -n "$vendor_id" ] && [ -n "$product_id" ]; then
         echo "[HOOK] Using new_id method for $device_name ($vendor_id:$product_id)"
         echo "$vendor_id $product_id" > /sys/bus/pci/drivers/vfio-pci/new_id 2>/dev/null || true
       fi
-      
+
       # Check if bind succeeded with new_id
       if ! is_using_driver "$device_id" "vfio-pci"; then
         # Try direct binding if new_id didn't work
@@ -74,7 +74,7 @@ let
           return 1
         }
       fi
-      
+
       # Final verification
       if is_using_driver "$device_id" "vfio-pci"; then
         echo "[HOOK] Successfully bound $device_name to vfio-pci"
@@ -113,7 +113,7 @@ let
     for module in vfio vfio-pci vfio_iommu_type1; do
       modprobe $module || echo "[ERROR] Failed to load $module module"
     done
-    
+
     # Process each device ID from configuration
     ${lib.concatMapStrings (id: ''
       VENDOR_ID=$(echo "${id}" | cut -d':' -f1)
@@ -126,7 +126,7 @@ let
       echo "[ERROR] Failed to unbind GPU from current driver"
       exit 1
     }
-    
+
     # Check for audio device and unbind if needed
     # Look for both common NVIDIA audio device IDs (22ba, 1aef, etc.)
     if [ -e "/sys/bus/pci/devices/${gpuAudioBusId}" ]; then
@@ -135,7 +135,7 @@ let
     else
       echo "[WARNING] Audio device not found at ${gpuAudioBusId}, may cause issues"
     fi
-    
+
     # Bind GPU to vfio-pci
     ${lib.concatMapStrings (id: ''
       BIND_VENDOR_ID=$(echo "${id}" | cut -d':' -f1)
@@ -145,7 +145,7 @@ let
         exit 1
       }
     '') gpuDeviceIds}
-    
+
     # Find the vendor/product ID for the audio device
     AUDIO_VENDOR_ID="10de"  # NVIDIA
     # Check for known NVIDIA audio device IDs
@@ -169,26 +169,26 @@ let
         AUDIO_DEVICE_ID="22ba"
       fi
     fi
-    
+
     # Bind audio device to vfio-pci
     if [ -e "/sys/bus/pci/devices/${gpuAudioBusId}" ]; then
       bind_to_vfio "${gpuAudioBusId}" "audio device" "$AUDIO_VENDOR_ID" "$AUDIO_DEVICE_ID" || {
         echo "[WARNING] Failed to bind audio device to vfio-pci, continuing anyway"
       }
     fi
-    
+
     # Final verification
     echo "[HOOK] Verifying device bindings..."
     GPU_BOUND=false
     AUDIO_BOUND=false
-    
+
     if is_using_driver "${gpuBusId}" "vfio-pci"; then
       GPU_BOUND=true
       echo "[HOOK] GPU successfully bound to vfio-pci"
     else
       echo "[ERROR] GPU not bound to vfio-pci"
     fi
-    
+
     if [ -e "/sys/bus/pci/devices/${gpuAudioBusId}" ]; then
       if is_using_driver "${gpuAudioBusId}" "vfio-pci"; then
         AUDIO_BOUND=true
@@ -197,7 +197,7 @@ let
         echo "[WARNING] Audio device not bound to vfio-pci"
       fi
     fi
-    
+
     if [ "$GPU_BOUND" = true ]; then
       echo "[SUCCESS] GPU successfully prepared for passthrough"
       exit 0
@@ -206,18 +206,18 @@ let
       exit 1
     fi
   '';
-  
+
   give-host-dGPU = pkgs.writeShellScriptBin "give-host-dgpu" ''
     #!${pkgs.stdenv.shell}
     set -e # Exit immediately if a command exits with a non-zero status.
-    
+
     echo "[INFO] Starting GPU return to host..."
-    
+
     # Helper function for unbinding devices from vfio-pci
     unbind_from_vfio() {
       local device_id=$1
       local device_name=$2
-      
+
       if [ -e /sys/bus/pci/devices/''${device_id}/driver ] && \
          [ "$(basename "$(readlink /sys/bus/pci/devices/''${device_id}/driver)")" = "vfio-pci" ]; then
         echo "[INFO] Unbinding $device_name from vfio-pci..."
@@ -226,7 +226,7 @@ let
         echo "[INFO] $device_name not bound to vfio-pci, nothing to unbind"
       fi
     }
-    
+
     # Helper function to bind a device to its driver
     bind_device() {
       local device_id=$1
@@ -234,14 +234,14 @@ let
       local device_name=$3
       local vendor_id=$4
       local product_id=$5
-      
+
       echo "[INFO] Attempting to bind $device_name to $driver..."
-      
+
       # Try direct bind first as it's most reliable when driver is loaded
       if [ -e "/sys/bus/pci/devices/''${device_id}" ] && [ -d "/sys/bus/pci/drivers/$driver" ]; then
         echo "[DEBUG] Trying direct bind for $device_name at ''${device_id}"
         echo "''${device_id}" > "/sys/bus/pci/drivers/$driver/bind" 2>/dev/null
-        
+
         # Check if bind was successful
         if [ -e /sys/bus/pci/devices/''${device_id}/driver ] && \
            [ "$(basename "$(readlink /sys/bus/pci/devices/''${device_id}/driver)")" = "$driver" ]; then
@@ -249,13 +249,13 @@ let
           return 0
         fi
       fi
-      
+
       # If vendor/product IDs provided, try new_id method
       if [ -n "$vendor_id" ] && [ -n "$product_id" ] && [ -f "/sys/bus/pci/drivers/$driver/new_id" ]; then
         echo "[DEBUG] Using new_id method for $device_name ($vendor_id:$product_id)"
         echo "$vendor_id $product_id" > /sys/bus/pci/drivers/$driver/new_id 2>/dev/null
         sleep 1
-        
+
         # Check if bind was successful
         if [ -e /sys/bus/pci/devices/''${device_id}/driver ] && \
            [ "$(basename "$(readlink /sys/bus/pci/devices/''${device_id}/driver)")" = "$driver" ]; then
@@ -263,40 +263,40 @@ let
           return 0
         fi
       fi
-      
+
       echo "[WARN] Failed to bind $device_name to $driver"
       return 1
     }
-    
+
     # 1. Unbind devices from vfio-pci
     unbind_from_vfio "${gpuBusId}" "GPU"
     unbind_from_vfio "${gpuAudioBusId}" "audio device"
     sleep 1
-    
+
     # 2. Load NVIDIA kernel modules in correct order
     echo "[INFO] Loading NVIDIA kernel modules..."
-    
+
     # Load modules with proper error handling
     for module in i2c_nvidia_gpu nvidia nvidia_modeset nvidia_drm nvidia_uvm; do
       if ! lsmod | grep -q "^$module "; then
         modprobe $module 2>/dev/null || echo "[WARN] Module $module failed to load"
       fi
     done
-    
+
     # Check if nvidia module loaded successfully
     if ! lsmod | grep -q "^nvidia "; then
       echo "[ERROR] Failed to load NVIDIA driver. Is the module built for this kernel?"
       exit 1
     fi
-    
+
     echo "[INFO] NVIDIA driver loaded successfully"
-    
+
     # 3. Bind GPU devices to their drivers
     echo "[INFO] Binding devices to appropriate drivers..."
-    
+
     # Bind GPU to nvidia driver
     if [ -d "/sys/bus/pci/drivers/nvidia" ]; then
-      ${lib.concatMapStrings (id: ''                
+      ${lib.concatMapStrings (id: ''
         VENDOR_ID=$(echo "${id}" | cut -d':' -f1)
         DEVICE_ID=$(echo "${id}" | cut -d':' -f2)
         bind_device "${gpuBusId}" "nvidia" "GPU" "$VENDOR_ID" "$DEVICE_ID"
@@ -305,7 +305,7 @@ let
       echo "[ERROR] NVIDIA driver directory not found"
       exit 1
     fi
-    
+
     # Ensure snd_hda_intel module is loaded before binding audio device
     echo "[INFO] Ensuring snd_hda_intel module is loaded..."
     if ! lsmod | grep -q "^snd_hda_intel "; then
@@ -313,12 +313,12 @@ let
         echo "[WARN] Failed to load snd_hda_intel module, attempting to continue anyway"
       }
     fi
-    
+
     # Bind audio device to snd_hda_intel
     if [ -e "/sys/bus/pci/devices/${gpuAudioBusId}" ]; then
       AUDIO_VENDOR_ID=$(cat "/sys/bus/pci/devices/${gpuAudioBusId}/vendor" 2>/dev/null | sed 's/0x//')
       AUDIO_DEVICE_ID=$(cat "/sys/bus/pci/devices/${gpuAudioBusId}/device" 2>/dev/null | sed 's/0x//')
-      
+
       # Try multiple binding attempts for the audio device
       for attempt in {1..3}; do
         echo "[INFO] Binding attempt $attempt for audio device..."
@@ -331,26 +331,26 @@ let
     else
       echo "[INFO] No audio device found at ${gpuAudioBusId}"
     fi
-    
+
     # 4. Final status check
     echo "[INFO] Device binding status:"
     GPU_DRIVER=$(basename $(readlink -f /sys/bus/pci/devices/${gpuBusId}/driver 2>/dev/null || echo "none"))
     AUDIO_DRIVER=$(basename $(readlink -f /sys/bus/pci/devices/${gpuAudioBusId}/driver 2>/dev/null || echo "none"))
-    
+
     echo "[INFO] GPU driver: $GPU_DRIVER"
     echo "[INFO] Audio driver: $AUDIO_DRIVER"
-    
+
     if [ "$GPU_DRIVER" = "nvidia" ]; then
       echo "[SUCCESS] GPU successfully returned to host"
     else
       echo "[WARNING] GPU may not be properly bound to nvidia driver"
     fi
-    
+
     if [ "$AUDIO_DRIVER" = "snd_hda_intel" ]; then
       echo "[SUCCESS] Audio device successfully bound to snd_hda_intel"
     else
       echo "[WARNING] Audio device binding failed, manual intervention may be required"
-      
+
       # Try a more aggressive approach if previous methods failed
       if [ -e "/sys/bus/pci/devices/${gpuAudioBusId}" ] && [ "$AUDIO_DRIVER" != "snd_hda_intel" ]; then
         echo "[INFO] Attempting alternative binding method for audio device..."
@@ -360,10 +360,10 @@ let
           echo "[INFO] Unbinding from current driver: $CURRENT_DRIVER"
           echo "${gpuAudioBusId}" > "/sys/bus/pci/devices/${gpuAudioBusId}/driver/unbind" 2>/dev/null || true
         fi
-        
+
         # Try direct binding again after forced unbind
         echo "${gpuAudioBusId}" > "/sys/bus/pci/drivers/snd_hda_intel/bind" 2>/dev/null || true
-        
+
         # Final check
         FINAL_AUDIO_DRIVER=$(basename $(readlink -f /sys/bus/pci/devices/${gpuAudioBusId}/driver 2>/dev/null || echo "none"))
         if [ "$FINAL_AUDIO_DRIVER" = "snd_hda_intel" ]; then
@@ -372,7 +372,7 @@ let
       fi
     fi
   '';
-  
+
   virsh-check-usb = pkgs.writeShellScriptBin "virsh-check-usb" ''
     #!${pkgs.stdenv.shell}
 

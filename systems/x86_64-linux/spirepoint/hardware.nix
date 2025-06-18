@@ -11,10 +11,49 @@ in
   imports = with nixos-hardware.nixosModules; [
     (modulesPath + "/installer/scan/not-detected.nix")
     common-cpu-intel
-    common-gpu-nvidia-nonprime
     common-pc
     common-pc-ssd
   ];
+
+  spirenix.hardware = {
+    audio.enable = true;
+    gpu = {
+      enable = true;
+      iGPU = {
+        isPrimary = false;
+        mfg = "intel";
+        deviceIds = [ "" ];
+        busId = "";
+      };
+      dGPU = {
+        mfg = "nvidia";
+        deviceIds = [ "10de:1c02" "10de:10f1" ];
+        busId = "";
+      };
+      nvidiaChannel = "stable";
+      nvidiaPrime = false;
+    };
+    storage.boot = {
+      ## Needed?
+      enable = true;
+      kernel.params = [
+        "systemd.setenv=SYSTEMD_SULOGIN_FORCE=1"
+        "systemd.show_status=true"
+        "systemd.log_target=console"
+        "systemd.journald.forward_to_console=1"
+      ];
+      kernel.initrd = {
+        forceLuks = true;
+        availableKernelModules = [
+          "xhci_pci"
+          "ehci_pci"
+          "ahci"
+          "sd_mod"
+          "rtsx_usb_sdmmc"
+        ];
+      };
+    };
+  };
 
   #other hardware
   hardware = {

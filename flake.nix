@@ -67,7 +67,6 @@
           plane-nix.nixosModules."services/plane"
           proxmox-nixos.nixosModules.proxmox-ve
           nixarr.nixosModules.default
-          NixVirt.nixosModules.default
         ];
 
         systems.hosts.DGPC-WSL.modules = with inputs; [

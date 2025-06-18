@@ -29,6 +29,7 @@ in
         busId = "0000:01:00.0";
       };
       nvidiaChannel = "stable";
+      nvidiaOpen = true;
       nvidiaPrime = true;
     };
     storage.boot.enable = true;

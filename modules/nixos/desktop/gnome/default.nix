@@ -15,14 +15,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.xserver = {
-      enable = true;
+    services = {
+      desktopManager.gnome.enable = true;
       displayManager.gdm = {
         enable = true;
         autoSuspend = false;
       };
-      desktopManager.gnome.enable = true;
-      xkb.layout = "us";
+      xserver.xkb.layout = "us";
     };
     environment.gnome.excludePackages = with pkgs; [
       gnome-photos

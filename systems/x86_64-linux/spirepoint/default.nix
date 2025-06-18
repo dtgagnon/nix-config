@@ -12,14 +12,6 @@ in
     ./disk-config.nix
   ];
 
-  hardware.nvidia = {
-    modesetting.enable = lib.mkForce true;
-    powerManagement.enable = lib.mkForce true;
-    powerManagement.finegrained = lib.mkForce false;
-    open = lib.mkForce false;
-    package = lib.mkForce config.boot.kernelPackages.nvidiaPackages.stable;
-  };
-
   spirenix = {
     suites = {
       arrs = enabled;
@@ -42,30 +34,6 @@ in
       };
     };
 
-    hardware = {
-      audio = enabled;
-      gpu = { enable = true; dGPU = "nvidia"; iGPU = "intel"; };
-      storage.boot = {
-        enable = true;
-        kernel.params = [
-          "systemd.setenv=SYSTEMD_SULOGIN_FORCE=1"
-          "systemd.show_status=true"
-          "systemd.log_target=console"
-          "systemd.journald.forward_to_console=1"
-        ];
-        kernel.initrd = {
-          forceLuks = true;
-          availableKernelModules = [
-            "xhci_pci"
-            "ehci_pci"
-            "ahci"
-            "sd_mod"
-            "rtsx_usb_sdmmc"
-          ];
-        };
-      };
-    };
-
     security = {
       pam = enabled;
       sudo = enabled;
@@ -74,6 +42,8 @@ in
         targetHost = "spirepoint";
       };
     };
+
+    services.karakeep.enable = lib.mkForce false;
 
     system = {
       enable = true;
@@ -85,21 +55,6 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
-    };
-
-    virtualisation = {
-      podman = enabled;
-      kvm = {
-        enable = true;
-        vfio = {
-          enable = true; #config'd for looking glass
-          blacklistNvidia = true;
-          vfioIds = [
-            "10de:1c02" #GTX1060 ID
-            "10de:10f1" #GTX1060 audio controller ID
-          ];
-        };
-      };
     };
   };
 

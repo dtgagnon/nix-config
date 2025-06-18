@@ -83,8 +83,8 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          theme = "everforest";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.greens.cherryblossoms-greentint;
+          # theme = "everforest";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.hazy-purple-orange-sunset-palmtrees;
         };
         stylix = {
           enable = true;
