@@ -44,10 +44,6 @@
           proxmox-nixos.overlays.x86_64-linux
         ];
 
-        homes.packages = with inputs; [
-          zen-browser.packages.specific
-        ];
-
         systems.modules.nixos = with inputs; [
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
@@ -55,7 +51,7 @@
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
           NixVirt.nixosModules.default
-          plane-nix.nixosModules."services/plane"
+          plane.nixosModules.default
           preservation.nixosModules.preservation
           sops-nix.nixosModules.sops
           stylix.nixosModules.stylix
@@ -72,6 +68,10 @@
 
         systems.hosts.DGPC-WSL.modules = with inputs; [
           nixos-wsl.nixosModules.default
+        ];
+
+        homes.packages = with inputs; [
+          zen-browser.packages.twilight
         ];
 
         homes.modules = with inputs; [
@@ -183,15 +183,14 @@
     ghostty.url = "github:ghostty-org/ghostty/7f9bb3c0e54f585e11259bc0c9064813d061929c"; #TODO: re-pin the main flake once they fix the esc:caps key issue
 
     neovim.url = "github:dtgagnon/nixvim/main";
-    neovim.inputs.nixpkgs.follows = "nixpkgs";
 
     nixarr.url = "github:rasmus-kirk/nixarr";
 
     nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
     nixos-conf-editor.inputs.nixpkgs.follows = "nixpkgs";
 
-    plane-nix.url = "github:jakehamilton/plane.nix";
-    plane-nix.inputs.nixpkgs.follows = "nixpkgs";
+    plane.url = "github:dtgagnon/plane/add/nix";
+    plane.inputs.nixpkgs.follows = "nixpkgs";
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";

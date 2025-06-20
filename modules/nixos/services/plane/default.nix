@@ -1,6 +1,7 @@
 { lib
 , pkgs
 , config
+, inputs
 , namespace
 , ...
 }:
@@ -17,25 +18,48 @@ in
   config = mkIf cfg.enable {
     services.plane = {
       enable = true;
-      package = pkgs.plane-nix.plane;
+      package = inputs.plane.packages.${pkgs.system}.plane;
       domain = "100.100.0.0";
       user = "plane";
       group = "plane";
       stateDir = "/var/lib/plane";
       secretKeyFile = config.sops.secrets."plane/apiKey".path;
 
-      web.port = 3101;
-      admin.port = 3102;
+      web = {
+        enable = true;
+        port = 3101;
+      };
+
+      admin = {
+        enable = true;
+        port = 3102;
+      };
 
       api = {
+        enable = true;
         workers = 1;
         port = 3103;
       };
 
-      space.port = 3104;
+      space = {
+        enable = true;
+        port = 3104;
+      };
+
+      live = {
+        enable = false;
+        port = 3105;
+      };
+
+      worker = {
+        enable = true;
+      };
+
+      beat = {
+        enable = true;
+      };
 
       database = {
-        # a postgres database
         local = true;
         user = "plane";
         passwordFile = config.sops.secrets."plane/dbPass".path;
@@ -47,7 +71,7 @@ in
       storage = {
         local = true;
         region = "us-east-1";
-        credentialsFile = config.sops.secrets."plane/strCreds".path; # minio-style credentials (see: services.minio.rootCredentialsFile for formatting info)
+        credentialsFile = config.sops.secrets."plane/strCreds".path;
         host = "127.0.0.1";
         port = 9000;
         bucket = "uploads";
@@ -60,13 +84,29 @@ in
         port = 6379;
       };
 
-      acme.enable = false;
+      rabbitmq = {
+        local = true;
+        host = "127.0.0.1";
+        port = 5672;
+        user = "plane";
+        passwordFile = config.sops.secrets."plane/rabbitmqPass".path;
+        vhost = "plane";
+      };
+
+      nginx = {
+        enable = true;
+      };
+
+      acme = {
+        enable = false;
+      };
     };
 
     sops.secrets = {
       "plane/apiKey" = { };
       "plane/dbPass" = { };
       "plane/strCreds" = { };
+      "plane/rabbitmqPass" = { };
     };
   };
 }

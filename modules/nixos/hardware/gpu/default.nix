@@ -75,7 +75,7 @@ in
       services.xserver.videoDrivers = [ "nvidia" ];
       hardware = {
         nvidia = {
-          nvidiaPersistenced = true;
+          nvidiaPersistenced = false;
           nvidiaSettings = true;
           open = cfg.nvidiaOpen; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};

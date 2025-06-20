@@ -23,7 +23,7 @@
               content = {
                 type = "luks";
                 name = "root-crypt";
-                passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
+                passwordFile = "/root/luks-pass"; # populated by bootstrap-nixos.sh
                 # extraOpenArgs = [ ];
                 settings.allowDiscards = true;
                 initrdUnlock = true;
@@ -63,7 +63,7 @@
               content = {
                 type = "luks";
                 name = "data-crypt";
-                passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
+                passwordFile = "/root/luks-pass"; # populated by bootstrap-nixos.sh
                 settings.allowDiscards = true;
                 content = {
                   type = "lvm_pv";
@@ -85,7 +85,7 @@
               content = {
                 type = "luks";
                 name = "bak-crypt";
-                passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
+                passwordFile = "/root/luks-pass"; # populated by bootstrap-nixos.sh
                 settings.allowDiscards = true;
                 content = {
                   type = "lvm_pv";

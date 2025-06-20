@@ -189,7 +189,10 @@ in
         (mkForce "nvidia-drm.modeset=0")
         (mkForce "nvidia-drm.fbdev=0")
       ];
-      hardware.nvidia.modesetting.enable = mkForce false;
+      hardware.nvidia = {
+        modesetting.enable = mkForce false;
+        nvidiaPersistenced = mkForce true;
+      };
       services.xserver.videoDrivers = mkForce [ "modesetting" ]; # Assumes intel iGPU as host primary
     })
   ];
