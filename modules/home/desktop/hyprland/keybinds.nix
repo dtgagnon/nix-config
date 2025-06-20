@@ -70,12 +70,12 @@ in
 
         # Special Workspaces
         # Move active window to special workspace (minimize)
-        "$mod, S, movetoworkspace, special:min" # General minimize to single special workspace
+        "$mod, S, movetoworkspacesilent, special:min" # General minimize to single special workspace
         "$mod_SHIFT, S, togglespecialworkspace, min" # Toggle general minimized workspace
 
         # Dynamic Minimize Function
         # Minimize to special workspace based on current numbered workspace
-        "$mod, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch movetoworkspace special:min$WORKSPACE; else hyprctl dispatch movetoworkspace special:min; fi"
+        "$mod, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch movetoworkspacesilent special:min$WORKSPACE; else hyprctl dispatch movetoworkspacesilent special:min; fi"
 
         # Toggle the special workspace for the current numbered workspace
         "$mod_ALT, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch togglespecialworkspace min$WORKSPACE; else hyprctl dispatch togglespecialworkspace min; fi"
