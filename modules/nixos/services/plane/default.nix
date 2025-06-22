@@ -18,11 +18,8 @@ in
   config = mkIf cfg.enable {
     services.plane = {
       enable = true;
-      package = inputs.plane.packages.${pkgs.system}.plane;
-      domain = "100.100.0.0";
-      user = "plane";
-      group = "plane";
-      stateDir = "/var/lib/plane";
+      # package = inputs.plane.packages.${pkgs.system}.plane;
+      domain = "100.100.0.0"; # The domain to use for hosting plane
       secretKeyFile = config.sops.secrets."plane/apiKey".path;
 
       web = {
@@ -51,13 +48,9 @@ in
         port = 3105;
       };
 
-      worker = {
-        enable = true;
-      };
+      worker = { enable = true; };
 
-      beat = {
-        enable = true;
-      };
+      beat = { enable = true; };
 
       database = {
         local = true;
@@ -74,7 +67,7 @@ in
         credentialsFile = config.sops.secrets."plane/strCreds".path;
         host = "127.0.0.1";
         port = 9000;
-        bucket = "uploads";
+        bucket = "plane-uploads";
         protocol = "http";
       };
 
@@ -93,13 +86,11 @@ in
         vhost = "plane";
       };
 
-      nginx = {
-        enable = true;
-      };
+      email = { enable = false; };
 
-      acme = {
-        enable = false;
-      };
+      nginx = { enable = false; };
+
+      acme = { enable = false; };
     };
 
     sops.secrets = {

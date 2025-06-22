@@ -2659,11 +2659,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1750390006,
-        "narHash": "sha256-gEBNpW+xQ4H8eiTzconjFX+240zEkrlg75wb71JOEik=",
+        "lastModified": 1750615523,
+        "narHash": "sha256-7LqCthdq+nJ2mBW1QlguyIxu7MEzqhPnvdDaUgk4AY0=",
         "owner": "dtgagnon",
         "repo": "plane",
-        "rev": "08b03b9eb6f9de1d2389315a07dcbcafc0b17d29",
+        "rev": "7f55afe8722e20b4a44cd87570a86b6f80a091c7",
         "type": "github"
       },
       "original": {
