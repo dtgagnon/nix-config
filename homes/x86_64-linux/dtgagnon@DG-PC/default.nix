@@ -19,6 +19,7 @@ in
 
     apps = {
       discord = enabled;
+      element = enabled;
       gimp = enabled;
       inkscape = enabled;
       looking-glass-client = enabled;
