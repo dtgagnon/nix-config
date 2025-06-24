@@ -42,7 +42,7 @@ let
       };
       hexToDec = hex:
         let
-          chars = builtins.stringToCharacters (lib.toLower hex);
+          chars = lib.stringToCharacters (lib.toLower hex);
         in
         builtins.foldl' (acc: ch: acc * 16 + hexDigits.${ch}) 0 chars;
 

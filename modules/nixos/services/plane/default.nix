@@ -19,6 +19,7 @@ in
     services.plane = {
       enable = true;
       # package = inputs.plane.packages.${pkgs.system}.plane;
+      stateDir = "/var/lib/plane";
       domain = "100.100.0.0"; # The domain to use for hosting plane
       secretKeyFile = config.sops.secrets."plane/apiKey".path;
 
@@ -57,7 +58,7 @@ in
         user = "plane";
         passwordFile = config.sops.secrets."plane/dbPass".path;
         name = "plane";
-        host = "localhost";
+        host = "127.0.0.1";
         port = 5432;
       };
 
@@ -67,7 +68,7 @@ in
         credentialsFile = config.sops.secrets."plane/strCreds".path;
         host = "127.0.0.1";
         port = 9000;
-        bucket = "plane-uploads";
+        bucket = "uploads";
         protocol = "http";
       };
 
@@ -88,7 +89,7 @@ in
 
       email = { enable = false; };
 
-      nginx = { enable = false; };
+      nginx = { enable = true; };
 
       acme = { enable = false; };
     };

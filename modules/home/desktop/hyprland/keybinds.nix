@@ -25,7 +25,7 @@ in
         "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, zen-beta"
         "$mod_ALT, V, exec, [workspace 1] windsurf"
-        "$mod_SHIFT, S, exec, hyprshot -z -m region -t 2000 --clipboard-only"
+        "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 2000 --clipboard-only"
 
         # Window Control
         "$mod, Q, killactive,"
@@ -78,7 +78,7 @@ in
         "$mod, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch movetoworkspacesilent special:min$WORKSPACE; else hyprctl dispatch movetoworkspacesilent special:min; fi"
 
         # Toggle the special workspace for the current numbered workspace
-        "$mod_ALT, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch togglespecialworkspace min$WORKSPACE; else hyprctl dispatch togglespecialworkspace min; fi"
+        "$mod, TAB, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch togglespecialworkspace min$WORKSPACE; else hyprctl dispatch togglespecialworkspace min; fi"
 
         # General Desktop
         "$mod_SHIFT_CTRL, L, exec, $lock"

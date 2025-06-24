@@ -77,6 +77,8 @@ in
       slurp
       hyprshot
       swappy
+      ## image viewer
+      nsxiv
       ## monitor controls
       ddcutil
       linuxKernel.packages.linux_6_6.ddcci-driver
