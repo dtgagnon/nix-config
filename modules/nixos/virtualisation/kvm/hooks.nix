@@ -12,7 +12,7 @@ let
   gpuAudioBusId = replaceStrings [ ".0" ] [ ".1" ] gpuBusId;
   gpuMfg = config.${namespace}.hardware.gpu.dGPU.mfg;
   gpuDeviceIds = config.${namespace}.hardware.gpu.dGPU.deviceIds;
-  vmDomainName = "win11-GPU"; #TODO: Make this dynamic based on VMs
+  vmDomainName = "win11-GPU"; #TODO: Expand this to a list of applicable VM domains (make a function that maps over the list)
 
   give-vfio-dGPU = pkgs.writeShellScriptBin "give-vfio-dgpu" ''
     #!${pkgs.stdenv.shell}
@@ -489,7 +489,7 @@ in
                 COMMAND="$2"
 
                 # For a specific VM, run scripts on start/stop
-                if [ "$VM_NAME" == "win11-GPU" ]; then
+                if [ "$VM_NAME" == "${vmDomainName}" ]; then
                   if [ "$COMMAND" == "prepare" ]; then
         						${pkgs.coreutils-full}/bin/echo "preparing"
                     ${give-vfio-dGPU}/bin/give-vfio-dgpu
