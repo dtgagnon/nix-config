@@ -38,6 +38,7 @@ in
 
     services = {
       davfs = enabled;
+      n8n = enabled;
       openssh.manage-other-hosts = false;
     };
 

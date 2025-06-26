@@ -20,7 +20,20 @@ in
       # sets the environment variable WEBHOOK_URL for n8n, in case we're running behind a reverse proxy. This cannot be set through configuration and must reside in an environment variable.
       webhookUrl = "";
       # JSON values for configuration (see n8n docs)
-      settings = { };
+      settings = {
+        diagnostics = {
+          enabled = false;
+        };
+        versionNotifications = {
+          enabled = false;
+        };
+        templates = {
+          enabled = false;
+        };
+        hiringBanner = {
+          enabled = false;
+        };
+      };
+      };
     };
-  };
-}
+  }
