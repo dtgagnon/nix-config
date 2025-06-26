@@ -49,6 +49,7 @@ in
       eza = enabled;
       fastfetch = enabled;
       fzf = enabled;
+      gemini-cli = enabled;
       git = enabled;
       neovim = enabled;
       network-tools = enabled;
