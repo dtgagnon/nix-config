@@ -71,14 +71,14 @@ in
         # Special Workspaces
         # Move active window to special workspace (minimize)
         "$mod, S, movetoworkspacesilent, special:min" # General minimize to single special workspace
-        "$mod_SHIFT, S, togglespecialworkspace, min" # Toggle general minimized workspace
+        "$mod, TAB, togglespecialworkspace, min" # Toggle general minimized workspace
 
         # Dynamic Minimize Function
         # Minimize to special workspace based on current numbered workspace
-        "$mod, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch movetoworkspacesilent special:min$WORKSPACE; else hyprctl dispatch movetoworkspacesilent special:min; fi"
+        "$mod_SHIFT, S, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch movetoworkspacesilent special:min$WORKSPACE; else hyprctl dispatch movetoworkspacesilent special:min; fi"
 
         # Toggle the special workspace for the current numbered workspace
-        "$mod, TAB, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch togglespecialworkspace min$WORKSPACE; else hyprctl dispatch togglespecialworkspace min; fi"
+        "$mod_SHIFT, TAB, exec, WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id'); if [[ $WORKSPACE -ge 1 && $WORKSPACE -le 10 ]]; then hyprctl dispatch togglespecialworkspace min$WORKSPACE; else hyprctl dispatch togglespecialworkspace min; fi"
 
         # General Desktop
         "$mod_SHIFT_CTRL, L, exec, $lock"
