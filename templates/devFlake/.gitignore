@@ -1,0 +1,15 @@
+#agents
+.aider*
+.gemini
+GEMINI.md
+CLAUDE.md
+AGENTS.md
+
+#nix
+results
+
+#nodejs
+node_modules
+
+#direnv
+.direnv

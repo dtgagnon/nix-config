@@ -60,6 +60,7 @@ in
       podman = enabled;
       kvm = {
         enable = true;
+        vmDomains = [ "win11-GPU" ];
         lookingGlass.enable = true;
         vfio = {
           enable = true; #config'd for looking glass

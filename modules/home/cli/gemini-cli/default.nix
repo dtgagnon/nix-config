@@ -16,5 +16,35 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.gemini-cli ];
+    home.file.".gemini/settings.json".text = ''
+      {
+        "theme": "Default",
+        "selectedAuthType": "oauth-personal",
+        "preferredEditor": "nvim",
+        "contextFileName": [ "GEMINI.md", "CLAUDE.md", "AGENTS.md" ],
+
+        "mcpServers": {
+          "nixos": {
+            "command": "nix",
+            "args": [ "run", "github:utensils/mcp-nixos", "--" ]
+          },
+          "playwrite": {
+            "command": "npx",
+            "args": [ "-y", "@executeautomation/playwright-mcp-server" ]
+          },
+          "puppeteer": {
+            "command": "npx",
+            "args": [ "-y", "@modelcontextprotocol/server-puppeteer" ],
+            "env": {
+              "PUPPETEER_EXECUTABLE_PATH": "${pkgs.ungoogled-chromium}/bin/chromium"
+            }
+          },
+          "sequential-thinking": {
+            "command": "npx",
+            "args": [ "-y", "@modelcontextprotocol/server-sequential-thinking" ]
+          }
+        }
+      }
+    '';
   };
 }

@@ -23,7 +23,7 @@ in
     virtualisation.libvirt = {
       enable = true;
       connections."qemu:///system" = {
-        domains = builtins.map (name: { definition = builtins.getAttr name (pkgs.callPackage ./vm-definitions/${name}.nix {}); }) cfg.vmDomains;
+        domains = builtins.map (name: { definition = pkgs.callPackage ./vm-definitions/${name}.nix { }; }) cfg.vmDomains;
         pools = [
           {
             definition = NixVirt.lib.pool.writeXML {
