@@ -25,7 +25,7 @@ in
     vfio = {
       enable = mkBoolOpt false "Enable VFIO Configuration";
       mode = mkOpt (types.enum [ "static" "dynamic" ]) "dynamic" "dynamic: GPU is bound to host at boot. Hooks are required. static: GPU is bound to vfio-pci at boot";
-      deviceIds = mkOpt (types.listOf types.str) [ ] "The hardware vendor:product IDs to pass through to the VM";
+      deviceIds = mkOpt (types.listOf types.str) dGPU.deviceIds "The hardware vendor:product IDs to pass through to the VM";
     };
 
     #NOTE: Unsure what to do with these options right now. Not sure what they each do for me.
@@ -140,7 +140,7 @@ in
       boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" "nvidia-drm.modeset=1" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModprobeConfig = ''
-        options vfio-pci ids=${concatStringsSep "," dGPU.deviceIds}
+        options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
     })
@@ -155,7 +155,7 @@ in
       ];
       hardware.nvidia = {
         modesetting.enable = mkForce false;
-        nvidiaPersistenced = mkForce true;
+        nvidiaPersistenced = mkForce false;
       };
       services.xserver.videoDrivers = mkForce [ "modesetting" ]; # Assumes intel iGPU as host primary
     })

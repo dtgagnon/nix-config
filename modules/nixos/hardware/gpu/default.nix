@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types mkDefault mkMerge optionalString;
+  inherit (lib) mkIf types mkDefault mkMerge;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.hardware.gpu;
 

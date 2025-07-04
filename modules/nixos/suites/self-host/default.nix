@@ -20,7 +20,7 @@ in
       home-assistant = enabled;
       immich = enabled;
       ntfy = enabled;
-      plane = enabled;
+      # plane = enabled;
     };
   };
 }

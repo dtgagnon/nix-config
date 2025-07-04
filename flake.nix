@@ -104,16 +104,13 @@
         #   };
 
         templates = {
-          empty.description = "A Nix Flake using snowfall-lib";
-          tmpDevShell.description = "A placeholder for a dev environment flake structure";
-          aiderProj.description = "dev-env w/ aider flake template";
-          sysMod.description = "template for NixOS system modules.";
-          homeMod.description = "template for home-manager modules.";
+          aiderProj.description = "Development environment flake template w/ aider";
+          devFlake.description = "General development environment flake template";
+          sysMod.description = "NixOS snowfall system module template";
+          homeMod.description = "NixOS snowfall home-manager module template";
         };
       }
-    // {
-      self = inputs.self;
-    };
+    // { self = inputs.self; };
 
   inputs = {
     ## packages
