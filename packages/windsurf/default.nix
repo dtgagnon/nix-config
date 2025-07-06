@@ -31,14 +31,6 @@ callPackage "${inputs.nixpkgs}/pkgs/applications/editors/vscode/generic.nix" {
 
   src = fetchurl { inherit (info) url sha256; };
 
-  nativeBuildInputs = [ pkgs.makeWrapper ];
-  buildInputs = [ pkgs.playwright-driver.browsers ];
-  postFixup = ''
-    			makeWrapper $out/bin/windsurf $out/bin/.windsurf-wrapped \
-    			  --set PLAYWRIGHT_BROWSERS_PATH "${pkgs.playwright-driver.browsers}" \
-    				--set PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS "true"
-    	'';
-
   tests = nixosTests.vscodium;
 
   updateScript = ./update/update.mts;
