@@ -32,7 +32,7 @@ in
           "windsurf.openRecentConversation": true,
           "windsurf.explainAndFixInCurrentConversation": true,
           "workbench.sideBar.location": "right",
-          "workbench.colorTheme": "base16-everforest-dark-hard",
+          "workbench.colorTheme": "base24-catppuccin-frappe",
           "workbench.iconTheme": "gruvbox-material-icon-theme",
           "window.menuBarVisibility": "compact",
           "windsurf.cascadeCommandsAllowList": [
