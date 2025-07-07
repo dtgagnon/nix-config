@@ -114,7 +114,6 @@ in
         NVD_BACKEND = "direct";
         LIBVA_DRIVER_NAME = "nvidia";
         GBM_BACKEND = "nvidia-drm";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       };
       # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
 

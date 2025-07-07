@@ -143,6 +143,7 @@ in
         options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
+      hardware.nvidia.modesetting.enable = mkForce true;
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
@@ -150,14 +151,14 @@ in
       boot.kernelParams = [
         "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"
-        (mkForce "nvidia-drm.modeset=0")
-        (mkForce "nvidia-drm.fbdev=0")
+        # (mkForce "nvidia-drm.modeset=0")
+        # (mkForce "nvidia-drm.fbdev=0")
       ];
       hardware.nvidia = {
         modesetting.enable = mkForce false;
-        nvidiaPersistenced = mkForce false;
+        nvidiaPersistenced = mkForce true;
       };
-      services.xserver.videoDrivers = mkForce [ "modesetting" ]; # Assumes intel iGPU as host primary
+      services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
     })
   ];
 }

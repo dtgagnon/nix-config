@@ -140,7 +140,7 @@ in
         };
 
         temperature = {
-          "thermal-zone" = 0;
+          "hwmon-path" = "/sys/class/hwmon/hwmon5/temp1_input";
           interval = 5;
           format = spanWrapText "{temperatureC}°";
           tooltip = false;

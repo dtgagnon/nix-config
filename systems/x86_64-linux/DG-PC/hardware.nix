@@ -50,6 +50,4 @@ in
 
     spacenavd.enable = true;
   };
-
-  boot.kernelPackages = pkgs.linuxPackages_6_13;
 }
