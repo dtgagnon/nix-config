@@ -35,7 +35,16 @@ in
     wayland.windowManager.hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${system}.hyprland;
-      systemd.enable = true;
+      systemd = {
+        enable = true;
+        variables = [
+          "DISPLAY"
+          "HYPRLAND_INSTANCE_SIGNATURE"
+          "WAYLAND_DISPLAY"
+          "XDG_CURRENT_DESKTOP"
+          "AQ_DRM_DEVICES"
+        ];
+      };
       xwayland.enable = true;
       inherit (cfg) extraConfig;
       settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
@@ -61,6 +70,8 @@ in
         qt = enabled; # Qt theme
       };
     };
+
+
 
     home.packages = with pkgs; [
       # core dependencies

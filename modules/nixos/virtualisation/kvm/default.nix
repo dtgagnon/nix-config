@@ -151,8 +151,8 @@ in
       boot.kernelParams = [
         "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"
-        # (mkForce "nvidia-drm.modeset=0")
-        # (mkForce "nvidia-drm.fbdev=0")
+        (mkForce "nvidia-drm.modeset=0")
+        (mkForce "nvidia-drm.fbdev=0")
       ];
       hardware.nvidia = {
         modesetting.enable = mkForce false;

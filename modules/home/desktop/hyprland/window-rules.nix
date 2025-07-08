@@ -123,11 +123,11 @@ in
         # XWaylandVideoBridge rules: These rules handle screen sharing for X11 apps (like Discord) under Wayland
         # They make the bridge window invisible, prevent animations/focus stealing, and keep it tiny (1x1)
         # This ensures smooth screen sharing without visual interference
-        "opacity 0.0 override,class:^(xwaylandvideobridge)$"
-        "noanim,class:^(xwaylandvideobridge)$"
-        "noinitialfocus,class:^(xwaylandvideobridge)$"
-        "maxsize 1 1,class:^(xwaylandvideobridge)$"
-        "noblur,class:^(xwaylandvideobridge)$"
+        # "opacity 0.0 override,class:^(xwaylandvideobridge)$"
+        # "noanim,class:^(xwaylandvideobridge)$"
+        # "noinitialfocus,class:^(xwaylandvideobridge)$"
+        # "maxsize 1 1,class:^(xwaylandvideobridge)$"
+        # "noblur,class:^(xwaylandvideobridge)$"
       ];
 
       layerrule = [

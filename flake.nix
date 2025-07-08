@@ -57,8 +57,8 @@
           stylix.nixosModules.stylix
         ];
 
-        systems.hosts.DG-PC.modules = with inputs; [
-
+        systems.hosts."DG-PC".modules = with inputs; [
+          hyprland.nixosModules.default
         ];
 
         systems.hosts.spirepoint.modules = with inputs; [
@@ -66,7 +66,7 @@
           nixarr.nixosModules.default
         ];
 
-        systems.hosts.DGPC-WSL.modules = with inputs; [
+        systems.hosts."DGPC-WSL".modules = with inputs; [
           nixos-wsl.nixosModules.default
         ];
 

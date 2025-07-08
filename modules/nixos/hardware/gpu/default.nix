@@ -110,11 +110,11 @@ in
         vulkan-tools
       ];
 
-      environment.variables = if cfg.iGPU.isPrimary then { } else {
-        NVD_BACKEND = "direct";
-        LIBVA_DRIVER_NAME = "nvidia";
-        GBM_BACKEND = "nvidia-drm";
-      };
+      # environment.variables = if cfg.iGPU.isPrimary then { } else {
+      #   NVD_BACKEND = "direct";
+      #   LIBVA_DRIVER_NAME = "nvidia";
+      #   GBM_BACKEND = "nvidia-drm";
+      # };
       # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
 
       boot = {
