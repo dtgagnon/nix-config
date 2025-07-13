@@ -41,9 +41,9 @@ in
 
     environment.systemPackages = [ pkgs.kitty ]; #default for when no home configuration has been established
     environment.variables = {
-      EGL_PLATFORM = "wayland";
-      # WLR_DRM_DEVICES = if (config.spirenix.hardware.gpu.iGPU.mfg != null) then "$HOME/.config/hypr/intel-iGPU" else if (cfg.multiGpuMonitors == false) then "" else "$HOME/.config/hypr/nvidia-dGPU"; #TODO: Confirm, but pretty sure that hyprland no longer uses wlroots and uses aquamarine (AQM) instead.
-      AQ_DRM_DEVICES = if (config.spirenix.hardware.gpu.iGPU.mfg != null) then "/home/dtgagnon/.config/hypr/intel-iGPU:/home/dtgagnon/.config/hypr/nvidia-dGPU" else if (cfg.multiGpuMonitors == false) then "" else "/home/dtgagnon/.config/hypr/nvidia-dGPU";
+      # EGL_PLATFORM = "wayland";
+      # # WLR_DRM_DEVICES = if (config.spirenix.hardware.gpu.iGPU.mfg != null) then "$HOME/.config/hypr/intel-iGPU" else if (cfg.multiGpuMonitors == false) then "" else "$HOME/.config/hypr/nvidia-dGPU"; #TODO: Confirm, but pretty sure that hyprland no longer uses wlroots and uses aquamarine (AQM) instead.
+      # AQ_DRM_DEVICES = if (config.spirenix.hardware.gpu.iGPU.mfg != null) then "/home/dtgagnon/.config/hypr/intel-iGPU" else if (cfg.multiGpuMonitors == false) then "" else "/home/dtgagnon/.config/hypr/nvidia-dGPU";
     };
   };
 }

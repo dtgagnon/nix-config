@@ -14,6 +14,9 @@ in
     common-pc-ssd
   ];
 
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   spirenix.hardware = {
     audio.enable = true;
     gpu = {

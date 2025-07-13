@@ -245,6 +245,10 @@ let
     bind_device "${gpuAudioBusId}" "snd_hda_intel" "audio device" "${gpuAudioIds.vendor}" "${gpuAudioIds.product}"
     fi
 
+    # Start NVIDIA services
+    echo "[HOOK] Starting NVIDIA persistence daemon (if inactive)..."
+    systemctl restart nvidia-persistenced.service 2>/dev/null || true
+
     # Final Status Check
     echo "[INFO] Device binding status:"
 
@@ -415,7 +419,7 @@ let
 
 in
 {
-  config = mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
+  config = mkIf (cfg.enable && cfg.vfio.enable) {
     # Ensure the hook scripts have the tools they need
     systemd.services.libvirtd.path = [ pkgs.bash ];
     environment.systemPackages = [

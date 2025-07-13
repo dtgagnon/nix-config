@@ -69,6 +69,7 @@ in
         enable = true;
         monitors = [
           "DP-1,3440x1440@144,0x0,1"
+          "HDMI-A-5, disable"
         ];
         extraConfig = ''
           general {

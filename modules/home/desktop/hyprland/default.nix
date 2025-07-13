@@ -32,19 +32,14 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.sessionVariables = {
+      AQ_DRM_DEVICES = "/home/dtgagnon/.config/hypr/intel-iGPU";
+      WLR_DRM_DEVICES = "/home/dtgagnon/.config/hypr/intel-iGPU";
+    };
     wayland.windowManager.hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${system}.hyprland;
-      systemd = {
-        enable = true;
-        variables = [
-          "DISPLAY"
-          "HYPRLAND_INSTANCE_SIGNATURE"
-          "WAYLAND_DISPLAY"
-          "XDG_CURRENT_DESKTOP"
-          "AQ_DRM_DEVICES"
-        ];
-      };
+      systemd.enable = true;
       xwayland.enable = true;
       inherit (cfg) extraConfig;
       settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;

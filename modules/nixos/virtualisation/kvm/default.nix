@@ -137,7 +137,7 @@ in
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "static") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
-      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" "nvidia-drm.modeset=1" ];
+      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" /* "nvidia-drm.modeset=1" */ ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModprobeConfig = ''
         options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
