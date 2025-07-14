@@ -53,6 +53,7 @@ in
       git = enabled;
       neovim = enabled;
       network-tools = enabled;
+      opencode = enabled;
       shells = { nushell = enabled; zsh = enabled; };
       ssh = enabled;
       yazi = enabled;
