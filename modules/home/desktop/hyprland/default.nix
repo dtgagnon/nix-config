@@ -7,8 +7,8 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types mkOption mkMerge concatStringsSep foldl' recursiveUpdateWith all isList last concatLists;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled mkLinesOpt mkDeepAttrsOpt;
   cfg = config.spirenix.desktop.hyprland;
 in
 {
@@ -22,79 +22,13 @@ in
     };
     monitors = mkOpt (types.listOf types.str) [ ] "Configure any additional monitors";
 
-    extraConfig = mkOption {
-      type = types.str;
-      default = "";
-      description = "Additional hyprland configuration in string format";
-      merge = mkMerge concatStringsSep "\n";
-    };
+    extraConfig = mkLinesOpt "" "Additional hyprland configuration in string format";
     hyprModifier = mkOpt types.str "SUPER" "The main hyprland modifier key.";
-    extraKeybinds = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Additional keybinds to add to the Hyprland config";
-      merge = mkMerge (foldl'
-        (a: b: recursiveUpdateWith
-          (path: values:
-            if all isList values
-            then concatLists values
-            else last values
-          )
-          a
-          b)
-        { });
-    };
-    extraSettings = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Additional settings to add to the Hyprland config";
-      merge = mkMerge (foldl'
-        (a: b: recursiveUpdateWith
-          (path: values:
-            if all isList values
-            then concatLists values
-            else last values
-          )
-          a
-          b)
-        { });
-    };
-    extraWinRules = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Window rules for Hyprland";
-      merge = mkMerge (foldl'
-        (a: b: recursiveUpdateWith
-          (path: values:
-            if all isList values
-            then concatLists values
-            else last values
-          )
-          a
-          b)
-        { });
-    };
-    extraAddons = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Additional addons to enable";
-      merge = mkMerge (foldl'
-        (a: b: recursiveUpdateWith
-          (path: values:
-            if all isList values
-            then concatLists values
-            else last values
-          )
-          a
-          b)
-        { });
-    };
-    extraExec = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      description = "Use for conditional exec-once additions in other modules";
-      merge = mkMerge concatLists;
-    };
+    extraKeybinds = mkDeepAttrsOpt { } "Additional keybinds to add to the Hyprland config";
+    extraSettings = mkDeepAttrsOpt { } "Additional settings to add to the Hyprland config";
+    extraWinRules = mkDeepAttrsOpt { } "Window rules for Hyprland";
+    extraAddons = mkDeepAttrsOpt { } "Additional addons to enable";
+    extraExec = mkOpt (types.listOf types.str) [ ] "Use for conditional exec-once additions in other modules";
   };
 
   config = mkIf cfg.enable {

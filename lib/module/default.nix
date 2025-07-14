@@ -22,6 +22,43 @@ rec {
   ## lib.mkBoolOpt true
   mkBoolOpt' = mkOpt' types.bool;
 
+  ## Create a lines NixOS module option.
+  ## lib.mkLinesOpt "" "Description of my option."
+  mkLinesOpt = mkOpt types.lines;
+
+  ## Create a lines NixOS module option without a description.
+  ## lib.mkLinesOpt' ""
+  mkLinesOpt' = mkOpt' types.lines;
+
+  ## Create a deep-merged attribute set NixOS module option.
+  ## lib.mkDeepAttrsOpt { } "Description of my option."
+  mkDeepAttrsOpt = default: description:
+    let
+      deepAttrsType = types.submodule {
+        freeformType = with types;
+          let
+            mergable = oneOf [
+              (attrsOf mergable)
+              (listOf mergable)
+              bool
+              int
+              float
+              str
+              null
+              path
+            ];
+          in mergable;
+        options = { };
+      };
+    in mkOption {
+      inherit default description;
+      type = deepAttrsType;
+    };
+
+  ## Create a deep-merged attribute set NixOS module option without a description.
+  ## lib.mkDeepAttrsOpt' { }
+  mkDeepAttrsOpt' = default: mkDeepAttrsOpt default null;
+
   enabled = {
     ## Quickly enable an option.
     ## services.nginx = enabled;
