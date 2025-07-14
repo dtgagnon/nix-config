@@ -22,14 +22,6 @@ rec {
   ## lib.mkBoolOpt true
   mkBoolOpt' = mkOpt' types.bool;
 
-  ## Create a lines NixOS module option.
-  ## lib.mkLinesOpt "" "Description of my option."
-  mkLinesOpt = mkOpt types.lines;
-
-  ## Create a lines NixOS module option without a description.
-  ## lib.mkLinesOpt' ""
-  mkLinesOpt' = mkOpt' types.lines;
-
   ## Create a deep-merged attribute set NixOS module option.
   ## lib.mkDeepAttrsOpt { } "Description of my option."
   mkDeepAttrsOpt = default: description:

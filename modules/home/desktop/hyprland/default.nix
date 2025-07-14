@@ -8,7 +8,7 @@
 }:
 let
   inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled mkLinesOpt mkDeepAttrsOpt;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled mkDeepAttrsOpt;
   cfg = config.spirenix.desktop.hyprland;
 in
 {
@@ -22,7 +22,7 @@ in
     };
     monitors = mkOpt (types.listOf types.str) [ ] "Configure any additional monitors";
 
-    extraConfig = mkLinesOpt "" "Additional hyprland configuration in string format";
+    extraConfig = mkOpt types.lines "" "Additional hyprland configuration in string format";
     hyprModifier = mkOpt types.str "SUPER" "The main hyprland modifier key.";
     extraKeybinds = mkDeepAttrsOpt { } "Additional keybinds to add to the Hyprland config";
     extraSettings = mkDeepAttrsOpt { } "Additional settings to add to the Hyprland config";
