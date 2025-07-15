@@ -39,6 +39,8 @@ in
     services = {
       davfs = enabled;
       n8n = enabled;
+      ollama = enabled;
+      openwebui = enabled;
       openssh.manage-other-hosts = false;
     };
 
