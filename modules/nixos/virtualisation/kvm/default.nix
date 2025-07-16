@@ -11,13 +11,6 @@ let
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
   dGPU = config.${namespace}.hardware.gpu.dGPU;
-  qemu-hooks = pkgs.callPackage (lib.snowfall.fs.get-file "packages/qemu-hooks/default.nix") {
-    enablePersistencedStop = config.hardware.nvidia.nvidiaPersistenced;
-    enableOllamaStop = config.services.ollama.enable;
-    vmDomainName = "win11-GPU";
-    gpuBusId = config.spirenix.hardware.gpu.dGPU.busId;
-    dgpuDeviceIds = config.spirenix.hardware.gpu.dGPU.deviceIds;
-  };
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
@@ -25,7 +18,6 @@ in
   options.${namespace}.virtualisation.kvm = with types; {
     enable = mkBoolOpt false "Enable KVM virtualisation";
     platform = mkOpt (enum [ "amd" "intel" ]) "intel" "The CPU platform of the host machine";
-    hooksPackage = mkOpt types.package qemu-hooks "Bundled qemu-hooks";
     lookingGlass = {
       enable = mkBoolOpt false "Enable support for looking-glass-client via /dev/kvmfr";
       kvmfrSize = mkOpt (types.listOf types.int) [ 64 ] "The size of the /dev/kvmfr device in MB";
@@ -130,8 +122,8 @@ in
 
         quickemu
         inputs.NixVirt.packages.x86_64-linux.default
-        # rustdesk # dont think this is used related to VMs
-        # rustdesk-server # dont think this is used related to VMs
+        # rustdesk
+        # rustdesk-server
       ];
       # spirenix.system.preservation.extraSysDirs = [
       #   { directory = "/var/lib/libvirt"; user = "${user.name}"; group = "qemu-libvirtd"; }
