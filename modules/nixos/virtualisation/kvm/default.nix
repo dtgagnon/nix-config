@@ -11,6 +11,13 @@ let
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
   dGPU = config.${namespace}.hardware.gpu.dGPU;
+  qemu-hooks = pkgs.callPackage (lib.snowfall.fs.get-file "packages/qemu-hooks/default.nix") {
+    enablePersistencedStop = config.hardware.nvidia.nvidiaPersistenced;
+    enableOllamaStop = config.services.ollama.enable;
+    vmDomainName = "win11-GPU";
+    gpuBusId = config.spirenix.hardware.gpu.dGPU.busId;
+    dgpuDeviceIds = config.spirenix.hardware.gpu.dGPU.deviceIds;
+  };
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files ./.;
@@ -18,6 +25,7 @@ in
   options.${namespace}.virtualisation.kvm = with types; {
     enable = mkBoolOpt false "Enable KVM virtualisation";
     platform = mkOpt (enum [ "amd" "intel" ]) "intel" "The CPU platform of the host machine";
+    hooksPackage = mkOpt types.package qemu-hooks "Bundled qemu-hooks";
     lookingGlass = {
       enable = mkBoolOpt false "Enable support for looking-glass-client via /dev/kvmfr";
       kvmfrSize = mkOpt (types.listOf types.int) [ 64 ] "The size of the /dev/kvmfr device in MB";
@@ -40,12 +48,16 @@ in
 
     (mkIf cfg.enable {
       boot = {
+        blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
         initrd.kernelModules = [ "kvm-${cfg.platform}" "i915" ];
+        initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
         kernelModules = [ "vhost" "vhost_net" "vhost_vsock" "vhost_scsi" ];
         kernelParams = [ "${cfg.platform}_iommu=on" "iommu=pt" ];
         extraModprobeConfig = ''
           ${optionalString (cfg.ignoreMSRs) "options kvm ignore_msrs=1"}
           ${optionalString (cfg.ignoreMSRs) "options kvm report_ignored_msrs=0"}
+          ${optionalString (cfg.vfio.enable) "options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}"}
+          ${optionalString (cfg.vfio.enable) "softdep nvidia pre: vfio-pci"}
         '';
       };
 
@@ -143,11 +155,12 @@ in
         options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
-      hardware.nvidia.modesetting.enable = mkForce true;
+      # hardware.nvidia.modesetting.enable = mkForce true;
     })
     (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
-      boot.initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
-      boot.extraModulePackages = [ config.hardware.nvidia.package ];
+      boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
+      boot.kernelModules = [ "vendor_reset" ];
+      services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
       boot.kernelParams = [
         "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"
@@ -158,7 +171,24 @@ in
         modesetting.enable = mkForce false;
         nvidiaPersistenced = mkForce true;
       };
-      services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
+      # services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
+      # snowfallorg.users.dtgagnon.home.config.spirenix.desktop.hyprland.extraExec = [ "sudo give-host-dgpu" ];
+      systemd = {
+        services = {
+          give-host-dgpu-startup = {
+            description = "Gives the host the dGPU after launching the desktop session";
+            after = [ "hyprland-session.target" "graphical-session.target" ];
+            serviceConfig = {
+              Type = "oneshot";
+              # User = cfg.user;
+              # Group = cfg.group;
+              ExecStart = "${cfg.hooksPackage}/bin/give-host-dgpu";
+            };
+          };
+          nvidia-persistenced = { after = [ "give-host-dgpu-startup.service" ]; };
+          ollama = { after = [ "give-host-dgpu-startup.service" ]; };
+        };
+      };
     })
   ];
 }

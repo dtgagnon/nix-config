@@ -65,7 +65,7 @@ in
         vmDomains = [ "win11-GPU" ];
         lookingGlass.enable = true;
         vfio.enable = true;
-        vfio.mode = "static";
+        vfio.mode = "dynamic";
       };
     };
   };

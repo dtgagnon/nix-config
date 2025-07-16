@@ -34,7 +34,7 @@ in
           user = "greeter";
         };
         initial_session = {
-          command = "--cmd Hyprland";
+          command = "--cmd hyprland-uwsm";
           user = "dtgagnon";
         };
       };
@@ -45,6 +45,7 @@ in
 
     # Create a symlink for tuigreet sessions
     environment.etc."greetd/environments".text = ''
+      hyprland-uwsm
       Hyprland
       GNOME
       nushell

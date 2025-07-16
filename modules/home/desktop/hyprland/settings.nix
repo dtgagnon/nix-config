@@ -1,9 +1,12 @@
 { lib
 , config
+, namespace
+, osConfig
 , ...
 }:
 let
   inherit (lib) mkIf;
+  inherit (lib.${namespace}) prependUWSM;
   cfg = config.spirenix.desktop.hyprland;
 
   cursorSize = toString config.stylix.cursor.size;
@@ -11,13 +14,20 @@ in
 {
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraSettings = {
-      exec-once = [
-        "gnome-keyring-daemon --start --components=secrets"
-        # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
-        "nm-applet"
-        "swww init ; sleep 1; setwall"
-        "playerctld daemon"
-      ] ++ cfg.extraExec;
+      exec-once =
+        let
+          execCmds = ([
+            "gnome-keyring-daemon --start --components=secrets"
+            # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
+            "nm-applet"
+            "swww init ; sleep 1; setwall"
+            "playerctld daemon"
+          ] ++ cfg.extraExec);
+        in
+        if osConfig.programs.hyprland.withUWSM then
+          map (c: "uwsm app -- ${c}") execCmds
+        else execCmds;
+
 
       monitor = cfg.monitors ++ [
         "Virtual-1,3440x1440,0x0,1"

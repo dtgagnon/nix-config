@@ -67,9 +67,10 @@ in
               owner = user;
               path = "/persist/home/${user}/.ssh/${user}-key.pub";
             };
+
+            # Add more generic user secrets here..
           };
 
-          # Add more generic user secrets here..
         })
         (snowfallHostUserList host)
       )

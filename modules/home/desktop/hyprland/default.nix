@@ -3,6 +3,7 @@
 , config
 , inputs
 , system
+, osConfig
 , namespace
 , ...
 }:
@@ -39,7 +40,7 @@ in
     wayland.windowManager.hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${system}.hyprland;
-      systemd.enable = true;
+      systemd.enable = if osConfig.programs.hyprland.withUWSM then false else true;
       xwayland.enable = true;
       inherit (cfg) extraConfig;
       settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
