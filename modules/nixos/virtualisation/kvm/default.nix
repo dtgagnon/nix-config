@@ -6,7 +6,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkMerge mkForce types optionalString concatStringsSep;
+  inherit (lib) mkIf mkMerge mkForce types optionalString concatStringsSep getExe;
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
@@ -160,26 +160,35 @@ in
         (mkForce "nvidia-drm.fbdev=0")
       ];
       hardware.nvidia = {
+        # enable = true; #NOTE Explictly enabled to test if this has impact on dynamic vfio passthrough set up, which boots with vfio-pci taking nvidia gpu right away.
         modesetting.enable = mkForce false;
         nvidiaPersistenced = mkForce true;
       };
       # services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
-      # snowfallorg.users.dtgagnon.home.config.spirenix.desktop.hyprland.extraExec = [ "sudo give-host-dgpu" ];
-      systemd = {
-        services = {
-          give-host-dgpu-startup = {
-            description = "Gives the host the dGPU after launching the desktop session";
-            after = [ "hyprland-session.target" "graphical-session.target" ];
-            serviceConfig = {
-              Type = "oneshot";
-              # User = cfg.user;
-              # Group = cfg.group;
-              ExecStart = "${cfg.hooksPackage}/bin/give-host-dgpu";
-            };
+      snowfallorg.users.${user.name}.home.config.spirenix.desktop.hyprland.extraExec = [ "sudo systemctl start give-host-dgpu-startup.service" ];
+      systemd.services = {
+        give-host-dgpu-startup = {
+          description = "Gives the host the dGPU after launching the desktop session";
+          path = [
+            cfg.hooksPackage
+            pkgs.kmod
+            pkgs.coreutils
+            pkgs.systemd
+          ];
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+            Group = "wheel";
+            ExecStart = "${cfg.hooksPackage}/bin/give-host-dgpu";
+            ExecStartPost = "${pkgs.systemd}/bin/systemctl start nvidia-persistenced.service";
           };
-          nvidia-persistenced = { after = [ "give-host-dgpu-startup.service" ]; };
-          ollama = { after = [ "give-host-dgpu-startup.service" ]; };
         };
+        #NOTE: Declared manually to change
+        nvidia-persistenced = {
+          after = [ "give-host-dgpu-startup.service" ];
+          wantedBy = mkForce [ "give-host-dgpu-startup.service" ];
+        };
+        ollama = { after = [ "give-host-dgpu-startup.service" ]; };
       };
     })
   ];

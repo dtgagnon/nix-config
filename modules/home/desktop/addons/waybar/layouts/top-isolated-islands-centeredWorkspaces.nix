@@ -47,7 +47,6 @@ in
         "group/hardware" = {
           orientation = "inherit";
           modules = [
-            "network"
             "battery"
             "backlight"
             "memory"
@@ -164,26 +163,6 @@ in
           format = spanWrapIcon "" + " {percent}%;";
         };
 
-        network = {
-          interval = 5;
-          format-wifi = spanWrapIcon "" + " {essid}";
-          format-ethernet = spanWrapIcon "󰈀";
-          format-disconnected = spanWrapIcon "󱚵";
-          tooltip = true;
-          tooltip-format = ''
-            {ifname}
-            {ipaddr}/{cidr}
-            {signalstrength}
-            Up: {bandwidthUpBytes}
-            Down: {bandwidthDownBytes}
-          '';
-          tooltip-format-ethernet = ''
-            {ipaddr}/{cidr}
-            Up: {bandwidthUpBytes}
-            Down: {bandwidthDownBytes}
-          '';
-        };
-
         pulseaudio = {
           scroll-step = 2;
           format = spanWrapText "{volume}<small>%</small> " + "{icon}";
@@ -293,7 +272,7 @@ in
         "custom/startmenu" = {
           tooltip = false;
           format = "<span size='36pt'><tt></tt></span>";
-          on-click = "sleep 0.1 && rofi -show drun";
+          on-click = "sleep 0.1 && if pgrep -x \"rofi\" > /dev/null; then killall rofi; else rofi -show drun; fi";
         };
       }
     ];

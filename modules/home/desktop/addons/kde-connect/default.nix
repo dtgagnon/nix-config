@@ -20,9 +20,9 @@ in
       indicator = true;
     };
 
-    spirenix.desktop.hyprland.extraExec = mkIf config.spirenix.desktop.hyprland.enable [
-      "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect"
-      "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
-    ];
+    # spirenix.desktop.hyprland.extraExec = mkIf config.spirenix.desktop.hyprland.enable [
+    #   "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect"
+    #   "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
+    # ];
   };
 }

@@ -18,14 +18,16 @@ in
     security.sudo = {
       enable = true;
       wheelNeedsPassword = false;
-      extraRules = [{
-        users = [ "dtgagnon" ];
-        groups = [ "wheel" ];
-        commands = [{
-          command = "ALL";
-          options = [ "NOPASSWD" ];
-        }];
-      }];
+      # extraRules = [{
+      #   users = [ "dtgagnon" ];
+      #   groups = [ "wheel" ];
+      #   # commands = [
+      #   #   {
+      #   #     command = "ALL";
+      #   #     options = [ "NOPASSWD" ];
+      #   #   }
+      #   # ];
+      # }];
       extraConfig = ''
                 Defaults env_keep += "*"
         				Defaults env_keep -= "HOME"

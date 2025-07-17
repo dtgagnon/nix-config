@@ -1,9 +1,8 @@
-{
-  lib,
-  host,
-  config,
-  namespace,
-  ...
+{ lib
+, host
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -70,11 +69,12 @@ in
       # };
 
       shellAliases = {
-        # Flake Stuff
+        # Nix Stuff
         rebuild = "nixos-rebuild switch --use-remote-sudo --flake .#${host}";
         test = "nixos-rebuild test --use-remote-sudo --flake .#${host}";
         update = "nix flake update";
         nixdev = "nix develop --command nushell";
+        nr = "nix repl .#nixosConfigurations.DG-PC";
 
         # Navigate Shell
         "..." = "z ../../";
@@ -91,7 +91,6 @@ in
         c = "clear";
 
         # Application aliases
-        wsf = "windsurf";
         vi = "vim";
         svi = "sudo nvim";
       };

@@ -24,9 +24,12 @@ let
 in
 stdenv.mkDerivation {
   pname = "qemu-hooks";
-  version = "0.1";
+  version = "0.2";
 
-  buildTools = with pkgs; [
+  buildInputs = with pkgs; [
+    kmod
+    coreutils
+    systemd
     libvirt
     psmisc
     usbutils
@@ -213,6 +216,13 @@ stdenv.mkDerivation {
       local vendor_id=$4
       local product_id=$5
 
+      echo "[DEBUG] Checking current driver for $device_name..."
+      if [ -e "/sys/bus/pci/devices/''${device_id}/driver" ] && \
+         [ "$(basename "$(readlink /sys/bus/pci/devices/''${device_id}/driver)")" = "$driver" ]; then
+         echo "[INFO] $device_name is already bound to $driver. Nothing to do."
+         return 0
+      fi
+
       echo "[INFO] Attempting to bind $device_name to $driver..."
 
       # Try direct bind first as it's most reliable when driver is loaded
@@ -247,7 +257,9 @@ stdenv.mkDerivation {
     }
 
     # Unbind devices from vfio-pci
+    echo "[INFO] Unbinding GPU device from vfio-pci..."
     unbind_from_vfio "${gpuBusId}" "GPU"
+    echo "[INFO] Unbinding GPU audio device from vfio-pci..."
     unbind_from_vfio "${gpuAudioBusId}" "audio device"
     sleep 1
 
@@ -287,9 +299,9 @@ stdenv.mkDerivation {
       bind_device "${gpuAudioBusId}" "snd_hda_intel" "audio device" "${gpuAudioIds.vendor}" "${gpuAudioIds.product}"
     fi
 
-    # Start NVIDIA services
-    echo "[HOOK] Starting NVIDIA persistence daemon (if inactive)..."
-    systemctl restart nvidia-persistenced.service 2>/dev/null || true
+    # # Start NVIDIA services
+    # echo "[HOOK] Starting NVIDIA persistence daemon (if inactive)..."
+    # systemctl restart nvidia-persistenced.service 2>/dev/null || true
 
     # Final status check
     echo "[INFO] Device binding status:"
@@ -330,8 +342,8 @@ stdenv.mkDerivation {
 
     # If no USBs are attached in the first place, there's nothing to do
     if [ ''${#ATTACHED_USBS[@]} -eq 0 ]; then
-    echo "No USB devices to check for ${vmDomainName}."
-    exit 0
+      echo "No USB devices to check for ${vmDomainName}."
+      exit 0
     fi
 
     # Dump the current XML configuration to our temporary file so we can edit it
@@ -339,23 +351,23 @@ stdenv.mkDerivation {
     MODIFIED=false
 
     for usb in "''${ATTACHED_USBS[@]}"; do
-    # For each device in the config, check if it's actually connected to the host system
-    if ! ${pkgs.usbutils}/bin/lsusb | grep -q "$usb"; then
-    echo "USB device $usb is defined in VM but not connected to host. Removing..."
-    vendor=$(echo "$usb" | cut -d':' -f1)
-    product=$(echo "$usb" | cut -d':' -f2)
+      # For each device in the config, check if it's actually connected to the host system
+      if ! ${pkgs.usbutils}/bin/lsusb | grep -q "$usb"; then
+        echo "USB device $usb is defined in VM but not connected to host. Removing..."
+        vendor=$(echo "$usb" | cut -d':' -f1)
+        product=$(echo "$usb" | cut -d':' -f2)
 
-    # If not connected, edit the XML file in-place (-L) to remove the device node
-    ${pkgs.xmlstarlet}/bin/xmlstarlet ed -L -d "/domain/devices/hostdev[source/vendor/@id='0x$vendor'][source/product/@id='0x$product']" "$VM_XML"
-    MODIFIED=true
-    fi
+        # If not connected, edit the XML file in-place (-L) to remove the device node
+        ${pkgs.xmlstarlet}/bin/xmlstarlet ed -L -d "/domain/devices/hostdev[source/vendor/@id='0x$vendor'][source/product/@id='0x$product']" "$VM_XML"
+        MODIFIED=true
+      fi
     done
 
     # If we removed any devices, MODIFIED will be true
     # We then redefine the VM using the cleaned-up configuration file
     if [ "$MODIFIED" = true ]; then
-    echo "Applying updated USB configuration to ${vmDomainName}..."
-    virsh define "$VM_XML"
+      echo "Applying updated USB configuration to ${vmDomainName}..."
+      virsh define "$VM_XML"
     fi
     EOF
 
@@ -371,8 +383,8 @@ stdenv.mkDerivation {
     sed 's/0x//g') )
 
     if [ ''${#ATTACHED_IDS[@]} -eq 0 ]; then
-    echo "No USB devices are attached to ${vmDomainName}."
-    exit 0
+      echo "No USB devices are attached to ${vmDomainName}."
+      exit 0
     fi
 
     echo "Select a USB device to detach:"
@@ -380,16 +392,16 @@ stdenv.mkDerivation {
     # Use an associative array to safely map the menu number to the device ID
     declare -A MENU_MAP
     for id in "''${ATTACHED_IDS[@]}"; do
-    # Find the corresponding line in lsusb, handling cases where it's not connected
-    line=$(${pkgs.usbutils}/bin/lsusb | grep "$id" || true)
-    if [ -n "$line" ]; then
-    name=$(echo "$line" | sed "s/.*$id[[:space:]]//") # Extract name after the ID
-    echo "$i) $name ($id)"
-    else
-    echo "$i) [Disconnected Device] ($id)"
-    fi
-    MENU_MAP[$i]=$id
-    ((i++))
+      # Find the corresponding line in lsusb, handling cases where it's not connected
+      line=$(${pkgs.usbutils}/bin/lsusb | grep "$id" || true)
+      if [ -n "$line" ]; then
+        name=$(echo "$line" | sed "s/.*$id[[:space:]]//") # Extract name after the ID
+        echo "$i) $name ($id)"
+      else
+        echo "$i) [Disconnected Device] ($id)"
+      fi
+      MENU_MAP[$i]=$id
+      ((i++))
     done
 
     read -p "Enter number: " chosen_idx
@@ -397,8 +409,8 @@ stdenv.mkDerivation {
     # Get the chosen ID from our map and validate it
     chosen_id_full=''${MENU_MAP[$chosen_idx]}
     if [ -z "$chosen_id_full" ]; then
-    echo "Invalid selection."
-    exit 1
+      echo "Invalid selection."
+      exit 1
     fi
 
     chosen_vendor=$(echo "$chosen_id_full" | cut -d':' -f1)
@@ -433,8 +445,8 @@ stdenv.mkDerivation {
     echo "Select a USB device to attach:"
     i=1
     for device in "''${USB_DEVICES[@]}"; do
-    echo "$i) $device (''${USB_IDS[(($i-1))]})"
-    ((i++))
+      echo "$i) $device (''${USB_IDS[(($i-1))]})"
+      ((i++))
     done
 
     read -p "Enter number: " chosenidx
@@ -480,7 +492,7 @@ stdenv.mkDerivation {
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,16-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-3,16-23
       elif [ "$COMMAND" == "release" ]; then
-        give-host-dgpu
+        ${pkgs.systemd}/bin/systemctl start give-host-dgpu-startup.service
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-23

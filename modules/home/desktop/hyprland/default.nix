@@ -67,8 +67,6 @@ in
       };
     };
 
-
-
     home.packages = with pkgs; [
       # core dependencies
       libinput
@@ -96,5 +94,21 @@ in
       swww
       playerctl
     ];
+
+    # systemd.user.services.give-host-dgpu-startup = {
+    #   description = "Gives the host the dGPU after launching the desktop session";
+    #   after = [ "graphical-session.target" ];
+    #   path = [
+    #     cfg.hooksPackage
+    #     pkgs.kmod
+    #     pkgs.coreutils
+    #     pkgs.systemd
+    #   ];
+    #   serviceConfig = {
+    #     Type = "oneshot";
+    #     User = "root";
+    #     ExecStart = "${osConfig.spirenix.virtualisation.kvm.hooksPackage}/bin/give-host-dgpu";
+    #   };
+    # };
   };
 }

@@ -5,20 +5,22 @@
 , ...
 }:
 let
-  inherit (lib) mkIf getExe' replaceStrings optionalString;
-  inherit (lib.lists) head last;
+  inherit (lib) mkIf mkOption types;
   cfg = config.${namespace}.virtualisation.kvm;
-  qemu-hooks = pkgs.callPackage (lib.snowfall.fs.get-file "packages/qemu-hooks/default.nix") {
-    enablePersistencedStop = config.hardware.nvidia.nvidiaPersistenced;
-    enableOllamaStop = config.services.ollama.enable;
-    vmDomainName = "win11-GPU";
-    gpuBusId = config.spirenix.hardware.gpu.dGPU.busId;
-    dgpuDeviceIds = config.spirenix.hardware.gpu.dGPU.deviceIds;
-  };
 in
 {
   options.${namespace}.virtualisation.kvm = {
-    hooksPackage = mkOpt types.package qemu-hooks "Bundled qemu-hooks";
+    hooksPackage = mkOption {
+      description = "Bundled qemu-hooks";
+      type = types.package;
+      default = pkgs.callPackage (lib.snowfall.fs.get-file "packages/qemu-hooks/default.nix") {
+        enablePersistencedStop = config.hardware.nvidia.nvidiaPersistenced;
+        enableOllamaStop = config.services.ollama.enable;
+        vmDomainName = "win11-GPU";
+        gpuBusId = config.spirenix.hardware.gpu.dGPU.busId;
+        dgpuDeviceIds = config.spirenix.hardware.gpu.dGPU.deviceIds;
+      };
+    };
   };
 
   config = mkIf (cfg.enable && cfg.vfio.enable) {
@@ -28,6 +30,8 @@ in
       cfg.hooksPackage
     ];
 
-    virtualisation.libvirtd.hooks.qemu."qemu-hook-dispatcher" = "${cfg.hooksPackage}/bin/qemu-hook-dispatcher";
+    virtualisation.libvirtd.hooks.qemu = {
+      "qemu-hook-dispatcher" = "${cfg.hooksPackage}/bin/qemu-hook-dispatcher";
+    };
   };
 }
