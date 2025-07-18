@@ -3,7 +3,6 @@
 , stdenv
 , vmDomainName ? "win11-GPU" #TODO: update this to accept a list of the vmDomains I want this to work for
 , enablePersistencedStop ? false
-, enableOllamaStop ? false
 , gpuBusId ? "" #config.${namespace}.hardware.gpu.dGPU.busId
 , dgpuDeviceIds ? [ ":" ":" ] #config.${namespace}.hardware.gpu.dGPU.deviceIds
 , ...
@@ -45,7 +44,6 @@ stdenv.mkDerivation {
     cat > $out/bin/give-vfio-dgpu << 'EOF'
     #!${pkgs.stdenv.shell}
     set -e
-    echo "[HOOK] Starting GPU passthrough to VFIO..."
 
     # Helper function to check if a device is using a specific driver
     is_using_driver() {
@@ -118,8 +116,7 @@ stdenv.mkDerivation {
 
     # Stop services
     echo "[HOOK] Stopping services..."
-    ${optionalString enablePersistencedStop "systemctl stop nvidia-persistenced.service 2>/dev/null || true"}
-    ${optionalString enableOllamaStop "systemctl stop ollama.service 2>/dev/null || true"}
+    echo "1" > /var/lib/systemd/qemu-hooks-state
 
     # Kill dGPU processes
     DGPU_DEVICES="/dev/nvidia*"
@@ -299,10 +296,6 @@ stdenv.mkDerivation {
       bind_device "${gpuAudioBusId}" "snd_hda_intel" "audio device" "${gpuAudioIds.vendor}" "${gpuAudioIds.product}"
     fi
 
-    # # Start NVIDIA services
-    # echo "[HOOK] Starting NVIDIA persistence daemon (if inactive)..."
-    # systemctl restart nvidia-persistenced.service 2>/dev/null || true
-
     # Final status check
     echo "[INFO] Device binding status:"
     GPU_DRIVER=$(basename $(readlink -f /sys/bus/pci/devices/${gpuBusId}/driver 2>/dev/null || echo "none"))
@@ -313,6 +306,7 @@ stdenv.mkDerivation {
 
     if [ "$GPU_DRIVER" = "nvidia" ]; then
       echo "[SUCCESS] GPU successfully returned to host"
+      echo "0" > /var/lib/systemd/qemu-hooks-state
     else
       echo "[WARNING] GPU may not be properly bound to nvidia driver"
     fi
@@ -485,14 +479,14 @@ stdenv.mkDerivation {
     if [ "$VM_NAME" == "${vmDomainName}" ]; then
       if [ "$COMMAND" == "prepare" ]; then
         ${pkgs.coreutils-full}/bin/echo "preparing"
-        give-vfio-dgpu
         virsh-check-usb
+        give-vfio-dgpu
       elif [ "$COMMAND" == "started" ]; then
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-3,16-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-3,16-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-3,16-23
       elif [ "$COMMAND" == "release" ]; then
-        ${pkgs.systemd}/bin/systemctl start give-host-dgpu-startup.service
+        give-host-dgpu
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
         ${pkgs.systemd}/bin/systemctl set-property --runtime -- init.scope AllowedCPUs=0-23

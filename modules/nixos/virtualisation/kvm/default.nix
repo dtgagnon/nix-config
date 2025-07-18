@@ -129,7 +129,7 @@ in
       #   { directory = "/var/lib/libvirt"; user = "${user.name}"; group = "qemu-libvirtd"; }
       # ];
     })
-    (mkIf (cfg.lookingGlass.enable) {
+    (mkIf (cfg.enable && cfg.lookingGlass.enable) {
       services.udev.extraRules = ''
         SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
       '';
@@ -139,7 +139,7 @@ in
         options kvmfr static_size_mb=${toString (builtins.elemAt cfg.lookingGlass.kvmfrSize 0)}
       '';
     })
-    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "static") {
+    (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "static") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
       boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" /* "nvidia-drm.modeset=1" */ ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
@@ -149,7 +149,7 @@ in
       '';
       # hardware.nvidia.modesetting.enable = mkForce true;
     })
-    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
+    (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
       boot.kernelModules = [ "vendor_reset" ];
       services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
@@ -165,31 +165,6 @@ in
         nvidiaPersistenced = mkForce true;
       };
       # services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
-      snowfallorg.users.${user.name}.home.config.spirenix.desktop.hyprland.extraExec = [ "sudo systemctl start give-host-dgpu-startup.service" ];
-      systemd.services = {
-        give-host-dgpu-startup = {
-          description = "Gives the host the dGPU after launching the desktop session";
-          path = [
-            cfg.hooksPackage
-            pkgs.kmod
-            pkgs.coreutils
-            pkgs.systemd
-          ];
-          serviceConfig = {
-            Type = "oneshot";
-            User = "root";
-            Group = "wheel";
-            ExecStart = "${cfg.hooksPackage}/bin/give-host-dgpu";
-            ExecStartPost = "${pkgs.systemd}/bin/systemctl start nvidia-persistenced.service";
-          };
-        };
-        #NOTE: Declared manually to change
-        nvidia-persistenced = {
-          after = [ "give-host-dgpu-startup.service" ];
-          wantedBy = mkForce [ "give-host-dgpu-startup.service" ];
-        };
-        ollama = { after = [ "give-host-dgpu-startup.service" ]; };
-      };
     })
   ];
 }
