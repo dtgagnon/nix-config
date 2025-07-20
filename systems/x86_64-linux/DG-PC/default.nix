@@ -71,8 +71,11 @@ in
   };
 
   sops.secrets = {
-    openai_api = { };
     anthropic_api = { };
+    deepseek_api = { };
+    moonshot_api = { };
+    openai_api = { };
+    openrouter_api = { };
   };
 
   system.stateVersion = "24.11";

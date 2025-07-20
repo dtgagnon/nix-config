@@ -105,5 +105,13 @@ in
     };
   };
 
+  sops.secrets = {
+    anthropic_api = { };
+    deepseek_api = { };
+    moonshot_api = { };
+    openai_api = { };
+    openrouter_api = { };
+  };
+
   home.stateVersion = "24.11";
 }
