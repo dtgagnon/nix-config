@@ -90,7 +90,7 @@ in
         (mkIf config.services.ollama.enable {
           ollama = {
             after = mkForce [ ];
-            wantedBy = [ "dgpu-host-ready.target" ];
+            wantedBy = mkForce [ "dgpu-host-ready.target" ];
             partOf = [ "dgpu-host-ready.target" ];
           };
         })

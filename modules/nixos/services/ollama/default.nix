@@ -16,7 +16,7 @@ in
     services.ollama = {
       enable = true;
       acceleration = "cuda";
-      host = "127.0.0.1";
+      host = "100.100.2.1";
       port = 11434;
       home = "/var/lib/ollama";
       # models = "/var/lib/ollama/models";

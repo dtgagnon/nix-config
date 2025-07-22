@@ -2,13 +2,12 @@
 , pkgs
 , stdenv
 , vmDomainName ? "win11-GPU" #TODO: update this to accept a list of the vmDomains I want this to work for
-, enablePersistencedStop ? false
 , gpuBusId ? "" #config.${namespace}.hardware.gpu.dGPU.busId
 , dgpuDeviceIds ? [ ":" ":" ] #config.${namespace}.hardware.gpu.dGPU.deviceIds
 , ...
 }:
 let
-  inherit (lib) optionalString replaceStrings getExe';
+  inherit (lib) replaceStrings getExe';
   inherit (lib.lists) head last;
 
   gpuAudioBusId = replaceStrings [ ".0" ] [ ".1" ] gpuBusId;

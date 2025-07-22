@@ -43,8 +43,17 @@ in
           server_port = 8123;
         };
         feedreader.urls = [ "https://nixos.org/blogs.xml" ];
+        recorder.db_url = "postgresql://@/hass";
       };
-      #   customLovelaceModules = [ ];
+      #   customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
+      #     advanced-camera-card
+      #     bubble-card
+      #     clock-weather-card
+      #     mini-graph-card
+      #     mini-media-player
+      #     versatile-thermostat-ui-card
+      #     weather-chart-card
+      #   ];
       #   lovelaceConfigWritable = false;
       #   lovelaceConfig = {
       #     title = "Home";
@@ -74,28 +83,56 @@ in
       #   };
 
       extraComponents = [
+        # Components required to complete onboarding
+        "analytics"
+        "google_translate"
+        "met"
+        "radio_browser"
+        "shopping_list"
+        "isal" # Recommended for fast zlib compression
+
+        # Other
         "androidtv_remote"
+        "asuswrt"
         "bluetooth"
         "bluetooth_adapters"
+        "calendar"
         "cast"
         "default_config"
         "glances"
+        "homekit"
+        "homekit_controller"
+        "kasa"
+        "jellyfin"
         "lifx"
         "matter"
-        "met"
         "mobile_app"
         "monarch_money"
         "nest"
+        "ollama"
         "opensensemap"
         "openweathermap"
-        "radio_browser"
         "radarr"
         "reddit"
+        "samsungtv"
         "sonarr"
+        "tailscale"
         "tplink"
       ];
 
-      customComponents = [ ];
+      customComponents = with pkgs.home-assistant-custom-components; [
+        midea_ac_lan
+        sleep_as_android
+        waste_collection_schedule
+      ];
+
+      extraPackages = python3Packages: with python3Packages; [
+        psycopg2
+        python-otbr-api
+        getmac
+        aiohomekit
+        grpcio
+      ];
     };
 
 
@@ -139,6 +176,15 @@ in
         exit 1 # Fail the service start
         fi
       '';
+    };
+
+    services.postgresql = {
+      enable = true;
+      ensureDatabases = [ "hass" ];
+      ensureUsers = [{
+        name = "hass";
+        ensureDBOwnership = true;
+      }];
     };
   };
 }

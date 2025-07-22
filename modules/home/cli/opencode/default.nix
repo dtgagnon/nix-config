@@ -21,7 +21,7 @@ in
         "$schema": "https://opencode.ai/config.json",
 
         "theme": "catppuccin",
-        "model": "ollama/devstral:24b",
+        "model": "ollama/devstral:24b-16k",
 
         "mcp": {
           "nixos": {
@@ -80,6 +80,7 @@ in
             },
             "models": {
               "devstral:24b-16k": {
+                "name": "devstral:24b-16k",
                 "tool_call": true
               }
             }

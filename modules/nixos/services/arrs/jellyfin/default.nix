@@ -21,6 +21,7 @@ in
       user = "jellyfin";
       group = "media";
       inherit (cfg) dataDir;
+      openFirewall = true;
     };
 
     environment.systemPackages = with pkgs; [
