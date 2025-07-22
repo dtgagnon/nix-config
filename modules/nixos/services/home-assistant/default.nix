@@ -122,6 +122,7 @@ in
 
       customComponents = with pkgs.home-assistant-custom-components; [
         midea_ac_lan
+        nest_protect
         sleep_as_android
         waste_collection_schedule
       ];
