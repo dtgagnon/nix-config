@@ -15,13 +15,13 @@ in
   config = mkIf cfg.enable {
     services.open-webui = {
       enable = true;
-      host = "127.0.0.1";
+      host = "100.100.2.1";
       port = 11435;
       environment = {
         ANONYMIZED_TELEMETRY = "False";
         DO_NOT_TRACK = "True";
         SCARF_NO_ANALYTICS = "True";
-        OLLAMA_API_BASE_URL = "http://100.100.2.1:11434";
+        OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
         WEBUI_AUTH = "False";
       };
       # environmentFile = ""; # Useful for passing secrets to the service
