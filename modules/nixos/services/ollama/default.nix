@@ -16,12 +16,14 @@ in
     services.ollama = {
       enable = true;
       acceleration = "cuda";
-      host = "100.100.2.1";
+      host = "0.0.0.0";
       port = 11434;
       home = "/var/lib/ollama";
       # models = "/var/lib/ollama/models";
       loadModels = [ ]; # a list of models to auto-download with start of the service
-      environmentVariables = { };
+      environmentVariables = {
+        OLLAMA_HOST=100.100.2.1:11434;
+      };
     };
   };
 }
