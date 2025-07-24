@@ -13,6 +13,12 @@ in
   options.${namespace}.services.home-assistant = {
     enable = mkBoolOpt false "Enable the home-assistant service";
     configDir = mkOpt types.str "/var/lib/hass" "The home assistant (hass) configuration directory";
+    energy = {
+      peakRateWinter = mkOpt types.str "0.1912" "The peak energy rate in winter";
+      offPeakRateWinter = mkOpt types.str "0.1764" "The off-peak energy rate in winter";
+      peakRateSummer = mkOpt types.str "0.2339" "The peak energy rate in summer";
+      offPeakRateSummer = mkOpt types.str "0.1764" "The off-peak energy rate in summer";
+    }
   };
 
   config = mkIf cfg.enable {
@@ -23,7 +29,7 @@ in
       configWritable = true;
 
       config = {
-        default_config = { };
+        # default_config = { };
         homeassistant = {
           name = "Home";
           country = "US";
@@ -35,15 +41,43 @@ in
           temperature_unit = "F";
           time_zone = "US/Eastern";
         };
-        # frontend = {
-        #   themes = "";
-        # };
         http = {
           server_host = [ "100.100.1.2" ];
           server_port = 8123;
         };
-        feedreader.urls = [ "https://nixos.org/blogs.xml" ];
         recorder.db_url = "postgresql://@/hass";
+        template = [
+          {
+            sensor = [
+              {
+                name = "D1.11 Inflow";
+                unit_of_measurement = "USD/kWh";
+                device_class = "monetary";
+                state = ''
+                  {# Current rates found through the Michigan Public Service Commission's website,
+                     https://www.michigan.gov/mpsc . These rates include:
+                     * capacity charge
+                     * non-capacity charge
+                     * delivery charge
+                     * Power Supply Cost Recovery (PSCR) charge of 0.25 cents/kWh, which has been static since November 2024 but is subject to change
+                  #}
+                  {% set month = now().month %}
+                  {% set day_of_week = now().isoweekday() %}
+                  {% set hour = now().hour %}
+                  {% if hour < 15 or hour >= 19 or day_of_week in [6, 7] %}
+                    ${cfg.energy.offPeakRateWinter}
+                  {% else %}
+                  {% if month in [10, 11, 12, 1, 2, 3, 4, 5] %}
+                    ${cfg.energy.peakRateWinter}
+                  {% elif month in [6, 7, 8, 9] %}
+                    ${cfg.energy.peakRateSummer}
+                  {% endif %}
+                  {% endif %}
+                '';
+              }
+            ];
+          }
+        ];
       };
       #   customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
       #     advanced-camera-card
@@ -133,6 +167,8 @@ in
         getmac
         aiohomekit
         grpcio
+        ical #local_todo
+        pyatv #apple_tv
       ];
     };
 

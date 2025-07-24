@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.gemini-cli ];
+    home.packages = [ pkgs.nur.repos.lonerOrz.gemini-cli ];
     home.file.".gemini/settings.json".text = ''
       {
         "theme": "Default",
