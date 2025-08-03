@@ -39,6 +39,7 @@ in
     };
 
     cli = {
+      # aider = enabled;
       bat = enabled;
       bottom = enabled;
       broot = enabled;

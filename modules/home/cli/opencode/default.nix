@@ -81,7 +81,13 @@ in
             "models": {
               "devstral:24b-16k": {
                 "name": "devstral:24b-16k",
-                "tool_call": true
+                "tools": true,
+                "reasoning": false
+              },
+              "qwen3:14b-32k": {
+                "name": "qwen3:14b-32k",
+                "tools": true,
+                "reasoning": true
               }
             }
           }
