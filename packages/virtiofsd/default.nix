@@ -20,7 +20,6 @@ rustPlatform.buildRustPackage rec {
 
   # From the original nixpkgs package, likely still relevant
   separateDebugInfo = true;
-  useFetchCargoVendor = true;
 
   cargoHash = "sha256-reaVHbfrHj5iZjpRaB+nREctoS3ZLdl5WGIurpRqjZU=";
 

@@ -1,0 +1,14 @@
+--- a/go.mod
++++ b/go.mod
+@@ -22,11 +22,6 @@
+ 	rsc.io/qr v0.2.0
+ )
+
+-replace (
+-	github.com/charmbracelet/x/input => ./input
+-	github.com/sst/opencode-sdk-go => ../sdk/go
+-)
+-
+ require golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
+
+ require (

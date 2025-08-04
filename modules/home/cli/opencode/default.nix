@@ -21,7 +21,7 @@ in
         "$schema": "https://opencode.ai/config.json",
 
         "theme": "catppuccin",
-        "model": "ollama/devstral:24b-16k",
+        "model": "ollama/qwen3:14b-32k",
 
         "mcp": {
           "nixos": {

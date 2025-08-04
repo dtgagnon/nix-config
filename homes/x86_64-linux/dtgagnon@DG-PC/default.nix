@@ -25,13 +25,7 @@ in
       obsidian = enabled;
       office.okular-pdf = enabled;
       # super-productivity = enabled;
-      terminals = {
-        ghostty = {
-          enable = true;
-          dark-theme = "Everforest Dark - Hard";
-          light-theme = "Everforest Dark - Hard";
-        };
-      };
+      terminals.ghostty = enabled;
       todoist = enabled;
       vscode = enabled;
       windsurf = enabled;

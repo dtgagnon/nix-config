@@ -32,7 +32,7 @@ in
         deviceIds = [ "10de:2684" "10de:22ba" ];
         busId = "0000:01:00.0";
       };
-      nvidiaChannel = "stable";
+      nvidiaChannel = "latest";
       nvidiaOpen = true;
       nvidiaPrime = true;
     };

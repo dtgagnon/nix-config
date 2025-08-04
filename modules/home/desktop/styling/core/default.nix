@@ -24,7 +24,7 @@ in
     fonts = {
       sizes = {
         applications = mkOpt types.int 12 "The font size for applications.";
-        terminal = mkOpt types.int 15 "The font size for terminal.";
+        terminal = mkOpt types.int 12 "The font size for terminal.";
         desktop = mkOpt types.int 10 "The font size for desktop.";
         popups = mkOpt types.int 10 "The font size for popups.";
       };

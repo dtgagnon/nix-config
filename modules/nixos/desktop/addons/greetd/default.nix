@@ -38,7 +38,6 @@ in
           user = "dtgagnon";
         };
       };
-      vt = 2;
     };
 
     boot.kernelParams = [ "console=tty1" ];

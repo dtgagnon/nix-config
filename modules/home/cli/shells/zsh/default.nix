@@ -23,7 +23,7 @@ in
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
 
-      dotDir = ".config/zsh/";
+      dotDir = "${config.xdg.configHome}/zsh";
       history = {
         size = 10000;
         path = "$HOME/.config/zsh/.zsh_history";

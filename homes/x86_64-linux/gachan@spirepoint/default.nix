@@ -19,13 +19,7 @@ in
 
     apps = {
       office.okular-pdf = enabled;
-      terminals = {
-        ghostty = {
-          enable = true;
-          dark-theme = "Everforest Dark - Hard";
-          light-theme = "Everforest Dark - Hard";
-        };
-      };
+      terminals.ghostty = enabled;
       zen = enabled;
     };
 
