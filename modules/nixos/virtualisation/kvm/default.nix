@@ -58,7 +58,7 @@ in
           enable = true;
           onBoot = "ignore";
           onShutdown = "shutdown";
-          # allowedBridges = [ "virbr0" "br0" ];
+          allowedBridges = [ "virbr0" "br0" ];
           extraConfig = ''
             user = "${user.name}"
             group = "qemu-libvirtd"
@@ -100,6 +100,8 @@ in
           ];
         };
       };
+
+      networking.firewall.trustedInterfaces = [ "virbr0" ];
 
       environment.systemPackages = with pkgs; [
         virt-manager

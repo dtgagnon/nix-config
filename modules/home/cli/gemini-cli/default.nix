@@ -29,8 +29,8 @@ in
             "args": [ "run", "github:utensils/mcp-nixos", "--" ]
           },
           "playwrite": {
-            "command": "npx",
-            "args": [ "-y", "@executeautomation/playwright-mcp-server" ]
+            "command": "nix",
+            "args": [ "run", "nixpkgs#playwright-mcp" ]
           },
           "sequential-thinking": {
             "command": "npx",
