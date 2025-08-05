@@ -1,10 +1,13 @@
-modules/home/tools/ssh
-.aider*
+modules/home/*/ssh
 .direnv
+.pre-commit-config.yaml
 tmp
 result
-.pre-copmmit-config.yaml
+
+#ai tooling
+AGENTS.md
 CLAUDE.md
 GEMINI.md
-AGENTS.md
+.aider*
+.claude
 .windsurf
