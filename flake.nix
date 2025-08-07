@@ -165,7 +165,6 @@
 
     nix-topology.url = "github:oddlama/nix-topology";
 
-
     ## virtualisation
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
 
@@ -176,7 +175,8 @@
     nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications+services
-    ghostty.url = "github:ghostty-org/ghostty/7f9bb3c0e54f585e11259bc0c9064813d061929c"; #TODO: re-pin the main flake once they fix the esc:caps key issue
+    ghostty.url = "github:ghostty-org/ghostty";
+    ghostty.inputs.nixpkgs.follows = "nixpkgs";
 
     neovim.url = "github:dtgagnon/nixvim/main";
 
