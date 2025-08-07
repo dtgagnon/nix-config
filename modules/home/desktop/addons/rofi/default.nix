@@ -1,8 +1,6 @@
 { lib
 , pkgs
 , config
-, inputs
-, system
 , namespace
 , ...
 }:
@@ -12,6 +10,7 @@ let
   inherit (config.lib.stylix) colors;
   inherit (config.lib.formats.rasi) mkLiteral;
   cfg = config.${namespace}.desktop.addons.rofi;
+  hyprCfg = config.${namespace}.desktop.hyprland;
 in
 {
   options.${namespace}.desktop.addons.rofi = {
@@ -23,7 +22,7 @@ in
       enable = true;
       package = pkgs.rofi-wayland;
       plugins = [ pkgs.rofi-calc ];
-      terminal = "${inputs.ghostty.packages.${system}.default}/bin/ghostty";
+      terminal = "${hyprCfg.terminal.package}/bin/${hyprCfg.terminal.name}";
       extraConfig = {
         modi = "drun,window,filebrowser";
         disable-history = false;

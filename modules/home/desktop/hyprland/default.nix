@@ -19,7 +19,7 @@ in
     enable = mkBoolOpt false "Whether or not to use the hyprland desktop manager";
     terminal = {
       name = mkOpt types.str "ghostty" "The terminal for hyprland to use";
-      package = mkOpt types.package inputs.ghostty.packages.${system}.${cfg.terminal.name} "The terminal for hyprland to use";
+      package = mkOpt types.package pkgs.${cfg.terminal.name} "The terminal for hyprland to use";
     };
     monitors = mkOpt (types.listOf types.str) [ ] "Configure any additional monitors";
 
