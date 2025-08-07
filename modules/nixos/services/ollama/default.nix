@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
@@ -15,16 +16,18 @@ in
   config = mkIf cfg.enable {
     services.ollama = {
       enable = true;
+      package = pkgs.ollama.override { acceleration = "cuda"; };
       acceleration = "cuda";
       host = "127.0.0.1";
       port = 11434;
       home = "/var/lib/ollama";
-      # models = "/var/lib/ollama/models";
-      # loadModels = [
-      #   "devstral:24b"
-      #   "gemma3:27b"
-      #   "qwen3:14b"
-      # ]; # a list of models to auto-download with start of the service
+      models = "/var/lib/ollama/models";
+      loadModels = [
+        "devstral:24b"
+        "gemma3:27b"
+        "gpt-oss:20b"
+        "qwen3:14b"
+      ];
       environmentVariables = { };
     };
   };

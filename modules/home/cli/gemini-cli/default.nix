@@ -26,6 +26,7 @@ in
         "theme": "Default",
         "selectedAuthType": "oauth-personal",
         "preferredEditor": "nvim",
+        "vimMode": "true",
         "contextFileName": [ "GEMINI.md", "CLAUDE.md", "AGENTS.md" ],
         "checkpointing": { "enabled": true },
 
