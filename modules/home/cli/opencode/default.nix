@@ -21,7 +21,7 @@ in
         "$schema": "https://opencode.ai/config.json",
 
         "theme": "catppuccin",
-        "model": "ollama/qwen3:14b-32k",
+        "model": "ollama/gpt-oss:20b",
 
         "mcp": {
           "nixos": {
@@ -83,6 +83,11 @@ in
                 "name": "devstral:24b-16k",
                 "tools": true,
                 "reasoning": false
+              },
+              "gpt-oss:20b": {
+                "name": "gpt-oss:20b",
+                "tools": true,
+                "reasoning": true
               },
               "qwen3:14b-32k": {
                 "name": "qwen3:14b-32k",
