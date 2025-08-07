@@ -1,9 +1,8 @@
 #NOTE: When Ghostty is configured via the programs.ghostty home-manager module and with Stylix enabled"" both theme, font-name, font-emoji, font-size, and opacity settings will already be added to the config file for ghostty from the stylix global configuration options
 
 { lib
+, pkgs
 , config
-, inputs
-, system
 , namespace
 , ...
 }:
@@ -20,12 +19,12 @@ in
   config = mkIf cfg.enable {
     programs.ghostty = {
       enable = true;
-      package = inputs.ghostty.packages.${system}.default;
-      clearDefaultKeybinds = true;
+      # package = pkgs.ghostty;
+      # clearDefaultKeybinds = true;
       settings = {
         keybind = [
           # Close Surface
-          "ctrl+w=close_surface"
+          "ctrl+alt+w=close_surface"
 
           # Split Management
           "ctrl+shift+e=new_split:down"
