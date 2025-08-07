@@ -25,7 +25,7 @@ in
       obsidian = enabled;
       office.okular-pdf = enabled;
       # super-productivity = enabled;
-      terminals.ghostty = enabled;
+      terminals = { ghostty = enabled; warp = enabled; };
       todoist = enabled;
       vscode = enabled;
       windsurf = enabled;
@@ -81,7 +81,6 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          # theme = "everforest";
           wallpaper = pkgs.spirenix.wallpapers.wallpapers.hazy-purple-orange-sunset-palmtrees;
         };
         stylix = {
