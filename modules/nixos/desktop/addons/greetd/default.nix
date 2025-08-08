@@ -20,7 +20,7 @@ in
       settings = {
         default_session = {
           command = concatStringsSep " " [
-            "${getExe pkgs.greetd.tuigreet}"
+            "${getExe pkgs.tuigreet}"
             "--remember"
             "--remember-user-session"
             "--user-menu"
