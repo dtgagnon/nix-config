@@ -1,26 +1,32 @@
 #NOTE: When Ghostty is configured via the programs.ghostty home-manager module and with Stylix enabled"" both theme, font-name, font-emoji, font-size, and opacity settings will already be added to the config file for ghostty from the stylix global configuration options
 
 { lib
-, pkgs
 , config
 , namespace
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkOption types;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.ghostty;
 in
 {
   options.${namespace}.apps.terminals.ghostty = {
     enable = mkBoolOpt true "Enable ghostty terminal emulator";
+    systemd = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to enable systemd-related configuration for Ghostty.";
+      example = true;
+    };
   };
 
   config = mkIf cfg.enable {
+    spirenix.desktop.hyprland.extraExec = mkIf cfg.systemd [ "systemctl --user start app-com.mitchellh.ghostty.service" ];
     programs.ghostty = {
       enable = true;
       # package = pkgs.ghostty;
-      # clearDefaultKeybinds = true;
+      clearDefaultKeybinds = true;
       settings = {
         keybind = [
           # Close Surface
@@ -93,11 +99,12 @@ in
           "shift+page_up=scroll_page_up"
           "shift+page_down=scroll_page_down"
         ];
+        quit-after-last-window-closed = false;
         window-padding-x = 10;
         window-padding-y = 10;
         window-decoration = false;
       };
-      # themes = { }; # Cu:tom created themes to add to $HOME/.config/ghostty/themes
+      # themes = { }; # Custom created themes to add to $HOME/.config/ghostty/themes
     };
   };
 }

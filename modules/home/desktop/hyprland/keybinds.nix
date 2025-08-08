@@ -12,7 +12,7 @@ in
 
       # Defaults
       "$mod" = "${cfg.hyprModifier}";
-      "$terminal" = "uwsm app -- ghostty +new-window";
+      "$terminal" = "'ghostty +new-window'";
       "$menu" = "rofi -show drun";
       "$lock" = "hyprlock";
 
