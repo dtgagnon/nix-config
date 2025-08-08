@@ -40,7 +40,21 @@ in
       };
     };
 
-    boot.kernelParams = [ "console=tty1" ];
+    #NOTE Prevent log rendering from overlaying with tuigreet.
+    # https://www.reddit.com/r/NixOS/comments/u0cdpi/tuigreet_with_xmonad_how/
+    systemd.services.greetd.serviceConfig = {
+      Type = "idle";
+      StandardInput = "tty";
+      StandardOutput = "tty";
+      StandardError = "journal";
+
+      #NOTE The below prevent bootlogs from rendering on screen.
+      TTYReset = true;
+      TTYVHangup = true;
+      TTYVTDisallocate = true;
+    };
+
+    # boot.kernelParams = [ "console=tty1" ];
 
     # Create a symlink for tuigreet sessions
     environment.etc."greetd/environments".text = ''
