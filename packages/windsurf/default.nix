@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , inputs
 , stdenv
 , callPackage

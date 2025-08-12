@@ -12,13 +12,13 @@ in
 
       # Defaults
       "$mod" = "${cfg.hyprModifier}";
-      "$terminal" = "'ghostty +new-window'";
+      "$terminal" = "ghostty +new-window";
       "$menu" = "rofi -show drun";
       "$lock" = "hyprlock";
 
       bind = [
         # Open
-        "$mod, Return, exec, [float; center; size 1200 800] $terminal"
+        "$mod, Return, exec, $terminal"
         "$mod_ALT, Return, exec, $terminal"
         "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"

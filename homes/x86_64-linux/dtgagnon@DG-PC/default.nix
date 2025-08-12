@@ -21,6 +21,7 @@ in
       discord = enabled;
       element = enabled;
       inkscape = enabled;
+      kiro = enabled;
       looking-glass-client = enabled;
       obsidian = enabled;
       office.okular-pdf = enabled;

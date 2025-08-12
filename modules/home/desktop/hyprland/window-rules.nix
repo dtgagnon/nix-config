@@ -43,6 +43,9 @@ in
         "size 1600 900,class:^(discord)$"
 
         # Ghostty - terminal
+        "float, class:^(com.mitchellh.ghostty)$"
+        "center, class:^(com.mitchellh.ghostty)$"
+        "size 1200 800, class:^(com.mitchellh.ghostty)$"
         "bordersize 0, class:^(com.mitchellh.ghostty)$"
         "opacity 0.9 override 0.8 override, class:^(com.mitchellh.ghostty)$"
 
