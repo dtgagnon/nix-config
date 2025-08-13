@@ -16,7 +16,7 @@ let
     "aarch64-darwin" = "sha256-QfsPK6iPuXXKpT3z1SUDdvCx3uT+U2IZy4msH8UiFg8=";
     "aarch64-linux" = "sha256-/BpbECRBxLOz+YEQrEHNrtHSr/BaLOrAkJXH0TBHjFE=";
     "x86_64-darwin" = "sha256-KA3jaU7BD7lueKBuM9cTJuEby6AC0E03JYZMKRxceqY=";
-    "x86_64-linux" = "sha256-oZa8O0iK5uSJjl6fOdnjqjIuG//ihrj4six3FUdfob8=";
+    "x86_64-linux" = "sha256-ql4qcMtuaRwSVVma3OeKkc9tXhe21PWMMko3W3JgpB0=";
   };
   bun-target = {
     "aarch64-darwin" = "bun-darwin-arm64";
@@ -27,12 +27,12 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "opencode";
-  version = "0.3.130";
+  version = "0.4.40";
   src = fetchFromGitHub {
     owner = "sst";
     repo = "opencode";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-/FWvHekyAM9U5WLptAr2YbcMOZa/twjucSUnlqfu1Y4=";
+    hash = "sha256-O/tLfLhrSKn4uNaiDge9B6PXgwE+pDTJNp5kzSv5jQA=";
   };
 
   tui = buildGoModule {
@@ -41,7 +41,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
     modRoot = "packages/tui";
 
-    vendorHash = "sha256-qsOL6gsZwEm7YcYO/zoyJAnVmciCjPYqPavV77psybU=";
+    vendorHash = "sha256-/BI9vBMSJjt0SHczH8LkxxWC2hiPPKQwfRhmf2/8+TU=";
 
     subPackages = [ "cmd/opencode" ];
 
@@ -118,8 +118,16 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   patches = [
     # Patch `packages/opencode/src/provider/models-macro.ts` to get contents of
     # `api.json` from the file bundled with `bun build`.
-    ./local-models-dev.patch
+    # ./local-models-dev.patch
   ];
+
+  postPatch = ''
+    substituteInPlace packages/opencode/src/provider/models.ts \
+      --replace "https://models.dev/api.json" "file://${models-dev}/dist/_api.json"
+
+    substituteInPlace packages/opencode/src/provider/models-macro.ts \
+      --replace "https://models.dev/api.json" "file://${models-dev}/dist/_api.json"
+  '';
 
   configurePhase = ''
     runHook preConfigure

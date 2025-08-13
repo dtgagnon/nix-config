@@ -11,7 +11,7 @@ in
 {
   options.${namespace}.services.meilisearch = {
     enable = mkBoolOpt false "Enable hoarder, a bookmarks manager";
-    masterKeyEnvironmentFile = mkOpt (types.nullOr types.path) config.sops.secrets."meili-masterkey".path "Declare the master key file location";
+    masterKeyFile = mkOpt (types.nullOr types.path) config.sops.secrets."meili-masterkey".path "Declare the master key file location";
     addr = mkOpt types.str "127.0.0.1" "Declare the directory to store the service data";
     port = mkOpt types.port 7700 "Declare the directory to store the service data";
   };
@@ -21,7 +21,7 @@ in
       enable = true;
       listenAddress = cfg.addr;
       listenPort = cfg.port;
-      inherit (cfg) masterKeyEnvironmentFile;
+      inherit (cfg) masterKeyFile;
     };
 
     sops.secrets."meili-masterkey" = { };

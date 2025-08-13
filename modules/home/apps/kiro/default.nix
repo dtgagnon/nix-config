@@ -86,24 +86,24 @@ in
         "keyboard.dispatch": "keyCode",
       }
     '';
-  };
 
-  home.file = {
-    ".kiro/argv.json".text = ''
-      // This configuration file allows you to pass permanent command line arguments to VS Code.
-      {
-        // For compatibility with Hyprland, to tell it the keyring to use.
-        "password-store":"gnome-libsecret",
+    home.file = {
+      ".kiro/argv.json".text = ''
+        // This configuration file allows you to pass permanent command line arguments to VS Code.
+        {
+          // For compatibility with Hyprland, to tell it the keyring to use.
+          "password-store":"gnome-libsecret",
 
-        // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
-        // "disable-hardware-acceleration": true,
+          // Use software rendering instead of hardware accelerated rendering. This can help in cases where you see rendering issues in VS Code.
+          // "disable-hardware-acceleration": true,
 
-        // Allows to disable crash reporting. Should restart the app if the value is changed.
-        "enable-crash-reporter": false,
+          // Allows to disable crash reporting. Should restart the app if the value is changed.
+          "enable-crash-reporter": false,
 
-        // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
-        "crash-reporter-id": "4c9b8afe-4e3d-40db-a77d-3879fc1923bd"
-      }
-    '';
+          // Unique id used for correlating crash reports sent from this instance. Do not edit this value.
+          "crash-reporter-id": "4c9b8afe-4e3d-40db-a77d-3879fc1923bd"
+        }
+      '';
+    };
   };
 }
