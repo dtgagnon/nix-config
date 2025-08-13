@@ -1,8 +1,7 @@
 {
   description = "SPIRE FLAKE";
 
-  outputs =
-    inputs:
+  outputs = inputs:
     let
       lib = inputs.snowfall-lib.mkLib {
         inherit inputs;
@@ -55,6 +54,13 @@
           preservation.nixosModules.preservation
           sops-nix.nixosModules.sops
           stylix.nixosModules.stylix
+        ];
+
+        systems.modules.darwin = with inputs; [
+          home-manager.darwinModules.home-manager
+          nix-index-database.darwinModules.nix-index
+          sops-nix.darwinModules.sops
+          stylix.darwinModules.stylix
         ];
 
         systems.hosts."DG-PC".modules = with inputs; [
@@ -136,6 +142,9 @@
 
     nixos-wsl.url = "github:nix-community/nixos-wsl";
     nixos-wsl.inputs.nixpkgs.follows = "stablepkgs";
+
+    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     ## libraries
     nix-rice.url = "github:bertof/nix-rice";
