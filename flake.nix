@@ -143,7 +143,7 @@
     nixos-wsl.url = "github:nix-community/nixos-wsl";
     nixos-wsl.inputs.nixpkgs.follows = "stablepkgs";
 
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     ## libraries
