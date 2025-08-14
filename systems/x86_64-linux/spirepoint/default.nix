@@ -41,6 +41,7 @@ in
         enable = true;
         targetHost = "spirepoint";
       };
+      vpn.tailscaleCompat = true;
     };
 
     system = {

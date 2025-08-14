@@ -1932,6 +1932,7 @@
       },
       "original": {
         "owner": "nix-darwin",
+        "ref": "master",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -1984,11 +1985,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1755058158,
-        "narHash": "sha256-3aN4BlQ5yCLt3jbNWgM/90rWQw//m9Iv2/vMlsuMYd4=",
+        "lastModified": 1755138817,
+        "narHash": "sha256-/WQ8pIitsQW6OXf81cyeuQCDIy8LUhuw4MiBYIdvnWA=",
         "ref": "refs/heads/main",
-        "rev": "73b9c99cb8607c65233a82b9c7cd00b04fd870b5",
-        "revCount": 72,
+        "rev": "8db895b8ff4158af8c03180850d9ddbb644b9d04",
+        "revCount": 73,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
