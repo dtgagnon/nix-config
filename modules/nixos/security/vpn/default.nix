@@ -37,7 +37,7 @@ in
         content = ''
           [Interface]
           Address = 10.2.0.2/32
-          PrivateKeyFile = ${config.sops.secrets."pvpn/priKey".path}
+          PrivateKeyFile = "${config.sops.secrets."pvpn/priKey".path}"
           Table = 51820
           PostUp = ip rule add priority 100 to 100.64.0.0/10 lookup main
           PostUp = ip -6 rule add priority 100 to fd7a:115c:a1e0::/48 lookup main 2>/dev/null || true
