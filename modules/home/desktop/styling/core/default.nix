@@ -52,11 +52,12 @@ in
         name = mkOpt types.str "adw-gtk3-dark" "The name of the GTK theme.";
       };
       iconTheme = {
-        package = mkOpt (types.package)
-          (pkgs.catppuccin-papirus-folders.override {
-            flavor = "mocha";
-            accent = "lavender";
-          }) "The icon theme package to use.";
+        # package = mkOpt (types.package)
+        #   (pkgs.catppuccin-papirus-folders.override {
+        #     flavor = "mocha";
+        #     accent = "lavender";
+        #   }) "The icon theme package to use.";
+        package = mkOpt (types.package) pkgs.catppuccin-papirus-folders "The icon theme package to use.";
         name = mkOpt types.str "Papirus-Dark" "The name of the icon theme.";
       };
     };
