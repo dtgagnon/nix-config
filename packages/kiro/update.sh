@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Script configuration
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-PACKAGE_NIX="${SCRIPT_DIR}/package.nix"
+PACKAGE_NIX="${SCRIPT_DIR}/default.nix"
 SOURCES_JSON="${SCRIPT_DIR}/sources.json"
 
 # Platform configuration
