@@ -39,8 +39,8 @@ in
           Address = 10.2.0.2/32
           PrivateKey = ${config.sops.placeholder."pvpn/priKey"}
           Table = 51820
-          PostUp = ip rule add priority 100 to 100.64.0.0/10 lookup main
-          PostUp = ip -6 rule add priority 100 to fd7a:115c:a1e0::/48 lookup main 2>/dev/null || true
+          PostUp = ip rule add priority 100 to 100.64.0.0/10 lookup 52
+          PostUp = ip -6 rule add priority 100 to fd7a:115c:a1e0::/48 lookup 52 2>/dev/null || true
           PostUp = ip rule add priority 101 to 192.200.0.0/24 lookup main
           PostUp = ip -6 rule add priority 101 to 2606:b740:49::/48 lookup main 2>/dev/null || true
           PostUp = ip rule add priority 120 lookup 51820
@@ -103,8 +103,8 @@ in
           add_rule() { ip $1 rule show | grep -q "$3" || ip $1 rule add $2; }
 
           # Exceptions (mirror postUp so they exist even if Proton is down)
-          add_rule "" "priority 100 to 100.64.0.0/10 lookup main" "to 100.64.0.0/10"
-          add_rule "-6" "priority 100 to fd7a:115c:a1e0::/48 lookup main" "fd7a:115c:a1e0::/48" || true
+          add_rule "" "priority 100 to 100.64.0.0/10 lookup 52" "to 100.64.0.0/10"
+          add_rule "-6" "priority 100 to fd7a:115c:a1e0::/48 lookup 52" "fd7a:115c:a1e0::/48" || true
           add_rule "" "priority 101 to 192.200.0.0/24 lookup main" "to 192.200.0.0/24"
           add_rule "-6" "priority 101 to 2606:b740:49::/48 lookup main" "2606:b740:49::/48" || true
 
