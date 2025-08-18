@@ -140,26 +140,26 @@ in
         temperature = {
           "hwmon-path" = "/sys/class/hwmon/hwmon5/temp1_input";
           interval = 5;
-          format = "{temperatureC}°";
+          format = "{temperatureC}° 󰔏";
           tooltip = false;
           critical-threshold = 80;
-          format-critical = "{temperatureC}° ";
+          format-critical = "{temperatureC}° 󰸁";
         };
 
         cpu = {
           interval = 5;
-          format = "{usage}% ";
+          format = "{usage}% 󰻠";
           tooltip = true;
         };
 
         memory = {
           interval = 5;
-          format = "{used}G ";
+          format = "{used}G 󰍛";
           tooltip = false;
         };
 
         backlight = {
-          format = " {percent}%";
+          format = "󰖨 {percent}%";
         };
 
         pulseaudio = {

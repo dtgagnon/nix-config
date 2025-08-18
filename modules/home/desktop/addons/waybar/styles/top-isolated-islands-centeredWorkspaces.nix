@@ -57,41 +57,13 @@ in
         font-size: 18px;
       }
 
-      #cpu::after {
-        content: "󰻠";
-        font-family: ${core.fonts.monospace.name};
-        font-size: 20px;
-        padding-left: 4px;
-      }
-
-      #memory::after {
-        content: "󰍛";
-        font-family: ${core.fonts.monospace.name};
-        font-size: 20px;
-        padding-left: 4px;
-      }
-
-      #temperature::after {
-        content: "󰔏";
-        font-family: ${core.fonts.monospace.name};
-        font-size: 20px;
-        padding-left: 4px;
-      }
-
       #temperature.critical {
         color: #FF2800;
       }
 
-      #temperature.critical::after {
-        content: "󰸁";
-        color: #FF2800;
-      }
-
-      #backlight::before {
-        content: "󰖨";
-        font-family: ${core.fonts.monospace.name};
-        font-size: 20px;
-        padding-right: 4px;
+      #backlight {
+        font-family: ${core.fonts.sansSerif.name};
+        font-size: 18px;
       }
 
       #pulseaudio {
@@ -324,26 +296,17 @@ in
         font-size: 20px;
       }
 
-      #custom-notification.notification::after {
-        content: " 󱕫";
+      #custom-notification.notification {
         color: #${colors.base08};
-        vertical-align: super;
-        font-size: 14px;
       }
 
-      #custom-notification.dnd-notification::after {
-        content: " ";
+      #custom-notification.dnd-notification {
         color: #${colors.base08};
-        vertical-align: super;
-        font-size: 14px;
       }
 
-      #custom-notification.inhibited-notification::after,
-      #custom-notification.dnd-inhibited-notification::after {
-        content: " ";
+      #custom-notification.inhibited-notification,
+      #custom-notification.dnd-inhibited-notification {
         color: #${colors.base08};
-        vertical-align: super;
-        font-size: 14px;
       }
     '';
   };
