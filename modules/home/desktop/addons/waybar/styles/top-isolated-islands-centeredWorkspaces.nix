@@ -18,7 +18,7 @@ in
 
       * {
         font-family: ${core.fonts.monospace.name};
-        font-size: 20px;
+        font-size: 18px;
         min-height: 0;
         border: none;
         border-radius: 0;
@@ -51,8 +51,58 @@ in
         font-size: 16px;
       }
 
+      /* Hardware module text styling */
+      #cpu, #memory, #temperature {
+        font-family: ${core.fonts.sansSerif.name};
+        font-size: 18px;
+      }
+
+      #cpu::after {
+        content: "󰻠";
+        font-family: ${core.fonts.monospace.name};
+        font-size: 20px;
+        padding-left: 4px;
+      }
+
+      #memory::after {
+        content: "󰍛";
+        font-family: ${core.fonts.monospace.name};
+        font-size: 20px;
+        padding-left: 4px;
+      }
+
+      #temperature::after {
+        content: "󰔏";
+        font-family: ${core.fonts.monospace.name};
+        font-size: 20px;
+        padding-left: 4px;
+      }
+
+      #temperature.critical {
+        color: #FF2800;
+      }
+
+      #temperature.critical::after {
+        content: "󰸁";
+        color: #FF2800;
+      }
+
+      #backlight::before {
+        content: "󰖨";
+        font-family: ${core.fonts.monospace.name};
+        font-size: 20px;
+        padding-right: 4px;
+      }
+
       #pulseaudio {
         padding: 0 16px 0 0;
+        font-family: ${core.fonts.sansSerif.name};
+        font-size: 18px;
+      }
+
+      /* Pulseaudio icons */
+      #pulseaudio.muted {
+        opacity: 0.5;
       }
 
       #hardware {
@@ -125,6 +175,8 @@ in
         padding: 0px 8px;
         margin: 0;
         border-radius: 4px;
+        font-size: 24px;
+        font-family: ${core.fonts.monospace.name};
       }
 
       #workspaces.odds button:hover {
@@ -166,6 +218,8 @@ in
         padding: 0px 8px;
         margin: 0;
         border-radius: 4px;
+        font-size: 24px;
+        font-family: ${core.fonts.monospace.name};
       }
 
       #workspaces.evens button:hover {
@@ -236,6 +290,60 @@ in
         background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
         border: 2px solid #${colors.base03};
         border-radius: 12px;
+      }
+
+      /* Custom module styling */
+      #custom-exit {
+        font-size: 20px;
+      }
+
+      #custom-startmenu {
+        font-size: 28px;
+      }
+
+      /* Battery state styling */
+      #battery {
+        font-family: ${core.fonts.sansSerif.name};
+        font-size: 18px;
+      }
+
+      #battery.warning {
+        color: #${colors.base0A};
+      }
+
+      #battery.critical {
+        color: #${colors.base08};
+      }
+
+      #battery.charging {
+        color: #${colors.base0B};
+      }
+
+      /* Notification states */
+      #custom-notification {
+        font-size: 20px;
+      }
+
+      #custom-notification.notification::after {
+        content: " 󱕫";
+        color: #${colors.base08};
+        vertical-align: super;
+        font-size: 14px;
+      }
+
+      #custom-notification.dnd-notification::after {
+        content: " ";
+        color: #${colors.base08};
+        vertical-align: super;
+        font-size: 14px;
+      }
+
+      #custom-notification.inhibited-notification::after,
+      #custom-notification.dnd-inhibited-notification::after {
+        content: " ";
+        color: #${colors.base08};
+        vertical-align: super;
+        font-size: 14px;
       }
     '';
   };
