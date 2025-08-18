@@ -23,7 +23,7 @@ in
 
     services.tailscale = {
       enable = true;
-      extraSetFlags = [ "--ssh" "--accept-routes" ];
+      extraSetFlags = [ "--ssh" ]; # only use "--accept-routes" when you want to access devices on a REMOTE physical LAN
       inherit (cfg) authKeyFile;
     };
   };

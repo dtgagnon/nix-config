@@ -8,7 +8,12 @@ let
   inherit (lib) mkIf mkMerge mkOption mkEnableOption types;
   cfg = config.${namespace}.security.vpn;
 
-  wgProtonConf = "wg-proton.conf";
+  digResult = pkgs.runCommand "proton-server-ip"
+    {
+      nativeBuildInputs = [ pkgs.dnsutils ];
+    } "dig 9.9.9.9 +short node-us-304.protonvpn.net A node-us-304.protonvpn.net AAAA";
+
+  protonServerIp = lib.strings.trim (builtins.head lib.strings.splitString "\n" (builtins.readFile digResult));
 in
 {
   options.${namespace}.security.vpn = {
@@ -25,48 +30,64 @@ in
     (mkIf (cfg.enable && cfg.provider == "proton-vpn") {
       environment.systemPackages = [
         pkgs.protonvpn-gui
-        pkgs.protonvpn-cli
       ];
     })
 
-    (mkIf (cfg.enable && cfg.tailscaleCompat) {
-      sops.templates.${wgProtonConf} = {
-        owner = "root";
-        group = "root";
-        mode = "0400";
-        content = ''
-          [Interface]
-          Address = 10.2.0.2/32
-          PrivateKey = ${config.sops.placeholder."pvpn/priKey"}
-          Table = 51820
-          PostUp = ip rule add priority 100 to 100.64.0.0/10 lookup 52
-          PostUp = ip -6 rule add priority 100 to fd7a:115c:a1e0::/48 lookup 52 2>/dev/null || true
-          PostUp = ip rule add priority 101 to 192.200.0.0/24 lookup main
-          PostUp = ip -6 rule add priority 101 to 2606:b740:49::/48 lookup main 2>/dev/null || true
-          PostUp = ip rule add priority 120 lookup 51820
-          PostDown = ip rule del priority 120 || true
-          PostDown = ip -6 rule del priority 120 || true
-          PostDown = ip rule del priority 101 || true
-          PostDown = ip -6 rule del priority 101 || true
-          PostDown = ip rule del priority 100 || true
-          PostDown = ip -6 rule del priority 100 || true
+    (mkIf (cfg.provider == "proton-vpn" && cfg.tailscaleCompat) {
 
-          [Peer]
-          PublicKey = ${config.sops.placeholder."pvpn/pubKey"}
-          Endpoint = ${config.sops.placeholder."pvpn/endpoint"}
-          AllowedIPs = 0.0.0.0/0, ::/0
-          PersistentKeepalive = 25
-        '';
+      systemd.network = {
+        enable = true;
+        networks = {
+          "10-wired" = {
+            matchConfig.Name = "enp3s0";
+            networkConfig.DHCP = "yes";
+            routes = [{
+              routeConfig = {
+                Designation = "${protonServerIp}/32";
+                Gateway = "192.168.50.1";
+              };
+            }];
+          };
+          "30-wg-proton" = {
+            matchConfig.Name = "wg-proton";
+            address = [ "10.2.0.2/32" "2a07:b944::2:2/128" ];
+            networkConfig = {
+              DNS = [ "10.2.0.1" "2a07:b944::2:1" ];
+              DefaultRouteOnDevice = true;
+              RouteTable = 52830;
+            };
+            routingPolicyRules = [
+              { ruleConfig = { To = "192.168.50.0/24"; Table = "main"; Priority = 32500; }; }
+              { ruleConfig = { Family = "inet6"; To = "fd33:62a6:8e4:b346::/64"; Table = "main"; Priority = 32500; }; }
+              { ruleConfig = { To = "192.168.51.0/24"; Table = "main"; Priority = 32510; }; }
+              { ruleConfig = { From = "0.0.0.0/0"; Table = "52830"; Priority = 32700; }; }
+              { ruleConfig = { Family = "inet6"; From = "::/0"; Table = "52830"; Priority = 32700; }; }
+            ];
+          };
+        };
+        netdevs = {
+          "30-wg-proton" = {
+            netdevConfig = { Name = "wg-proton"; Kind = "wireguard"; };
+            wireguardConfig = { PrivateKeyFile = config.sops.secrets."pvpn/priKey".path; };
+            wireguardPeers = [
+              {
+                wireguardPeerConfig = {
+                  PublicKey = builtins.readFile config.sops.secrets."pvpn/pubKey".path;
+                  AllowedIPs = [ "0.0.0.0/0" "::/0" ];
+                  Endpoint = "node-us-304.protonvpn.net:51820";
+                  PersistentKeepalive = 25;
+                };
+              }
+            ];
+          };
+        };
       };
 
-      sops.secrets = {
-        "pvpn/priKey" = { }; #path
-        "pvpn/pubKey" = { }; #string
-        "pvpn/endpoint" = { }; #string
+      networking = {
+        useDHCP = false; # let networkd handle DHCP
+        # resolvconf.enable = false;
       };
-
-      networking.wg-quick.interfaces."wg-proton".configFile = config.sops.templates.${wgProtonConf}.path;
-      services.tailscale.extraUpFlags = [ "--accept-dns=false" ];
+      # environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";
 
       # Handle DNS
       services.resolved = {
@@ -75,44 +96,30 @@ in
           DNS=9.9.9.9 149.112.112.112 2620:fe::fe 2620:fe::9
         '';
       };
-      networking.resolvconf.enable = false;
-      environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";
 
+      services.tailscale.extraUpFlags = [ "--accept-dns=false" ];
       systemd.services.tailscale-splitdns = {
         description = "Attach MagicDNS to tailscale0 (systemd-resolved split DNS)";
         after = [ "tailscaled.service" "network-online.target" ];
         wants = [ "network-online.target" ];
         wantedBy = [ "multi-user.target" ];
-        serviceConfig.Type = "oneshot";
+        partOf = [ "tailscaled.service" ];
+        path = [ pkgs.systemd ];
         script = ''
           # Route *.ts.net via MagicDNS on the tailnet
           resolvectl dns tailscale0 100.100.100.100
-          resolvectl domain tailscale0 "~ts.net"
+          resolvectl domain tailscale0 "~.aegean-interval.ts.net"
         '';
+        serviceConfig = {
+          Type = "oneshot";
+          Restart = "on-failure";
+        };
       };
 
-      # Kill switch
-      systemd.services.pbr-baseline = {
-        description = "Baseline policy rules (+unreachable) at boot";
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig.Type = "oneshot";
-        script = ''
-          # Ensure idempotency
-          add_rule() { ip $1 rule show | grep -q "$3" || ip $1 rule add $2; }
-
-          # Exceptions (mirror postUp so they exist even if Proton is down)
-          add_rule "" "priority 100 to 100.64.0.0/10 lookup 52" "to 100.64.0.0/10"
-          add_rule "-6" "priority 100 to fd7a:115c:a1e0::/48 lookup 52" "fd7a:115c:a1e0::/48" || true
-          add_rule "" "priority 101 to 192.200.0.0/24 lookup main" "to 192.200.0.0/24"
-          add_rule "-6" "priority 101 to 2606:b740:49::/48 lookup main" "2606:b740:49::/48" || true
-
-          # Hard stop AFTER Proton rule (priority 120) to avoid leaks:
-          # (wg-quick postUp adds priority 120 when Proton is up)
-          add_rule "" "priority 121 type unreachable" "priority 121"
-          add_rule "-6" "priority 121 type unreachable" "priority 121" || true
-        '';
+      sops.secrets = {
+        "pvpn/priKey" = { };
+        "pvpn/presharedKey" = { };
+        "pvpn/pubKey" = { };
       };
     })
   ];

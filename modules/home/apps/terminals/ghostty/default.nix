@@ -25,7 +25,6 @@ in
     spirenix.desktop.hyprland.extraExec = mkIf cfg.systemd [ "systemctl --user start app-com.mitchellh.ghostty.service" ];
     programs.ghostty = {
       enable = true;
-      # package = pkgs.ghostty;
       clearDefaultKeybinds = true;
       settings = {
         keybind = [

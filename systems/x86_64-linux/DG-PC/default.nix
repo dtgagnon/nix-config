@@ -38,6 +38,7 @@ in
 
     services = {
       davfs = enabled;
+      keyd.enable = true;
       n8n = enabled;
       ollama = enabled;
       openwebui = enabled;
@@ -71,6 +72,12 @@ in
   };
 
   sops.secrets = {
+    # Loc
+    city = { };
+    elevation = { };
+    latlong = { };
+
+    # APIs
     anthropic_api = { };
     deepseek_api = { };
     moonshot_api = { };

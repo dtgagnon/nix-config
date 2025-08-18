@@ -1,6 +1,5 @@
-{ options
+{ lib
 , config
-, lib
 , namespace
 , ...
 }:
@@ -20,7 +19,7 @@ in
     services.xserver = {
       xkb = {
         layout = "us";
-        options = "caps:swapescape";
+        # options = "caps:swapescape"; #TODO: Delete after switching to keyd
       };
     };
   };

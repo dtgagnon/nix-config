@@ -48,7 +48,7 @@ in
 
       #custom-music {
         font-family: ${core.fonts.sansSerif.name};
-        font-size: 20px;
+        font-size: 16px;
       }
 
       #pulseaudio {
@@ -221,6 +221,16 @@ in
       }
 
       #custom-notification {
+        margin: 0 2px;
+        padding: 0 8px;
+        background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};
+        border: 2px solid #${colors.base03};
+        border-radius: 12px;
+      }
+
+      #custom-weather {
+        font-family: ${core.fonts.sansSerif.name};
+        font-size: 20px;
         margin: 0 2px;
         padding: 0 8px;
         background: ${mkRGBA { hex = "#${colors.base00}"; alpha = 0.7; }};

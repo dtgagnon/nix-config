@@ -9,8 +9,6 @@ let
   cfg = config.${namespace}.desktop.addons.waybar;
 
   core = config.spirenix.desktop.styling.core;
-  spanWrapIcon = icon: ''<span face="${core.fonts.monospace.name}" size="20pt">${icon}</span>'';
-  spanWrapText = text: ''<span face="${core.fonts.sansSerif.name}" size="12pt" rise="5pt">${text}</span>'';
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
@@ -32,6 +30,7 @@ in
         modules-right = [
           "custom/notification"
           "tray"
+          "custom/weather"
           "clock#calendar"
           "clock#clock"
         ];
@@ -66,15 +65,15 @@ in
         ##### 󰲌   󰎞   󰺵  󰝦    #####
         "hyprland/workspaces#odds" = {
           persistent-workspaces = {
-            "1" = spanWrapIcon "";
+            "1" = "";
           };
           format = "{icon}";
           format-icons = {
-            "1" = spanWrapIcon "";
-            "3" = spanWrapIcon "";
-            "5" = spanWrapIcon "󰎞";
-            "default" = spanWrapIcon "󰝦";
-            "urgent" = spanWrapIcon "";
+            "1" = "";
+            "3" = "";
+            "5" = "󰎞";
+            "default" = "󰝦";
+            "urgent" = "";
           };
           on-click = "activate";
           ignore-workspaces = [
@@ -90,15 +89,15 @@ in
 
         "hyprland/workspaces#evens" = {
           persistent-workspaces = {
-            "2" = spanWrapIcon "";
+            "2" = "";
           };
           format = "{icon}";
           format-icons = {
-            "2" = spanWrapIcon "";
-            "4" = spanWrapIcon "";
-            "6" = spanWrapIcon "";
-            "default" = spanWrapIcon "󰝦";
-            "urgent" = spanWrapIcon "";
+            "2" = "";
+            "4" = "";
+            "6" = "";
+            "default" = "󰝦";
+            "urgent" = "";
           };
           on-click = "activate";
           ignore-workspaces = [
@@ -113,7 +112,7 @@ in
 
         ### v--- Individual module configuration ---v ###
         "clock#clock" = {
-          format = "{:%I:%M<small>%p</small>}";
+          format = "{:%I:%M %p}";
           interval = 15;
           tooltip = false;
         };
@@ -141,47 +140,47 @@ in
         temperature = {
           "hwmon-path" = "/sys/class/hwmon/hwmon5/temp1_input";
           interval = 5;
-          format = spanWrapText "{temperatureC}°";
+          format = "{temperatureC}°";
           tooltip = false;
           critical-threshold = 80;
-          format-critical = spanWrapText "{temperatureC}° " + spanWrapIcon "<span color='#FF2800'></span>";
+          format-critical = "{temperatureC}° ";
         };
 
         cpu = {
           interval = 5;
-          format = spanWrapText "{usage}<small>%</small> " + spanWrapIcon "";
+          format = "{usage}% ";
           tooltip = true;
         };
 
         memory = {
           interval = 5;
-          format = spanWrapText "{used}<small>G</small> " + spanWrapIcon "";
+          format = "{used}G ";
           tooltip = false;
         };
 
         backlight = {
-          format = spanWrapIcon "" + " {percent}%;";
+          format = " {percent}%";
         };
 
         pulseaudio = {
           scroll-step = 2;
-          format = spanWrapText "{volume}<small>%</small> " + "{icon}";
-          format-bluetooth = "{volume}<small>%</small> {icon}";
-          format-bluetooth-muted = spanWrapIcon "󰝟";
-          format-muted = spanWrapIcon "󰝟";
-          format-source = spanWrapIcon "";
-          format-source-muted = spanWrapIcon "";
+          format = "{volume}% {icon}";
+          format-bluetooth = "{volume}% {icon}";
+          format-bluetooth-muted = "󰝟";
+          format-muted = "󰝟";
+          format-source = "";
+          format-source-muted = "";
           format-icons = {
-            headphone = spanWrapIcon "";
-            hands-free = spanWrapIcon "󰋎";
-            headset = spanWrapIcon "󰋎";
-            phone = spanWrapIcon "";
-            portable = spanWrapIcon "";
-            car = spanWrapIcon "";
+            headphone = "";
+            hands-free = "󰋎";
+            headset = "󰋎";
+            phone = "";
+            portable = "";
+            car = "";
             default = [
-              (spanWrapIcon "")
-              (spanWrapIcon "")
-              (spanWrapIcon "")
+              ""
+              ""
+              ""
             ];
           };
           on-click = "sleep 0.1 && pavucontrol";
@@ -198,17 +197,17 @@ in
             critical = 15;
           };
           format = "{icon} {capacity}%";
-          format-charging = spanWrapIcon "󰂄" + " {capacity}%";
-          format-plugged = spanWrapIcon "󱘖" + " {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = "󱘖 {capacity}%";
           format-icons = [
-            (spanWrapIcon "󰁺")
-            (spanWrapIcon "󰁻")
-            (spanWrapIcon "󰁼")
-            (spanWrapIcon "󰁾")
-            (spanWrapIcon "󰁿")
-            (spanWrapIcon "󰂀")
-            (spanWrapIcon "󰂁")
-            (spanWrapIcon "󰂂")
+            "󰁺"
+            "󰁻"
+            "󰁼"
+            "󰁾"
+            "󰁿"
+            "󰂀"
+            "󰂁"
+            "󰂂"
           ];
           on-click = "";
           tooltip = false;
@@ -217,13 +216,13 @@ in
         #====================CUSTOM MODULES====================
         "custom/exit" = {
           tooltip = false;
-          format = spanWrapIcon "";
+          format = "";
           on-click = "sleep 0.1 && wlogout";
         };
 
         "custom/hyprbindings" = {
           tooltip = false;
-          format = spanWrapIcon "󱕴";
+          format = "�ｴ";
           on-click = "sleep 0.1 && hyprctl binds";
         };
 
@@ -241,14 +240,14 @@ in
           tooltip = false;
           format = "{icon}";
           "format-icons" = {
-            "notification" = spanWrapIcon "<span foreground='red'><sup>󱅫</sup></span>";
-            "none" = spanWrapIcon "";
-            "dnd-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
-            "dnd-none" = spanWrapIcon "󰂛";
-            "inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
-            "inhibited-none" = spanWrapIcon "";
-            "dnd-inhibited-notification" = spanWrapIcon "<span foreground='red'><sup></sup></span>";
-            "dnd-inhibited-none" = spanWrapIcon "";
+            "notification" = " 󱕫";
+            "none" = "";
+            "dnd-notification" = " ";
+            "dnd-none" = "󰂛";
+            "inhibited-notification" = " ";
+            "inhibited-none" = "";
+            "dnd-inhibited-notification" = " ";
+            "dnd-inhibited-none" = "";
           };
           return-type = "json";
           exec-if = "which makoctl";
@@ -271,8 +270,17 @@ in
 
         "custom/startmenu" = {
           tooltip = false;
-          format = "<span size='36pt'><tt></tt></span>";
+          format = "";
           on-click = "sleep 0.1 && if pgrep -x \"rofi\" > /dev/null; then killall rofi; else rofi -show drun; fi";
+        };
+
+        "custom/weather" = {
+          format = "{}";
+          tooltip = true;
+          interval = 600;
+          exec = "wttrbar --main-indicator 'temp_F' --date-format '%Y-%m-%d' --custom-indicator '{ICON} {temp_F}°'";
+          return-type = "json";
+          on-click = "sleep 0.1 && xdg-open 'https://wttr.in'";
         };
       }
     ];

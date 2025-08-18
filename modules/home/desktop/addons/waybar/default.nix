@@ -18,6 +18,7 @@ in
     presetLayout = mkOpt (types.nullOr types.str) "top-isolated-islands-centeredWorkspaces" "The waybar layout to use";
     presetStyle = mkOpt (types.nullOr types.str) "top-isolated-islands-centeredWorkspaces" "The waybar style to use";
     extraStyle = mkOpt types.str "" "Additional style to add to waybar";
+    weatherLocation = mkOpt types.str "Montreal" "Location for weather display in waybar";
   };
 
   config = mkIf cfg.enable {
@@ -29,5 +30,8 @@ in
       };
       inherit (cfg) settings;
     };
+    
+    # Add wttrbar for weather module support
+    home.packages = [ pkgs.wttrbar ];
   };
 }
