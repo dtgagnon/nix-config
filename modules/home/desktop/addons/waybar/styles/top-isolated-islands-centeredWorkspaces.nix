@@ -124,6 +124,8 @@ in
         );
         border-radius: 12px;
         border: 2px solid #${colors.base03};
+        font-family: ${core.fonts.monospace.name};
+        font-size: 34px;
       }
 
       #workspaces.odds {
@@ -147,7 +149,7 @@ in
         padding: 0px 8px;
         margin: 0;
         border-radius: 4px;
-        font-size: 24px;
+        font-size: 48px;
         font-family: ${core.fonts.monospace.name};
       }
 
@@ -190,7 +192,7 @@ in
         padding: 0px 8px;
         margin: 0;
         border-radius: 4px;
-        font-size: 24px;
+        font-size: 34px;
         font-family: ${core.fonts.monospace.name};
       }
 
@@ -267,10 +269,6 @@ in
       /* Custom module styling */
       #custom-exit {
         font-size: 20px;
-      }
-
-      #custom-startmenu {
-        font-size: 28px;
       }
 
       /* Battery state styling */

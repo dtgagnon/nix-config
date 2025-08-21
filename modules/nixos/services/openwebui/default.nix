@@ -14,6 +14,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    users.users.openwebui = {
+      isSystemUser = true;
+      group = "openwebui";
+    };
+
+    users.groups.openwebui = {};
+
     # Enable PostgreSQL service
     services.postgresql = {
       enable = true;
@@ -25,14 +32,12 @@ in
           ensureDBOwnership = true;
         }
       ];
-      # authentication = pkgs.lib.mkOverride 10 ''
-      #   # TYPE  DATABASE        USER            ADDRESS                 METHOD
-      #   local   all             postgres                                peer
-      #   local   all             all                                     peer
-      #   host    openwebui       openwebui       127.0.0.1/32            trust
-      #   host    all             all             127.0.0.1/32            md5
-      #   host    all             all             ::1/128                 md5
-      # '';
+      authentication = lib.mkForce ''
+        # TYPE  DATABASE        USER            ADDRESS                 METHOD
+        local   openwebui       openwebui                               peer
+        host    openwebui       openwebui       127.0.0.1/32            trust
+        host    openwebui       openwebui       ::1/128                 trust
+      '';
     };
 
     services.open-webui = {
@@ -49,6 +54,12 @@ in
         DATABASE_URL = "postgresql://openwebui@localhost/openwebui";
       };
       # environmentFile = ""; # Useful for passing secrets to the service
+    };
+
+    systemd.services.open-webui.serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = lib.mkForce "openwebui";
+      Group = lib.mkForce "openwebui";
     };
   };
 }

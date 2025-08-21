@@ -25,7 +25,7 @@ in
       };
 
       targets.nixvim = {
-        enable = false;
+        enable = true;
         plugin = pkgs.base16-nvim;
         transparentBackground.main = true;
         transparentBackground.signColumn = true;

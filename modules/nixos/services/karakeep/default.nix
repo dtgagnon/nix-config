@@ -8,6 +8,11 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.karakeep;
+
+  forBoth = "gpt-5-nano";
+  txt-model = "${forBoth}";
+  img-model = "${forBoth}";
+  embedding-model = "text-embedding-3-small";
 in
 {
   options.${namespace}.services.karakeep = {
@@ -143,9 +148,9 @@ in
 
             # ai config
             OPENAI_API_KEY=${config.sops.placeholder.openai-api-key}
-            INFERENCE_TEXT_MODEL=gpt-4o-mini
-            INFERENCE_IMAGE_MODEL=gpt-4o-mini
-            EMBEDDING_TEXT_MODEL=text-embedding-3-small
+            INFERENCE_TEXT_MODEL=${txt-model}
+            INFERENCE_IMAGE_MODEL=${img-model}
+            EMBEDDING_TEXT_MODEL=${embedding-model}
             INFERENCE_CONTEXT_LENGTH=2048
             INFERENCE_LANG=english
             INFERENCE_JOB_TIMEOUT_SEC=30
@@ -154,7 +159,7 @@ in
 
             # Headless browser config
             ${lib.optionalString cfg.enableHeadlessBrowser ''
-            BROWSER_WEB_URL=http://127.0.0.1:9222
+              BROWSER_WEB_URL=http://127.0.0.1:9222
             ''}
 
             # Crawler configs

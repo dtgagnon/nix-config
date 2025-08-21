@@ -62,18 +62,18 @@ in
           ];
         };
 
-        ##### 󰲌   󰎞   󰺵  󰝦    #####
+        ##### 󰲌     󰎞   󰺵  󰝦    #####
         "hyprland/workspaces#odds" = {
           persistent-workspaces = {
-            "1" = "";
+            "1" = "";
           };
           format = "{icon}";
           format-icons = {
-            "1" = "";
-            "3" = "";
+            "1" = "";
+            "3" = "";
             "5" = "󰎞";
             "default" = "󰝦";
-            "urgent" = "";
+            "urgent" = "";
           };
           on-click = "activate";
           ignore-workspaces = [
@@ -93,11 +93,11 @@ in
           };
           format = "{icon}";
           format-icons = {
-            "2" = "";
-            "4" = "";
-            "6" = "";
+            "2" = "";
+            "4" = "";
+            "6" = "";
             "default" = "󰝦";
-            "urgent" = "";
+            "urgent" = "";
           };
           on-click = "activate";
           ignore-workspaces = [
@@ -168,19 +168,19 @@ in
           format-bluetooth = "{volume}% {icon}";
           format-bluetooth-muted = "󰝟";
           format-muted = "󰝟";
-          format-source = "";
-          format-source-muted = "";
+          format-source = "";
+          format-source-muted = "";
           format-icons = {
-            headphone = "";
+            headphone = "";
             hands-free = "󰋎";
             headset = "󰋎";
-            phone = "";
-            portable = "";
-            car = "";
+            phone = "";
+            portable = "";
+            car = "";
             default = [
-              ""
-              ""
-              ""
+              ""
+              ""
+              ""
             ];
           };
           on-click = "sleep 0.1 && pavucontrol";
@@ -216,13 +216,13 @@ in
         #====================CUSTOM MODULES====================
         "custom/exit" = {
           tooltip = false;
-          format = "";
-          on-click = "sleep 0.1 && wlogout";
+          format = "";
+          on-click = "sleep 0.1 && wlogout --buttons-per-row 2 --column-spacing 20 --row-spacing 20";
         };
 
         "custom/hyprbindings" = {
           tooltip = false;
-          format = "�ｴ";
+          format = "󱕴";
           on-click = "sleep 0.1 && hyprctl binds";
         };
 
@@ -240,14 +240,14 @@ in
           tooltip = false;
           format = "{icon}";
           "format-icons" = {
-            "notification" = " 󱕫";
-            "none" = "";
-            "dnd-notification" = " ";
+            "notification" = "󱅫";
+            "none" = "";
+            "dnd-notification" = "󰂛";
             "dnd-none" = "󰂛";
-            "inhibited-notification" = " ";
-            "inhibited-none" = "";
-            "dnd-inhibited-notification" = " ";
-            "dnd-inhibited-none" = "";
+            "inhibited-notification" = "";
+            "inhibited-none" = "";
+            "dnd-inhibited-notification" = "";
+            "dnd-inhibited-none" = "";
           };
           return-type = "json";
           exec-if = "which makoctl";
@@ -270,7 +270,7 @@ in
 
         "custom/startmenu" = {
           tooltip = false;
-          format = "";
+          format = "";
           on-click = "sleep 0.1 && if pgrep -x \"rofi\" > /dev/null; then killall rofi; else rofi -show drun; fi";
         };
 

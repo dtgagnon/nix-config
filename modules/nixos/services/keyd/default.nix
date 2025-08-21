@@ -27,10 +27,11 @@ in
         ids = [ "*" ];
         settings = {
           main = {
-            esc = "capslock";
-            capslock = "overload(symbols, esc)";
+            capslock = null;
+            esc = "overload(symbols, esc)";
           };
           symbols = {
+            t = "`";
             h = "~";
           };
         };

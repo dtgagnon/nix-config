@@ -19,7 +19,6 @@ in
     services.xserver = {
       xkb = {
         layout = "us";
-        # options = "caps:swapescape"; #TODO: Delete after switching to keyd
       };
     };
   };

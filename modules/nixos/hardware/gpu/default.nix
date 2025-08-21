@@ -65,7 +65,7 @@ in
       deviceIds = mkOpt (types.listOf types.str) [ ] "The device IDs of the dGPU";
       busId = mkOpt (types.nullOr types.str) null "The bus ID of the dGPU";
     };
-    nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, production, beta)";
+    nvidiaChannel = mkOpt (types.enum [ "stable" "beta" "latest" ]) "stable" "Declare the nvidia driver release channel (stable, latest (production), beta)";
     nvidiaPrime = mkBoolOpt false "Whether to use nvidia's PRIME dGPU offload/sync feature";
     nvidiaOpen = mkBoolOpt false "Use nvidia open-sourced kernel modules (on RTX series GPUs and newer)";
   };

@@ -1,105 +1,35 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf mkEnableOption;
+  inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.wlogout;
-in {
+
+  iconsDir = "/home/${config.${namespace}.user.name}/.config/wlogout/icons";
+in
+{
   options.${namespace}.desktop.addons.wlogout = {
-    enable = mkBoolOpt false "Enable wlogout screen for managing sessions.";
+    enable = mkEnableOption "Enable wlogout screen for managing sessions.";
   };
 
   config = mkIf cfg.enable {
     programs.wlogout = {
       enable = true;
-      style = ''
-        *{
-          font-family: JetbrainsMono Nerd Font;
-          font-style: italic;
-          font-size: 20px;
-        }
-        
-        window {
-            color: #d3c6aa; /* text */
-            background-color: rgba(39, 46, 51, 0.5);
-        
-        } 
-        
-        button {
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 20%;
-            background-color: transparent;
-            animation: gradient_f 20s ease-in infinite;
-            transition: all 0.3s ease-in;
-            box-shadow: 0 0 10px 2px transparent;
-            border-radius: 36px;
-            margin: 10px;
-        }
-        
-        
-        button:focus {
-            box-shadow: none;
-            outline-style: none;
-            background-size : 20%;
-        }
-        
-        button:hover {
-            background-size: 50%;
-            outline-style: none;
-            box-shadow: 0 0 10px 3px rgba(0,0,0,.4);
-            background-color: #83c092;
-            color: transparent;
-            transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.5s ease-in;
-        }
-        
-        #shutdown {
-            background-image: image(url("./icons/power.png"));
-        }
-        #shutdown:hover {
-          background-image: image(url("./icons/power-hover.png"));
-        }
-        
-        #logout {
-            background-image: image(url("./icons/logout.png"));
-        
-        }
-        #logout:hover {
-          background-image: image(url("./icons/logout-hover.png"));
-        }
-        
-        #reboot {
-            background-image: image(url("./icons/restart.png"));
-        }
-        #reboot:hover {
-          background-image: image(url("./icons/restart-hover.png"));
-        }
-        
-        #lock {
-            background-image: image(url("./icons/lock.png"));
-        }
-        #lock:hover {
-          background-image: image(url("./icons/lock-hover.png"));
-        }
-        
-        #sleep {
-            background-image: image(url("./icons/hibernate.png"));
-        }
-        #sleep:hover {
-          background-image: image(url("./icons/hibernate-hover.png"));
-        }
-      '';
       layout = [
         {
           label = "shutdown";
           action = "systemctl poweroff";
           text = "Shutdown";
           keybind = "s";
+        }
+        {
+          label = "sleep";
+          action = "loginctl lock-session && systemctl suspend";
+          text = "Sleep";
+          keybind = "h";
         }
         {
           label = "reboot";
@@ -113,19 +43,65 @@ in {
           text = "Logout";
           keybind = "e";
         }
-        {
-          label = "sleep";
-          action = "loginctl lock-session && systemctl suspend";
-          text = "Sleep";
-          keybind = "h";
-        }
-        {
-          label = "lock";
-          action = "loginctl lock-session";
-          text = "Lock";
-          keybind = "l";
-        }
       ];
+      style = ''
+        *{
+          background-image: none;
+          box-shadow: none;
+          text-shadow: none;
+          transition 20ms;
+
+        }
+
+        window {
+          font-family: JetbrainsMono Nerd Font;
+          font-style: italic;
+          font-size: 20px;
+          color: #${colors.base05};
+          background-color: #${colors.base00}80;
+        }
+
+        button {
+          color: #${colors.base05};
+          font-size: 20px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 25%;
+          background-color: #${colors.base01};
+          border-style: solid;
+          border-radius: 20px;
+          border: 2px solid #${colors.base03};
+          animation: gradient_f 20s ease-in infinite;
+          transition: all 0.3s ease-in-out;
+          margin: 10px;
+        }
+
+        button:focus, button:active {
+          background-color: #${colors.base02};
+          border: 2px solid #${colors.base08};
+          color: #${colors.base04}
+        }
+
+        button:hover {
+          background-color: #${colors.base02};
+          border: 2px solid #${colors.base0D};
+          color: #${colors.base04};
+        }
+
+        #shutdown {
+          background-image: image(url("${iconsDir}/shutdown.png"));
+        }
+        #reboot {
+          background-image: image(url("./icons/reboot.png"));
+        }
+        #logout {
+          background-image: image(url("${iconsDir}/logout.png"));
+        }
+        #sleep {
+          background-image: image(url("./icons/hibernate.png"));
+        }
+      '';
+
     };
 
     xdg.configFile."wlogout/icons" = {

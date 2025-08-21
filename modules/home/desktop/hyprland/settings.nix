@@ -84,7 +84,7 @@ in
         kb_layout = "us";
         repeat_delay = 200;
         repeat_rate = 100;
-        kb_options = "caps:swapescape";
+        # kb_options = "caps:swapescape";
         # mouse
         accel_profile = "flat";
         follow_mouse = 1;

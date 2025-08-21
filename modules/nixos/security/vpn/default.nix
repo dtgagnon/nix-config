@@ -7,13 +7,6 @@
 let
   inherit (lib) mkIf mkMerge mkOption mkEnableOption types;
   cfg = config.${namespace}.security.vpn;
-
-  digResult = pkgs.runCommand "proton-server-ip"
-    {
-      nativeBuildInputs = [ pkgs.dnsutils ];
-    } "dig 9.9.9.9 +short node-us-304.protonvpn.net A node-us-304.protonvpn.net AAAA";
-
-  protonServerIp = lib.strings.trim (builtins.head lib.strings.splitString "\n" (builtins.readFile digResult));
 in
 {
   options.${namespace}.security.vpn = {
@@ -23,6 +16,27 @@ in
       type = types.str;
       default = "proton-vpn";
       description = "Select VPN provider to enable";
+    };
+    peerPublicKey = mkOption {
+      type = types.str;
+      description = "ProtonVPN WireGuard peer public key (base64, non-secret).";
+      example = "u3y1m4Qn3c+q0...==";
+      default = "ntBhUr1CJmbVydw6cgccMFGSzEcPugiikF/l4NuDygA=";
+    };
+    endpoint = mkOption {
+      type = types.str;
+      default = "node-us-304.protonvpn.net:51820";
+      description = "ProtonVPN WireGuard endpoint (host:port).";
+    };
+    vpnRouteTable = mkOption {
+      type = types.str;
+      default = "52830";
+      description = "Routing table ID used for ProtonVPN full-tunnel policy routing.";
+    };
+    wgFirewallMark = mkOption {
+      type = types.int;
+      default = 256; # 0x100
+      description = "Fwmark set on packets originating from wg-proton itself.";
     };
   };
 
@@ -41,40 +55,60 @@ in
           "10-wired" = {
             matchConfig.Name = "enp3s0";
             networkConfig.DHCP = "yes";
-            routes = [{
-              routeConfig = {
-                Designation = "${protonServerIp}/32";
-                Gateway = "192.168.50.1";
-              };
-            }];
+            domains = [ "~protonvpn.net" ]; #NOTE Followup on this, I don't understand how it works.
           };
           "30-wg-proton" = {
             matchConfig.Name = "wg-proton";
             address = [ "10.2.0.2/32" "2a07:b944::2:2/128" ];
+            # Proton's internal DNS - used once VPN is up
+            dns = [ "10.2.0.1" "2a07:b944::2:1" ];
+            # Make this link the default DNS route when up
+            domains = [ "~." ];
             networkConfig = {
-              DNS = [ "10.2.0.1" "2a07:b944::2:1" ];
-              DefaultRouteOnDevice = true;
-              RouteTable = 52830;
+              ConfigureWithoutCarrier = true; # Configure the interface even before "carrier"
+              DNSDefaultRoute = true;
             };
+
+            # Install default routes into our custom table for v4 and v6
+            routes = [
+              { routeConfig = { Destination = "0.0.0.0/0"; Table = cfg.vpnRouteTable; }; }
+              { routeConfig = { Family = "ipv6"; Destination = "::/0"; Table = cfg.vpnRouteTable; }; }
+            ];
+
+            # Policy routing:
+            #  - Keep LAN subnets direct (main table)
+            #  - Send everything else to table 52830
+            #  - EXCEPT packets marked by WireGuard itself (FirewallMark=0x100) —
+            #    those are the tunnel's own handshake packets and must use main.
             routingPolicyRules = [
-              { ruleConfig = { To = "192.168.50.0/24"; Table = "main"; Priority = 32500; }; }
-              { ruleConfig = { Family = "inet6"; To = "fd33:62a6:8e4:b346::/64"; Table = "main"; Priority = 32500; }; }
-              { ruleConfig = { To = "192.168.51.0/24"; Table = "main"; Priority = 32510; }; }
-              { ruleConfig = { From = "0.0.0.0/0"; Table = "52830"; Priority = 32700; }; }
-              { ruleConfig = { Family = "inet6"; From = "::/0"; Table = "52830"; Priority = 32700; }; }
+              # Local IPv4 LANs stay outside the VPN
+              { routingPolicyRuleConfig = { To = "192.168.50.0/24"; Table = "main"; Priority = 100; }; }
+              { routingPolicyRuleConfig = { To = "192.168.51.0/24"; Table = "main"; Priority = 110; }; }
+              # Local IPv6 ULA (adjust to actual prefix as needed)
+              { routingPolicyRuleConfig = { Family = "ipv6"; To = "fd33:62a6:8e4:b346::/64"; Table = "main"; Priority = 120; }; }
+
+              # All other traffic -> VPN table, but not WG's own marked packets
+              { routingPolicyRuleConfig = { FirewallMark = cfg.wgFirewallMark; InvertRule = true; Table = cfg.vpnRouteTable; Priority = 32765; }; }
+              { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.wgFirewallMark; InvertRule = true; Table = cfg.vpnRouteTable; Priority = 32765; }; }
             ];
           };
         };
         netdevs = {
           "30-wg-proton" = {
-            netdevConfig = { Name = "wg-proton"; Kind = "wireguard"; };
-            wireguardConfig = { PrivateKeyFile = config.sops.secrets."pvpn/priKey".path; };
+            netdevConfig = {
+              Name = "wg-proton";
+              Kind = "wireguard";
+            };
+            wireguardConfig = {
+              PrivateKeyFile = config.sops.secrets."pvpn/priKey".path;
+              FirewallMark = cfg.wgFirewallMark;
+            };
             wireguardPeers = [
               {
                 wireguardPeerConfig = {
-                  PublicKey = builtins.readFile config.sops.secrets."pvpn/pubKey".path;
+                  PublicKey = cfg.peerPublicKey;
                   AllowedIPs = [ "0.0.0.0/0" "::/0" ];
-                  Endpoint = "node-us-304.protonvpn.net:51820";
+                  Endpoint = cfg.endpoint;
                   PersistentKeepalive = 25;
                 };
               }
@@ -83,21 +117,16 @@ in
         };
       };
 
-      networking = {
-        useDHCP = false; # let networkd handle DHCP
-        # resolvconf.enable = false;
-      };
-      # environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";
+      # Let systemd-networkd manage DHCP, not legacy networking
+      networking.useDHCP = false;
 
-      # Handle DNS
-      services.resolved = {
-        enable = true;
-        extraConfig = ''
-          DNS=9.9.9.9 149.112.112.112 2620:fe::fe 2620:fe::9
-        '';
-      };
+      # DNS manager
+      services.resolved.enable = true;
 
+      # Tailscale: let it run normally, but don't let it own DNS
       services.tailscale.extraUpFlags = [ "--accept-dns=false" ];
+
+      # Attach MagicDNS for tailscale-only names (w/o owning global DNS)
       systemd.services.tailscale-splitdns = {
         description = "Attach MagicDNS to tailscale0 (systemd-resolved split DNS)";
         after = [ "tailscaled.service" "network-online.target" ];
