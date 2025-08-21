@@ -71,8 +71,8 @@ in
 
             # Install default routes into our custom table for v4 and v6
             routes = [
-              { routeConfig = { Destination = "0.0.0.0/0"; Table = cfg.vpnRouteTable; }; }
-              { routeConfig = { Family = "ipv6"; Destination = "::/0"; Table = cfg.vpnRouteTable; }; }
+              { Destination = "0.0.0.0/0"; Table = cfg.vpnRouteTable; }
+              { Destination = "::/0"; Table = cfg.vpnRouteTable; }
             ];
 
             # Policy routing:
@@ -82,14 +82,14 @@ in
             #    those are the tunnel's own handshake packets and must use main.
             routingPolicyRules = [
               # Local IPv4 LANs stay outside the VPN
-              { routingPolicyRuleConfig = { To = "192.168.50.0/24"; Table = "main"; Priority = 100; }; }
-              { routingPolicyRuleConfig = { To = "192.168.51.0/24"; Table = "main"; Priority = 110; }; }
+              { To = "192.168.50.0/24"; Table = "main"; Priority = 100; }
+              { To = "192.168.51.0/24"; Table = "main"; Priority = 110; }
               # Local IPv6 ULA (adjust to actual prefix as needed)
-              { routingPolicyRuleConfig = { Family = "ipv6"; To = "fd33:62a6:8e4:b346::/64"; Table = "main"; Priority = 120; }; }
+              { Family = "ipv6"; To = "fd33:62a6:8e4:b346::/64"; Table = "main"; Priority = 120; }
 
               # All other traffic -> VPN table, but not WG's own marked packets
-              { routingPolicyRuleConfig = { FirewallMark = cfg.wgFirewallMark; InvertRule = true; Table = cfg.vpnRouteTable; Priority = 32765; }; }
-              { routingPolicyRuleConfig = { Family = "ipv6"; FirewallMark = cfg.wgFirewallMark; InvertRule = true; Table = cfg.vpnRouteTable; Priority = 32765; }; }
+              { FirewallMark = cfg.wgFirewallMark; InvertRule = true; Table = cfg.vpnRouteTable; Priority = 32765; }
+              { Family = "ipv6"; FirewallMark = cfg.wgFirewallMark; InvertRule = true; Table = cfg.vpnRouteTable; Priority = 32765; }
             ];
           };
         };
@@ -105,12 +105,10 @@ in
             };
             wireguardPeers = [
               {
-                wireguardPeerConfig = {
-                  PublicKey = cfg.peerPublicKey;
-                  AllowedIPs = [ "0.0.0.0/0" "::/0" ];
-                  Endpoint = cfg.endpoint;
-                  PersistentKeepalive = 25;
-                };
+                PublicKey = cfg.peerPublicKey;
+                AllowedIPs = [ "0.0.0.0/0" "::/0" ];
+                Endpoint = cfg.endpoint;
+                PersistentKeepalive = 25;
               }
             ];
           };
