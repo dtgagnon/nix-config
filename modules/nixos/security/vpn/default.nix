@@ -12,31 +12,35 @@ in
   options.${namespace}.security.vpn = {
     enable = mkEnableOption "Enable VPN";
     tailscaleCompat = mkEnableOption "Activate configuration for symbiotic tailscale and wireguard VPN";
+    bypassDomains = {
+      description = "List of domains to route to main, bypassing the VPN tunnel";
+      type = types.listOf types.str;
+      default = [ ];
+    };
     provider = mkOption {
+      description = "Select VPN provider to enable";
       type = types.str;
       default = "proton-vpn";
-      description = "Select VPN provider to enable";
     };
     peerPublicKey = mkOption {
-      type = types.str;
       description = "ProtonVPN WireGuard peer public key (base64, non-secret).";
-      example = "u3y1m4Qn3c+q0...==";
-      default = "ntBhUr1CJmbVydw6cgccMFGSzEcPugiikF/l4NuDygA=";
+      type = types.str;
+      default = "";
     };
     endpoint = mkOption {
-      type = types.str;
-      default = "node-us-304.protonvpn.net:51820";
       description = "ProtonVPN WireGuard endpoint (host:port).";
+      type = types.str;
+      default = "";
     };
     vpnRouteTable = mkOption {
+      description = "Routing table ID used for ProtonVPN full-tunnel policy routing.";
       type = types.str;
       default = "52830";
-      description = "Routing table ID used for ProtonVPN full-tunnel policy routing.";
     };
     wgFirewallMark = mkOption {
+      description = "Fwmark set on packets originating from wg-proton itself.";
       type = types.int;
       default = 256; # 0x100
-      description = "Fwmark set on packets originating from wg-proton itself.";
     };
   };
 
@@ -55,13 +59,16 @@ in
           "10-wired" = {
             matchConfig.Name = "enp3s0";
             networkConfig.DHCP = "yes";
+            networkConfig.DNSDefaultRoute = true;
             domains = [ "~protonvpn.net" ]; #NOTE Followup on this, I don't understand how it works.
           };
           "30-wg-proton" = {
             matchConfig.Name = "wg-proton";
             address = [ "10.2.0.2/32" "2a07:b944::2:2/128" ];
+
             # Proton's internal DNS - used once VPN is up
             dns = [ "10.2.0.1" "2a07:b944::2:1" ];
+
             # Make this link the default DNS route when up
             domains = [ "~." ];
             networkConfig = {
@@ -78,9 +85,11 @@ in
             # Policy routing:
             #  - Keep LAN subnets direct (main table)
             #  - Send everything else to table 52830
-            #  - EXCEPT packets marked by WireGuard itself (FirewallMark=0x100) —
-            #    those are the tunnel's own handshake packets and must use main.
+            #  - EXCEPT packets marked by WireGuard itself (FirewallMark=0x100) those are the tunnel's own handshake packets and must use main
             routingPolicyRules = [
+              { FirewallMark = cfg.wgFirewallMark; Table = "main"; Priority = 50; }
+              (mkIf (cfg.bypass != []) { FirewallMark = cfg.wgFirewallMark; Table = "main"; Priority = 90; })
+
               # Local IPv4 LANs stay outside the VPN
               { To = "192.168.50.0/24"; Table = "main"; Priority = 100; }
               { To = "192.168.51.0/24"; Table = "main"; Priority = 110; }
@@ -94,7 +103,7 @@ in
           };
         };
         netdevs = {
-          "30-wg-proton" = {
+          "30-pvpn0" = {
             netdevConfig = {
               Name = "wg-proton";
               Kind = "wireguard";
@@ -115,8 +124,18 @@ in
         };
       };
 
+      # make rp_filter honor fwmarks used by policy routing
+      boot.kernel.sysctl = {
+        "net.ipv4.conf.all.src_valid_mark" = true;
+        "net.ipv4.conf.default.src_valid_mark" = true;
+        # "net.netfilter.nf_log_all_netns" = 1;
+      };
+
       # Let systemd-networkd manage DHCP, not legacy networking
-      networking.useDHCP = false;
+      networking = {
+        firewall.checkReversePath = "loose";
+        useDHCP = false;
+      };
 
       # DNS manager
       services.resolved.enable = true;
@@ -144,8 +163,11 @@ in
       };
 
       sops.secrets = {
-        "pvpn/priKey" = { };
-        "pvpn/presharedKey" = { };
+        "pvpn/priKey" = {
+          owner = "systemd-network";
+          group = "systemd-network";
+          mode = "0400";
+        };
         "pvpn/pubKey" = { };
       };
     })

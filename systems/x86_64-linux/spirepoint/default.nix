@@ -41,8 +41,14 @@ in
         enable = true;
         targetHost = "spirepoint";
       };
-      vpn.tailscaleCompat = true;
+      vpn = {
+        tailscaleCompat = true;
+        endpoint = "node-us-121.protonvpn.net:51820";
+        peerPublicKey = "5vyz98gHBbT8z1bdNNZdGYAW0NJIgw1pgr+E6WlJPQA=";
+      };
     };
+
+    services = { odoo = enabled; };
 
     system = {
       enable = true;
@@ -54,6 +60,7 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
+      rustdesk = enabled;
     };
 
     virtualisation.kvm.enable = false;

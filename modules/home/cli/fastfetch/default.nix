@@ -114,10 +114,15 @@ in
           {
             type = "colors";
             key = "  └󰉼 ";
+            blockRange = "0-7";
+            symbol = "circle";
           }
           {
-            type = "custom";
-            format = "               ";
+            type = "colors";
+            key = "       ";
+            separator = "";
+            blockRange = "8-15";
+            symbol = "circle";
           }
           {
             type = "custom";

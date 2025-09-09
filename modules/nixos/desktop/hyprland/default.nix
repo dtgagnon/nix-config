@@ -37,7 +37,14 @@ in
       keyring = enabled;
       network-manager = enabled;
       thunar = enabled;
-      xdg-portal = enabled;
+    };
+
+    xdg = {
+      autostart.enable = true;
+      portal = {
+        enable = true;
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      };
     };
 
     environment.systemPackages = [ pkgs.kitty ]; #default for when no home configuration has been established

@@ -45,6 +45,20 @@ in
       database = {
         enable = true; # enable the postgresql database
         createDB = true; # enable automatic database creation
+        #TODO: Supervise migration to VectorChord from pgvector:
+        # 1. Make sure VectorChord is enabled ([](#opt-services.immich.database.enableVectorChord)) and Immich has completed the migration. Refer to the [Immich documentation][vectorchord-migration-docs] for details.
+        # 2. Run the following two statements in the PostgreSQL database using a superuser role in Immich's database.
+        #
+        #     ```sql
+        #     DROP EXTENSION vectors;
+        #     DROP SCHEMA vectors;
+        #     ```
+        #
+        #     - You may use the following command to run these statements against the database: `sudo -u postgres psql immich` (Replace `immich` with the value of [](#opt-services.immich.database.name))
+        #
+        # 3. Disable `pgvecto-rs` by setting [](#opt-services.immich.database.enableVectors) to `false`.
+        # 4. Rebuild and switch.
+        enableVectorChord = true;
         host = "/run/postgresql";
         port = 5432;
         name = "immich";

@@ -1,7 +1,6 @@
 { lib
 , config
 , namespace
-, pkgs
 , ...
 }:
 let
@@ -19,25 +18,19 @@ in
       group = "openwebui";
     };
 
-    users.groups.openwebui = {};
+    users.groups.openwebui = { };
 
     # Enable PostgreSQL service
     services.postgresql = {
       enable = true;
-      package = pkgs.postgresql_15;
       ensureDatabases = [ "openwebui" ];
       ensureUsers = [
         {
           name = "openwebui";
           ensureDBOwnership = true;
+          ensureClauses.login = true;
         }
       ];
-      authentication = lib.mkForce ''
-        # TYPE  DATABASE        USER            ADDRESS                 METHOD
-        local   openwebui       openwebui                               peer
-        host    openwebui       openwebui       127.0.0.1/32            trust
-        host    openwebui       openwebui       ::1/128                 trust
-      '';
     };
 
     services.open-webui = {
@@ -48,18 +41,22 @@ in
         ANONYMIZED_TELEMETRY = "False";
         DO_NOT_TRACK = "True";
         SCARF_NO_ANALYTICS = "True";
-        OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
-        WEBUI_AUTH = "False";
+        OLLAMA_API_BASE_URL = "http://100.100.2.1:11434";
+        WEBUI_AUTH = "True";
         # PostgreSQL database configuration
-        DATABASE_URL = "postgresql://openwebui@localhost/openwebui";
+        DATABASE_URL = "postgresql:///openwebui?host=/run/postgresql";
       };
       # environmentFile = ""; # Useful for passing secrets to the service
     };
 
-    systemd.services.open-webui.serviceConfig = {
-      DynamicUser = lib.mkForce false;
-      User = lib.mkForce "openwebui";
-      Group = lib.mkForce "openwebui";
+    systemd.services.open-webui = {
+      after = [ "postgresql.service" "tailscaled.service" "network-online.target" ];
+      requires = [ "postgresql.service" "tailscaled.service" ];
+      serviceConfig = {
+        DynamicUser = lib.mkForce false;
+        User = lib.mkForce "openwebui";
+        Group = lib.mkForce "openwebui";
+      };
     };
   };
 }

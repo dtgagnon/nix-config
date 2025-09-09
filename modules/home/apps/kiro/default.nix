@@ -16,7 +16,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.spirenix.kiro inputs.nixd.packages.${system}.nixd ];
+    home.packages = [ pkgs.kiro inputs.nixd.packages.${system}.nixd ];
 
     xdg.configFile."Kiro/User/nixed-settings.json".text = ''
       {

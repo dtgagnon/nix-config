@@ -26,12 +26,14 @@ in
       enable = true;
       systemd = {
         enable = true;
-        target = "graphical-session.target";
+        target = "wayland-session@Hyprland.target";
       };
       inherit (cfg) settings;
     };
-    
-    # Add wttrbar for weather module support
-    home.packages = [ pkgs.wttrbar ];
+
+    home.packages = [
+      # Weather module support
+      pkgs.wttrbar
+    ];
   };
 }

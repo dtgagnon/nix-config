@@ -20,12 +20,12 @@ in
         # Open
         "$mod, Return, exec, $terminal"
         "$mod_ALT, Return, exec, $terminal"
-        "$mod, E, exec, [float; center; size 1600 900] ghostty -e yazi /home/${config.spirenix.user.name}"
+        "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
         "$mod_ALT, P, exec, fuzzel"
-        "$mod, B, exec, zen-beta"
+        "$mod, B, exec, zen"
         "$mod_ALT, V, exec, [workspace 1] kiro"
-        "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 2000 --clipboard-only"
+        "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 1000 --clipboard-only"
 
         # Window Control
         "$mod, Q, killactive,"

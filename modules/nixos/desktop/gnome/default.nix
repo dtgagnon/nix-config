@@ -15,6 +15,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    xdg = {
+      autostart.enable = true;
+      portal.enable = true;
+    };
     services = {
       desktopManager.gnome.enable = true;
       displayManager.gdm = {

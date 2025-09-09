@@ -1,12 +1,10 @@
 { lib
 , config
-, namespace
 , osConfig
 , ...
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib.${namespace}) prependUWSM;
   cfg = config.spirenix.desktop.hyprland;
 
   cursorSize = toString config.stylix.cursor.size;
@@ -20,7 +18,7 @@ in
             "gnome-keyring-daemon --start --components=secrets"
             # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
             "nm-applet"
-            "swww init ; sleep 1; setwall"
+            "aw-qt --no-gui"
             "playerctld daemon"
           ] ++ cfg.extraExec);
         in
@@ -74,17 +72,11 @@ in
 
       binds.allow_workspace_cycles = true;
 
-      gestures = {
-        workspace_swipe = true;
-        workspace_swipe_use_r = true;
-      };
-
       input = {
         # keyboard
         kb_layout = "us";
         repeat_delay = 200;
         repeat_rate = 100;
-        # kb_options = "caps:swapescape";
         # mouse
         accel_profile = "flat";
         follow_mouse = 1;

@@ -1,0 +1,346 @@
+{ lib
+, pkgs
+, config
+, namespace
+, ...
+}:
+let
+  inherit (lib) mkIf types optionalString;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+
+  cfg = config.${namespace}.services.arrs.qbittorrent;
+
+  # NAT-PMP + firewall + qBittorrent port sync daemon
+  qbtPortforwardd = pkgs.writeShellApplication {
+    name = "qbt-portforwardd";
+    runtimeInputs = [
+      pkgs.curl
+      pkgs.jq
+      pkgs.libnatpmp
+      pkgs.iptables
+      pkgs.coreutils
+      pkgs.gawk
+      pkgs.gnugrep
+    ];
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      STATE_DIR="/run/qbittorrent"
+      COOKIE_JAR="$STATE_DIR/cookies.txt"
+      TCP_FILE="$STATE_DIR/pf_tcp_port"
+      UDP_FILE="$STATE_DIR/pf_udp_port"
+
+      # Configuration (prefer environment overrides from unit; otherwise use sane defaults)
+      IFACE="${'$'}{IFACE:-wg-proton}"
+      GATEWAY="${'$'}{GATEWAY:-10.2.0.1}"
+      # Favor tailnet-local address for API access (whitelisted 100.100.0.0/16)
+      QBT_HOST="${'$'}{QBT_HOST:-100.100.1.2}"
+      QBT_WEB_PORT="${'$'}{QBT_WEB_PORT:-${cfg.port}}"
+      QBT_USER="${cfg.user or ""}"
+      QBT_PASS_FILE="${optionalString (config.sops.secrets ? qbittorrent-webui) (toString config.sops.secrets.qbittorrent-webui.path)}"
+
+      OPEN_UDP="${'$'}{OPEN_UDP:-1}"
+      CHECK_INTERVAL="${'$'}{CHECK_INTERVAL:-15}"
+      IDLE_GRACE="${'$'}{IDLE_GRACE:-60}"
+      MIN_DL="${'$'}{MIN_DL:-1024}"
+      MIN_UL="${'$'}{MIN_UL:-1024}"
+      RESET_PORT_ON_IDLE="${'$'}{RESET_PORT_ON_IDLE:-0}"
+
+      mkdir -p "$STATE_DIR"
+
+      cleanup_rules() {
+        local tcp_port="${1:-}"
+        local udp_port="${2:-}"
+        if [[ -n "$tcp_port" ]]; then
+          while iptables -C nixos-fw -i "$IFACE" -p tcp --dport "$tcp_port" -j nixos-fw-accept 2>/dev/null; do
+            iptables -D nixos-fw -i "$IFACE" -p tcp --dport "$tcp_port" -j nixos-fw-accept || true
+          done
+        fi
+        if [[ -n "$udp_port" ]]; then
+          while iptables -C nixos-fw -i "$IFACE" -p udp --dport "$udp_port" -j nixos-fw-accept 2>/dev/null; do
+            iptables -D nixos-fw -i "$IFACE" -p udp --dport "$udp_port" -j nixos-fw-accept || true
+          done
+        fi
+      }
+
+      teardown() {
+        local tcp_port="" udp_port=""
+        [[ -f "$TCP_FILE" ]] && tcp_port="$(cat "$TCP_FILE" || true)"
+        [[ -f "$UDP_FILE" ]] && udp_port="$(cat "$UDP_FILE" || true)"
+
+        if [[ -n "$tcp_port" ]]; then natpmpc -g "$GATEWAY" -a "$tcp_port" 0 tcp 0 >/dev/null 2>&1 || true; fi
+        if [[ -n "$udp_port" ]]; then natpmpc -g "$GATEWAY" -a "$udp_port" 0 udp 0 >/dev/null 2>&1 || true; fi
+        cleanup_rules "$tcp_port" "$udp_port"
+
+        if [[ "$RESET_PORT_ON_IDLE" == "1" ]]; then
+          curl -fsS -b "$COOKIE_JAR" --data-urlencode 'json={"listen_port":0}' \
+            "http://$QBT_HOST:$QBT_WEB_PORT/api/v2/app/setPreferences" >/dev/null || true
+        fi
+
+        rm -f "$COOKIE_JAR" "$TCP_FILE" "$UDP_FILE" || true
+      }
+
+      trap 'teardown' EXIT
+
+      qbt_login() {
+        if [[ -n "$QBT_USER" && -r "$QBT_PASS_FILE" ]]; then
+          local pass; pass="$(<"$QBT_PASS_FILE")"
+          curl -fsS -c "$COOKIE_JAR" --data "username=$QBT_USER&password=$pass" \
+            "http://$QBT_HOST:$QBT_WEB_PORT/api/v2/auth/login" >/dev/null || true
+        fi
+      }
+
+      api_get() {
+        local path="$1"
+        if [[ -f "$COOKIE_JAR" ]]; then
+          curl -fsS -b "$COOKIE_JAR" "http://$QBT_HOST:$QBT_WEB_PORT$path"
+        else
+          curl -fsS "http://$QBT_HOST:$QBT_WEB_PORT$path"
+        fi
+      }
+
+      api_post_prefs() {
+        local json="$1"
+        if [[ -f "$COOKIE_JAR" ]]; then
+          curl -fsS -b "$COOKIE_JAR" --data-urlencode "json=$json" \
+            "http://$QBT_HOST:$QBT_WEB_PORT/api/v2/app/setPreferences" >/dev/null
+        else
+          curl -fsS --data-urlencode "json=$json" \
+            "http://$QBT_HOST:$QBT_WEB_PORT/api/v2/app/setPreferences" >/dev/null
+        fi
+      }
+
+      is_active() {
+        local dlcnt sdcnt
+        dlcnt=$(api_get "/api/v2/torrents/info?filter=downloading" | jq 'length' 2>/dev/null || echo 0)
+        sdcnt=$(api_get "/api/v2/torrents/info?filter=seeding" | jq 'length' 2>/dev/null || echo 0)
+        if (( dlcnt > 0 || sdcnt > 0 )); then return 0; fi
+        local speeds dl ul
+        speeds=$(api_get "/api/v2/transfer/info" 2>/dev/null || echo '{}')
+        dl=$(echo "$speeds" | jq -r '.dl_info_speed // 0' 2>/dev/null || echo 0)
+        ul=$(echo "$speeds" | jq -r '.up_info_speed // 0' 2>/dev/null || echo 0)
+        (( dl >= MIN_DL || ul >= MIN_UL ))
+      }
+
+      acquire_port() {
+        local tcp udp
+        tcp=$(natpmpc -g "$GATEWAY" -a 0 0 tcp 60 2>/dev/null | sed -n 's/.*Mapped public port \([0-9]\+\).*/\1/p' | tail -n1)
+        if [[ -z "$tcp" ]]; then echo ""; echo ""; return 1; fi
+        if [[ "$OPEN_UDP" == "1" ]]; then
+          udp=$(natpmpc -g "$GATEWAY" -a 0 0 udp 60 2>/dev/null | sed -n 's/.*Mapped public port \([0-9]\+\).*/\1/p' | tail -n1)
+        else
+          udp=""
+        fi
+        echo "$tcp"; echo "$udp"; return 0
+      }
+
+      open_fw() {
+        local port="$1" proto="$2"
+        if ! iptables -C nixos-fw -i "$IFACE" -p "$proto" --dport "$port" -j nixos-fw-accept 2>/dev/null; then
+          iptables -I nixos-fw 1 -i "$IFACE" -p "$proto" --dport "$port" -j nixos-fw-accept
+        fi
+      }
+
+      renew_mapping() {
+        local port="$1" proto="$2"
+        natpmpc -g "$GATEWAY" -a "$port" 0 "$proto" 60 >/dev/null 2>&1 || true
+      }
+
+      set_qbt_listen_port() { api_post_prefs "{\"listen_port\":$1}"; }
+
+      qbt_login || true
+
+      current_tcp=""; current_udp=""; last_active_ts=$(date +%s)
+      while true; do
+        if is_active; then
+          last_active_ts=$(date +%s)
+          if [[ -z "$current_tcp" ]]; then
+            read -r tcp udp < <(acquire_port || true)
+            if [[ -n "$tcp" ]]; then
+              current_tcp="$tcp"; echo -n "$tcp" >"$TCP_FILE"; set_qbt_listen_port "$tcp" || true; open_fw "$tcp" tcp
+            fi
+            if [[ -n "$udp" ]]; then
+              current_udp="$udp"; echo -n "$udp" >"$UDP_FILE"; open_fw "$udp" udp
+            fi
+          else
+            renew_mapping "$current_tcp" tcp
+            [[ -n "$current_udp" ]] && renew_mapping "$current_udp" udp
+          fi
+        else
+          now=$(date +%s)
+          if [[ -n "$current_tcp" && $(( now - last_active_ts )) -ge $IDLE_GRACE ]]; then
+            natpmpc -g "$GATEWAY" -a "$current_tcp" 0 tcp 0 >/dev/null 2>&1 || true
+            [[ -n "$current_udp" ]] && natpmpc -g "$GATEWAY" -a "$current_udp" 0 udp 0 >/dev/null 2>&1 || true
+            cleanup_rules "$current_tcp" "$current_udp"
+            [[ "$RESET_PORT_ON_IDLE" == "1" ]] && set_qbt_listen_port 0 || true
+            rm -f "$TCP_FILE" "$UDP_FILE" || true
+            current_tcp=""; current_udp=""
+          fi
+        fi
+        sleep "$CHECK_INTERVAL"
+      done
+    '';
+  };
+in
+{
+  # Copy the original module's options so this can serve as a drop-in replacement
+  options.${namespace}.services.arrs.qbittorrent = {
+    enable = mkBoolOpt false "Enable qBittorrent";
+    port = mkOpt types.str "8080" "Declare the webui port";
+    configDir = mkOpt types.str "/etc/qbittorrent" "The default configuration directory";
+    dataDir = mkOpt types.str "${config.spirenix.services.arrs.dataDir}/qbittorrent" "Declare the application working directory";
+    downDir = mkOpt types.str "/srv/media/downloads" "Declare the default torrent downlaod directory";
+    user = mkOpt types.str "qbittorrent" "User the service runs as";
+    group = mkOpt types.str "media" "Group the service user belongs to";
+
+    # Additional knobs for the PF daemon (non-conflicting with original)
+    pf = {
+      enable = mkBoolOpt true "Enable dynamic NAT-PMP port-forward daemon";
+      iface = mkOpt types.str "wg-proton" "Interface to open firewall on";
+      gateway = mkOpt types.str "10.2.0.1" "NAT-PMP gateway (ProtonVPN)";
+      openUDP = mkBoolOpt true "Also open/map UDP";
+      resetPortOnIdle = mkBoolOpt false "Reset qBittorrent listen_port to 0 when idle";
+      checkInterval = mkOpt types.int 15 "Activity poll interval (s)";
+      idleGraceSeconds = mkOpt types.int 60 "Idle grace before teardown (s)";
+      minDlSpeed = mkOpt types.int 1024 "Min DL speed (B/s) to consider active";
+      minUlSpeed = mkOpt types.int 1024 "Min UL speed (B/s) to consider active";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    environment.systemPackages = [ pkgs.qbittorrent-nox ];
+
+    environment.variables = {
+      QBT_WEBUI_PORT = "${cfg.port}";
+      QBT_PROFILE = "${cfg.configDir}";
+      QBT_SAVE_PATH = "${cfg.downDir}";
+      QBT_ADD_STOPPED = "FALSE";
+      QBT_CONFIRM_LEGAL_NOTICE = "TRUE";
+    };
+
+    systemd.tmpfiles.rules = [
+      "d ${cfg.dataDir} 0750 ${cfg.user} ${cfg.group} -"
+      "d ${cfg.downDir} 0750 ${cfg.user} ${cfg.group} -"
+      "d /run/qbittorrent 0755 root root -"
+    ];
+
+    systemd.services.qbittorrent = {
+      description = "qBittorrent-nox daemon";
+      after = [ "systemd-networkd.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "notify";
+        User = "${cfg.user}";
+        ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --confirm-legal-notice";
+        WorkingDirectory = "${cfg.dataDir}";
+        Restart = "on-failure";
+      };
+    };
+
+    # Dynamic NAT-PMP forwarder (drop-in replacement for qbittorrent-natpmp)
+    systemd.services.qbittorrent-portforwardd = mkIf (cfg.pf.enable) {
+      description = "qBittorrent dynamic NAT-PMP port forward daemon (wg-proton)";
+      after = [ "qbittorrent.service" "network-online.target" ];
+      wants = [ "network-online.target" ];
+      partOf = [ "qbittorrent.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${qbtPortforwardd}/bin/qbt-portforwardd";
+        Restart = "always";
+        RestartSec = 5;
+      };
+      environment = {
+        IFACE = cfg.pf.iface;
+        GATEWAY = cfg.pf.gateway;
+        OPEN_UDP = if cfg.pf.openUDP then "1" else "0";
+        CHECK_INTERVAL = toString cfg.pf.checkInterval;
+        IDLE_GRACE = toString cfg.pf.idleGraceSeconds;
+        MIN_DL = toString cfg.pf.minDlSpeed;
+        MIN_UL = toString cfg.pf.minUlSpeed;
+        RESET_PORT_ON_IDLE = if cfg.pf.resetPortOnIdle then "1" else "0";
+      };
+    };
+
+    users.users.${cfg.user} = {
+      isSystemUser = true;
+      group = cfg.group;
+      home = cfg.dataDir;
+    };
+    users.groups.${cfg.group} = {};
+
+    sops.secrets.qbittorrent-webui = {
+      owner = "${cfg.user}";
+      mode = "0750";
+    };
+
+    # Keep original config layout and whitelist 100.100.0.0/16 (tailnet)
+    environment.etc."qbittorrent/.config/qBittorrent/qBittorrent.conf".text = ''
+      [Application]
+      FileLogger\\Age=1
+      FileLogger\\AgeType=1
+      FileLogger\\Backup=true
+      FileLogger\\DeleteOld=true
+      FileLogger\\Enabled=true
+      FileLogger\\MaxSizeBytes=66560
+      FileLogger\\Path=/var/lib/qbittorrent/.local/share/qBittorrent/logs
+
+      [BitTorrent]
+      Session\\AlternativeGlobalDLSpeedLimit=5000
+      Session\\AlternativeGlobalUPSpeedLimit=1000
+      Session\\AnonymousModeEnabled=false
+      Session\\BTProtocol=TCP
+      Session\\BandwidthSchedulerEnabled=true
+      Session\\DefaultSavePath=/srv/media/downloads/qbt
+      Session\\DisableAutoTMMByDefault=false
+      Session\\DisableAutoTMMTriggers\\CategorySavePathChanged=false
+      Session\\DisableAutoTMMTriggers\\DefaultSavePathChanged=false
+      Session\\ExcludedFileNames=
+      Session\\FinishedTorrentExportDirectory=
+      Session\\GlobalMaxInactiveSeedingMinutes=-1
+      Session\\GlobalMaxRatio=-1
+      Session\\GlobalMaxSeedingMinutes=-1
+      Session\\Interface=wg-proton
+      Session\\InterfaceAddress=
+      Session\\InterfaceName=wg-proton
+      Session\\MaxConnectionsPerTorrent=-1
+      Session\\MaxUploads=8
+      Session\\Port=61496
+      Session\\Preallocation=true
+      Session\\QueueingSystemEnabled=false
+      Session\\SSL\\Port=25650
+      Session\\SubcategoriesEnabled=false
+      Session\\TempPath=/srv/media/downloads/dl
+      Session\\TempPathEnabled=false
+      Session\\TorrentExportDirectory=
+      Session\\UseAlternativeGlobalSpeedLimit=true
+
+      [Core]
+      AutoDeleteAddedTorrentFile=IfAdded
+
+      [Meta]
+      MigrationVersion=8
+
+      [Network]
+      Cookies=@Invalid()
+      PortForwardingEnabled=false
+
+      [Preferences]
+      General\\Locale=en
+      General\\StatusbarExternalIPDisplayed=true
+      MailNotification\\req_auth=true
+      Scheduler\\end_time=@Variant(\0\0\0\xf\x4\xb8\x7f\0)
+      WebUI\\AuthSubnetWhitelist=100.100.0.0/16
+      WebUI\\AuthSubnetWhitelistEnabled=true
+      WebUI\\CSRFProtection=false
+      WebUI\\ClickjackingProtection=false
+      WebUI\\HostHeaderValidation=false
+      WebUI\\Password_PBKDF2="@ByteArray(W7Gxyc/YUtjij7+F/OuVjw==:43NrfiEa5KlXXYuxWSK7uozQZx7Qnp2AUYWU7B4FLI/8VmN0AqwqL/2cxtdqxxL/bVxII0/ZoVu5G29HQydqWg==)"
+
+      [RSS]
+      AutoDownloader\\DownloadRepacks=true
+      AutoDownloader\\SmartEpisodeFilter=s(\\\\d+)e(\\\\d+), (\\\\d+)x(\\\\d+), "(\\\\d{4}[.\\\\-]\\\\d{1,2}[.\\\\-]\\\\d{1,2})", "(\\\\d{1,2}[.\\\\-]\\\\d{1,2}[.\\\\-]\\\\d{4})"
+    '';
+  };
+}

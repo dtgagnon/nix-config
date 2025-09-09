@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.spirenix.opencode ];
+    home.packages = [ pkgs.opencode ];
     xdg.configFile."opencode/opencode.json".text = ''
       {
         "$schema": "https://opencode.ai/config.json",
@@ -76,7 +76,7 @@ in
             "name": "Ollama",
             "npm": "@ai-sdk/openai-compatible",
             "options": {
-              "baseURL": "http://127.0.0.1:11434/v1"
+              "baseURL": "http://100.100.2.1:11434/v1"
             },
             "models": {
               "devstral:24b-16k": {

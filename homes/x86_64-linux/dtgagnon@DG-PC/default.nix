@@ -24,7 +24,7 @@ in
       kiro = enabled;
       looking-glass-client = enabled;
       obsidian = enabled;
-      office.okular-pdf = enabled;
+      office = { libreoffice = enabled; okular-pdf = enabled; };
       # super-productivity = enabled;
       terminals = { ghostty = enabled; warp = enabled; };
       todoist = enabled;
@@ -40,6 +40,7 @@ in
       broot = enabled;
       carapace = enabled;
       claude-code = enabled;
+      codex = enabled;
       direnv = enabled;
       eza = enabled;
       fastfetch = enabled;
@@ -82,7 +83,8 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.orange-black-cosmic-surreal-gnarled-tree-traveler;
+          theme = "gruvbox-material-dark-medium";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.gruvbox.gruvbox-nixos-logo;
         };
         stylix = {
           enable = true;

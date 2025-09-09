@@ -86,12 +86,12 @@ in
       nsxiv
       ## monitor controls
       ddcutil
-      linuxKernel.packages.linux_6_6.ddcci-driver
       brightnessctl
+      ## video viewer
+      mpv
 
       # misc
       wl-clipboard
-      swww
       playerctl
     ];
 

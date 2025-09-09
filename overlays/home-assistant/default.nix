@@ -1,4 +1,4 @@
 { channels, ... }: _final: _prev:
 {
-  inherit (channels.masterpkgs) home-assistant;
+  # inherit (channels.masterpkgs) home-assistant;
 }

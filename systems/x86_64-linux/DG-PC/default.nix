@@ -38,7 +38,7 @@ in
 
     services = {
       davfs = enabled;
-      keyd.enable = true;
+      keyd = enabled;
       n8n = enabled;
       ollama = enabled;
       openwebui = enabled;
@@ -55,6 +55,7 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
+      rustdesk = enabled;
     };
 
     # topology.self.hardware.info = "DG-PC";
