@@ -7,6 +7,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.ssh;
+  username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.cli.ssh = {
@@ -14,12 +15,54 @@ in
   };
 
   config = mkIf cfg.enable {
+    programs.ssh = { };
+
     programs.ssh = {
       enable = true;
-      matchBlocks."*".addKeysToAgent = "yes";
+      matchBlocks = {
+        "*" = {
+          # Auth + access
+          identitiesOnly = true;
+          identityFile = [ "~/.ssh/${username}-key" ];
+          addKeysToAgent = "yes";
+          #NOTE Use a specific agent if you have one (1Password, gnome-keyring, etc.)
+          # identityAgent = "~/.1password/agent.sock";
+
+          # Speed + stability
+          compression = false;
+          controlMaster = "no";
+          controlPath = "~/.ssh/master-%r@%n:%p";
+          controlPersist = "no";
+
+          # Host key UX
+          hashKnownHosts = false;
+          userKnownHostsFile = "~/.ssh/known_hosts";
+
+          # Safety
+          forwardAgent = false;
+          forwardX11 = false;
+          forwardX11Trusted = false;
+
+          extraOptions = {
+            HostKeyAlgorithms = "ssh-ed25519";
+            StrictHostKeyChecking = "accept-new";
+            UpdateHostKeys = "yes";
+            PreferredAuthentications = "publickey";
+            TCPKeepAlive = "yes";
+          };
+        };
+
+        "*.ts.net" = {
+          controlMaster = "auto";
+          controlPersist = "10m";
+          serverAliveInterval = 60;
+          serverAliveCountMax = 3;
+          checkHostIP = false;
+          addressFamily = "any"; # use v4+v6 over tailnet
+        };
+      };
       extraConfig = ''
-        Host *
-          HostKeyAlgorithms ssh-ed25519
+        HostKeyAlgorithms ssh-ed25519
       '';
     };
 
