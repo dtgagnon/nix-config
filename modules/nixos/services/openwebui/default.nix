@@ -50,7 +50,7 @@ in
     };
 
     systemd.services.open-webui = {
-      after = [ "postgresql.service" "tailscaled.service" "network-online.target" ];
+      after = [ "postgresql.service" "tailscaled.service" ];
       requires = [ "postgresql.service" "tailscaled.service" ];
       serviceConfig = {
         DynamicUser = lib.mkForce false;

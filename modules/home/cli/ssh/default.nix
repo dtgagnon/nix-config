@@ -16,7 +16,7 @@ in
   config = mkIf cfg.enable {
     programs.ssh = {
       enable = true;
-      addKeysToAgent = "yes";
+      matchBlocks."*".addKeysToAgent = "yes";
       extraConfig = ''
         Host *
           HostKeyAlgorithms ssh-ed25519

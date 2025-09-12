@@ -114,14 +114,6 @@ in
           {
             type = "colors";
             key = "  └󰉼 ";
-            blockRange = "0-7";
-            symbol = "circle";
-          }
-          {
-            type = "colors";
-            key = "       ";
-            separator = "";
-            blockRange = "8-15";
             symbol = "circle";
           }
           {

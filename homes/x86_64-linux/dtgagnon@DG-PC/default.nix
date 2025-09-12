@@ -108,6 +108,7 @@ in
     moonshot_api = { };
     openai_api = { };
     openrouter_api = { };
+    ref_api = { };
   };
 
   home.stateVersion = "24.11";

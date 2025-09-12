@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
@@ -16,18 +17,61 @@ in
     programs.codex = {
       enable = true;
 
-      # # written to config.toml
+      # written to config.toml
       # settings = {
-      #   model = "";
-      #   model_provider = "";
-      #   baseURL = "";
-      #   envKey = "";
-      # };
+      #   projects = {
+      #     "/home/dtgagnon/nix-config/nixos" = { "trust_level" = "trusted"; };
+      #     "/hom"
+      #   };
+      #   tools."web_search" = true;
+      #   mcp_servers = {
+      #     nixos = {
+      #       command = "nix";
+      #       args = [ "run" "github:utensils/mcp-nixos" "--" ];
+      #     };
+      #     ref = {
+      #       command = "npx";
+      #       args = [ "-y" "ref-tools-mcp@latest" ];
+      #       env = {
+      #         "API_KEY" = "value";
+      #       };
+      #     };
+      #   };
       #
-      # # define global AGENTS.md
+      #   profile = {
+      #     default = {
+      #       # model = "gpt-5";
+      #       # model_provider = "openai";
+      #       # baseURL = "";
+      #       # envKey = "";
+      #
+      #     };
+      #     local = {
+      #       model = "gpt-oss:20b";
+      #       model_provider = "ollama";
+      #       model_providers = {
+      #         ollama = {
+      #           name = "Ollama";
+      #           baseURL = "http://127.0.0.1:11434/v1";
+      #         };
+      #       };
+      #     };
+      #   };
+      # };
+
+      # define global AGENTS.md
       # custom-instructions = ''
       #
       # '';
+    };
+
+    home = {
+      packages = with pkgs; [
+        nodejs # For mcp servers that rely on npx
+      ];
+      sessionVariables = {
+        "CODEX_HOME" = lib.mkForce "~/.config/.codex";
+      };
     };
   };
 }

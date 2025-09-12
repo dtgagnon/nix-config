@@ -131,6 +131,8 @@ in
         "default_config"
         "emulated_kasa"
         "glances"
+        "google"
+        "google_maps"
         "homekit"
         "homekit_controller"
         "jellyfin"
@@ -142,8 +144,10 @@ in
         "ollama"
         "opensensemap"
         "openweathermap"
+        "qbittorrent"
         "radarr"
         "reddit"
+        "sabnzbd"
         "samsungtv"
         "sonarr"
         "tailscale"
@@ -165,6 +169,11 @@ in
         grpcio
         ical #local_todo
         pyatv #apple_tv
+        pysabnzbd #sabnzbd
+        qbittorrent-api #qbittorrent
+        gcal-sync #google
+        oauth2client #google
+        locationsharinglib #google_maps
       ];
     };
 

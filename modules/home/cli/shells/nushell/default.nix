@@ -21,6 +21,7 @@ in
   config = mkIf cfg.enable {
     programs.nushell = {
       enable = true;
+      environmentVariables = config.home.sessionVariables;
       # extraEnv = ''
       #   	let EDITOR = "nvim"
       # '';
@@ -85,8 +86,8 @@ in
         ll = "ls -la";
         ea = "eza -a --icons";
         ela = "eza -la --icons --git";
-        tr = "eza -Ta -L 3 --icons --git";
-        trl = "eza -Ta -L --icons --git";
+        tr = "eza -Ta --icons --git -L 3";
+        trl = "eza -Ta --icons --git -L";
         h = "history";
         c = "clear";
 

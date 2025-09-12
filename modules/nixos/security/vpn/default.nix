@@ -88,7 +88,7 @@ in
             #  - EXCEPT packets marked by WireGuard itself (FirewallMark=0x100) those are the tunnel's own handshake packets and must use main
             routingPolicyRules = [
               { FirewallMark = cfg.wgFirewallMark; Table = "main"; Priority = 50; }
-              (mkIf (cfg.bypass != []) { FirewallMark = cfg.wgFirewallMark; Table = "main"; Priority = 90; })
+              # (mkIf (cfg.bypass != []) { FirewallMark = cfg.wgFirewallMark; Table = "main"; Priority = 90; })
 
               # Local IPv4 LANs stay outside the VPN
               { To = "192.168.50.0/24"; Table = "main"; Priority = 100; }

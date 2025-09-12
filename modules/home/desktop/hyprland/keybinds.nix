@@ -12,7 +12,7 @@ in
 
       # Defaults
       "$mod" = "${cfg.hyprModifier}";
-      "$terminal" = "ghostty +new-window";
+      "$terminal" = "ghostty";
       "$menu" = "rofi -show drun";
       "$lock" = "hyprlock";
 
