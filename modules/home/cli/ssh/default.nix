@@ -19,6 +19,7 @@ in
 
     programs.ssh = {
       enable = true;
+      enableDefaultConfig = false;
       matchBlocks = {
         "*" = {
           # Auth + access
@@ -61,9 +62,6 @@ in
           addressFamily = "any"; # use v4+v6 over tailnet
         };
       };
-      extraConfig = ''
-        HostKeyAlgorithms ssh-ed25519
-      '';
     };
 
     home.file = {

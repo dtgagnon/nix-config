@@ -70,7 +70,7 @@ in
         nodejs # For mcp servers that rely on npx
       ];
       sessionVariables = {
-        "CODEX_HOME" = lib.mkForce "~/.config/.codex";
+        "CODEX_HOME" = lib.mkForce "~/.config/codex";
       };
     };
   };
