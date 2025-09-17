@@ -5,18 +5,12 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib) mkIf mkEnableOption;
   cfg = config.${namespace}.desktop.addons.hellwal;
 in
 {
   options.${namespace}.desktop.addons.hellwal = {
-    enable = mkBoolOpt false "Whether to enable Hellwal wallpaper management.";
-
-    # Basic configuration options
-    wallpaperDir = mkOpt types.path "${config.home.homeDirectory}/Pictures/wallpapers" "Directory containing wallpapers.";
-    interval = mkOpt types.int 3600 "Interval in seconds between wallpaper changes.";
-    randomize = mkBoolOpt true "Whether to select wallpapers randomly.";
+    enable = mkEnableOption "Enable Hellwal wallpaper management.";
   };
 
   config = mkIf cfg.enable {

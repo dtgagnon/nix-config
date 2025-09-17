@@ -26,7 +26,7 @@ in
       obsidian = enabled;
       office = { libreoffice = enabled; okular-pdf = enabled; };
       # super-productivity = enabled;
-      terminals = { ghostty = enabled; warp = enabled; };
+      terminals.ghostty = enabled;
       todoist = enabled;
       vscode = enabled;
       windsurf = enabled;

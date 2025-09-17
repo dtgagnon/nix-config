@@ -41,7 +41,7 @@ in
       enable = true;
       package = inputs.hyprland.packages.${system}.hyprland;
       systemd.enable = if osConfig.programs.hyprland.withUWSM then false else true;
-      xwayland.enable = true;
+      xwayland.enable = false;
       inherit (cfg) extraConfig;
       settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
     };

@@ -20,7 +20,6 @@ in
   config = mkIf cfg.enable {
     programs.rofi = {
       enable = true;
-      package = pkgs.rofi-wayland;
       plugins = [ pkgs.rofi-calc ];
       terminal = "${hyprCfg.terminal.package}/bin/${hyprCfg.terminal.name}";
       extraConfig = {

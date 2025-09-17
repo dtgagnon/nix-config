@@ -174,6 +174,7 @@ in
         gcal-sync #google
         oauth2client #google
         locationsharinglib #google_maps
+        typedmonarchmoney #monarch_money
       ];
     };
 

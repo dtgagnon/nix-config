@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.${namespace}.cli.codex;
 in
 {
@@ -14,64 +14,37 @@ in
   };
 
   config = mkIf cfg.enable {
-    programs.codex = {
-      enable = true;
-
-      # written to config.toml
-      # settings = {
-      #   projects = {
-      #     "/home/dtgagnon/nix-config/nixos" = { "trust_level" = "trusted"; };
-      #     "/hom"
-      #   };
-      #   tools."web_search" = true;
-      #   mcp_servers = {
-      #     nixos = {
-      #       command = "nix";
-      #       args = [ "run" "github:utensils/mcp-nixos" "--" ];
-      #     };
-      #     ref = {
-      #       command = "npx";
-      #       args = [ "-y" "ref-tools-mcp@latest" ];
-      #       env = {
-      #         "API_KEY" = "value";
-      #       };
-      #     };
-      #   };
-      #
-      #   profile = {
-      #     default = {
-      #       # model = "gpt-5";
-      #       # model_provider = "openai";
-      #       # baseURL = "";
-      #       # envKey = "";
-      #
-      #     };
-      #     local = {
-      #       model = "gpt-oss:20b";
-      #       model_provider = "ollama";
-      #       model_providers = {
-      #         ollama = {
-      #           name = "Ollama";
-      #           baseURL = "http://127.0.0.1:11434/v1";
-      #         };
-      #       };
-      #     };
-      #   };
-      # };
-
-      # define global AGENTS.md
-      # custom-instructions = ''
-      #
-      # '';
-    };
-
     home = {
       packages = with pkgs; [
-        nodejs # For mcp servers that rely on npx
+        codex
+        nodejs # for `npx` mcp servers
       ];
-      sessionVariables = {
-        "CODEX_HOME" = lib.mkForce "~/.config/codex";
-      };
+    };
+
+    sops.templates."codex-config.toml" = {
+      path = "${config.xdg.configHome}/codex/config.toml";
+      content = ''
+        model = "gpt-5-codex"
+
+        [tools]
+        web_search = true
+
+        [mcp_servers.nixos]
+            command = "nix"
+            args = [ "run", "github:utensils/mcp-nixos", "--" ]
+        [mcp_servers.Ref]
+            command = "npx"
+            args = [ "ref-tools-mcp@latest" ]
+            env = { "REF_API_KEY" = "${config.sops.placeholder.ref_api}" }
+
+        [projects."/home/dtgagnon/nix-config/nixos"]
+        trust_level = "trusted"
+      '';
+    };
+
+    # xdg.configFile."codex/config.toml".source = config.sops.templates."codex-config.toml".path;
+    home.sessionVariables = {
+      CODEX_HOME = "$HOME/.config/codex";
     };
   };
 }

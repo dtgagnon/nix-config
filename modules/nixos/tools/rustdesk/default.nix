@@ -17,7 +17,7 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.rustdesk-flutter ];
     systemd.services.rustdesk-client-service = {
-      description = "Runs rustdesk-flutter as a background systemd system-level service";
+      description = "rustdesk client service";
       wantedBy = [ "multi-user.target" ];
       requires = [ "network-online.target" ];
       after = [ "display-manager.service" ];

@@ -277,7 +277,7 @@ in
         "custom/weather" = {
           format = "{}";
           tooltip = true;
-          interval = 600;
+          interval = 300;
           exec = "wttrbar --main-indicator 'temp_F' --fahrenheit --mph --date-format '%Y-%m-%d' --custom-indicator '{ICON} {temp_F}°'";
           return-type = "json";
           on-click = "sleep 0.1 && xdg-open 'https://wttr.in'";

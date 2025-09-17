@@ -24,6 +24,8 @@ in
     };
 
     fonts.packages = with pkgs; [
+      carlito
+
       font-awesome
 
       nerd-fonts._0xproto
@@ -38,6 +40,10 @@ in
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
       noto-fonts-emoji
+
+      open-sans
+
+      roboto
     ] ++ cfg.extraFonts;
   };
 }

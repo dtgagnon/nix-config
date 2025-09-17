@@ -1,5 +1,6 @@
 { lib
 , host
+, pkgs
 , config
 , namespace
 , ...
@@ -21,12 +22,16 @@ in
   config = mkIf cfg.enable {
     programs.nushell = {
       enable = true;
-      environmentVariables = config.home.sessionVariables;
-      # extraEnv = ''
-      #   	let EDITOR = "nvim"
-      # '';
+      plugins = with pkgs.nushellPlugins; [
+        query
+        gstat
+        highlight
+        desktop_notifications
+      ];
+
       extraConfig = ''
         $env.config = {
+        	show_banner: false,
         	edit_mode: "vi"
         	render_right_prompt_on_last_line: true
         	highlight_resolved_externals: true
@@ -36,38 +41,8 @@ in
         		shape_internal: { fg: "${colors.base08}" }
         		shape_unknown: { fg: "${colors.base0E}" }
         	}
-
-        	show_banner: false,
         }
       '';
-
-      # nu-abbr = {
-      #   abbreviations = {
-      #     #git
-      #     ga = "git add";
-      #     gaa = "git add --all .";
-      #     gb = "git branch";
-      #     gbd = "git branch -D";
-      #     gcm = "git checkout main";
-      #     gco = "git checkout";
-      #     gcob = "git checkout -b";
-      #     gd = "git diff";
-      #     gdc = "git diff --cached";
-      #     gds = "git diff --staged";
-      #     gl = "git log";
-      #     gm = "git commit -m";
-      #     gma = "git commit --amend";
-      #     gman = "git commit --amend --no-edit";
-      #     gp = "git push";
-      #     gpf = "git push --force";
-      #     gph = "git push origin HEAD";
-      #     gphu = "git push origin HEAD -u";
-      #     gpm = "git pull origin main";
-      #     gpuh = "git push upstream HEAD";
-      #     gpt = "git push --tags";
-      #     gs = "git status";
-      #   };
-      # };
 
       shellAliases = {
         # Nix Stuff
@@ -114,7 +89,6 @@ in
       broot.enableNushellIntegration = mkNushellIntegration "broot";
       carapace.enableNushellIntegration = mkNushellIntegration "carapace";
       direnv.enableNushellIntegration = mkNushellIntegration "direnv";
-      thefuck.enableNushellIntegration = mkNushellIntegration "thefuck";
       yazi.enableNushellIntegration = mkNushellIntegration "yazi";
       zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";
     };
@@ -122,3 +96,31 @@ in
     home.sessionVariables.SHELL = "nushell";
   };
 }
+
+# nu-abbr = {
+#   abbreviations = {
+#     #git
+#     ga = "git add";
+#     gaa = "git add --all .";
+#     gb = "git branch";
+#     gbd = "git branch -D";
+#     gcm = "git checkout main";
+#     gco = "git checkout";
+#     gcob = "git checkout -b";
+#     gd = "git diff";
+#     gdc = "git diff --cached";
+#     gds = "git diff --staged";
+#     gl = "git log";
+#     gm = "git commit -m";
+#     gma = "git commit --amend";
+#     gman = "git commit --amend --no-edit";
+#     gp = "git push";
+#     gpf = "git push --force";
+#     gph = "git push origin HEAD";
+#     gphu = "git push origin HEAD -u";
+#     gpm = "git pull origin main";
+#     gpuh = "git push upstream HEAD";
+#     gpt = "git push --tags";
+#     gs = "git status";
+#   };
+# };

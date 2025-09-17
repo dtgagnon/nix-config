@@ -47,6 +47,9 @@ in
 
     system = {
       enable = true;
+      environment.sessionVariables = {
+        CODEX_HOME = "$HOME/.config/codex";
+      };
       preservation = enabled;
     };
 

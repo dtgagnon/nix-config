@@ -5,12 +5,17 @@
 , ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.${namespace}.services.ollama;
 in
 {
   options.${namespace}.services.ollama = {
     enable = mkEnableOption "Enable ollama for local LLM serving";
+    allowedOrigins = mkOption {
+      type = types.listOf types.str;
+      default = [ "http://127.0.0.1" "http://100.100.0.0" ];
+      description = "additional allowed ollama origin addresses";
+    };
   };
 
   config = mkIf cfg.enable {
