@@ -6,20 +6,19 @@
 }:
 
 let
-  inherit (lib) mkIf mkMerge;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf mkEnableOption;
   cfg = config.${namespace}.services.activity-watch;
 in
 {
   options.${namespace}.services.activity-watch = {
-    enable = mkBoolOpt false "Enable ActivityWatch service for the user";
+    enable = mkEnableOption "Enable ActivityWatch service for the user";
   };
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.aw-qt ];
     services.activitywatch = {
       enable = true;
-      package = pkgs.aw-server-rust;
+      package = pkgs.activitywatch; # was previously using pkgs.aw-server-rust #TODO Delete if works or works better with activitywatch now.
       # settings = { # in TOML
       #   port = 1234;
       #   custom_static = {

@@ -7,13 +7,14 @@
 let
   inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.${namespace}.services.ollama;
+  hmUser = config.home-manager.users.${config.${namespace}.user.name};
 in
 {
   options.${namespace}.services.ollama = {
     enable = mkEnableOption "Enable ollama for local LLM serving";
     allowedOrigins = mkOption {
       type = types.listOf types.str;
-      default = [ "http://127.0.0.1" "http://100.100.0.0" ];
+      default = [ ];
       description = "additional allowed ollama origin addresses";
     };
   };
@@ -33,7 +34,13 @@ in
       #   "gpt-oss:20b"
       #   "qwen3:14b"
       # ];
-      environmentVariables = { };
+      environmentVariables = {
+        OLLAMA_ORIGINS = lib.concatStringsSep "," (
+          [ "http://127.0.0.1" ]
+          ++ cfg.allowedOrigins
+          ++ lib.optionals hmUser.spirenix.apps.zen.enable [ "moz-extensions://*" ]
+        );
+      };
     };
   };
 }

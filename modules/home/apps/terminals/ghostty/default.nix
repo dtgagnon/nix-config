@@ -9,6 +9,8 @@ let
   inherit (lib) mkIf mkOption types;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.ghostty;
+  trailShaders = import ./trails.nix;
+  trailNames = builtins.attrNames trailShaders;
 in
 {
   options.${namespace}.apps.terminals.ghostty = {
@@ -16,8 +18,13 @@ in
     systemd = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable systemd-related configuration for Ghostty.";
+      description = "Whether to enable systemd-related configuration for Ghostty";
       example = true;
+    };
+    trail = mkOption {
+      type = types.nullOr (types.enum trailNames);
+      default = null;
+      description = ''Name of the predefined cursor trail shader to install from `trails.nix`'';
     };
   };
 
@@ -72,6 +79,7 @@ in
           "alt+nine=last_tab"
 
           # Other
+          "ctrl+shift+p=toggle_command_palette"
           "ctrl+alt+a=select_all"
           "ctrl+alt+i=inspector:toggle"
           "ctrl+alt+j=write_screen_file:paste"
@@ -98,12 +106,19 @@ in
           "shift+page_up=scroll_page_up"
           "shift+page_down=scroll_page_down"
         ];
+        cursor-style = "block";
+        custom-shader = mkIf (cfg.trail != null) "./shaders/trail.glsl";
+        custom-shader-animation = true;
         quit-after-last-window-closed = false;
         window-padding-x = 10;
         window-padding-y = 10;
         window-decoration = false;
       };
       # themes = { }; # Custom created themes to add to $HOME/.config/ghostty/themes
+    };
+
+    xdg.configFile = mkIf (cfg.trail != null) {
+      "ghostty/shaders/trail.glsl".text = trailShaders.${cfg.trail};
     };
   };
 }

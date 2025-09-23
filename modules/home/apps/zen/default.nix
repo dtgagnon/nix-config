@@ -1,19 +1,17 @@
-{
-  lib,
-  config,
-  inputs,
-  system,
-  namespace,
-  ...
+{ lib
+, config
+, inputs
+, system
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.${namespace}.apps.zen;
 in
 {
   options.${namespace}.apps.zen = {
-    enable = mkBoolOpt false "Enable Zen Browser";
+    enable = mkEnableOption "Enable Zen Browser";
   };
 
   config = mkIf cfg.enable {

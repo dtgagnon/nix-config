@@ -39,6 +39,8 @@ in
 
         [projects."/home/dtgagnon/nix-config/nixos"]
         trust_level = "trusted"
+        [projects."/home/dtgagnon/Apps/Obsidian/dtg-engineering/~ops/generations"]
+        trust_level = "trusted"
       '';
     };
 
