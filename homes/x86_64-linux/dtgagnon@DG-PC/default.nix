@@ -23,6 +23,7 @@ in
       inkscape = enabled;
       kiro = enabled;
       looking-glass-client = enabled;
+      music-player = { enable = true; player = "ncmpcpp"; };
       obsidian = enabled;
       office = { libreoffice = enabled; okular-pdf = enabled; };
       # super-productivity = enabled;

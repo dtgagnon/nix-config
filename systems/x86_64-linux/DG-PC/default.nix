@@ -37,6 +37,7 @@ in
     };
 
     services = {
+      audio = enabled;
       davfs = enabled;
       keyd = enabled;
       n8n = enabled;

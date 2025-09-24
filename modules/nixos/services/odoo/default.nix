@@ -17,6 +17,9 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    sops.secrets.odoo."adminPass" = { };
+
     # Delegate the service to nixpkgs upstream module.
     services.odoo = {
       enable = true;
@@ -26,8 +29,13 @@ in
       # Settings part of application INI file
       settings = {
         options = {
+          # admin_passwd = "";
+
+          # Database config
+          db_host = "100.100.1.2";
+          db_port = "8069";
+          db_name = "odoo";
           db_user = "odoo";
-          db_password = "odoo";
         };
       };
     };

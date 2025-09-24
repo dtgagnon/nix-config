@@ -21,7 +21,6 @@ in
       };
 
       hardware = {
-        audio = enabled;
         keyboard = enabled;
       };
 
@@ -33,6 +32,7 @@ in
       };
 
       services = {
+        audio = enabled;
         openssh = enabled;
       };
 

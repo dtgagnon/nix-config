@@ -1,3 +1,12 @@
+{ lib
+, config
+, namespace
+, ...
+}:
+let
+  inherit (lib.${namespace}) mkRGBA_valOnly;
+  inherit (config.lib.stylix) colors;
+in
 {
   blaze = ''
     // Based on https://gist.github.com/chardskarth/95874c54e29da6b5a36ab7b50ae2d088
@@ -73,10 +82,10 @@
         return vec2(rectangle.x + (rectangle.z / 2.), rectangle.y - (rectangle.w / 2.));
     }
 
-    const vec4 TRAIL_COLOR = vec4(1.0, 0.725, 0.161, 1.0); // yellow
+    const vec4 TRAIL_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base03}"; alpha = 1.0; }}); //stylix driven
     const vec4 CURRENT_CURSOR_COLOR = TRAIL_COLOR;
     const vec4 PREVIOUS_CURSOR_COLOR = TRAIL_COLOR;
-    const vec4 TRAIL_COLOR_ACCENT = vec4(1.0, 0., 0., 1.0); // red-orange
+    const vec4 TRAIL_COLOR_ACCENT = vec4(1.0,0,0,1.0); //stylix driven
     const float DURATION = .5;
     const float OPACITY = .2;
     // Don't draw trail within that distance * cursor size.

@@ -16,7 +16,6 @@ in
   ];
 
   spirenix.hardware = {
-    audio.enable = true;
     gpu = {
       enable = true;
       iGPU = {

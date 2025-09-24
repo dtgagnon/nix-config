@@ -9,7 +9,7 @@ let
   inherit (lib) mkIf mkOption types;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.ghostty;
-  trailShaders = import ./trails.nix;
+  trailShaders = import ./trails.nix { inherit lib config namespace; };
   trailNames = builtins.attrNames trailShaders;
 in
 {

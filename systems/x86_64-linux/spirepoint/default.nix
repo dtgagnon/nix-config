@@ -48,7 +48,10 @@ in
       };
     };
 
-    services = { odoo = enabled; };
+    services = {
+      audio = { enable = true; useMpd = true; };
+      odoo = enabled;
+    };
 
     system = {
       enable = true;
