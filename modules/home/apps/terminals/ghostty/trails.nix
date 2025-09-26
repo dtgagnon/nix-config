@@ -82,11 +82,11 @@ in
         return vec2(rectangle.x + (rectangle.z / 2.), rectangle.y - (rectangle.w / 2.));
     }
 
-    const vec4 TRAIL_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base03}"; alpha = 1.0; }}); //stylix driven
+    const vec4 TRAIL_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base03}"; alpha = 1.0; }}) / vec4(255.0,255.0,255.0,255.0); //stylix driven
     const vec4 CURRENT_CURSOR_COLOR = TRAIL_COLOR;
     const vec4 PREVIOUS_CURSOR_COLOR = TRAIL_COLOR;
-    const vec4 TRAIL_COLOR_ACCENT = vec4(1.0,0,0,1.0); //stylix driven
-    const float DURATION = .5;
+    const vec4 TRAIL_COLOR_ACCENT = vec4(${mkRGBA_valOnly { hex = "#${colors.base04}"; alpha = 1.0; }}) / vec4(255.0,255.0,255.0,255.0); //stylix driven
+    const float DURATION = .2;
     const float OPACITY = .2;
     // Don't draw trail within that distance * cursor size.
     // This prevents trails from appearing when typing.
@@ -356,6 +356,88 @@ in
         outRGB = mix(outRGB, colTween, covCursor); /* block */
 
         fragColor.rgb = outRGB;
+    }
+  '';
+
+  glitter_comet = ''
+    /*─────────────────────────────────────────────────────────────────────────
+     *  glitter_comet.glsl — sparkly cursor trail whose density follows motion
+     *    • bursts of “glitter” appear only along the cursor travel segment
+     *    • faster/longer jumps raise the sparkle density
+     *    • Stylix colours drive tint and opacity without extra shader edits
+     *────────────────────────────────────────────────────────────────────────*/
+
+    vec2 ndc(vec2 value, float isPos) {
+      return (value * 2.0 - iResolution.xy * isPos) / iResolution.y;
+    }
+
+    float sdSegment(vec2 p, vec2 a, vec2 b) {
+      vec2 pa = p - a;
+      vec2 ba = b - a;
+      float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-5), 0.0, 1.0);
+      return length(pa - ba * h);
+    }
+
+    float hash(vec3 p) {
+      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+    }
+
+    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base0F}"; alpha = 1.0; }}) / vec4(255.0, 255.0, 255.0, 255.0);
+    const float GLITTER_WIDTH = 0.018;
+    const float MIN_DENSITY = 0.08;
+    const float MAX_DENSITY = 0.85;
+    const float BRIGHTNESS = 0.75;
+    const float GLITTER_PERIOD = 1.5;
+    const float GLITTER_FALL_DISTANCE = 0.2;
+    const float GLITTER_LIFETIME = 0.7;
+
+    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+      #if !defined(WEB)
+      vec4 base = texture(iChannel0, fragCoord / iResolution.xy);
+      #else
+      vec4 base = vec4(0.0);
+      #endif
+
+      vec2 curPx = iCurrentCursor.xy;
+      vec2 prvPx = iPreviousCursor.xy;
+      vec2 deltaPx = curPx - prvPx;
+      float travelPx = length(deltaPx);
+
+      vec2 cur = ndc(curPx, 1.0);
+      vec2 prv = ndc(prvPx, 1.0);
+      vec2 P = ndc(fragCoord, 1.0);
+
+      vec2 sparkleCell = floor(fragCoord.xy * 0.5);
+      float cellSeed = hash(vec3(sparkleCell, 37.0));
+      float timeline = iTime / GLITTER_PERIOD + cellSeed;
+      float cycleProgress = fract(timeline);
+      float cycleIndex = floor(timeline);
+
+      float fall = cycleProgress * GLITTER_FALL_DISTANCE;
+      vec2 fallP = P;
+      fallP.y += fall;
+
+      // smoothstep expects ascending edges; use inner then outer radius so the
+      // trail mask stays confined to the cursor path instead of covering screen
+      float trail = 1.0 - smoothstep(GLITTER_WIDTH * 0.2, GLITTER_WIDTH, sdSegment(fallP, prv, cur));
+
+      float moveElapsed = max(iTime - iTimeCursorChange, 0.0);
+      float motionPhase = clamp(moveElapsed / GLITTER_LIFETIME, 0.0, 1.0);
+      float motionFade = 1.0 - smoothstep(0.0, 1.0, motionPhase);
+
+      float travelNorm = clamp(travelPx / max(iResolution.y, 1.0), 0.0, 1.0);
+      float densityFactor = clamp(travelNorm * 10.0, 0.0, 1.0);
+      float density = mix(MIN_DENSITY, MAX_DENSITY, densityFactor) * motionFade;
+      float travelMask = clamp(travelPx * 0.5, 0.0, 1.0);
+
+      float sparkle = hash(vec3(sparkleCell, cycleIndex));
+      float spawn = step(1.0 - density, sparkle);
+
+      float fade = 1.0 - smoothstep(0.33, 1.0, cycleProgress);
+      float glitter = trail * spawn * fade * travelMask * motionFade;
+
+      vec3 colour = mix(base.rgb, GLITTER_COLOR.rgb, glitter * BRIGHTNESS);
+      fragColor = vec4(colour, base.a);
     }
   '';
 }

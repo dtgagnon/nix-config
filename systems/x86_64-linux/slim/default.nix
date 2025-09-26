@@ -46,7 +46,6 @@ in
     };
 
     hardware = {
-      audio = enabled;
       keyboard = enabled; # xkb stuff
       laptop = enabled; # battery, lid, etc.
     };
@@ -57,7 +56,9 @@ in
       sops-nix = enabled;
     };
 
-    services = { };
+    services = {
+      audio = enabled;
+    };
 
     system.enable = true; # gneral system config
     system.preservation = enabled;

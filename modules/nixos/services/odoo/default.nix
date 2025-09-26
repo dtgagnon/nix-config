@@ -17,25 +17,37 @@ in
   };
 
   config = mkIf cfg.enable {
-
-    sops.secrets.odoo."adminPass" = { };
+    spirenix.security.sops-nix.plainTextSecrets."odoo.admin-password" = {
+      secret = "odoo/adminPass";
+      usedBy = "services.odoo.settings.options.admin_passwd";
+      owner = "odoo";
+      group = "odoo";
+      mode = "0400";
+      restartUnits = [ "odoo.service" ];
+    };
 
     # Delegate the service to nixpkgs upstream module.
     services.odoo = {
       enable = true;
-      autoInitExtraFlags = [ ];
-      addons = [ ];
+      autoInit = true;
+      autoInitExtraFlags = [ "--load-language=en_US" "--without-demo=all" ];
+      # addons = [ ];
 
       # Settings part of application INI file
       settings = {
         options = {
-          # admin_passwd = "";
+          admin_passwd = config.spirenix.security.sops-nix.secretStrings."odoo.admin-password";
+          # WebUI
+          http_interface = "0.0.0.0";
+          http_port = 8069;
+          web_base_url = "http://spirepoint.aegean-interval.ts.net";
 
-          # Database config
-          db_host = "100.100.1.2";
-          db_port = "8069";
+          # Database config; use UNIX socket so peer auth works without a password.
+          db_host = "False";
+          db_port = "False";
           db_name = "odoo";
           db_user = "odoo";
+          db_password = "False";
         };
       };
     };

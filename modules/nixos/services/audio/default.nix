@@ -12,7 +12,9 @@ in
 {
   options.${namespace}.services.audio = {
     enable = mkBoolOpt true "Enable typical audio configuration";
-    extraPackages = mkOpt (types.listOf types.package) [ ] "A list of additional audio related packages";
+    extraPackages =
+      mkOpt (types.listOf types.package) [ ]
+        "A list of additional audio related packages";
     useMpd = mkBoolOpt false "Use mpd as the default music player daemon";
   };
 
@@ -29,21 +31,23 @@ in
         wireplumber.enable = true;
       };
 
-      environment.systemPackages = with pkgs; [
-        pulsemixer
-        pavucontrol
-      ] ++ cfg.extraPackages;
+      environment.systemPackages =
+        with pkgs;
+        [
+          pulsemixer
+          pavucontrol
+        ]
+        ++ cfg.extraPackages;
     })
 
     (mkIf cfg.useMpd {
       services.mpd = {
         enable = true;
-        musicDirectory = /srv/media/music;
-        playlistDirectory = /srv/media/music/playlists;
-        startWhenNeeded = true;
+        musicDirectory = "/srv/media/music";
+        playlistDirectory = "/srv/media/music/playlists";
         network = {
           listenAddress = "100.100.1.2";
-          port = "6600";
+          port = 6600;
         };
       };
     })

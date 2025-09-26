@@ -1,9 +1,9 @@
 { lib
 , pkgs
 , config
-  # , osConfig ? { }
+, # , osConfig ? { }
   # , format ? "unknown"
-, namespace
+  namespace
 , ...
 }:
 let
@@ -23,11 +23,11 @@ in
       inkscape = enabled;
       kiro = enabled;
       looking-glass-client = enabled;
-      music-player = { enable = true; player = "ncmpcpp"; };
+      music-player = { enable = true; player = "rmcp"; };
       obsidian = enabled;
       office = { libreoffice = enabled; okular-pdf = enabled; };
       # super-productivity = enabled;
-      terminals.ghostty = { enable = true; trail = "blaze"; };
+      terminals.ghostty = { enable = true; trail = "glitter_comet"; };
       todoist = enabled;
       vscode = enabled;
       windsurf = enabled;
@@ -71,8 +71,18 @@ in
         ];
         extraConfig = ''
           general {
-            col.active_border = ${mkRGBA { hex = "#${colors.base0D}"; alpha = 0.75; }}
-            col.inactive_border = ${mkRGBA { hex = "#${colors.base03}"; alpha = 0.6; }}
+            col.active_border = ${
+              mkRGBA {
+                hex = "#${colors.base0D}";
+                alpha = 0.75;
+              }
+            }
+            col.inactive_border = ${
+              mkRGBA {
+                hex = "#${colors.base03}";
+                alpha = 0.6;
+              }
+            }
           }
         '';
       };
