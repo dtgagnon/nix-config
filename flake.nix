@@ -216,5 +216,8 @@
     ags.url = "github:Aylur/ags";
     ags.inputs.nixpkgs.follows = "nixpkgs";
     nixd.url = "github:nix-community/nixd";
+
+    ## misc repos
+    odoo-oca-repos.url = "github:dtgagnon/nixpile?dir=odoo_oca_flake";
   };
 }

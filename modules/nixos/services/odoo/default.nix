@@ -1,5 +1,7 @@
 { lib
+, pkgs
 , config
+, inputs
 , namespace
 , ...
 }:
@@ -7,6 +9,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.services.odoo;
+  odooAddons = inputs.odoo-oca-repos.odoo_oca_repos; #TODO: Figure out how to reference these individual repos in this flake
 in
 {
   options.${namespace}.services.odoo = {
@@ -31,7 +34,39 @@ in
       enable = true;
       autoInit = true;
       autoInitExtraFlags = [ "--load-language=en_US" "--without-demo=all" ];
-      # addons = [ ];
+      addons = with odooAddons; [
+        account-analytic
+        account-financial-reporting
+        account-financial-tools
+        account-invoicing
+        account-invoice-reporting
+        account-payment
+        account-reconcile
+        ai
+        bank-payment
+        connector
+        contract
+        crm
+        dms
+        hr
+        knowledge
+        management-system
+        manufacture
+        mis-builder
+        partner-contact
+        project
+        queue
+        reporting-engine
+        rest-framework
+        sale-workflow
+        server-auth
+        server-tools
+        server-ux
+        timesheet
+        web
+
+        project-gantt
+      ];
 
       # Settings part of application INI file
       settings = {

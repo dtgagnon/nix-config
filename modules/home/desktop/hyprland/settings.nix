@@ -17,9 +17,8 @@ in
           execCmds = ([
             "gnome-keyring-daemon --start --components=secrets"
             # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
-            "nm-applet"
-            "aw-qt --no-gui"
             "playerctld daemon"
+            "solaar -b symbolic"
           ] ++ cfg.extraExec);
         in
         if osConfig.programs.hyprland.withUWSM then

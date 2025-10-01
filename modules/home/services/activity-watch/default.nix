@@ -16,6 +16,12 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.aw-qt ];
+    xdg.autostart = {
+      enable = true;
+      entries = [
+        "${pkgs.activitywatch}/share/applications/aw-qt.desktop"
+      ];
+    };
     services.activitywatch = {
       enable = true;
       package = pkgs.activitywatch; # was previously using pkgs.aw-server-rust #TODO Delete if works or works better with activitywatch now.

@@ -30,9 +30,9 @@ in
           scrolloff: 0,
           wrap_navigation: false,
           enable_mouse: true,
-          enableconfig_hot_reload: true,
+          enable_config_hot_reload: true,
           status_update_interval_ms: 1000,
-          select_currrent_song_on_change: false,
+          select_current_song_on_change: false,
           browser_song_sort: [Disc, Track, Artist, Title],
         )
       '';

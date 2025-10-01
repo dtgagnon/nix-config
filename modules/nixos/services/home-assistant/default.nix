@@ -175,6 +175,7 @@ in
         oauth2client #google
         locationsharinglib #google_maps
         typedmonarchmoney #monarch_money
+        python-kasa #kasa devices
       ];
     };
 

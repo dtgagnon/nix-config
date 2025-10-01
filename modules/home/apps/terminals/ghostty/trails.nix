@@ -371,25 +371,27 @@ in
       return (value * 2.0 - iResolution.xy * isPos) / iResolution.y;
     }
 
-    float sdSegment(vec2 p, vec2 a, vec2 b) {
+    float sdSegment(vec2 p, vec2 a, vec2 b, out float param) {
       vec2 pa = p - a;
       vec2 ba = b - a;
-      float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-5), 0.0, 1.0);
-      return length(pa - ba * h);
+      float denom = max(dot(ba, ba), 1e-5);
+      param = clamp(dot(pa, ba) / denom, 0.0, 1.0);
+      return length(pa - ba * param);
     }
 
     float hash(vec3 p) {
       return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
     }
 
-    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base0F}"; alpha = 1.0; }}) / vec4(255.0, 255.0, 255.0, 255.0);
+    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base06}"; alpha = 1.0; }}) / vec4(255.0, 255.0, 255.0, 255.0);
     const float GLITTER_WIDTH = 0.018;
     const float MIN_DENSITY = 0.08;
     const float MAX_DENSITY = 0.85;
     const float BRIGHTNESS = 0.75;
     const float GLITTER_PERIOD = 1.5;
-    const float GLITTER_FALL_DISTANCE = 0.2;
+    const float GLITTER_FALL_DISTANCE = 0.4;
     const float GLITTER_LIFETIME = 0.7;
+    const float GLITTER_FRONT_THICKNESS = 0.1;
 
     void mainImage(out vec4 fragColor, in vec2 fragCoord) {
       #if !defined(WEB)
@@ -398,13 +400,17 @@ in
       vec4 base = vec4(0.0);
       #endif
 
-      vec2 curPx = iCurrentCursor.xy;
-      vec2 prvPx = iPreviousCursor.xy;
-      vec2 deltaPx = curPx - prvPx;
+      vec4 curRect = iCurrentCursor;
+      vec4 prvRect = iPreviousCursor;
+
+      vec2 curCentrePx = curRect.xy + vec2(curRect.z * 0.5, -curRect.w * 0.5);
+      vec2 prvCentrePx = prvRect.xy + vec2(prvRect.z * 0.5, -prvRect.w * 0.5);
+
+      vec2 deltaPx = curCentrePx - prvCentrePx;
       float travelPx = length(deltaPx);
 
-      vec2 cur = ndc(curPx, 1.0);
-      vec2 prv = ndc(prvPx, 1.0);
+      vec2 cur = ndc(curCentrePx, 1.0);
+      vec2 prv = ndc(prvCentrePx, 1.0);
       vec2 P = ndc(fragCoord, 1.0);
 
       vec2 sparkleCell = floor(fragCoord.xy * 0.5);
@@ -413,13 +419,21 @@ in
       float cycleProgress = fract(timeline);
       float cycleIndex = floor(timeline);
 
-      float fall = cycleProgress * GLITTER_FALL_DISTANCE;
-      vec2 fallP = P;
-      fallP.y += fall;
+      float segParam;
+      float distToSeg = sdSegment(P, prv, cur, segParam);
+      vec2 basePoint = mix(prv, cur, segParam);
 
       // smoothstep expects ascending edges; use inner then outer radius so the
-      // trail mask stays confined to the cursor path instead of covering screen
-      float trail = 1.0 - smoothstep(GLITTER_WIDTH * 0.2, GLITTER_WIDTH, sdSegment(fallP, prv, cur));
+      // trail mask stays confined to the cursor path while allowing vertical drift
+      float trail = 1.0 - smoothstep(GLITTER_WIDTH * 0.2, GLITTER_WIDTH, distToSeg);
+
+      float drop = P.y - basePoint.y;
+      float dropNorm = clamp(drop / max(GLITTER_FALL_DISTANCE, 1e-4), 0.0, 1.0);
+      float fallHead = cycleProgress;
+      float fallTail = max(fallHead - GLITTER_FRONT_THICKNESS, 0.0);
+      float leadingEdge = 1.0 - smoothstep(fallHead, fallHead + GLITTER_FRONT_THICKNESS, dropNorm);
+      float trailingEdge = smoothstep(fallTail, fallTail + GLITTER_FRONT_THICKNESS, dropNorm);
+      float fallMask = leadingEdge * trailingEdge * smoothstep(0.0, GLITTER_FRONT_THICKNESS, drop);
 
       float moveElapsed = max(iTime - iTimeCursorChange, 0.0);
       float motionPhase = clamp(moveElapsed / GLITTER_LIFETIME, 0.0, 1.0);
@@ -434,7 +448,7 @@ in
       float spawn = step(1.0 - density, sparkle);
 
       float fade = 1.0 - smoothstep(0.33, 1.0, cycleProgress);
-      float glitter = trail * spawn * fade * travelMask * motionFade;
+      float glitter = trail * fallMask * spawn * fade * travelMask * motionFade;
 
       vec3 colour = mix(base.rgb, GLITTER_COLOR.rgb, glitter * BRIGHTNESS);
       fragColor = vec4(colour, base.a);
