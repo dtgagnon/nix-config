@@ -46,7 +46,7 @@ in
         musicDirectory = "/srv/media/music";
         playlistDirectory = "/srv/media/music/playlists";
         network = {
-          listenAddress = "100.100.1.2";
+          listenAddress = "0.0.0.0";
           port = 6600;
         };
       };

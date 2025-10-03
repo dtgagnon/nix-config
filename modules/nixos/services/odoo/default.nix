@@ -9,7 +9,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.services.odoo;
-  odooAddons = inputs.odoo-oca-repos.odoo_oca_repos; #TODO: Figure out how to reference these individual repos in this flake
+  odooAddons = inputs.odoo_addons.odoo_addons; #TODO: Figure out how to reference these individual repos in this flake
 in
 {
   options.${namespace}.services.odoo = {
@@ -65,7 +65,7 @@ in
         timesheet
         web
 
-        project-gantt
+        odoo_gantt
       ];
 
       # Settings part of application INI file

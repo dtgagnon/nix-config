@@ -39,7 +39,7 @@ in
 
         # Discord
         "float,class:^(discord)$"
-        "move 50% 84,class:^(discord)$"
+        "move 50%-w/2 84,class:^(discord)$"
         "size 1600 900,class:^(discord)$"
 
         # Ghostty - terminal

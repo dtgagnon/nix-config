@@ -8,6 +8,137 @@ let
   inherit (config.lib.stylix) colors;
 in
 {
+  glitter_comet = ''
+    /*─────────────────────────────────────────────────────────────────────────
+     *  glitter_comet.glsl — sparkly cursor trail whose density follows motion
+     *    • bursts of “glitter” appear only along the cursor travel segment
+     *    • faster/longer jumps raise the sparkle density
+     *    • Stylix colours drive tint and opacity without extra shader edits
+     *────────────────────────────────────────────────────────────────────────*/
+
+    // inputs - screen size helper
+    vec2 ndc(vec2 value, float isPos) {
+      // Map from pixels to NDC where Y dimension spans [-1, 1]
+      return (value * 2.0 - iResolution.xy * isPos) / iResolution.y;
+    }
+
+    // Distance helper to a segment A->B
+    float sdSegment(vec2 p, vec2 a, vec2 b, out float param) {
+      vec2 pa = p - a;
+      vec2 ba = b - a;
+      float denom = max(dot(ba, ba), 1e-5);
+      param = clamp(dot(pa, ba) / denom, 0.0, 1.0);
+      return length(pa - ba * param);
+    }
+
+    // Randomizer
+    float hash(vec3 p) {
+      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+    }
+
+    //Tuneable Values in NDC units
+    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base06}"; alpha = 1.0; }}) / vec4(255.0, 255.0, 255.0, 1.0);
+    const float GLITTER_WIDTH = 0.05;
+    const float MIN_DENSITY = 0.9;
+    const float MAX_DENSITY = 1.0;
+    const float BRIGHTNESS = 0.75;
+    const float GLITTER_PERIOD = 1.5;
+    const float GLITTER_FALL_DISTANCE = 0.4;
+    const float GLITTER_LIFETIME = 0.7;
+    const float GLITTER_FRONT_THICKNESS = 0.1;
+
+    //ShaderToy entry, pixel coords, output colors
+    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+      #if !defined(WEB)
+        vec4 base = texture(iChannel0, fragCoord / iResolution.xy); //Sample existing framebuffer/background
+      #else
+        vec4 base = vec4(0.0); //Starting color
+      #endif
+
+      //Ghostty-provided uniforms for terminal cursor state
+      //Cursor position before and after movement
+      vec4 curRect = iCurrentCursor;
+      vec4 prvRect = iPreviousCursor;
+
+      //Compute cursor center in pixel space before and after movement
+      vec2 curCentrePx = curRect.xy + vec2(curRect.z * 0.5, -curRect.w * 0.5);
+      vec2 prvCentrePx = prvRect.xy + vec2(prvRect.z * 0.5, -prvRect.w * 0.5);
+
+      //NDC positions for all relevant points
+      vec2 cur = ndc(curCentrePx, 1.0);
+      vec2 prv = ndc(prvCentrePx, 1.0);
+      vec2 P = ndc(fragCoord, 1.0);
+
+      // Cursor size in NDC
+      vec2 cursorSizeNdc = (iCurrentCursor.zw * 2.0) / iResolution.y;
+      float cursorMaxNdc = macx(cursorSizeNdc.x, cursorSizeNdc.y);
+
+      // NDC centers already computer as `cur` and `prv`
+      float travelNdc = length (cur - prv);
+
+      //Optional same-line suppression
+      bool sameLine = abs(ndc(curRect.xy, 1.0).y - ndc(prvRect.xy, 1.0).y) < 1e-6;
+      bool suppressSameLine = HIDE_TRAILS_ON_THE_SAME_LINE && sameLine;
+
+      //Gate tiny moves (suppress tiny moves)
+      bool smallMove = (travelNdc <= DRAW_THRESHOLD * cursorMaxNdc);
+
+      //Motion fade after the last cursor change
+      float moveElapsed = max(iTime - iTimeCursorChange, 0.0);
+      float motionPhase = clamp(moveElapsed / GLITTER_LIFETIME, 0.0, 1.0);
+      float motionFade = 1.0 - smoothstep(0.0, 1.0, motionPhase);
+
+      //Segment distance field in NDC units
+      float segParam;
+      float distToSeg = sdSegment(P, prv, cur, segParam);
+      vec2 basePoint = mix(prv, cur, segParam);
+
+      //Trail thickness mask around the segment (area around the line from A->B (before pos. to after pos.))
+      // smoothstep expects ascending edges; use inner then outer radius so the trail mask stays confined to the cursor path while allowing vertical drift
+      float trail = 1.0 - smoothstep(GLITTER_WIDTH * 0.2, GLITTER_WIDTH, distToSeg);
+
+      //Falling glitter band below the path, expressed in normalized "fall space"
+      float drop = P.y - basePoint.y; //NDC delta along Y-axis
+      float dropNorm = clamp(drop / max(GLITTER_FALL_DISTANCE, 1e-4), 0.0, 1.0);
+      float timeline = iTime / GLITTER_PERIOD;
+
+      //Stable per-cell phasing: grid in pixel space with fixed cell size for sparkles?
+      const float cellSizePx = 2.0; //~2px cells
+      vec2 sparkleCell = floor(fragCoord.xy / cellSizePx);
+      float cellSeed = hash(vec3(sparkleCell, 37.0));
+      float t = timeline + cellSeed;
+      float cycleProg = fract(t);
+      float cycleIndex = floor(t);
+
+      //Falling band front and tail in normalized [0,1] space
+      float fallHead = cycleProg;
+      float fallTail = max(fallHead - GLITTER_FRONT_THICKNESS, 0.0);
+      float leadingEdge = 1.0 - smoothstep(fallHead, fallHead + GLITTER_FRONT_THICKNESS, dropNorm);
+      float trailingEdge = 1.0 - (1.0 - smoothstep(fallTail, fallTail + GLITTER_FRONT_THICKNESS, dropNorm));
+      float fallMask = leadingEdge * trailingEdge * smoothstep(0.0, GLITTER_FRONT_THICKNESS, dropNorm);
+
+      //Denisty responds to travel distance in NDC, clamped to [0,1]
+      float travelNorm = clamp(travelNdc, 0.0, 1.0);
+      float densityFactor = clamp(travelNorm * 10.0, 0.0, 1.0);
+      float density = mix(MIN_DENSITY, MAX_DENSITY, densityFactor) * motionFade;
+
+      //Spawn decision per-cell per-cycle
+      float sparkle = hash(vec3(sparkleCell, cycleIndex));
+      float spawn = step(1.0 - density, sparkle);
+
+      //Fade out within a cycle so specks twinkle
+      float fade = 1.0 - smoothstep(0.33, 1.0, cycleProg);
+
+      //Travel mask in consistent units; suppress tiny moves and optional same-line
+      float travelMask = (smallMove || suppressSameLine) ? 0.0 : travelNorm;
+
+      //Final glitter mask
+      float glitter = trail * fallMask * spawn * fade * travelMask * motionFade;
+
+      vec3 colour = mix(base.rgb, GLITTER_COLOR.rgb, glitter * BRIGHTNESS);
+      fragColor = vec4(colour, base.a);
+    }
+  '';
   blaze = ''
     // Based on https://gist.github.com/chardskarth/95874c54e29da6b5a36ab7b50ae2d088
     float ease(float x) {
@@ -356,102 +487,6 @@ in
         outRGB = mix(outRGB, colTween, covCursor); /* block */
 
         fragColor.rgb = outRGB;
-    }
-  '';
-
-  glitter_comet = ''
-    /*─────────────────────────────────────────────────────────────────────────
-     *  glitter_comet.glsl — sparkly cursor trail whose density follows motion
-     *    • bursts of “glitter” appear only along the cursor travel segment
-     *    • faster/longer jumps raise the sparkle density
-     *    • Stylix colours drive tint and opacity without extra shader edits
-     *────────────────────────────────────────────────────────────────────────*/
-
-    vec2 ndc(vec2 value, float isPos) {
-      return (value * 2.0 - iResolution.xy * isPos) / iResolution.y;
-    }
-
-    float sdSegment(vec2 p, vec2 a, vec2 b, out float param) {
-      vec2 pa = p - a;
-      vec2 ba = b - a;
-      float denom = max(dot(ba, ba), 1e-5);
-      param = clamp(dot(pa, ba) / denom, 0.0, 1.0);
-      return length(pa - ba * param);
-    }
-
-    float hash(vec3 p) {
-      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
-    }
-
-    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base06}"; alpha = 1.0; }}) / vec4(255.0, 255.0, 255.0, 255.0);
-    const float GLITTER_WIDTH = 0.018;
-    const float MIN_DENSITY = 0.08;
-    const float MAX_DENSITY = 0.85;
-    const float BRIGHTNESS = 0.75;
-    const float GLITTER_PERIOD = 1.5;
-    const float GLITTER_FALL_DISTANCE = 0.4;
-    const float GLITTER_LIFETIME = 0.7;
-    const float GLITTER_FRONT_THICKNESS = 0.1;
-
-    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-      #if !defined(WEB)
-      vec4 base = texture(iChannel0, fragCoord / iResolution.xy);
-      #else
-      vec4 base = vec4(0.0);
-      #endif
-
-      vec4 curRect = iCurrentCursor;
-      vec4 prvRect = iPreviousCursor;
-
-      vec2 curCentrePx = curRect.xy + vec2(curRect.z * 0.5, -curRect.w * 0.5);
-      vec2 prvCentrePx = prvRect.xy + vec2(prvRect.z * 0.5, -prvRect.w * 0.5);
-
-      vec2 deltaPx = curCentrePx - prvCentrePx;
-      float travelPx = length(deltaPx);
-
-      vec2 cur = ndc(curCentrePx, 1.0);
-      vec2 prv = ndc(prvCentrePx, 1.0);
-      vec2 P = ndc(fragCoord, 1.0);
-
-      vec2 sparkleCell = floor(fragCoord.xy * 0.5);
-      float cellSeed = hash(vec3(sparkleCell, 37.0));
-      float timeline = iTime / GLITTER_PERIOD + cellSeed;
-      float cycleProgress = fract(timeline);
-      float cycleIndex = floor(timeline);
-
-      float segParam;
-      float distToSeg = sdSegment(P, prv, cur, segParam);
-      vec2 basePoint = mix(prv, cur, segParam);
-
-      // smoothstep expects ascending edges; use inner then outer radius so the
-      // trail mask stays confined to the cursor path while allowing vertical drift
-      float trail = 1.0 - smoothstep(GLITTER_WIDTH * 0.2, GLITTER_WIDTH, distToSeg);
-
-      float drop = P.y - basePoint.y;
-      float dropNorm = clamp(drop / max(GLITTER_FALL_DISTANCE, 1e-4), 0.0, 1.0);
-      float fallHead = cycleProgress;
-      float fallTail = max(fallHead - GLITTER_FRONT_THICKNESS, 0.0);
-      float leadingEdge = 1.0 - smoothstep(fallHead, fallHead + GLITTER_FRONT_THICKNESS, dropNorm);
-      float trailingEdge = smoothstep(fallTail, fallTail + GLITTER_FRONT_THICKNESS, dropNorm);
-      float fallMask = leadingEdge * trailingEdge * smoothstep(0.0, GLITTER_FRONT_THICKNESS, drop);
-
-      float moveElapsed = max(iTime - iTimeCursorChange, 0.0);
-      float motionPhase = clamp(moveElapsed / GLITTER_LIFETIME, 0.0, 1.0);
-      float motionFade = 1.0 - smoothstep(0.0, 1.0, motionPhase);
-
-      float travelNorm = clamp(travelPx / max(iResolution.y, 1.0), 0.0, 1.0);
-      float densityFactor = clamp(travelNorm * 10.0, 0.0, 1.0);
-      float density = mix(MIN_DENSITY, MAX_DENSITY, densityFactor) * motionFade;
-      float travelMask = clamp(travelPx * 0.5, 0.0, 1.0);
-
-      float sparkle = hash(vec3(sparkleCell, cycleIndex));
-      float spawn = step(1.0 - density, sparkle);
-
-      float fade = 1.0 - smoothstep(0.33, 1.0, cycleProgress);
-      float glitter = trail * fallMask * spawn * fade * travelMask * motionFade;
-
-      vec3 colour = mix(base.rgb, GLITTER_COLOR.rgb, glitter * BRIGHTNESS);
-      fragColor = vec4(colour, base.a);
     }
   '';
 }
