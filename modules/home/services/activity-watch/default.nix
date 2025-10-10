@@ -6,8 +6,11 @@
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkIf mkEnableOption attrByPath;
   cfg = config.${namespace}.services.activity-watch;
+  withHyprland = attrByPath [ "wayland" "windowManager" "hyprland" "enable" ] false config;
+  hyprlandSystemd = attrByPath [ "wayland" "windowManager" "hyprland" "systemd" "enable" ] false config;
+  waybarEnabled = attrByPath [ "programs" "waybar" "enable" ] false config;
 in
 {
   options.${namespace}.services.activity-watch = {
@@ -16,12 +19,6 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.aw-qt ];
-    xdg.autostart = {
-      enable = true;
-      entries = [
-        "${pkgs.activitywatch}/share/applications/aw-qt.desktop"
-      ];
-    };
     services.activitywatch = {
       enable = true;
       package = pkgs.activitywatch; # was previously using pkgs.aw-server-rust #TODO Delete if works or works better with activitywatch now.
@@ -72,5 +69,29 @@ in
         # };
       };
     };
+
+    systemd.user.services.aw-qt = {
+      Unit = {
+        Description = "ActivityWatch Tray";
+        After = [ "waybar.service" "graphical-session.target" ];
+        Wants = lib.optionals waybarEnabled [ "waybar.service" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.aw-qt}/bin/aw-qt";
+        Restart = "on-failure";
+      };
+      Install = {
+        WantedBy =
+          [ "graphical-session.target" ]
+          ++ lib.optionals hyprlandSystemd [ "wayland-session@Hyprland.target" ];
+      };
+    };
+
+    spirenix.desktop.hyprland.extraExec =
+      lib.optionals (
+        withHyprland
+        && !hyprlandSystemd
+      ) [ "systemctl --user start aw-qt.service" ];
   };
 }
