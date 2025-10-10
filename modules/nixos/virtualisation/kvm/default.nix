@@ -66,10 +66,10 @@ in
           qemu = {
             package = pkgs.qemu_kvm;
             runAsRoot = false;
-            ovmf = {
-              enable = true;
-              packages = [ pkgs.OVMFFull.fd ];
-            };
+            # ovmf = {
+            #   enable = true;
+            #   packages = [ pkgs.OVMFFull.fd ];
+            # };
             swtpm = enabled;
             vhostUserPackages = [ pkgs.spirenix.virtiofsd ];
             verbatimConfig = ''
