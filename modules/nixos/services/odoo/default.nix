@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , inputs
 , namespace
@@ -9,7 +8,7 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.services.odoo;
-  odooAddons = inputs.odoo_addons.odoo_addons; #TODO: Figure out how to reference these individual repos in this flake
+  ocaAddons = inputs.odooAdds.ocaAddons;
 in
 {
   options.${namespace}.services.odoo = {
@@ -34,44 +33,51 @@ in
       enable = true;
       autoInit = true;
       autoInitExtraFlags = [ "--load-language=en_US" "--without-demo=all" ];
-      addons = with odooAddons; [
-        account-analytic
-        account-financial-reporting
-        account-financial-tools
-        account-invoicing
-        account-invoice-reporting
-        account-payment
-        account-reconcile
-        ai
-        bank-payment
-        connector
-        contract
-        crm
-        dms
-        hr
-        knowledge
-        management-system
-        manufacture
-        mis-builder
-        partner-contact
-        project
-        queue
-        reporting-engine
-        rest-framework
-        sale-workflow
-        server-auth
-        server-tools
-        server-ux
-        timesheet
-        web
-
-        odoo_gantt
+      addons = [
+        ocaAddons.account-analytic
+        ocaAddons.account-financial-reporting
+        ocaAddons.account-financial-tools
+        ocaAddons.account-invoicing
+        ocaAddons.account-invoice-reporting
+        ocaAddons.account-payment
+        # ocaAddons.account-reconcile
+        ocaAddons.ai
+        ocaAddons.bank-payment
+        ocaAddons.connector
+        ocaAddons.contract
+        ocaAddons.crm
+        ocaAddons.dms
+        ocaAddons.hr
+        ocaAddons.knowledge
+        ocaAddons.management-system
+        ocaAddons.manufacture
+        ocaAddons.mis-builder
+        ocaAddons.partner-contact
+        ocaAddons.product-attribute
+        ocaAddons.project
+        ocaAddons.queue
+        ocaAddons.reporting-engine
+        ocaAddons.rest-framework
+        ocaAddons.sale-workflow
+        ocaAddons.server-auth
+        ocaAddons.server-tools
+        ocaAddons.server-ux
+        ocaAddons.stock-logistics-shopfloor
+        ocaAddons.stock-logistics-tracking
+        ocaAddons.stock-logistics-transport
+        ocaAddons.stock-logistics-warehouse
+        ocaAddons.timesheet
+        ocaAddons.web
       ];
 
       # Settings part of application INI file
       settings = {
         options = {
           admin_passwd = config.spirenix.security.sops-nix.secretStrings."odoo.admin-password";
+          server_wide_modules = "base,web,web_enterprise";
+          limit_time_real = 3600;
+          limit_time_cpu = 3600;
+
           # WebUI
           http_interface = "0.0.0.0";
           http_port = 8069;

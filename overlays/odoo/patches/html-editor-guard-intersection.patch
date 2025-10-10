@@ -1,0 +1,50 @@
+diff --git a/odoo/addons/html_editor/static/src/main/movenode_plugin.js b/odoo/addons/html_editor/static/src/main/movenode_plugin.js
+--- a/odoo/addons/html_editor/static/src/main/movenode_plugin.js
++++ b/odoo/addons/html_editor/static/src/main/movenode_plugin.js
+@@ -85,8 +85,14 @@ export class MoveNodePlugin extends Plugin {
+     }
+     destroy() {
+         super.destroy();
+-        this.intersectionObserver.disconnect();
+-        this.mutationObserver.disconnect();
++        if (this.intersectionObserver) {
++            this.intersectionObserver.disconnect();
++            this.intersectionObserver = null;
++        }
++        if (this.mutationObserver) {
++            this.mutationObserver.disconnect();
++            this.mutationObserver = null;
++        }
+         this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
+     }
+     intersectionObserverCallback(entries) {
+         for (const entry of entries) {
+             const element = entry.target;
+             if (entry.isIntersecting) {
+                 this.visibleMovableElements.add(element);
+                 this.resetHooksNextMousemove = true;
+diff --git a/odoo/addons/web_editor/static/src/js/wysiwyg/MoveNodePlugin.js b/odoo/addons/web_editor/static/src/js/wysiwyg/MoveNodePlugin.js
+--- a/odoo/addons/web_editor/static/src/js/wysiwyg/MoveNodePlugin.js
++++ b/odoo/addons/web_editor/static/src/js/wysiwyg/MoveNodePlugin.js
+@@ -109,8 +109,14 @@ export class MoveNodePlugin {
+         }
+     }
+     destroy() {
+-        this._intersectionObserver.disconnect();
+-        this.mutationObserver.disconnect();
++        if (this._intersectionObserver) {
++            this._intersectionObserver.disconnect();
++            this._intersectionObserver = null;
++        }
++        if (this.mutationObserver) {
++            this.mutationObserver.disconnect();
++            this.mutationObserver = null;
++        }
+         this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
+     }
+     _intersectionObserverCallback(entries) {
+         for (const entry of entries) {
+             const element = entry.target;
+             if (entry.isIntersecting) {
+                 this._visibleMovableElements.add(element);
+                 this._resetHooksNextMousemove = true;
