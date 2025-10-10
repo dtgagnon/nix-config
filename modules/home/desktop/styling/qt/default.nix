@@ -18,7 +18,6 @@ in
   config = mkIf cfg.enable {
     qt = {
       enable = true;
-      platformTheme.name = mkForce config.spirenix.desktop.styling.core.qt.platform;
       style = {
         name = mkForce config.spirenix.desktop.styling.core.qt.style.name;
         package = mkForce config.spirenix.desktop.styling.core.qt.style.package;
@@ -35,7 +34,6 @@ in
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       QT_SCALE_FACTOR = mkForce (toString cfg.scaling);
       QT_QPA_PLATFORM = "wayland;xcb";
-      QT_QPA_PLATFORMTHEME = mkForce "qt6ct";
       QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     };
   };

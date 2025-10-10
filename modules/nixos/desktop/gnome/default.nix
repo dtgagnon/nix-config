@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkForce;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.gnome;
 in
@@ -24,6 +24,10 @@ in
       displayManager.gdm = {
         enable = true;
         autoSuspend = false;
+        banner = ''
+          Hi Sweetpea, I love you <3
+          - Your Cheesepuff
+        '';
       };
       xserver.xkb.layout = "us";
     };
@@ -50,5 +54,6 @@ in
       gnome-contacts
       simple-scan
     ];
+    qt.platformTheme = mkForce "lxqt";
   };
 }

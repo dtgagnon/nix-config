@@ -63,10 +63,9 @@ in
     };
 
     qt = {
-      platform = mkOpt types.str "gtk" "The Qt platform theme to use.";
       style = {
         package = mkOpt (types.nullOr types.package) null "The Qt style package to use.";
-        name = mkOpt (types.nullOr types.str) null "The name of the Qt style.";
+        name = mkOpt (types.nullOr types.str) "lxqt" "The name of the Qt style.";
       };
     };
   };
