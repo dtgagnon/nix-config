@@ -1,5 +1,7 @@
-{ ... }:
+{ config, ... }:
 {
+  sops.secrets.luks.path = "/persist/var/lib/sops-nix/luks";
+
   disko.devices = {
     disk = {
       primary = {
@@ -25,7 +27,10 @@
                 name = "root-crypt";
                 passwordFile = "/root/luks-pass"; # populated by bootstrap-nixos.sh
                 # extraOpenArgs = [ ];
-                settings.allowDiscards = true;
+                settings = {
+                  allowDiscards = true;
+                  keyFile = config.sops.secrets.luks.path;
+                };
                 initrdUnlock = true;
                 content = {
                   type = "lvm_pv";
