@@ -25,6 +25,7 @@ in
       path = "${config.xdg.configHome}/codex/config.toml";
       content = ''
         model = "gpt-5-codex"
+        model_reasoning_effort = "medium"
 
         [tools]
         web_search = true

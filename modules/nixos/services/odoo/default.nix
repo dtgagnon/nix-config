@@ -93,6 +93,8 @@ in
       };
     };
 
+    systemd.services.odoo.serviceConfig.TimeoutStartSec = 300;
+
     # Optional local PostgreSQL provisioning.
     services.postgresql = mkIf cfg.db.enableLocalPostgres {
       enable = true;

@@ -18,7 +18,7 @@ in
             "gnome-keyring-daemon --start --components=secrets"
             # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
             "playerctld daemon"
-            "solaar --window hide --battery-icons symbolic"
+            "solaar --window hide --battery-icons regular"
           ] ++ cfg.extraExec);
         in
         if osConfig.programs.hyprland.withUWSM then

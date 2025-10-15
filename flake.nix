@@ -41,6 +41,7 @@
           nix-topology.overlays.default
           nur.overlays.default
           proxmox-nixos.overlays.x86_64-linux
+          odooAdds.overlays.default
         ];
 
         systems.modules.nixos = with inputs; [
