@@ -26,11 +26,7 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       claude-code
-      mcp-server-github
-      mcp-server-postgresql
-      mcp-server-sequential-thinking
-      mcp-server-playwright
-      playwright-driver.browsers # For playwright MCP
+      # MCP servers will be configured per-project in dev shells
     ];
 
     # Create sops template for Claude Code settings with secrets
@@ -53,32 +49,8 @@ in
             type = "http";
             url = "https://api.ref.tools/mcp?apiKey=${config.sops.placeholder.ref_api}";
           };
-          github = {
-            transport = "stdio";
-            command = "${pkgs.mcp-server-github}/bin/mcp-server-github";
-            env = {
-              GITHUB_PERSONAL_ACCESS_TOKEN = config.sops.placeholder.github_token or "";
-            };
-          };
-          postgresql = {
-            transport = "stdio";
-            command = "${pkgs.mcp-server-postgresql}/bin/mcp-server-postgresql";
-            env = {
-              POSTGRES_CONNECTION_STRING = config.sops.placeholder.postgres_connection_string or "";
-            };
-          };
-          sequential-thinking = {
-            transport = "stdio";
-            command = "${pkgs.mcp-server-sequential-thinking}/bin/mcp-server-sequential-thinking";
-          };
-          playwright = {
-            transport = "stdio";
-            command = "${pkgs.mcp-server-playwright}/bin/mcp-server-playwright";
-            env = {
-              PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
-              PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
-            };
-          };
+          # Project-specific MCP servers should be configured in dev shells
+          # using mcp-servers-nix.lib.mkConfig as shown in the examples
         };
       });
     };
