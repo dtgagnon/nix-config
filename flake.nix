@@ -42,6 +42,7 @@
           nur.overlays.default
           proxmox-nixos.overlays.x86_64-linux
           odooAdds.overlays.default
+          mcp-servers-nix.overlays.default
         ];
 
         systems.modules.nixos = with inputs; [
@@ -221,5 +222,9 @@
 
     ## misc repos
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
+
+    ## mcp servers
+    mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
+    mcp-servers-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 }
