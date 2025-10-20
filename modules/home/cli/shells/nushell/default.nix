@@ -93,7 +93,10 @@ in
       zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";
     };
 
-    home.sessionVariables.SHELL = "nushell";
+    home = {
+      extraDependencies = config.programs.nushell.plugins;
+      sessionVariables.SHELL = "nushell";
+    };
   };
 }
 

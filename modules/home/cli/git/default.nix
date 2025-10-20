@@ -25,7 +25,6 @@ in
   config = mkIf cfg.enable {
     programs.git = {
       enable = true;
-      inherit (cfg) userName userEmail;
       lfs = enabled;
 
       signing = {
@@ -34,7 +33,12 @@ in
         format = "ssh";
       };
 
-      extraConfig = {
+      settings = {
+        user = {
+          name = cfg.userName;
+          email = cfg.userEmail;
+          signing.key = cfg.signingKey;
+        };
         init.defaultBranch = "main";
         pull.rebase = true;
         push.autoSetupRemote = true;
@@ -46,7 +50,6 @@ in
           "ssh://git@gitlab.com".insteadOf = "https://gitlab.com";
         };
         commit.gpgsign = true;
-        user.signing.key = "${cfg.signingKey}";
       };
     };
     programs.ssh = {

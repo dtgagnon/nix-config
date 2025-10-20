@@ -18,10 +18,7 @@ in
   config = mkIf cfg.enable {
     qt = {
       enable = true;
-      style = {
-        name = mkForce config.spirenix.desktop.styling.core.qt.style.name;
-        package = mkForce config.spirenix.desktop.styling.core.qt.style.package;
-      };
+      # Note: qt.style is managed by stylix, do not override
     };
 
     home.packages = with pkgs.kdePackages; [
