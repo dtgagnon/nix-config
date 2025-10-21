@@ -1132,11 +1132,11 @@
         "zon2nix": "zon2nix"
       },
       "locked": {
-        "lastModified": 1760931937,
-        "narHash": "sha256-KnRmqU5Pcj/UmVJ41XpCK3BEIdJvQHLvQoX+wikf76k=",
+        "lastModified": 1760991282,
+        "narHash": "sha256-Q9HNbRW1UF0KBlkDeY26RImACEm5Cln0NPed8N8LFwg=",
         "owner": "ghostty-org",
         "repo": "ghostty",
-        "rev": "2696d50ca42003d648aa0172315b6f4d3b66443e",
+        "rev": "0546606e059b197479cc8f548b0990a341df6249",
         "type": "github"
       },
       "original": {
@@ -2029,11 +2029,11 @@
     },
     "masterpkgs": {
       "locked": {
-        "lastModified": 1760974509,
-        "narHash": "sha256-QfgharuhSFe4VsdI0ICLuAkB6U+uP/HXuoxY/YrJaiA=",
+        "lastModified": 1760992386,
+        "narHash": "sha256-jv38SVrSYJwYMqxhQO/BdZlkRCl8q5cNKGeRWI3EA3A=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "2ad4dc8cfbb5954cb22ccf8f6adc9da1113b6482",
+        "rev": "7d19100fc0608a3a2e0109ebd36a75328eaef20e",
         "type": "github"
       },
       "original": {
@@ -2050,11 +2050,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1760876638,
-        "narHash": "sha256-57Z3M5tAHHKU1U1MyXkvmkq7KMFtR6znUOJ5bnU/tCs=",
+        "lastModified": 1760984589,
+        "narHash": "sha256-/G8M3JR9di/xXnsxvi2Y1WYAwvh+nQI+gjH6mNSAGeU=",
         "owner": "natsukium",
         "repo": "mcp-servers-nix",
-        "rev": "df38f2afc08cdb600a6b01d1edf60ad8e2f553e5",
+        "rev": "2c56b02605a2b60d7ea287f788fb72759dd606b3",
         "type": "github"
       },
       "original": {
@@ -2736,11 +2736,11 @@
         "nixpkgs": "nixpkgs_11"
       },
       "locked": {
-        "lastModified": 1760977175,
-        "narHash": "sha256-KRN9+47yQgxGZwPHDf61Qy9qEuxsWt94zRuX9KXNp1E=",
+        "lastModified": 1760989469,
+        "narHash": "sha256-NfJBKyXnJzeO2euRAjqoIXJjzzboENGEG/h2nxts/aE=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "afb8e0e3791ac367007aba2c91412efcd82e72b8",
+        "rev": "7cd8c7f83a95ec0878270b5901658348db737a78",
         "type": "github"
       },
       "original": {
@@ -2839,11 +2839,11 @@
         "web": "web"
       },
       "locked": {
-        "lastModified": 1760680112,
-        "narHash": "sha256-eGttNHtSVderZfJFuITXMOrCluiKTARMBk1D0fqVBOM=",
+        "lastModified": 1760987776,
+        "narHash": "sha256-JEoRDlS6mg5wcQ3Fup28nl53ec7hdNhfaSudRXK0iRU=",
         "ref": "refs/heads/main",
-        "rev": "ce95c68737dcf9e4a249bfc1f5f71ea7afb4e8d1",
-        "revCount": 71,
+        "rev": "be97549afe433a4dd82c168098ded8be2c992456",
+        "revCount": 73,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },

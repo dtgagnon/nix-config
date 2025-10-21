@@ -70,6 +70,20 @@ in
       };
     };
 
+    # Fix aw-watcher-afk for Wayland/Hyprland
+    systemd.user.services.activitywatch-watcher-aw-watcher-afk = mkIf config.wayland.windowManager.hyprland.enable {
+      Unit = {
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        Environment = [
+          "WAYLAND_DISPLAY=wayland-1"
+          "XDG_SESSION_TYPE=wayland"
+        ];
+      };
+    };
+
     systemd.user.services.aw-qt = {
       Unit = {
         Description = "ActivityWatch Tray";

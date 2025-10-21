@@ -51,6 +51,7 @@ in
         update = "nix flake update";
         nixdev = "nix develop --command nushell";
         nr = "nix repl .#nixosConfigurations.DG-PC";
+        buildspirepoint = "nixos-rebuild boot --sudo --flake .#spirepoint --target-host 100.100.1.2 ; ssh root@100.100.1.2 'reboot'";
 
         # Navigate Shell
         "..." = "z ../../";

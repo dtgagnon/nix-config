@@ -125,6 +125,7 @@
     stablepkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
+    oldpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nur.url = "github:nix-community/NUR"; # Community package repository
 
     ## configuration frameworks

@@ -5,8 +5,8 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.claude-code;
 in
 {
@@ -32,7 +32,7 @@ in
           ---
           name: documentation
           description: Documentation writing assistant
-          model: claude-3-5-sonnet-20241022
+          model: haiku-4-5-sonnet
           tools: Read, Write, Edit
           ---
 
@@ -108,54 +108,11 @@ in
           command = "input=$(cat); echo \"[$(echo \"$input\" | jq -r '.model.display_name')] 📁 $(basename \"$(echo \"$input\" | jq -r '.workspace.current_dir')\")\"";
           padding = 0;
         };
-        # Examples below:
-        hooks = {
-          PostToolUse = [
-            {
-              hooks = [
-                {
-                  command = "nix fmt $(jq -r '.tool_input.file_path' &lt;&lt;&lt; '$CLAUDE_TOOL_INPUT')";
-                  type = "command";
-                }
-              ];
-              matcher = "Edit|MultiEdit|Write";
-            }
-          ];
-          PreToolUse = [
-            {
-              hooks = [
-                {
-                  command = "echo 'Running command: $CLAUDE_TOOL_INPUT'";
-                  type = "command";
-                }
-              ];
-              matcher = "Bash";
-            }
-          ];
-        };
         includeCoAuthoredBy = false;
-        permissions = {
-          additionalDirectories = [
-            "../docs/"
-          ];
-          allow = [
-            "Bash(git diff:*)"
-            "Edit"
-          ];
-          ask = [
-            "Bash(git push:*)"
-          ];
-          defaultMode = "acceptEdits";
-          deny = [
-            "WebFetch"
-            "Bash(curl:*)"
-            "Read(./.env)"
-            "Read(./secrets/**)"
-          ];
-          disableBypassPermissionsMode = "disable";
-        };
-
         theme = "dark";
+        env = {
+          "DISABLE_AUTOUPDATER" = 1;
+        };
       };
     };
   };

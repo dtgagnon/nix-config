@@ -58,8 +58,16 @@ in
         networks = {
           "10-wired" = {
             matchConfig.Name = "enp3s0";
-            networkConfig.DHCP = "yes";
-            networkConfig.DNSDefaultRoute = true;
+            # Use ipv4 only to avoid systemd 257 DHCPv6 race condition crash
+            # IPv6 still works via SLAAC from Router Advertisements
+            networkConfig = {
+              DHCP = "ipv4";
+              DNSDefaultRoute = true;
+              # Accept RAs but don't start DHCPv6 client to avoid systemd 257 crash
+              IPv6AcceptRA = true;
+            };
+            # Disable DHCPv6 client to prevent crash while keeping SLAAC
+            ipv6AcceptRAConfig.DHCPv6Client = "no";
             domains = [ "~protonvpn.net" ]; #NOTE Followup on this, I don't understand how it works.
           };
           "30-wg-proton" = {

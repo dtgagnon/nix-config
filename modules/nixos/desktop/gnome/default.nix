@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce;
+  inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.gnome;
 in
@@ -54,6 +54,5 @@ in
       gnome-contacts
       simple-scan
     ];
-    qt.platformTheme = mkForce "lxqt";
   };
 }
