@@ -2839,17 +2839,33 @@
         "web": "web"
       },
       "locked": {
-        "lastModified": 1760987776,
-        "narHash": "sha256-JEoRDlS6mg5wcQ3Fup28nl53ec7hdNhfaSudRXK0iRU=",
+        "lastModified": 1761094314,
+        "narHash": "sha256-Wi/izOcDB28ge1A6W7PgE5X+T7q+3///cxGKJ3Yd0+s=",
         "ref": "refs/heads/main",
-        "rev": "be97549afe433a4dd82c168098ded8be2c992456",
-        "revCount": 73,
+        "rev": "0ea74ad52f708649379995a898aad67df7eca204",
+        "revCount": 74,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },
       "original": {
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
+      }
+    },
+    "oldpkgs": {
+      "locked": {
+        "lastModified": 1751274312,
+        "narHash": "sha256-/bVBlRpECLVzjV19t5KMdMFWSwKLtb5RyXdjz3LJT+g=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "50ab793786d9de88ee30ec4e4c24fb4236fc2674",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-24.11",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "partner-contact": {
@@ -3134,6 +3150,7 @@
         "nixpkgs": "nixpkgs_10",
         "nur": "nur",
         "odooAdds": "odooAdds",
+        "oldpkgs": "oldpkgs",
         "plane": "plane",
         "preservation": "preservation",
         "proxmox-nixos": "proxmox-nixos",

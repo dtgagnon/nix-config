@@ -130,6 +130,7 @@ in
         "cast"
         "default_config"
         "emulated_kasa"
+        "esphome"
         "glances"
         "google"
         "google_maps"
@@ -176,6 +177,29 @@ in
         locationsharinglib #google_maps
         typedmonarchmoney #monarch_money
         python-kasa #kasa devices
+
+        # ESPhome
+        aioesphomeapi
+        aiohasupervisor
+        aiousbwatcher
+        bleak
+        bleak-esphome
+        bleak-retry-connector
+        bluetooth-adapters
+        bluetooth-auto-recovery
+        bluetooth-data-tools
+        dbus-fast
+        esphome-dashboard-api
+        ha-ffmpeg
+        habluetooth
+        hassil
+        home-assistant-intents
+        ifaddr
+        mutagen
+        pymicro-vad
+        pyserial
+        pyspeex-noise
+        zeroconf
       ];
     };
 

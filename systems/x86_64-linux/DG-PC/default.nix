@@ -72,6 +72,7 @@ in
         lookingGlass.enable = true;
         vfio.enable = true;
         vfio.mode = "dynamic";
+        diagnostics.enable = true;
       };
     };
   };

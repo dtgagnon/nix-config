@@ -124,8 +124,6 @@ in
 
         quickemu
         inputs.NixVirt.packages.x86_64-linux.default
-        # rustdesk
-        # rustdesk-server
       ];
       # spirenix.system.preservation.extraSysDirs = [
       #   { directory = "/var/lib/libvirt"; user = "${user.name}"; group = "qemu-libvirtd"; }
