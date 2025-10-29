@@ -40,7 +40,7 @@
           neovim.overlays.default
           nix-topology.overlays.default
           nur.overlays.default
-          proxmox-nixos.overlays.x86_64-linux
+          # proxmox-nixos.overlays.x86_64-linux #NOTE Not in use - can remove
           odooAdds.overlays.default
           mcp-servers-nix.overlays.default
         ];
@@ -52,7 +52,6 @@
           nix-index-database.nixosModules.nix-index
           nix-topology.nixosModules.default
           NixVirt.nixosModules.default
-          plane.nixosModules.default
           preservation.nixosModules.preservation
           sops-nix.nixosModules.sops
           stylix.nixosModules.stylix
@@ -125,7 +124,6 @@
     stablepkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     masterpkgs.url = "github:nixos/nixpkgs/master";
-    oldpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nur.url = "github:nix-community/NUR"; # Community package repository
 
     ## configuration frameworks
@@ -197,9 +195,6 @@
 
     nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
     nixos-conf-editor.inputs.nixpkgs.follows = "nixpkgs";
-
-    plane.url = "github:dtgagnon/plane/add/nix";
-    plane.inputs.nixpkgs.follows = "nixpkgs";
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
