@@ -7,16 +7,10 @@
 }:
 
 let
-  inherit (lib)
-    types
-    mkIf
-    mkDefault
-    mkMerge
-    ;
+  inherit (lib) types mkIf mkDefault mkMerge;
   inherit (lib.${namespace}) mkOpt mkBoolOpt;
   cfg = config.${namespace}.user;
 
-  # is-linux = pkgs.stdenv.isLinux; # Line isn't used because if it's linux, it's just using the final else statement.
   is-darwin = pkgs.stdenv.isDarwin;
 
   home-directory =
