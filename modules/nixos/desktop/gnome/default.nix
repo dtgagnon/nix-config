@@ -31,6 +31,8 @@ in
       };
       xserver.xkb.layout = "us";
     };
+
+    qt.platformTheme = lib.mkForce "qt5ct";
     environment.gnome.excludePackages = with pkgs; [
       gnome-photos
       gnome-tour
