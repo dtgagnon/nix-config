@@ -22,6 +22,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Creates automations.yaml file so that Hass doesn't fail to load when splitting into declarative and ui configured automations.
+    systemd.tmpfiles.rules = [ "f ${config.services.home-assistant.configDir}/automations.yaml 0755 hass hass" ];
     services.home-assistant = {
       enable = true;
       openFirewall = false;
@@ -29,6 +31,10 @@ in
       configWritable = true;
 
       config = {
+        "automation declarations" = [
+          { }
+        ];
+        "automation ui" = "!include automations.yaml";
         default_config = { };
         homeassistant = {
           name = "Home";
@@ -136,6 +142,7 @@ in
         "google_maps"
         "homekit"
         "homekit_controller"
+        "ibeacon"
         "jellyfin"
         "lifx"
         "matter"
@@ -178,28 +185,70 @@ in
         typedmonarchmoney #monarch_money
         python-kasa #kasa devices
 
-        # ESPhome
-        aioesphomeapi
-        aiohasupervisor
-        aiousbwatcher
-        bleak
-        bleak-esphome
-        bleak-retry-connector
-        bluetooth-adapters
-        bluetooth-auto-recovery
-        bluetooth-data-tools
-        dbus-fast
-        esphome-dashboard-api
-        ha-ffmpeg
-        habluetooth
-        hassil
-        home-assistant-intents
-        ifaddr
-        mutagen
-        pymicro-vad
-        pyserial
-        pyspeex-noise
-        zeroconf
+        # # HomeKit
+        # base36
+        # fnv-hash-fast
+        # ha-ffmpeg
+        # hap-python
+        # ifaddr
+        # pyqrcode
+        # pyturbojpeg
+        # zeroconf
+        #
+        # # HomeKit Controller
+        # aioesphomeapi
+        # aiohasupervisor
+        # aiohomekit
+        # aioruuvigateway
+        # aioshelly
+        # aiousbwatcher
+        # bleak
+        # bleak-esphome
+        # bleak-retry-connector
+        # bluetooth-adapters
+        # bluetooth-auto-recovery
+        # bluetooth-data-tools
+        # dbus-fast
+        # esphome-dashboard-api
+        # ha-ffmpeg
+        # habluetooth
+        # hassil
+        # home-assistant-intents
+        # ifaddr
+        # mutagen
+        # pymicro-vad
+        # pyroute2
+        # pyserial
+        # pyspeex-noise
+        # python-otbr-api
+        # zeroconf
+        #
+        # # ESPhome
+        # aioblescan
+        # aioesphomeapi
+        # aiohasupervisor
+        # aiousbwatcher
+        # bleak
+        # bleak-esphome
+        # bleak-retry-connector
+        # bluetooth-adapters
+        # bluetooth-auto-recovery
+        # bluetooth-data-tools
+        # dbus-fast
+        # esphome-dashboard-api
+        # govee-ble
+        # ha-ffmpeg
+        # habluetooth
+        # hassil
+        # home-assistant-intents
+        # ibeacon-ble
+        # ifaddr
+        # kegtron-ble
+        # mutagen
+        # pymicro-vad
+        # pyserial
+        # pyspeex-noise
+        # zeroconf
       ];
     };
 

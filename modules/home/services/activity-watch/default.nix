@@ -22,13 +22,6 @@ in
     services.activitywatch = {
       enable = true;
       package = pkgs.activitywatch; # was previously using pkgs.aw-server-rust #TODO Delete if works or works better with activitywatch now.
-      # settings = { # in TOML
-      #   port = 1234;
-      #   custom_static = {
-      #     my-custom-watcher = "${pkgs.my-custom-watcher}/share/my-custom-watcher/static";
-      #     aw-keywatcher = "${pkgs.aw-keywatcher}/share/aw-keywatcher/static";
-      #   };
-      # };
       watchers = {
         aw-watcher-afk = {
           package = pkgs.activitywatch;
@@ -103,9 +96,10 @@ in
     };
 
     spirenix.desktop.hyprland.extraExec =
-      lib.optionals (
-        withHyprland
-        && !hyprlandSystemd
-      ) [ "systemctl --user start aw-qt.service" ];
+      lib.optionals
+        (
+          withHyprland
+          && !hyprlandSystemd
+        ) [ "systemctl --user start aw-qt.service" ];
   };
 }

@@ -1,4 +1,8 @@
-{ channels, ... }: _final: _prev:
+{ channels, ... }: _final: prev:
 {
-  # inherit (channels.masterpkgs) home-assistant;
+  python3Packages = prev.python3Packages.overrideScope (_pyfinal: pyprev: {
+    gtts = pyprev.gtts.overridePythonAttrs (old: {
+      propagatedBuildInputs = (builtins.filter (pkgs: pkgs.pname != "click") (old.propagatedBuildInputs or [ ])) ++ [ channels.stablepkgs.python3Packages.click ];
+    });
+  });
 }

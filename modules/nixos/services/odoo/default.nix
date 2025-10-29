@@ -19,9 +19,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    spirenix.security.sops-nix.plainTextSecrets."odoo.admin-password" = {
-      secret = "odoo/adminPass";
-      usedBy = "services.odoo.settings.options.admin_passwd";
+    # Declare the secret using native sops-nix.
+    sops.secrets."odoo/adminPass" = {
       owner = "odoo";
       group = "odoo";
       mode = "0400";
@@ -73,7 +72,7 @@ in
       # Settings part of application INI file
       settings = {
         options = {
-          admin_passwd = config.spirenix.security.sops-nix.secretStrings."odoo.admin-password";
+          admin_passwd = "temp";
           server_wide_modules = "base,web,web_enterprise";
           limit_time_real = 3600;
           limit_time_cpu = 3600;

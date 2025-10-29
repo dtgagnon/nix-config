@@ -103,6 +103,12 @@ in
         configFile = "${cfg.stateDir}/sabnzbd.ini";
       };
 
+      # Systemd service dependencies
+      systemd.services.sabnzbd = {
+        after = [ "tailscaled.service" ];
+        requires = [ "tailscaled.service" ];
+      };
+
       # Firewall configuration
       networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ cfg.guiPort ];
 
@@ -120,7 +126,7 @@ in
       systemd.tmpfiles.rules = [
         # Base state directory
         "d '${cfg.stateDir}' 0700 usenet media - -"
-        "C '${cfg.stateDir}/sabnzbd.ini' 0750 usenet media - ${config.sops.templates."sabnzbd.ini".path}"
+        "f '${cfg.stateDir}/sabnzbd.ini' 0750 usenet media - ${config.sops.templates."sabnzbd.ini".path}"
 
         # Media directory structure
         # All directories owned by usenet:media with appropriate permissions
