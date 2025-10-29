@@ -16,6 +16,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    sops.secrets = {
+      "plane/apiKey" = { };
+      "plane/dbPass" = { };
+      "plane/strCreds" = { };
+      "plane/rabbitmqPass" = { };
+    };
+
     services.plane = {
       enable = true;
       # package = inputs.plane.packages.${pkgs.system}.plane;
@@ -92,13 +99,6 @@ in
       nginx = { enable = true; };
 
       acme = { enable = false; };
-    };
-
-    sops.secrets = {
-      "plane/apiKey" = { };
-      "plane/dbPass" = { };
-      "plane/strCreds" = { };
-      "plane/rabbitmqPass" = { };
     };
   };
 }
