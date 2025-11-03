@@ -18,7 +18,7 @@ in
   config = mkIf cfg.enable {
     qt = {
       enable = true;
-      platformTheme.name = "adwaita"; # Use adwaita instead of deprecated qgnomeplatform
+      # platformTheme.name = "adwaita"; # Use adwaita instead of deprecated qgnomeplatform
       # Note: qt.style is managed by stylix, do not override
     };
 
