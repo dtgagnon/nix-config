@@ -40,7 +40,6 @@ in
 
     (mkIf cfg.enable {
       boot = {
-        blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
         initrd.kernelModules = [ "kvm-${cfg.platform}" "i915" ];
         initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
         kernelModules = [ "vhost" "vhost_net" "vhost_vsock" "vhost_scsi" ];
@@ -141,7 +140,7 @@ in
     })
     (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "static") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
-      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" /* "nvidia-drm.modeset=1" */ ];
+      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModprobeConfig = ''
         options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
@@ -150,10 +149,12 @@ in
       # hardware.nvidia.modesetting.enable = mkForce true;
     })
     (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
+      boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nouveau" ];
       boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
       boot.kernelModules = [ "vendor_reset" ];
       services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
       boot.kernelParams = [
+        "vfio-pci.ids=${concatStringsSep "," cfg.vfio.deviceIds}"
         "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"
         (mkForce "nvidia-drm.modeset=0")
