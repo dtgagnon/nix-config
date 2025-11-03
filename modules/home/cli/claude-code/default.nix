@@ -24,6 +24,19 @@ in
       settings = {
         includeCoAuthoredBy = false;
         theme = "dark";
+        permissions = {
+          allow = [
+            "Bash(git diff:*)"
+            "Bash(git status:*)"
+          ];
+          ask = [
+            "Bash(curl:*)"
+          ];
+          deny = [
+            "Read(./.env)"
+            "Read(./secrets/**)"
+          ];
+        };
         env = {
           "DISABLE_AUTOUPDATER" = 1;
         };

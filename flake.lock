@@ -2176,11 +2176,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1761434876,
-        "narHash": "sha256-ACb79Zd79NrxVl2VrVhrxniooji6uiDa2+XD884Q8FQ=",
+        "lastModified": 1762185929,
+        "narHash": "sha256-zndBSwA4sXVex4i3bqpFnAqkUgvlaTYs4oeJo+p8G+U=",
         "ref": "refs/heads/main",
-        "rev": "c6f554bdfeef8139e9752bcba335936dc3ccd55d",
-        "revCount": 97,
+        "rev": "cf3c4968ca6ea3d3dbb243effa0f6505107ca166",
+        "revCount": 99,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -2821,11 +2821,11 @@
         "web": "web"
       },
       "locked": {
-        "lastModified": 1761707672,
-        "narHash": "sha256-sBWNhgMeGpv6pxsdVDNWVJY3GMmo44Ex0JxP84DzhtI=",
+        "lastModified": 1761772827,
+        "narHash": "sha256-saz1H0iMA8b3oUqNp6O0ZeMeTQWedglkKF4ExpQbp4U=",
         "ref": "refs/heads/main",
-        "rev": "3f38f41f771611440ab2ac59e28fde58893fcb3d",
-        "revCount": 84,
+        "rev": "df9d5bfd3bd97f6dcdc9a74cbfb4b98defdccac8",
+        "revCount": 89,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },

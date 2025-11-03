@@ -252,14 +252,6 @@ in
       ];
     };
 
-
-
-    sops.secrets = {
-      "hass/latitude".owner = "hass";
-      "hass/longitude".owner = "hass";
-      "hass/elevation".owner = "hass";
-    };
-
     # Process the additional commands for handling secrets at runtime
     systemd.services."home-assistant" = {
       path = [ pkgs.coreutils pkgs.gettext ];
@@ -302,6 +294,30 @@ in
         name = "hass";
         ensureDBOwnership = true;
       }];
+    };
+
+    # go2rtc camera streaming service for IOT cameras (EC70, KC100, etc.)
+    services.go2rtc = {
+      enable = true;
+      settings = {
+        streams = {
+          kasaCam = "\${KASA_CAM_FEED}";
+        };
+      };
+    };
+
+    # Load the kasaCamFeed secret as an environment variable
+    systemd.services.go2rtc = {
+      serviceConfig = {
+        EnvironmentFile = config.sops.secrets.kasaCamFeed.path;
+      };
+    };
+
+    sops.secrets = {
+      "hass/latitude".owner = "hass";
+      "hass/longitude".owner = "hass";
+      "hass/elevation".owner = "hass";
+      kasaCamFeed = { };
     };
   };
 }
