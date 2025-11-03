@@ -16,7 +16,7 @@ in
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      pkgs.protonup
+      pkgs.protonup-ng
       pkgs.protontricks
     ];
   };

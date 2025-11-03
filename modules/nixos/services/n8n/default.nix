@@ -16,10 +16,10 @@ in
   config = mkIf cfg.enable {
     services.n8n = {
       environment = {
-        diagnostics = false;
-        versionNotifications = false;
-        templates = true;
-        hiringBanner = false;
+        diagnostics = "false";
+        versionNotifications = "false";
+        templates = "true";
+        hiringBanner = "false";
       };
       enable = true;
       openFirewall = false;

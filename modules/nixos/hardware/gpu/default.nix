@@ -131,7 +131,7 @@ in
           intel-media-driver
           intel-vaapi-driver
           vpl-gpu-rt
-          vaapiVdpau
+          libva-vdpau-driver
           libvdpau-va-gl
         ];
       };

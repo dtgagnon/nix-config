@@ -23,21 +23,35 @@ in
     ];
     home.file.".gemini/settings.json".text = ''
       {
-        "theme": "Default",
-        "selectedAuthType": "oauth-personal",
-        "preferredEditor": "nvim",
-        "vimMode": "true",
-        "contextFileName": [ "GEMINI.md", "CLAUDE.md", "AGENTS.md" ],
-        "checkpointing": { "enabled": true },
-
+        "general": {
+          "checkpointing": {
+            "enabled": true
+          },
+          "preferredEditor": "nvim",
+          "vimMode": false
+        },
+        "context": {
+          "fileName": [
+            "GEMINI.md",
+            "CLAUDE.md",
+            "AGENTS.md"
+          ]
+        },
         "mcpServers": {
           "nixos": {
             "command": "nix",
-            "args": [ "run", "github:utensils/mcp-nixos", "--" ]
+            "args": [
+              "run",
+              "github:utensils/mcp-nixos",
+              "--"
+            ]
           },
           "playwrite": {
             "command": "nix",
-            "args": [ "run", "nixpkgs#playwright-mcp" ],
+            "args": [
+              "run",
+              "nixpkgs#playwright-mcp"
+            ],
             "env": {
               "PLAYWRIGHT_BROWSERS_PATH": "${pkgs.playwright-driver.browsers}",
               "PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS": "true",
@@ -47,8 +61,19 @@ in
           },
           "sequential-thinking": {
             "command": "npx",
-            "args": [ "-y", "@modelcontextprotocol/server-sequential-thinking" ]
+            "args": [
+              "-y",
+              "@modelcontextprotocol/server-sequential-thinking"
+            ]
           }
+        },
+        "security": {
+          "auth": {
+            "selectedType": "oauth-personal"
+          }
+        },
+        "ui": {
+          "theme": "Default"
         }
       }
     '';
