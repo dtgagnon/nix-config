@@ -8,6 +8,18 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.claude-code;
+
+  # Wrapped claude-code package that injects secrets as environment variables
+  claude-wrapped = pkgs.symlinkJoin {
+    name = "claude-code-wrapped";
+    paths = [ pkgs.claude-code ];
+    buildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/claude \
+        --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
+        --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})'
+    '';
+  };
 in
 {
   # Conditionally import sub-modules.
@@ -20,7 +32,7 @@ in
   config = mkIf cfg.enable {
     programs.claude-code = {
       enable = true;
-      package = pkgs.claude-code;
+      package = claude-wrapped;
       settings = {
         includeCoAuthoredBy = false;
         theme = "dark";
