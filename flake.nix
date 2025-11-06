@@ -219,7 +219,9 @@
     ## misc repos
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
 
-    ## mcp servers
+    ## ai tools
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    ### mcp servers
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
     mcp-servers-nix.inputs.nixpkgs.follows = "nixpkgs";
   };

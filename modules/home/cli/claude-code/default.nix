@@ -27,9 +27,11 @@ in
 
   options.${namespace}.cli.claude-code = {
     enable = mkBoolOpt false "Enable the claude ai assistant cli tool";
+    router = mkBoolOpt false "Enable the claude-code-router package for allow other LLMs to be used";
   };
 
   config = mkIf cfg.enable {
+    home.packages = mkIf cfg.router [ pkgs.claude-code-router ];
     programs.claude-code = {
       enable = true;
       package = claude-wrapped;
