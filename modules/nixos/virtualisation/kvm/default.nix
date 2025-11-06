@@ -150,6 +150,7 @@ in
     })
     (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nouveau" ];
+      boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
       boot.kernelModules = [ "vendor_reset" ];
       services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
@@ -163,6 +164,7 @@ in
       hardware.nvidia = {
         # enable = true; #NOTE Explictly enabled to test if this has impact on dynamic vfio passthrough set up, which boots with vfio-pci taking nvidia gpu right away.
         modesetting.enable = mkForce false;
+        # powerManagement.enable = mkForce false;
         nvidiaPersistenced = mkForce true;
       };
       # services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
