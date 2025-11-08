@@ -18,6 +18,7 @@ in
     };
 
     apps = {
+      claude-desktop = enabled;
       discord = enabled;
       element = enabled;
       inkscape = enabled;
@@ -26,8 +27,10 @@ in
       music-player = { enable = true; player = "rmcp"; };
       obsidian = enabled;
       office = { libreoffice = enabled; okular-pdf = enabled; };
+      proton-cloud = enabled;
       # super-productivity = enabled;
       terminals.ghostty = { enable = true; trail = "glitter_comet"; };
+      thunderbird = enabled;
       todoist = enabled;
       vscode = enabled;
       windsurf = enabled;

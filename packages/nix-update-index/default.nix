@@ -9,7 +9,7 @@ let
   nix-update-index = pkgs.writeShellScriptBin "nix-update-index" ''
     set -euo pipefail
 
-    filename="index-${pkgs.system}"
+    filename="index-${pkgs.stdenv.hostPlatform.system}"
     release="https://github.com/Mic92/nix-index-database/releases/latest/download/''${filename}"
 
     mkdir -p ~/.cache/nix-index

@@ -19,6 +19,7 @@ in
 
     apps = {
       office.okular-pdf = enabled;
+      proton-cloud = enabled;
       terminals.ghostty = enabled;
       zen = enabled;
     };

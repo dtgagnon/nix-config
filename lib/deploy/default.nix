@@ -25,7 +25,7 @@ in rec {
         let
           host = hosts.${name};
           user = host.config.user.name or null;
-          inherit (host.pkgs) system;
+          system = host.pkgs.stdenv.hostPlatform.system;
         in result // {
           ${name} = (overrides.${name} or { }) // {
             hostname = overrides.${name}.hostname or "${name}";

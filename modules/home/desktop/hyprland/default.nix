@@ -36,6 +36,10 @@ in
     home.sessionVariables = {
       AQ_DRM_DEVICES = "/home/dtgagnon/.config/hypr/intel-iGPU";
       WLR_DRM_DEVICES = "/home/dtgagnon/.config/hypr/intel-iGPU";
+      #NOTE: Restrict EGL to Mesa only, preventing NVIDIA's libEGL from opening the dGPU render node.
+      #NOTE: This prevents Hyprland from holding file descriptors to /dev/dri/renderD129 (NVIDIA).
+      #NOTE: See: https://github.com/hyprwm/Hyprland/issues/8679 (upstream bug - AQ_DRM_DEVICES doesn't restrict EGL layer)
+      __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
     };
     wayland.windowManager.hyprland = {
       enable = true;

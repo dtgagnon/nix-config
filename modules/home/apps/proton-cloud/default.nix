@@ -1,5 +1,4 @@
-{
-  lib
+{ lib
 , pkgs
 , config
 , namespace
@@ -7,7 +6,7 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt enabled;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.proton-cloud;
 in
 {
@@ -16,15 +15,14 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
+    home.packages = with pkgs; [
       proton-pass
-      protonmail-desktop
     ];
 
     services.protonmail-bridge = {
-      enable = false;
+      enable = true;
       package = pkgs.protonmail-bridge;
-      # path = [ ];
+      extraPackages = [ pkgs.gnome-keyring ];
     };
   };
 }

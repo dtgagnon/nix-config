@@ -121,6 +121,7 @@ in
                 ".claude"
                 { directory = ".gnupg"; mode = "0700"; }
                 ".icons"
+                ".thunderbird"
                 ".vscode-oss"
                 "vfio-vm-info"
               ] ++ cfg.extraHomeDirs;

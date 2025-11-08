@@ -27,6 +27,9 @@ in
         "$mod_ALT, V, exec, [workspace 1] kiro"
         "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 1000 --clipboard-only"
 
+        # Claude Desktop quick input (Ctrl+Alt+Space)
+        "CTRL_ALT, Space, exec, claude-desktop --quick-input"
+
         # Window Control
         "$mod, Q, killactive,"
         "$mod, F, fullscreen, 0"

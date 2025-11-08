@@ -1,7 +1,7 @@
 { lib
-, pkgs
 , config
 , namespace
+, osConfig ? null
 , ...
 }:
 let
@@ -23,13 +23,13 @@ in
 
       profiles.${config.spirenix.user.name} = {
         search = {
-          default = "DuckDuckGo";
+          default = "ddg";
           order = [
-            "DuckDuckGo"
+            "ddg"
             "Perplexity"
-            "Google"
+            "google"
           ];
-          privateDefault = "DuckDuckGo";
+          privateDefault = "ddg";
         };
 
         settings = {
@@ -42,8 +42,5 @@ in
 
     home.sessionVariables.MAIL_CLIENT = "thunderbird";
 
-    # spirenix.user.persistHomeDirs = [
-    #   ".thunderbird"  # Contains all user profiles, extensions, and settings
-    # ];
   };
 }

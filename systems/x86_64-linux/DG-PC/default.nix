@@ -22,7 +22,6 @@ in
 
     apps = {
       proton = enabled;
-      proton-cloud = enabled;
     };
 
     desktop = {
