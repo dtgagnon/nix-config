@@ -60,27 +60,81 @@ EOF
       fi
     fi
 
-    # PATCH: Add --quick-input CLI flag support
+    # PATCH: Add --quick-input CLI flag support with custom quick window
     echo "Adding --quick-input CLI flag support..."
     cat > /tmp/quick-input-patch.js << 'EOF'
-// Quick Input Trigger Patch for Wayland/Hyprland
+// Quick Input Patch for Wayland/Hyprland - Custom Implementation
 if (process.argv.includes('--quick-input')) {
-  const { BrowserWindow, app } = require('electron');
+  const { BrowserWindow, app, ipcMain } = require('electron');
 
   app.whenReady().then(() => {
-    setTimeout(() => {
-      const windows = BrowserWindow.getAllWindows();
-      // Quick window dimensions: 320x54 + padding (8*2) = 336x70
-      const quickWindow = windows.find(w => {
-        const bounds = w.getBounds();
-        return bounds.width === 336 && bounds.height === 70;
-      });
-
-      if (quickWindow && !quickWindow.isDestroyed()) {
-        quickWindow.show();
-        quickWindow.focus();
+    // Create custom quick input window
+    const quickWin = new BrowserWindow({
+      width: 336,
+      height: 70,
+      frame: false,
+      transparent: true,
+      skipTaskbar: true,
+      resizable: false,
+      alwaysOnTop: true,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true
       }
-    }, 2000);
+    });
+
+    // Load simple HTML
+    quickWin.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            width: 320px;
+            height: 54px;
+            padding: 8px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 8px;
+          }
+          input {
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(50, 50, 50, 0.8);
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+          }
+          input:focus {
+            background: rgba(60, 60, 60, 0.9);
+          }
+        </style>
+      </head>
+      <body>
+        <input type="text" placeholder="Ask Claude..." autofocus />
+        <script>
+          const input = document.querySelector('input');
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+              window.close();
+            }
+          });
+        </script>
+      </body>
+      </html>
+    `));
+
+    quickWin.show();
+    quickWin.focus();
+
+    // Close when focus is lost
+    quickWin.on('blur', () => {
+      quickWin.close();
+    });
   });
 }
 
