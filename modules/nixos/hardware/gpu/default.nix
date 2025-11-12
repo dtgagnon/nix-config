@@ -77,7 +77,7 @@ in
         nvidia = {
           nvidiaPersistenced = false;
           nvidiaSettings = true;
-          open = cfg.nvidiaOpen; # lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware);
+          open = cfg.nvidiaOpen; #TODO: Test if `lib.mkOverride 990 (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware)` works as intended
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
           modesetting.enable = true;
           powerManagement = {
@@ -89,7 +89,7 @@ in
             intelBusId = canonToPrime cfg.iGPU.busId;
             nvidiaBusId = canonToPrime cfg.dGPU.busId;
           };
-          videoAcceleration = true; # adds pkgs.nvidia-vaapi-driver
+          videoAcceleration = true; # True adds the pkgs.nvidia-vaapi-driver.
         };
         graphics = {
           enable = true;
@@ -110,13 +110,7 @@ in
         vulkan-tools
       ];
 
-      # environment.variables = if cfg.iGPU.isPrimary then { } else {
-      #   NVD_BACKEND = "direct";
-      #   LIBVA_DRIVER_NAME = "nvidia";
-      #   GBM_BACKEND = "nvidia-drm";
-      # };
-      # systemd.services.systemd-suspend.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
-
+      #TODO: I think this can move into the kvm module; not sure why I put it here
       boot = {
         blacklistedKernelModules = [ "nouveau" "nvidiafb" ];
       };
@@ -143,7 +137,6 @@ in
           "i915.enable_psr=2"
           "i915.modeset=1"
         ] ++ lib.optional cfg.iGPU.isPrimary (lib.mkForce "nvidia-drm.fbdev=0");
-        # kernelPackages = pkgs.linuxPackages_latest; # For newer iGPUs (13th Gen) for proper kernel support
       };
       environment.variables = {
         LIBVA_DRIVER_NAME = mkIf cfg.iGPU.isPrimary "iHD";
