@@ -127,8 +127,8 @@
     nur.url = "github:nix-community/NUR"; # Community package repository
 
     ## configuration frameworks
-    # snowfall-lib.url = "github:snowfallorg/lib";
-    snowfall-lib.url = "github:anntnzrb/snowfall-lib";
+    # snowfall-lib.url = "github:anntnzrb/snowfall-lib"; # Most recently maintained snowfall-lib
+    snowfall-lib.url = "github:dtgagnon/snowfall-lib/fix/system-throw";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager";
@@ -192,9 +192,6 @@
     neovim.url = "github:dtgagnon/nixvim/main";
 
     nixarr.url = "github:rasmus-kirk/nixarr";
-
-    nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
-    nixos-conf-editor.inputs.nixpkgs.follows = "nixpkgs";
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
