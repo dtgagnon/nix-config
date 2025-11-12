@@ -49,11 +49,13 @@ in
         "bordersize 0, class:^(com.mitchellh.ghostty)$"
         "opacity 0.9 override 0.8 override, class:^(com.mitchellh.ghostty)$"
 
+        #NOTE Window is addressed in related keybind.
         # Kitty - terminal
         # "float,class:^(kitty)$"
         # "center,floating:1,class:kitty"
         # "size 600 900,floating:1,class:kitty"
 
+        #NOTE Window is addressed in related keybind.
         # Yazi - file explorer
         # "float,title:^(Yazi)$"
         # "center,floating:1,title:^(Yazi)$"
@@ -67,9 +69,6 @@ in
         "size 700 450,title:^(Volume Control)$"
         "center,title:^(Volume Control)$"
         "float, title:^(Volume Control)$"
-
-        # Zen Browser
-        ## Extensions
 
         # Force total opacity
         "opacity 1.0 override 1.0 override, title:^(Picture in Picture)$"
@@ -123,6 +122,7 @@ in
         "float,title:^(Confirm to replace files)$"
         "float,title:^(File Operation Progress)$"
 
+        #TODO: Figure out if disabling the below config has broken anything or if it had no impact.
         # XWaylandVideoBridge rules: These rules handle screen sharing for X11 apps (like Discord) under Wayland
         # They make the bridge window invisible, prevent animations/focus stealing, and keep it tiny (1x1)
         # This ensures smooth screen sharing without visual interference
@@ -135,7 +135,6 @@ in
 
       layerrule = [
         "blur, rofi"
-        # "xray on, rofi"
       ];
     };
   };

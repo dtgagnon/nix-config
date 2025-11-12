@@ -28,7 +28,7 @@ in
 
       monitor = cfg.monitors ++ [
         "Virtual-1,3440x1440,0x0,1"
-        # ",preferred,auto,1"
+        #TODO: Figure out if this should be used or not `",preferred,auto,1"`
       ];
 
       general = {
