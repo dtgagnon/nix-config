@@ -1,13 +1,14 @@
 { lib
+, pkgs
 , config
 , namespace
-, osConfig ? null
 , ...
 }:
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.thunderbird;
+  username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.apps.thunderbird = {
@@ -15,32 +16,28 @@ in
   };
 
   config = mkIf cfg.enable {
-    programs.thunderbird = {
-      enable = true;
-      settings = {
-        #global settings
-      };
-
-      profiles.${config.spirenix.user.name} = {
-        search = {
-          default = "ddg";
-          order = [
-            "ddg"
-            "Perplexity"
-            "google"
-          ];
-          privateDefault = "ddg";
-        };
-
-        settings = {
-          "mail.spellcheck.inline" = true;
-        };
-
-        isDefault = true;
-      };
-    };
-
+    #NOTE: Disabling the home-manager module for now since it interferes with the dynamic setting changes on-going currently - 11/10/2025
+    # programs.thunderbird = {
+    #   enable = true;
+    #   profiles.${username} = {
+    #     search = {
+    #       default = "ddg";
+    #       order = [
+    #         "ddg"
+    #         "Perplexity"
+    #         "google"
+    #       ];
+    #       privateDefault = "ddg";
+    #     };
+    #
+    #     settings = {
+    #       "mail.spellcheck.inline" = true;
+    #     };
+    #
+    #     isDefault = true;
+    #   };
+    # };
+    home.packages = [ pkgs.thunderbird pkgs.birdtray ];
     home.sessionVariables.MAIL_CLIENT = "thunderbird";
-
   };
 }
