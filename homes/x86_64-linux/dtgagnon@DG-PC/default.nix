@@ -64,6 +64,7 @@ in
       addons = {
         hellwal = enabled;
         kde-connect = enabled;
+        rofi.style = "slim";
         weylus = enabled;
       };
       hyprland = {

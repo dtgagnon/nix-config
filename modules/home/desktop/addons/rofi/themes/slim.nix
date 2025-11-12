@@ -19,10 +19,6 @@ in
         icon-theme = "Papirus";
         drun-display-format = "{icon} {name}";
         display-drun = "";
-        display-filebrowser = "";
-        display-run = "";
-        display-ssh = "󰈀";
-        display-window = "";
         sidebar-mode = false;
       };
       location = "top";
@@ -62,15 +58,15 @@ in
           opacity = mkLiteral "0.66";
         };
 
-        # Container for all main elements (inputbar and listbox)
+        # Container for all main elements (listbox first, then inputbar at bottom)
         "mainbox" = {
           enabled = true;
           padding = mkLiteral "10px";
           margin = mkLiteral "10px";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
-            "inputbar"
             "listbox"
+            "inputbar"
           ];
           border-radius = mkLiteral "16px";
           border = mkLiteral "0px";
@@ -78,102 +74,74 @@ in
           background-color = mkLiteral "transparent";
         };
 
-        # Search bar container with entry field and mode switcher
+        # Search bar container - now minimal and at bottom
         "inputbar" = {
           enabled = true;
           padding = mkLiteral "0px";
-          margin = mkLiteral "0px";
+          margin = mkLiteral "6px 0px 0px 0px";
           background-color = mkLiteral "transparent";
           border = mkLiteral "0px";
           border-color = mkLiteral "transparent";
-          border-radius = mkLiteral "8px";
+          border-radius = mkLiteral "0px";
           orientation = mkLiteral "horizontal";
           children = map mkLiteral [
             "entry"
-            "mode-switcher"
           ];
         };
 
-        # Prompt text before search input
+        # Prompt text before search input (disabled)
         "prompt" = {
-          enable = false;
-          padding = mkLiteral "6px";
-          margin = mkLiteral "0px";
-          background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@base04";
-          border-radius = mkLiteral "4px";
-          vertical-align = mkLiteral "0.5";
-          horizontal-align = mkLiteral "0.5";
+          enabled = false;
         };
 
-        # Text input field for search
+        # Text input field for search - minimal styling at bottom
         "entry" = {
           enabled = true;
           width = mkLiteral "100%";
           blink = false;
           expand = true;
-          padding = mkLiteral "10px";
-          margin = mkLiteral "0px 40px 0px 0px";
-          border = mkLiteral "2px 0px";
-          border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@base03";
-          background-color = mkLiteral "transparent";
-          text-color = mkLiteral "@base05";
-
-          cursor = mkLiteral "text";
-          font = "${config.stylix.fonts.sansSerif.name} 12";
-          placeholder = "Search...";
-          placeholder-color = mkLiteral "@base03";
-          horizontal-align = mkLiteral "0.5";
-          vertical-align = mkLiteral "0.5";
-        };
-
-        # Container for mode buttons (drun, run, window, etc)
-        "mode-switcher" = {
-          expand = false;
-          padding = mkLiteral "4px";
+          padding = mkLiteral "4px 6px";
           margin = mkLiteral "0px";
-          spacing = mkLiteral "0px";
-          border = mkLiteral "2px 0px";
-          border-radius = mkLiteral "8px";
-          border-color = mkLiteral "@base03";
-          background-color = mkLiteral "transparent";
-        };
-
-        # Individual mode selection buttons
-        "button" = {
-          padding = mkLiteral "2px 4px";
-          margin = mkLiteral "0px 2px";
           border = mkLiteral "0px";
+          border-radius = mkLiteral "6px";
           border-color = mkLiteral "transparent";
-          border-radius = mkLiteral "4px";
-          background-color = mkLiteral "transparent";
-          font = "${config.stylix.fonts.monospace.name} 22";
-          text-color = mkLiteral "@base05";
-          vertical-align = mkLiteral "0.5";
-          horizontal-align = mkLiteral "0.5";
-          cursor = mkLiteral "pointer";
-        };
-
-        # Style for selected mode button
-        "button selected" = {
           background-color = mkLiteral "transparent";
           text-color = mkLiteral "@base04";
-          border-color = mkLiteral "@base04";
+
+          cursor = mkLiteral "text";
+          font = "${config.stylix.fonts.sansSerif.name} 9";
+          placeholder = "";
+          placeholder-color = mkLiteral "transparent";
+          horizontal-align = mkLiteral "0.5";
+          vertical-align = mkLiteral "0.5";
+        };
+
+        # Container for mode buttons (no longer needed but keeping for compatibility)
+        "mode-switcher" = {
+          enabled = false;
+        };
+
+        # Individual mode selection buttons (disabled)
+        "button" = {
+          enabled = false;
+        };
+
+        # Style for selected mode button (disabled)
+        "button selected" = {
+          enabled = false;
         };
 
         # Container for message and results list
         "listbox" = {
-          border = mkLiteral "2px 0px";
-          border-color = mkLiteral "@base03";
+          border = mkLiteral "0px";
+          border-color = mkLiteral "transparent";
           spacing = mkLiteral "0px";
           padding = mkLiteral "0px";
-          margin = mkLiteral "10px 0px 0px 0px";
-          border-radius = mkLiteral "8px";
+          margin = mkLiteral "0px";
+          border-radius = mkLiteral "0px";
           background-color = mkLiteral "transparent";
           orientation = mkLiteral "vertical";
           children = map mkLiteral [
-            "message"
             "listview"
           ];
         };
@@ -182,7 +150,7 @@ in
         "listview" = {
           enabled = true;
           expand = true;
-          padding = mkLiteral "12px 0px 4px 0px";
+          padding = mkLiteral "8px 0px";
           margin = mkLiteral "0px";
 
           columns = 3;
@@ -325,6 +293,11 @@ in
           margin = mkLiteral "0px";
           padding = mkLiteral "0px";
           border-radius = mkLiteral "8px";
+        };
+
+        # Message element (not used but keeping for compatibility)
+        "message" = {
+          enabled = false;
         };
       };
     };
