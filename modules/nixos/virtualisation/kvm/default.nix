@@ -6,7 +6,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkMerge mkForce types optionalString concatStringsSep getExe;
+  inherit (lib) mkIf mkMerge mkForce types optionalString concatStringsSep getExe mapAttrsToList;
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
@@ -37,8 +37,14 @@ in
   };
 
   config = mkMerge [
-
     (mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = cfg.vfio.enable -> cfg.enable;
+          message = "${namespace}.virtualisation.kvm.vfio.enable requires ${namespace}.virtualisation.kvm.enable";
+        }
+      ];
+
       boot = {
         initrd.kernelModules = [ "kvm-${cfg.platform}" "i915" ];
         initrd.availableKernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
@@ -87,8 +93,6 @@ in
         spiceUSBRedirection.enable = true;
       };
 
-      services.qemuGuest.enable = true;
-
       spirenix = {
         user = {
           extraGroups = [
@@ -99,9 +103,8 @@ in
           ];
         };
       };
-
+      services.qemuGuest.enable = true;
       networking.firewall.trustedInterfaces = [ "virbr0" ];
-
       environment.systemPackages = with pkgs; [
         virt-manager
         virt-viewer
@@ -124,10 +127,13 @@ in
         quickemu
         inputs.NixVirt.packages.x86_64-linux.default
       ];
+
+      #TODO: Get preservation system working for this dir
       # spirenix.system.preservation.extraSysDirs = [
       #   { directory = "/var/lib/libvirt"; user = "${user.name}"; group = "qemu-libvirtd"; }
       # ];
     })
+
     (mkIf (cfg.enable && cfg.lookingGlass.enable) {
       services.udev.extraRules = ''
         SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
@@ -138,7 +144,8 @@ in
         options kvmfr static_size_mb=${toString (builtins.elemAt cfg.lookingGlass.kvmfrSize 0)}
       '';
     })
-    (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "static") {
+
+    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "static") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
       boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
@@ -146,9 +153,9 @@ in
         options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
-      # hardware.nvidia.modesetting.enable = mkForce true;
     })
-    (mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
+
+    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nouveau" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
@@ -162,10 +169,10 @@ in
         (mkForce "nvidia-drm.fbdev=0")
       ];
       hardware.nvidia = {
-        # enable = true; #NOTE Explictly enabled to test if this has impact on dynamic vfio passthrough set up, which boots with vfio-pci taking nvidia gpu right away.
         modesetting.enable = mkForce false;
-        # powerManagement.enable = mkForce false;
         nvidiaPersistenced = mkForce true;
+        # enable = true; #NOTE Explictly enabled to test if this has impact on dynamic vfio passthrough set up, which boots with vfio-pci taking nvidia gpu right away.
+        # powerManagement.enable = mkForce false; #NOTE Not sure of the impacts of this after successful __EGL_VENDOR_LIBRARY_FILENAMES addition below
       };
       # services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
     })
