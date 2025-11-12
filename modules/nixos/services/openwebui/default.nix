@@ -13,25 +13,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    users.users.openwebui = {
-      isSystemUser = true;
-      group = "openwebui";
-    };
-
-    users.groups.openwebui = { };
-
-    # Enable PostgreSQL service
-    services.postgresql = {
-      enable = true;
-      ensureDatabases = [ "openwebui" ];
-      ensureUsers = [
-        {
-          name = "openwebui";
-          ensureDBOwnership = true;
-          ensureClauses.login = true;
-        }
-      ];
-    };
 
     services.open-webui = {
       enable = true;
@@ -58,5 +39,23 @@ in
         Group = lib.mkForce "openwebui";
       };
     };
+
+    users = {
+      groups.openwebui = { };
+      users.openwebui = {
+        isSystemUser = true;
+        group = "openwebui";
+      };
+    };
+
+    # Enable PostgreSQL service
+    services.postgresql = {
+      enable = true;
+      ensureDatabases = [ "openwebui" ];
+      ensureUsers = [
+        { name = "openwebui"; ensureDBOwnership = true; ensureClauses.login = true; }
+      ];
+    };
+
   };
 }
