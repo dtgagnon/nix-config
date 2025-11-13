@@ -52,10 +52,10 @@ in
           wlsunset = enabled; # color temperature manager
 
           # Basic functionality
-          # ags.bar = enabled;
+          # sysbar.ags = enabled;
           hypridle = enabled;
           hyprlock = enabled;
-          waybar = enabled;
+          sysbar.waybar = enabled;
           wlogout = enabled;
         };
         styling = {
@@ -91,28 +91,11 @@ in
         wl-clipboard
         playerctl
       ];
-
-      # systemd.user.services.give-host-dgpu-startup = {
-      #   description = "Gives the host the dGPU after launching the desktop session";
-      #   after = [ "graphical-session.target" ];
-      #   path = [
-      #     cfg.hooksPackage
-      #     pkgs.kmod
-      #     pkgs.coreutils
-      #     pkgs.systemd
-      #   ];
-      #   serviceConfig = {
-      #     Type = "oneshot";
-      #     User = "root";
-      #     ExecStart = "${osConfig.spirenix.virtualisation.kvm.hooksPackage}/bin/give-host-dgpu";
-      #   };
-      # };
     })
 
     # Configure Hyprland to use Intel iGPU when VFIO is enabled
     # This prevents Hyprland from holding file descriptors to the NVIDIA dGPU
     (mkIf (cfg.enable && osConfig.${namespace}.virtualisation.kvm.vfio.enable) {
-      # Use uwsm env file when UWSM is enabled, otherwise use home.sessionVariables
       xdg.configFile."uwsm/env-hyprland" = mkIf osConfig.programs.hyprland.withUWSM {
         text = ''
           export AQ_DRM_DEVICES=${config.home.homeDirectory}/.config/hypr/intel-iGPU

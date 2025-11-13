@@ -6,8 +6,6 @@
 let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
-
-  cursorSize = toString config.stylix.cursor.size;
 in
 {
   config = mkIf cfg.enable {
@@ -16,7 +14,6 @@ in
         let
           execCmds = ([
             "gnome-keyring-daemon --start --components=secrets"
-            # "hyprctl setcursor ${config.stylix.cursor.name} ${cursorSize}"
             "playerctld daemon"
             "solaar --window hide --battery-icons regular"
           ] ++ cfg.extraExec);
