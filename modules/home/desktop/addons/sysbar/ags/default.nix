@@ -9,7 +9,7 @@
 let
   inherit (lib) mkIf types getExe;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.desktop.addons.ags.bar;
+  cfg = config.${namespace}.desktop.addons.sysbar.ags;
 
   bar = pkgs.runCommandNoCC "spirenix-ags-bar" {
     nativeBuildInputs = [ pkgs.sassc ];
@@ -34,7 +34,7 @@ let
   '';
 in
 {
-  options.${namespace}.desktop.addons.ags.bar = {
+  options.${namespace}.desktop.addons.sysbar.ags = {
     enable = mkBoolOpt false "AGS Bar";
     package = mkOpt types.package inputs.ags.packages.${system}.default "The package to use for AGS";
   };

@@ -6,13 +6,13 @@
 let
   inherit (lib) mkIf;
   inherit (config.lib.stylix) colors;
-  cfg = config.${namespace}.desktop.addons.waybar;
+  cfg = config.${namespace}.desktop.addons.sysbar.waybar;
 
   core = config.spirenix.desktop.styling.core;
 in
 {
   config = mkIf (cfg.presetLayout == "top-isolated-islands-centeredWorkspaces") {
-    spirenix.desktop.addons.waybar.settings = [
+    spirenix.desktop.addons.sysbar.waybar.settings = [
       {
         layer = "top";
         position = "top";

@@ -5,7 +5,7 @@
 }:
 let
   inherit (lib) mkIf;
-  cfg = config.${namespace}.desktop.addons.waybar;
+  cfg = config.${namespace}.desktop.addons.sysbar.waybar;
 
   inherit (lib.${namespace}) mkRGBA;
   inherit (config.lib.stylix) colors;

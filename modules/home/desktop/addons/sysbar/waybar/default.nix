@@ -7,12 +7,12 @@
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  cfg = config.${namespace}.desktop.addons.waybar;
+  cfg = config.${namespace}.desktop.addons.sysbar.waybar;
 in
 {
   imports = lib.snowfall.fs.get-non-default-nix-files-recursive ./.;
 
-  options.${namespace}.desktop.addons.waybar = {
+  options.${namespace}.desktop.addons.sysbar.waybar = {
     enable = mkBoolOpt false "Enable waybar";
     settings = mkOpt (types.listOf types.attrs) [ ] "Configuration for the layout of waybar";
     presetLayout = mkOpt (types.nullOr types.str) "top-isolated-islands-centeredWorkspaces" "The waybar layout to use";
@@ -24,10 +24,7 @@ in
   config = mkIf cfg.enable {
     programs.waybar = {
       enable = true;
-      systemd = {
-        enable = true;
-        target = "wayland-session@Hyprland.target";
-      };
+      systemd.enable = true;
       inherit (cfg) settings;
     };
 
