@@ -6,11 +6,10 @@
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption attrByPath;
+  inherit (lib) mkIf mkEnableOption;
   cfg = config.${namespace}.services.activity-watch;
-  withHyprland = attrByPath [ "wayland" "windowManager" "hyprland" "enable" ] false config;
-  hyprlandSystemd = attrByPath [ "wayland" "windowManager" "hyprland" "systemd" "enable" ] false config;
-  waybarEnabled = attrByPath [ "programs" "waybar" "enable" ] false config;
+
+  anyWaylandWM = lib.any (wm: wm.enable or false) (lib.attrValues config.wayland.windowManager);
 in
 {
   options.${namespace}.services.activity-watch = {
@@ -18,10 +17,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.aw-qt ];
     services.activitywatch = {
       enable = true;
-      package = pkgs.activitywatch; # was previously using pkgs.aw-server-rust #TODO Delete if works or works better with activitywatch now.
+      package = pkgs.activitywatch;
       watchers = {
         aw-watcher-afk = {
           package = pkgs.activitywatch;
@@ -31,75 +29,38 @@ in
           };
         };
 
-        aw-watcher-window-wayland = mkIf config.wayland.windowManager.hyprland.enable {
+        aw-watcher-window-wayland = mkIf anyWaylandWM {
           package = pkgs.aw-watcher-window-wayland;
           settings.poll_time = 1;
         };
-
-        # aw-watcher-web = {
-        #   package = pkgs.aw-watcher-web;
-        # };
-
-        # aw-watcher-vscode = mkIf config.spirenix.apps.vscode.enable {
-        #   package = pkgs.aw-watcher-vscode;
-        #   settings.poll_time = 2;
-        # };
-        # aw-watcher-input = {
-        #   package = pkgs.aw-watcher-input;
-        # };
-        # name-of-watcher = {
-        #   executable = "";
-        #   extraOptions = [ "" ];
-        #   name = "";
-        #   package = pkgs.activitywatch;
-        #   settings = {
-        #     # in TOML
-        #     enable_greetings = true;
-        #     poll_time = 2;
-        #     timeout = 300;
-        #   };
-        #   settingsFilename = "config.toml";
-        # };
       };
     };
 
-    # Fix aw-watcher-afk for Wayland/Hyprland
-    systemd.user.services.activitywatch-watcher-aw-watcher-afk = mkIf config.wayland.windowManager.hyprland.enable {
-      Unit = {
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
+    #FIX: Watchers must start after main ActivityWatch service and graphical session
+    systemd.user.services = {
+      activitywatch-watcher-aw-watcher-afk = {
+        Unit = {
+          After = [ "activitywatch.service" "graphical-session.target" ];
+          Wants = [ "activitywatch.service" ];
+        };
+        Service.Environment = mkIf anyWaylandWM [
+          "WAYLAND_DISPLAY=wayland-1"
+          "XDG_SESSION_TYPE=wayland"
+        ];
       };
-      Service = {
-        Environment = [
+
+      activitywatch-watcher-aw-watcher-window-wayland = mkIf anyWaylandWM {
+        Unit = {
+          After = [ "activitywatch.service" "graphical-session.target" ];
+          Wants = [ "activitywatch.service" ];
+        };
+        Service.Environment = [
           "WAYLAND_DISPLAY=wayland-1"
           "XDG_SESSION_TYPE=wayland"
         ];
       };
     };
 
-    systemd.user.services.aw-qt = {
-      Unit = {
-        Description = "ActivityWatch Tray";
-        After = [ "waybar.service" "graphical-session.target" ];
-        Wants = lib.optionals waybarEnabled [ "waybar.service" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service = {
-        ExecStart = "${pkgs.aw-qt}/bin/aw-qt";
-        Restart = "on-failure";
-      };
-      Install = {
-        WantedBy =
-          [ "graphical-session.target" ]
-          ++ lib.optionals hyprlandSystemd [ "wayland-session@Hyprland.target" ];
-      };
-    };
-
-    spirenix.desktop.hyprland.extraExec =
-      lib.optionals
-        (
-          withHyprland
-          && !hyprlandSystemd
-        ) [ "systemctl --user start aw-qt.service" ];
+    spirenix.desktop.addons.sysbar.sysTrayApps = [ "aw-qt" ];
   };
 }
