@@ -10,7 +10,7 @@ let
 in
 {
   config = mkIf (cfg.style == "slim") {
-    programs.rofi = {
+    spirenix.desktop.addons.rofi = {
       extraConfig = {
         modi = "drun";
         disable-history = false;
@@ -21,7 +21,7 @@ in
         display-drun = "";
         sidebar-mode = false;
       };
-      location = "top";
+      location = "center";
       theme = {
         # Global color and style variables used throughout the theme
         "*" = {
@@ -78,7 +78,7 @@ in
         "inputbar" = {
           enabled = true;
           padding = mkLiteral "0px";
-          margin = mkLiteral "6px 0px 0px 0px";
+          margin = mkLiteral "0px 0px 0px 0px";
           background-color = mkLiteral "transparent";
           border = mkLiteral "0px";
           border-color = mkLiteral "transparent";
@@ -100,7 +100,7 @@ in
           width = mkLiteral "100%";
           blink = false;
           expand = true;
-          padding = mkLiteral "4px 6px";
+          padding = mkLiteral "0px 0px";
           margin = mkLiteral "0px";
           border = mkLiteral "0px";
           border-radius = mkLiteral "6px";
@@ -109,7 +109,7 @@ in
           text-color = mkLiteral "@base04";
 
           cursor = mkLiteral "text";
-          font = "${config.stylix.fonts.sansSerif.name} 9";
+          font = "${config.stylix.fonts.sansSerif.name} 8";
           placeholder = "";
           placeholder-color = mkLiteral "transparent";
           horizontal-align = mkLiteral "0.5";
@@ -150,7 +150,7 @@ in
         "listview" = {
           enabled = true;
           expand = true;
-          padding = mkLiteral "8px 0px";
+          padding = mkLiteral "0px 0px";
           margin = mkLiteral "0px";
 
           columns = 3;
@@ -203,7 +203,7 @@ in
         # Icon styling for results
         "element-icon" = {
           background-color = mkLiteral "inherit";
-          size = mkLiteral "32px";
+          size = mkLiteral "42px"; #was 32
           cursor = mkLiteral "inherit";
           vertical-align = mkLiteral "1.0";
           horizontal-align = mkLiteral "0.5";

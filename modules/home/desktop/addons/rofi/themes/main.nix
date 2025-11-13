@@ -10,7 +10,7 @@ let
 in
 {
   config = mkIf (cfg.style == "default") {
-    programs.rofi = {
+    spirenix.desktop.addons.rofi = {
       extraConfig = {
         modi = "drun,window,filebrowser";
         disable-history = false;
