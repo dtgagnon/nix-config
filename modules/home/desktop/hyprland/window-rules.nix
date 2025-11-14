@@ -61,9 +61,9 @@ in
         # "center,floating:1,title:^(Yazi)$"
         # "size 1200 725,floating:1,title:^(Yazi)$"
 
-        # VMs
-        ## Looking Glass
-        "workspace 6, fullscreen, class:^(looking-glass-client)$"
+        # Workspaces
+        "workspace 6 silent, class:^(thunderbird)$"
+        "workspace 8, fullscreen, class:^(looking-glass-client)$"
 
         # Volume Control
         "size 700 450,title:^(Volume Control)$"

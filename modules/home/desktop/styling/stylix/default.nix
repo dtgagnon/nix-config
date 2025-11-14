@@ -77,11 +77,21 @@ in
                   ${target}.enable = false;
                 }
             )
-            { 
-              gtk = { 
+            {
+              gtk = {
                 enable = true;
-                # extraCss = builtins.readFile ../gtk/gtk.css; 
-              }; 
+                # extraCss = builtins.readFile ../gtk/gtk.css;
+              };
+              # Enable nixvim target for standalone nixvim configuration
+              # This generates the exportedModule that can be used with .extend
+              nixvim = {
+                enable = true;
+                plugin = pkgs.base16-nvim;
+                transparentBackground = {
+                  main = true;
+                  signColumn = true;
+                };
+              };
             }
             cfg.excludedTargets;
       };

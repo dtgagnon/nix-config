@@ -58,13 +58,6 @@ in
               "PLAYWRIGHT_NODEJS_PATH": "${pkgs.nodejs}/bin/node",
               "PLAYWRIGHT_LAUNCH_OPTIONS_EXECUTABLE_PATH": "${pkgs.playwright-driver.browsers}/chromium-1134/chrome-linux/chrome"
             }
-          },
-          "sequential-thinking": {
-            "command": "npx",
-            "args": [
-              "-y",
-              "@modelcontextprotocol/server-sequential-thinking"
-            ]
           }
         },
         "security": {

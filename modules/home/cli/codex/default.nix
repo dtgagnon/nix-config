@@ -28,7 +28,9 @@ in
         model_reasoning_effort = "medium"
 
         [tools]
-        web_search = true
+
+        [features]
+        web_search_request = true
 
         [mcp_servers.nixos]
             command = "nix"

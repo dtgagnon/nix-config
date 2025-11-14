@@ -1,4 +1,4 @@
-#NOTE: When Ghostty is configured via the programs.ghostty home-manager module and with Stylix enabled"" both theme, font-name, font-emoji, font-size, and opacity settings will already be added to the config file for ghostty from the stylix global configuration options
+#NOTE: When Ghostty is configured via the programs.ghostty home-manager module and with Stylix enabled: theme, font-name, font-emoji, font-size, and opacity settings will already be added to the config file for ghostty from the stylix global configuration options
 
 { lib
 , config

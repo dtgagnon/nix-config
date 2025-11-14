@@ -98,8 +98,8 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          theme = "gruvbox-material-dark-medium";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.gruvbox.gruvbox-nixos-logo;
+          theme = "nord";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.flat-blue-mountains;
         };
         stylix = {
           enable = true;

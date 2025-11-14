@@ -10,8 +10,6 @@ let
   cfg = config.${namespace}.desktop.addons.sysbar;
 in
 {
-  imports = [ ./waybar ./ags ];
-
   options.${namespace}.desktop.addons.sysbar = {
     enable = mkBoolOpt false "Enable system bar (waybar or ags)";
     backend = mkOpt (types.enum [ "waybar" "ags" ]) "waybar" "Which system bar backend to use";

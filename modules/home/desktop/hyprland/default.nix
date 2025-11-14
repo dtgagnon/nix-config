@@ -55,7 +55,7 @@ in
           # sysbar.ags = enabled;
           hypridle = enabled;
           hyprlock = enabled;
-          sysbar.waybar = enabled;
+          sysbar = enabled;
           wlogout = enabled;
         };
         styling = {

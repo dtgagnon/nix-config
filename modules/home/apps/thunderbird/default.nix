@@ -47,9 +47,9 @@ let
     "common/launchthunderbirddelay" = 1;
     "common/startClosedThunderbird" = true;
     "common/exitthunderbirdonquit" = true;
-    "common/showhidethunderbird" = true;
+    "common/showhidethunderbird" = false; # doesn't work on wayland
     "common/hidewhenminimized" = true;
-    "common/monitorthunderbirdwindow" = true;
+    "common/monitorthunderbirdwindow" = false; # doesn't work on wayland
     "common/restartthunderbird" = false;
     "common/hidewhenrestarted" = false;
     "common/hidewhenstarted" = false;
@@ -85,11 +85,12 @@ in
       sessionVariables.MAIL_CLIENT = "thunderbird";
       packages = [
         pkgs.thunderbird
-        pkgs.birdtray
+        # pkgs.birdtray
       ];
     };
 
-    spirenix.desktop.addons.sysbar.sysTrayApps = [ "birdtray" ];
-    xdg.configFile."birdtray-config.json".text = builtins.toJSON birdtrayConfig;
+    spirenix.desktop.hyprland.extraExec = [ "thunderbird" ];
+    # spirenix.desktop.addons.sysbar.sysTrayApps = [ "birdtray" ];
+    # xdg.configFile."birdtray-config.json".text = builtins.toJSON birdtrayConfig;
   };
 }
