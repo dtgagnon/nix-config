@@ -86,7 +86,7 @@ in
               # This generates the exportedModule that can be used with .extend
               nixvim = {
                 enable = true;
-                plugin = pkgs.base16-nvim;
+                plugin = "base16-nvim";
                 transparentBackground = {
                   main = true;
                   signColumn = true;
