@@ -6,7 +6,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkMerge mkForce types optionalString concatStringsSep getExe mapAttrsToList;
+  inherit (lib) mkIf mkMerge mkForce types optionalString;
   inherit (lib.${namespace}) mkOpt mkBoolOpt enabled;
   cfg = config.${namespace}.virtualisation.kvm;
   user = config.${namespace}.user;
@@ -53,8 +53,6 @@ in
         extraModprobeConfig = ''
           ${optionalString (cfg.ignoreMSRs) "options kvm ignore_msrs=1"}
           ${optionalString (cfg.ignoreMSRs) "options kvm report_ignored_msrs=0"}
-          ${optionalString (cfg.vfio.enable) "options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}"}
-          ${optionalString (cfg.vfio.enable) "softdep nvidia pre: vfio-pci"}
         '';
       };
 
@@ -136,7 +134,7 @@ in
 
     (mkIf (cfg.enable && cfg.lookingGlass.enable) {
       services.udev.extraRules = ''
-        SUBSYSTEM=="kvmfr", OWNER="${user.name}", GROUP="qemu-libvirtd", MODE="0660"
+        SUBSYSTEM=="kvmfr", KERNEL=="kvmfr*", GROUP="qemu-libvirtd", MODE="0660", TAG+="uaccess"
       '';
       boot.kernelModules = [ "kvmfr" ];
       boot.extraModulePackages = [ config.boot.kernelPackages.kvmfr ];
@@ -150,7 +148,7 @@ in
       boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModprobeConfig = ''
-        options vfio-pci ids=${concatStringsSep "," cfg.vfio.deviceIds}
+        options vfio-pci ids=${lib.concatStringsSep "," cfg.vfio.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
     })
@@ -162,11 +160,10 @@ in
       boot.kernelModules = [ "vendor_reset" ];
       services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
       boot.kernelParams = [
-        "vfio-pci.ids=${concatStringsSep "," cfg.vfio.deviceIds}"
-        "vfio-pci.disable_vga=1"
+        # "vfio-pci.disable_vga=1"
         "video=vesafb:off,efifb:off"
-        (mkForce "nvidia-drm.modeset=0")
-        (mkForce "nvidia-drm.fbdev=0")
+        # (mkForce "nvidia-drm.modeset=0")
+        # (mkForce "nvidia-drm.fbdev=0")
       ];
       hardware.nvidia = {
         modesetting.enable = mkForce false;

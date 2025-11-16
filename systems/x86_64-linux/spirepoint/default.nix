@@ -62,7 +62,7 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
-      rustdesk = enabled;
+      # rustdesk = enabled; #TODO: Renable when rustdesk build failure is fixed
     };
 
     virtualisation.kvm.enable = false;

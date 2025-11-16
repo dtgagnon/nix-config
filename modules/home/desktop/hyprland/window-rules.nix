@@ -49,6 +49,9 @@ in
         "bordersize 0, class:^(com.mitchellh.ghostty)$"
         "opacity 0.9 override 0.8 override, class:^(com.mitchellh.ghostty)$"
 
+        #NOTE Higher opacity for terminals running neovim (makes blur more visible, text more readable). Matches nushell's window title pattern: "~/path> vi" or "~/path> nvim filename"
+        "opacity 0.95 override 0.9 override, title:.*> n?vi(m)?.*"
+
         #NOTE Window is addressed in related keybind.
         # Kitty - terminal
         # "float,class:^(kitty)$"

@@ -156,7 +156,6 @@ in
         "radarr"
         "reddit"
         "sabnzbd"
-        "samsungtv"
         "sonarr"
         "tailscale"
         "tplink"
@@ -165,7 +164,7 @@ in
       customComponents = with pkgs.home-assistant-custom-components; [
         midea_ac_lan
         nest_protect
-        sleep_as_android
+        sleep_as_android_mqtt
         waste_collection_schedule
       ];
 

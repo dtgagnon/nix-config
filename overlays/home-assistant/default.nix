@@ -4,5 +4,6 @@
     gtts = pyprev.gtts.overridePythonAttrs (old: {
       propagatedBuildInputs = (builtins.filter (pkgs: pkgs.pname != "click") (old.propagatedBuildInputs or [ ])) ++ [ channels.stablepkgs.python3Packages.click ];
     });
+    samsungtvws = channels.masterpkgs.samsungtvws;
   });
 }

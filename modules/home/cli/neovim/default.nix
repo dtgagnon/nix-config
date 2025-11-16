@@ -10,12 +10,11 @@ let
   cfg = config.${namespace}.cli.neovim;
 
   # Extend nixvim with Stylix theme when Stylix is enabled
-  # This follows the Stylix standalone mode documentation:
   # https://stylix.danth.me/targets/nixvim.html#standalone-mode
   neovimPackage =
     if config.stylix.enable or false
     then
-      # First configure to use stylix theme, then extend with Stylix's exported module
+    # First configure to use stylix theme, then extend with Stylix's exported module
       (pkgs.spirenix-nvim.neovim.override {
         neovim-config = { themeName = "stylix"; };
       }).extend config.stylix.targets.nixvim.exportedModule
@@ -40,6 +39,18 @@ in
     };
     xdg.configFile = {
       "dashboard-nvim/.keep".text = "";
+    };
+
+    # Enable nixvim target for standalone nixvim configuration
+    # This generates the exportedModule that can be used with .extend
+    stylix.targets.nixvim = {
+      enable = true;
+      plugin = "base16-nvim";
+      transparentBackground = {
+        main = true;
+        numberLine = true;
+        signColumn = true;
+      };
     };
   };
 }

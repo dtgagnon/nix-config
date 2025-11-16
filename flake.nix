@@ -193,8 +193,7 @@
 
     nixarr.url = "github:rasmus-kirk/nixarr";
 
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake/beta";
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
@@ -215,6 +214,7 @@
 
     ## misc repos
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
+    odooAdds.inputs.nixpkgs.follows = "nixpkgs";
 
     ## ai tools
     nix-ai-tools.url = "github:numtide/nix-ai-tools";

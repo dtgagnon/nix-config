@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkMerge types foldl';
+  inherit (lib) mkIf mkMerge types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.styling.stylix;
 
@@ -69,7 +69,7 @@ in
         };
 
         targets =
-          foldl'
+          lib.foldl'
             (
               acc: target:
                 acc
@@ -78,19 +78,10 @@ in
                 }
             )
             {
+              #TODO: Remove gtk enbable from here; test for impact to theming. Suspect unnecessary
               gtk = {
                 enable = true;
                 # extraCss = builtins.readFile ../gtk/gtk.css;
-              };
-              # Enable nixvim target for standalone nixvim configuration
-              # This generates the exportedModule that can be used with .extend
-              nixvim = {
-                enable = true;
-                plugin = "base16-nvim";
-                transparentBackground = {
-                  main = true;
-                  signColumn = true;
-                };
               };
             }
             cfg.excludedTargets;
