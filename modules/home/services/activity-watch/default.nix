@@ -36,28 +36,32 @@ in
       };
     };
 
-    #FIX: Watchers must start after main ActivityWatch service and graphical session
+    #FIX: Main service must wait for Wayland compositor, watchers will inherit ordering
     systemd.user.services = {
-      activitywatch-watcher-aw-watcher-afk = {
+      activitywatch = mkIf anyWaylandWM {
         Unit = {
-          After = [ "activitywatch.service" "graphical-session.target" ];
-          Wants = [ "activitywatch.service" ];
+          After = [ "wayland-session@Hyprland.target" ];
         };
-        Service.Environment = mkIf anyWaylandWM [
-          "WAYLAND_DISPLAY=wayland-1"
-          "XDG_SESSION_TYPE=wayland"
-        ];
+        Service = {
+          # Add restart on failure to handle any remaining race conditions
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
+      };
+
+      activitywatch-watcher-aw-watcher-afk = {
+        Service = {
+          # DISPLAY needed for pynput's X11 backend fallback
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
       };
 
       activitywatch-watcher-aw-watcher-window-wayland = mkIf anyWaylandWM {
-        Unit = {
-          After = [ "activitywatch.service" "graphical-session.target" ];
-          Wants = [ "activitywatch.service" ];
+        Service = {
+          Restart = "on-failure";
+          RestartSec = "5s";
         };
-        Service.Environment = [
-          "WAYLAND_DISPLAY=wayland-1"
-          "XDG_SESSION_TYPE=wayland"
-        ];
       };
     };
 
