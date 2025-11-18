@@ -1,0 +1,13 @@
+# Add this to your ~/.ssh/config file for easy access to dtg-vps
+# Replace YOUR_DROPLET_IP with the actual IP address after creating the droplet
+
+Host dtg-vps
+    HostName YOUR_DROPLET_IP
+    User root
+    IdentityFile ~/.ssh/dtg-vps
+    IdentitiesOnly yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+# After adding this, you can connect with just:
+# ssh dtg-vps
