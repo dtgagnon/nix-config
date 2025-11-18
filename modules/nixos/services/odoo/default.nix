@@ -67,6 +67,7 @@ in
         ocaAddons.stock-logistics-warehouse
         ocaAddons.timesheet
         ocaAddons.web
+        ocaAddons.web-api
       ];
 
       # Settings part of application INI file
