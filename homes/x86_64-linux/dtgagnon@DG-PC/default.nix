@@ -18,6 +18,7 @@ in
     };
 
     apps = {
+      antigravity = enabled;
       claude-desktop = enabled;
       discord = enabled;
       element = enabled;
