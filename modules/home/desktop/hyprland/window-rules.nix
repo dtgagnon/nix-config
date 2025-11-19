@@ -1,143 +1,200 @@
-{ lib
-, config
-, ...
-}:
+{ lib, config, ... }:
 let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
-
-  # floatWindow =
-  #   { windowSizeX
-  #   , windowSizeY
-  #   , windowAnchorX ? 0.0
-  #   , windowAnchorY ? 0.0
-  #   , screenAnchorX ? 0.0
-  #   , screenAnchorY ? 0.0
-  #   , className
-  #   }:
-  #   let
-  #     buildPos = { windowAnchor, screenAnchor, dimensionLetter }: if windowAnchor == "0" then screenAnchor else "${screenAnchor}-${dimensionLetter}-${windowAnchor}";
-
-  #     anchorX = windowSizeX * windowAnchorX;
-  #     anchorY = windowSizeY * windowAnchorY;
-
-  #     moveX = buildPos { windowAnchor = anchorX; screenAnchor = screenAnchorX; dimensionLetter = "w"; };
-  #     moveY = buildPos { windowAnchor = anchorY; screenAnchor = screenAnchorY; dimensionLetter = "h"; };
-  #   in
-  #   ''
-  #     			float,class:^(${className})
-  #     			size ${windowSizeX} ${windowSizeY},class:^(${className})
-  #     			move ${moveX} ${moveY},class:^(${className})
-  #     		'';
 in
 {
   config = mkIf cfg.enable {
     spirenix.desktop.hyprland.extraWinRules = {
-      windowrulev2 = [
+      windowrule = [
         # Aseprite - pixel art editor
-        "tile,title:^(Aseprite)$"
+        {
+          name = "aseprite-tile";
+          "match:title" = "^(Aseprite)$";
+          tile = true;
+        }
 
-        # Discord
-        "float,class:^(discord)$"
-        "move 50%-w/2 84,class:^(discord)$"
-        "size 1600 900,class:^(discord)$"
+        # Discord - floating centered window
+        {
+          name = "discord";
+          "match:class" = "^(discord)$";
+          float = true;
+          move = "50%-w/2 84";
+          size = "1600 900";
+        }
 
-        # Ghostty - terminal
-        "float, class:^(com.mitchellh.ghostty)$"
-        "center, class:^(com.mitchellh.ghostty)$"
-        "size 1200 800, class:^(com.mitchellh.ghostty)$"
-        "bordersize 0, class:^(com.mitchellh.ghostty)$"
-        "opacity 0.9 override 0.8 override, class:^(com.mitchellh.ghostty)$"
+        # Ghostty - terminal with custom styling
+        {
+          name = "ghostty";
+          "match:class" = "^(com.mitchellh.ghostty)$";
+          float = true;
+          center = true;
+          size = "1200 800";
+          border_size = 0;
+          opacity = "0.9 override 0.8 override";
+        }
 
-        #NOTE Higher opacity for terminals running neovim (makes blur more visible, text more readable). Matches nushell's window title pattern: "~/path> vi" or "~/path> nvim filename"
-        "opacity 0.95 override 0.9 override, title:.*> n?vi(m)?.*"
+        # Higher opacity for terminals running neovim (makes blur more visible, text more readable)
+        # Matches nushell's window title pattern: "~/path> vi" or "~/path> nvim filename"
+        {
+          name = "terminal-nvim-opacity";
+          "match:title" = ".*> n?vi(m)?.*";
+          opacity = "0.95 override 0.9 override";
+        }
 
-        #NOTE Window is addressed in related keybind.
-        # Kitty - terminal
-        # "float,class:^(kitty)$"
-        # "center,floating:1,class:kitty"
-        # "size 600 900,floating:1,class:kitty"
-
-        #NOTE Window is addressed in related keybind.
-        # Yazi - file explorer
-        # "float,title:^(Yazi)$"
-        # "center,floating:1,title:^(Yazi)$"
-        # "size 1200 725,floating:1,title:^(Yazi)$"
-
-        # Workspaces
-        "workspace 6 silent, class:^(thunderbird)$"
-        "workspace 8, fullscreen, class:^(looking-glass-client)$"
+        # Workspace assignments
+        {
+          name = "thunderbird-workspace";
+          "match:class" = "^(thunderbird)$";
+          workspace = "6 silent";
+        }
+        {
+          name = "looking-glass";
+          "match:class" = "^(looking-glass-client)$";
+          workspace = "8";
+          fullscreen = true;
+        }
 
         # Volume Control
-        "size 700 450,title:^(Volume Control)$"
-        "center,title:^(Volume Control)$"
-        "float, title:^(Volume Control)$"
+        {
+          name = "volume-control";
+          "match:title" = "^(Volume Control)$";
+          float = true;
+          center = true;
+          size = "700 450";
+        }
 
-        # Force total opacity
-        "opacity 1.0 override 1.0 override, title:^(Picture in Picture)$"
-        "opacity 1.0 override 1.0 override,title:^(.*imv.*)$"
-        "opacity 1.0 override 1.0 override,title:^(.*mpv.*)$"
-        "opacity 1.0 override 1.0 override,class:(Aseprite)"
-        "opacity 1.0 override 1.0 override,class:(Unity)"
-
-        #### General Window Rules ####
+        # Force total opacity for media viewers
+        {
+          name = "pip-opacity";
+          "match:title" = "^(Picture in Picture)$";
+          opacity = "1.0 override 1.0 override";
+        }
+        {
+          name = "imv-opacity";
+          "match:title" = "^(.*imv.*)$";
+          opacity = "1.0 override 1.0 override";
+        }
+        {
+          name = "mpv-opacity";
+          "match:title" = "^(.*mpv.*)$";
+          opacity = "1.0 override 1.0 override";
+        }
+        {
+          name = "aseprite-opacity";
+          "match:class" = "(Aseprite)";
+          opacity = "1.0 override 1.0 override";
+        }
+        {
+          name = "unity-opacity";
+          "match:class" = "(Unity)";
+          opacity = "1.0 override 1.0 override";
+        }
 
         # Picture-in-Picture
-        "float, title:^(Picture-in-Picture)$"
-        "pin, title:^(Picture-in-Picture)$"
-        "move 100%-h 0, title:^(Picture-in-Picture)$"
+        {
+          name = "pip";
+          "match:title" = "^(Picture-in-Picture)$";
+          float = true;
+          pin = true;
+          move = "100%-h 0";
+        }
 
         # Inhibit Idle for fullscreen videos/focused media
-        "idleinhibit fullscreen, class:^(firefox)$"
-        "idleinhibit focus,class:^(mpv)$"
+        {
+          name = "firefox-idle-inhibit";
+          "match:class" = "^(firefox)$";
+          idle_inhibit = "fullscreen";
+        }
 
         # Prevent windows from being maximized
-        "suppressevent maximize, class:.*"
+        {
+          name = "suppress-maximize";
+          "match:class" = ".*";
+          suppress_event = "maximize";
+        }
 
         # System tray and utility windows
-        "float,title:^(Transmission)$"
-        "float,title:^(Volume Control)$"
-        "float,title:^(Firefox — Sharing Indicator)$"
-        "move 0 0,title:^(Firefox — Sharing Indicator)$"
+        {
+          name = "transmission-float";
+          "match:title" = "^(Transmission)$";
+          float = true;
+        }
+        {
+          name = "firefox-sharing";
+          "match:title" = "^(Firefox — Sharing Indicator)$";
+          float = true;
+          move = "0 0";
+        }
 
         # Image viewer (imv) settings - floating centered window with fixed size
-        "float,class:^(imv)$"
-        "center,class:^(imv)$"
-        "size 1200 725,class:^(imv)$"
+        {
+          name = "imv";
+          "match:class" = "^(imv)$";
+          float = true;
+          center = true;
+          size = "1200 725";
+        }
 
         # Media player (mpv) settings - floating centered window with fixed size
-        "float,class:^(mpv)$"
-        "center,class:^(mpv)$"
-        "size 1200 725,class:^(mpv)$"
-        "idleinhibit focus,class:^(mpv)$"
+        {
+          name = "mpv";
+          "match:class" = "^(mpv)$";
+          float = true;
+          center = true;
+          size = "1200 725";
+          idle_inhibit = "focus";
+        }
 
-        # Float dialogs and notifications
-        "float,class:^(file_progress)$"
-        "float,class:^(confirm)$"
-        "float,class:^(dialog)$"
-        "float,class:^(download)$"
-        "float,class:^(notification)$"
-        "float,class:^(error)$"
-        "float,class:^(confirmreset)$"
-        "float,class:^(pavucontrol)$"
-        "float,title:^(Open File)$"
-        "float,title:^(branchdialog)$"
-        "float,title:^(Confirm to replace files)$"
-        "float,title:^(File Operation Progress)$"
+        # Float dialogs and notifications - using regex OR pattern for efficiency
+        {
+          name = "dialogs-float-class";
+          "match:class" = "^(file_progress|confirm|dialog|download|notification|error|confirmreset|pavucontrol)$";
+          float = true;
+        }
+        {
+          name = "dialogs-float-title";
+          "match:title" = "^(Open File|branchdialog|Confirm to replace files|File Operation Progress)$";
+          float = true;
+        }
 
-        #TODO: Figure out if disabling the below config has broken anything or if it had no impact.
         # XWaylandVideoBridge rules: These rules handle screen sharing for X11 apps (like Discord) under Wayland
         # They make the bridge window invisible, prevent animations/focus stealing, and keep it tiny (1x1)
         # This ensures smooth screen sharing without visual interference
-        # "opacity 0.0 override,class:^(xwaylandvideobridge)$"
-        # "noanim,class:^(xwaylandvideobridge)$"
-        # "noinitialfocus,class:^(xwaylandvideobridge)$"
-        # "maxsize 1 1,class:^(xwaylandvideobridge)$"
-        # "noblur,class:^(xwaylandvideobridge)$"
+        # NOTE: Commented out per user preference
+        # {
+        #   name = "xwayland-bridge-opacity";
+        #   "match:class" = "^(xwaylandvideobridge)$";
+        #   opacity = "0.0 override";
+        # }
+        # {
+        #   name = "xwayland-bridge-anim";
+        #   "match:class" = "^(xwaylandvideobridge)$";
+        #   no_anim = true;
+        # }
+        # {
+        #   name = "xwayland-bridge-focus";
+        #   "match:class" = "^(xwaylandvideobridge)$";
+        #   noinitialfocus = true;
+        # }
+        # {
+        #   name = "xwayland-bridge-size";
+        #   "match:class" = "^(xwaylandvideobridge)$";
+        #   maxsize = "1 1";
+        # }
+        # {
+        #   name = "xwayland-bridge-blur";
+        #   "match:class" = "^(xwaylandvideobridge)$";
+        #   noblur = true;
+        # }
       ];
 
       layerrule = [
-        "blur, rofi"
+        {
+          name = "rofi-blur";
+          "match:namespace" = "rofi";
+          blur = true;
+        }
       ];
     };
   };

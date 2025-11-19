@@ -33,8 +33,6 @@ in
       "qemu-hook-dispatcher" = "${cfg.hooksPackage}/bin/qemu-hook-dispatcher";
     };
 
-    #TODO: Delete or uncomment after next reboot reveals if desired behavior is due to this line functioning properly or __EGL_VENDOR_LIBRARY_FILENAME fixing the issue
-    # snowfallorg.users.${user.name}.home.config.spirenix.desktop.hyprland.extraExec = [ "sudo systemctl start give-host-dgpu-startup.service" ];
     systemd = {
       targets.dgpu-host-ready = { description = "Target for services that need the dGPU on the host"; };
       paths.dgpu-host-ready = {
@@ -51,6 +49,7 @@ in
 
           dgpu-host-ready = {
             description = "Check for dGPU on host and start or stop services";
+            wantedBy = [ "multi-user.target" ];
             path = [ pkgs.coreutils pkgs.systemd ];
             serviceConfig = { Type = "oneshot"; };
             script = ''

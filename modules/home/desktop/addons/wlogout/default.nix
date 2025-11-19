@@ -110,7 +110,11 @@ in
     };
 
     spirenix.desktop.hyprland.extraWinRules.layerrule = [
-      "blur, logout_dialog"
+      {
+        name = "wlogout-blur";
+        "match:namespace" = "logout_dialog";
+        blur = true;
+      }
     ];
   };
 }

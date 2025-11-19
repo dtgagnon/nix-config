@@ -33,8 +33,7 @@ in
       terminals.ghostty = { enable = true; trail = "glitter_comet"; };
       thunderbird = enabled;
       todoist = enabled;
-      vscode = enabled;
-      windsurf = enabled;
+      # vscode = enabled;
       zen = enabled;
     };
 
