@@ -57,6 +57,9 @@ in
           hyprlock = enabled;
           sysbar = enabled;
           wlogout = enabled;
+
+          # Media
+          mpv = enabled; # video player with Jellyfin support
         };
         styling = {
           gtk = enabled; # GTK theme
@@ -84,8 +87,6 @@ in
         ## monitor controls
         ddcutil
         brightnessctl
-        ## video viewer
-        mpv
 
         # misc
         wl-clipboard

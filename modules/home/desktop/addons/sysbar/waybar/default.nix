@@ -32,5 +32,13 @@ in
       # Weather module support
       pkgs.wttrbar
     ];
+
+    spirenix.desktop.hyprland.extraWinRules.layerrule = [
+      {
+        name = "waybar-blur";
+        "match:namespace" = "waybar";
+        blur = true;
+      }
+    ];
   };
 }
