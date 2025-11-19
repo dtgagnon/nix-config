@@ -34,64 +34,55 @@ in
     };
 
     systemd = {
-      targets.dgpu-host-ready = { description = "Target for services that need the dGPU on the host"; };
-      paths.dgpu-host-ready = {
-        description = "Monitor for dGPU being returned to host";
+      targets.vfio-dgpu-available = { description = "Target for services that need the dGPU available on the host"; };
+      paths.vfio-dgpu-state-monitor = {
+        description = "Monitor for dGPU VFIO binding state changes";
         wantedBy = [ "multi-user.target" ];
         pathConfig = {
-          Unit = "dgpu-host-ready.service";
-          PathModified = "/var/lib/systemd/qemu-hooks-state";
+          Unit = "vfio-dgpu-state-manager.service";
+          PathModified = "/var/lib/systemd/vfio-dgpu-state";
         };
       };
       services = mkMerge [
         {
           libvirtd.path = [ pkgs.bash cfg.hooksPackage ];
 
-          dgpu-host-ready = {
-            description = "Check for dGPU on host and start or stop services";
+          vfio-dgpu-state-manager = {
+            description = "Manage dGPU availability state and dependent services";
             wantedBy = [ "multi-user.target" ];
             path = [ pkgs.coreutils pkgs.systemd ];
             serviceConfig = { Type = "oneshot"; };
             script = ''
-              if [ -f /var/lib/systemd/qemu-hooks-state ] && [ "$(cat /var/lib/systemd/qemu-hooks-state)" = "0" ]; then
-                echo "dGPU is on host, starting dgpu-host-ready.target"
-                systemctl start dgpu-host-ready.target
+              # Initialize state file if it doesn't exist
+              # In dynamic mode, GPU is bound to nvidia driver at boot
+              if [ ! -f /var/lib/systemd/vfio-dgpu-state ]; then
+                echo "State file does not exist, initializing to 0 (dGPU available on host)"
+                echo "0" > /var/lib/systemd/vfio-dgpu-state
+              fi
+
+              if [ "$(cat /var/lib/systemd/vfio-dgpu-state)" = "0" ]; then
+                echo "dGPU is available on host, starting vfio-dgpu-available.target"
+                systemctl start vfio-dgpu-available.target
               else
-                echo "dGPU is not on the host, stopping dgpu-host-ready.target"
-                systemctl stop dgpu-host-ready.target
+                echo "dGPU is not available on host, stopping vfio-dgpu-available.target"
+                systemctl stop vfio-dgpu-available.target
               fi
             '';
-          };
-
-          give-host-dgpu-startup = {
-            description = "Gives the host the dGPU after launching the desktop session";
-            path = [
-              cfg.hooksPackage
-              pkgs.kmod
-              pkgs.coreutils
-              pkgs.systemd
-            ];
-            serviceConfig = {
-              Type = "oneshot";
-              User = "root";
-              Group = "wheel";
-              ExecStart = "${cfg.hooksPackage}/bin/give-host-dgpu";
-            };
           };
         }
 
         (mkIf config.hardware.nvidia.nvidiaPersistenced {
           nvidia-persistenced = {
             after = mkForce [ ];
-            wantedBy = mkForce [ "dgpu-host-ready.target" ];
-            partOf = mkForce [ "dgpu-host-ready.target" ];
+            wantedBy = mkForce [ "vfio-dgpu-available.target" ];
+            partOf = mkForce [ "vfio-dgpu-available.target" ];
           };
         })
         (mkIf config.services.ollama.enable {
           ollama = {
             after = mkForce [ ];
-            wantedBy = mkForce [ "dgpu-host-ready.target" ];
-            partOf = [ "dgpu-host-ready.target" ];
+            wantedBy = mkForce [ "vfio-dgpu-available.target" ];
+            partOf = [ "vfio-dgpu-available.target" ];
           };
         })
       ];

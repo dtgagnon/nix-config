@@ -115,7 +115,7 @@ stdenv.mkDerivation {
 
     # Stop services
     echo "[HOOK] Stopping services..."
-    echo "1" > /var/lib/systemd/qemu-hooks-state
+    echo "1" > /var/lib/systemd/vfio-dgpu-state
 
     # Kill dGPU processes
     DGPU_DEVICES="/dev/nvidia*"
@@ -305,7 +305,7 @@ stdenv.mkDerivation {
 
     if [ "$GPU_DRIVER" = "nvidia" ]; then
       echo "[SUCCESS] GPU successfully returned to host"
-      echo "0" > /var/lib/systemd/qemu-hooks-state
+      echo "0" > /var/lib/systemd/vfio-dgpu-state
     else
       echo "[WARNING] GPU may not be properly bound to nvidia driver"
     fi
