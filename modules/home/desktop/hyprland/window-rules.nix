@@ -195,6 +195,13 @@ in
           "match:namespace" = "rofi";
           blur = true;
         }
+        {
+          name = "notifications-blur";
+          "match:namespace" = "notifications";
+          blur = true;
+          blur_popups = true;
+          ignorealpha = 0.69;
+        }
       ];
     };
   };
