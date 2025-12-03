@@ -1,6 +1,8 @@
 { lib
 , pkgs
 , config
+, inputs
+, system
 , namespace
 , ...
 }:
@@ -9,16 +11,14 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.neovim;
 
-  # Extend nixvim with Stylix theme when Stylix is enabled
-  # https://stylix.danth.me/targets/nixvim.html#standalone-mode
+  #NOTE: Extend nixvim with Stylix theme when Stylix is enabled. https://stylix.danth.me/targets/nixvim.html#standalone-mode
   neovimPackage =
     if config.stylix.enable or false
     then
-    # First configure to use stylix theme, then extend with Stylix's exported module
-      (pkgs.spirenix-nvim.neovim.override {
+      (inputs.spirenixvim.packages.${system}.default.override {
         neovim-config = { themeName = "stylix"; };
       }).extend config.stylix.targets.nixvim.exportedModule
-    else pkgs.spirenix-nvim.neovim;
+    else inputs.spirenixvim.packages.${system}.default;
 in
 {
   options.${namespace}.cli.neovim = {
@@ -34,15 +34,15 @@ in
       sessionVariables = {
         PAGER = "less";
         MANPAGER = "less";
-        NPM_CONFIG_PREFIX = "$HOME/.config/.npm-global";
       };
     };
-    xdg.configFile = {
-      "dashboard-nvim/.keep".text = "";
-    };
 
-    # Enable nixvim target for standalone nixvim configuration
-    # This generates the exportedModule that can be used with .extend
+    #TODO: Remove if nothing breaks - dashboard-nvim doesn't actually need this directory
+    # xdg.configFile = {
+    #   "dashboard-nvim/.keep".text = "";
+    # };
+
+    #NOTE: Enable nixvim target for standalone nixvim configuration. This generates the exportedModule that can be used with .extend
     stylix.targets.nixvim = {
       enable = true;
       plugin = "base16-nvim";
