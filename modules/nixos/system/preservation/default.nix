@@ -48,7 +48,10 @@ in
           "/var/log"
           { directory = "/var/lib/nixos"; inInitrd = true; }
           { directory = "/var/lib/colord"; user = "colord"; group = "colord"; mode = "0754"; }
-        ] ++ cfg.extraSysDirs;
+        ]
+        # ++ lib.optional config.services.ollama.enable "/var/lib/ollama"
+        # ++ lib.optional config.${namespace}.services.llama-cpp.enable "/var/lib/llama-cpp"
+        ++ cfg.extraSysDirs;
 
         # preserve system files
         files = [

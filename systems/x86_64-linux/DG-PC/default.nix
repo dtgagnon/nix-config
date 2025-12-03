@@ -40,7 +40,8 @@ in
       davfs = enabled;
       keyd = enabled;
       n8n = enabled;
-      ollama = enabled;
+      # llama-cpp = enabled; # Replaced Ollama with llama.cpp + llama-swap
+      ollama = enabled; # Disabled in favor of llama-cpp
       openwebui = enabled;
       openssh.manage-other-hosts = false;
     };

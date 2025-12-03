@@ -23,6 +23,7 @@ in
       discord = enabled;
       element = enabled;
       inkscape = enabled;
+      jellyfin-client = enabled;
       kiro = enabled;
       looking-glass-client = enabled;
       music-player = { enable = true; player = "rmcp"; };
@@ -30,7 +31,7 @@ in
       office = { libreoffice = enabled; okular-pdf = enabled; };
       proton-cloud = enabled;
       # super-productivity = enabled;
-      terminals.ghostty = { enable = true; trail = "glitter_comet"; };
+      terminals.ghostty = { enable = true; trail = null; };
       thunderbird = enabled;
       todoist = enabled;
       # vscode = enabled;
@@ -56,6 +57,7 @@ in
       opencode = enabled;
       shells = { nushell = enabled; zsh = enabled; };
       ssh = enabled;
+      web-browser = enabled;
       yazi = enabled;
       zoxide = enabled;
     };
