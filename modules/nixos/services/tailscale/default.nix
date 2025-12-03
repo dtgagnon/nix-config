@@ -31,7 +31,8 @@ in
       };
     })
 
-    (mkIf config.spirenix.services.ollama.enable {
+    # Add CORS origins for LLM services Ollama is enabled
+    (mkIf config.services.ollama.enable {
       spirenix.services.ollama.allowedOrigins = [ "http://100.100.1.2" ];
     })
   ];

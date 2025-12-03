@@ -21,8 +21,13 @@ in
       user = "jellyfin";
       group = "media";
       inherit (cfg) dataDir;
-      openFirewall = true;
+      openFirewall = false;
     };
+
+    # Allow only specific device to access Jellyfin
+    networking.firewall.extraCommands = ''
+      iptables -A nixos-fw -s 192.168.51.36 -p tcp --dport 8096 -j nixos-fw-accept
+    '';
 
     environment.systemPackages = with pkgs; [
       jellyfin

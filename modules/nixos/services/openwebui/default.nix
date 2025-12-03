@@ -6,6 +6,11 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.${namespace}.services.openwebui;
+
+  # Check which LLM backend is enabled
+  ollamaEnabled = config.services.ollama.enable;
+  llamaCppEnabled = config.${namespace}.services.llama-cpp.enable;
+  hasLLMBackend = ollamaEnabled || llamaCppEnabled;
 in
 {
   options.${namespace}.services.openwebui = {
@@ -13,6 +18,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Warn if no LLM backend is configured
+    assertions = [
+      {
+        assertion = hasLLMBackend;
+        message = "Open WebUI requires either Ollama or llama.cpp to be enabled";
+      }
+    ];
 
     services.open-webui = {
       enable = true;
@@ -31,8 +43,18 @@ in
     };
 
     systemd.services.open-webui = {
-      after = [ "postgresql.service" "tailscaled.service" ];
-      requires = [ "postgresql.service" "tailscaled.service" ];
+      after = [
+        "postgresql.service"
+        "tailscaled.service"
+      ] ++ lib.optional ollamaEnabled "ollama.service"
+        ++ lib.optional llamaCppEnabled "llama-cpp.service";
+
+      requires = [
+        "postgresql.service"
+        "tailscaled.service"
+      ] ++ lib.optional ollamaEnabled "ollama.service"
+        ++ lib.optional llamaCppEnabled "llama-cpp.service";
+
       serviceConfig = {
         DynamicUser = lib.mkForce false;
         User = lib.mkForce "openwebui";

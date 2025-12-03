@@ -22,6 +22,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    # AI/LLM Integration:
+    # - When Ollama is enabled: Uses native "ollama" integration
+    # - When llama-cpp is enabled: Uses "openai" integration with custom endpoint
+    #   Configure in Home Assistant UI: Settings -> Integrations -> Add OpenAI Conversation
+    #   Set API endpoint to: http://100.100.2.1:11434/v1
+    #   API key can be anything (llama-cpp doesn't require auth by default)
+
     # Creates automations.yaml file so that Hass doesn't fail to load when splitting into declarative and ui configured automations.
     systemd.tmpfiles.rules = [ "f ${config.services.home-assistant.configDir}/automations.yaml 0755 hass hass" ];
     services.home-assistant = {
@@ -149,7 +156,6 @@ in
         "mobile_app"
         "monarch_money"
         "nest"
-        "ollama"
         "opensensemap"
         "openweathermap"
         "qbittorrent"
@@ -159,7 +165,8 @@ in
         "sonarr"
         "tailscale"
         "tplink"
-      ];
+      ] ++ lib.optional config.services.ollama.enable "ollama"
+        ++ lib.optional config.${namespace}.services.llama-cpp.enable "openai";
 
       customComponents = with pkgs.home-assistant-custom-components; [
         midea_ac_lan
