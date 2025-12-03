@@ -37,7 +37,7 @@
         };
 
         overlays = with inputs; [
-          neovim.overlays.default
+          # neovim.overlays.default
           nix-topology.overlays.default
           nur.overlays.default
           # proxmox-nixos.overlays.x86_64-linux #NOTE Not in use - can remove
@@ -189,9 +189,11 @@
     ghostty.url = "github:ghostty-org/ghostty";
     ghostty.inputs.nixpkgs.follows = "nixpkgs";
 
-    neovim.url = "github:dtgagnon/nixvim/main";
+    spirenixvim.url = "github:dtgagnon/nixvim/refactor/to-blueprint";
 
     nixarr.url = "github:rasmus-kirk/nixarr";
+
+    opencode.url = "github:sst/opencode";
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake/beta";
 
