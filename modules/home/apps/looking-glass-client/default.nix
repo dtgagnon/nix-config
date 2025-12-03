@@ -33,11 +33,11 @@ in
           maximize = "no";
           noScreensaver = "yes";
           quickSplash = "yes";
-          uiSize = 16; #huh? idk why
+          uiSize = 16;
         };
         input = {
           autoCapture = "no";
-          escapeKey = "KEY_RIGHTCTRL";
+          escapeKey = "KEY_EQUAL";
           grabKeyboardOnFocus = "yes";
           rawMouse = "yes";
           releaseKeysOnFocusLoss = "yes";

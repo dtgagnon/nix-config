@@ -28,7 +28,8 @@ in
             "enabled": true
           },
           "preferredEditor": "nvim",
-          "vimMode": false
+          "vimMode": false,
+          "previewFeatures": true
         },
         "context": {
           "fileName": [
@@ -46,20 +47,20 @@ in
               "--"
             ]
           },
-          "playwrite": {
-            "command": "nix",
-            "args": [
-              "run",
-              "nixpkgs#playwright-mcp"
-            ],
-            "env": {
-              "PLAYWRIGHT_BROWSERS_PATH": "${pkgs.playwright-driver.browsers}",
-              "PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS": "true",
-              "PLAYWRIGHT_NODEJS_PATH": "${pkgs.nodejs}/bin/node",
-              "PLAYWRIGHT_LAUNCH_OPTIONS_EXECUTABLE_PATH": "${pkgs.playwright-driver.browsers}/chromium-1134/chrome-linux/chrome"
-            }
-          }
-        },
+        #   "playwrite": {
+        #     "command": "nix",
+        #     "args": [
+        #       "run",
+        #       "nixpkgs#playwright-mcp"
+        #     ],
+        #     "env": {
+        #       "PLAYWRIGHT_BROWSERS_PATH": "${pkgs.playwright-driver.browsers}",
+        #       "PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS": "true",
+        #       "PLAYWRIGHT_NODEJS_PATH": "${pkgs.nodejs}/bin/node",
+        #       "PLAYWRIGHT_LAUNCH_OPTIONS_EXECUTABLE_PATH": "${pkgs.playwright-driver.browsers}/chromium-1134/chrome-linux/chrome"
+        #     }
+        #   }
+        # },
         "security": {
           "auth": {
             "selectedType": "oauth-personal"
