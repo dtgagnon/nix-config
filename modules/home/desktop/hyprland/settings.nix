@@ -41,10 +41,11 @@ in
         inactive_opacity = 1.0;
         blur = {
           enabled = true;
-          special = true;
+          ignore_opacity = false;
+          passes = 2;
           popups = true;
           size = 5;
-          passes = 2;
+          special = true;
         };
         shadow = {
           range = 30;

@@ -92,6 +92,13 @@ in
         wl-clipboard
         playerctl
       ];
+
+      xdg.mimeApps.defaultApplications = {
+        "image/*" = "nsxiv.desktop";
+        "image/png" = "nsxiv.desktop";
+        "image/jpg" = "nsxiv.desktop";
+        "image/jpeg" = "nsxiv.desktop";
+      };
     })
 
     # Configure Hyprland to use Intel iGPU when VFIO is enabled
