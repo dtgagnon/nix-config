@@ -21,5 +21,9 @@ in
         withVencord = true;
       })
     ];
+
+    xdg.mimeApps.defaultApplications = {
+      "x-scheme-handler/discord" = "discord.desktop";
+    };
   };
 }
