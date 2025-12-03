@@ -127,8 +127,7 @@
     nur.url = "github:nix-community/NUR"; # Community package repository
 
     ## configuration frameworks
-    # snowfall-lib.url = "github:anntnzrb/snowfall-lib"; # Most recently maintained snowfall-lib
-    snowfall-lib.url = "github:dtgagnon/snowfall-lib/fix/system-throw";
+    snowfall-lib.url = "github:dtgagnon/snowfall-lib"; # based on updates from "github:anntnzrb/snowfall-lib"
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager";

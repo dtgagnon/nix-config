@@ -28,9 +28,6 @@ in
         "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 1000 --clipboard-only"
         "$mod_SHIFT_CTRL, Z, exec, hyprshot -z -m region -t 1000 -o ~/Pictures/screenshots -f screenshot-$(date +%Y%m%d-%H%M%S).png"
 
-        # Claude Desktop quick input (Ctrl+Alt+Space)
-        "CTRL_ALT, Space, exec, claude-desktop --quick-input"
-
         # Window Control
         "$mod, Q, killactive,"
         "$mod, F, fullscreen, 0"

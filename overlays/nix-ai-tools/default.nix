@@ -8,9 +8,4 @@
       outputHash = "sha256-Q3008o4dEZdf/4ATOmOfJIJa7B+MeLVMWzfTLVDcWjg=";
     });
   });
-
-  # Use patched version with --quick-input support for Wayland/Hyprland
-  claude-desktop = final.callPackage ../../packages/claude-desktop-patched {
-    claude-desktop = inputs.nix-ai-tools.packages.${prev.stdenv.hostPlatform.system}.claude-desktop;
-  };
 }

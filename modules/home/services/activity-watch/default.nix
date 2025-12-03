@@ -53,14 +53,14 @@ in
         Service = {
           # DISPLAY needed for pynput's X11 backend fallback
           Restart = "on-failure";
-          RestartSec = "5s";
+          RestartSec = "10s";
         };
       };
 
       activitywatch-watcher-aw-watcher-window-wayland = mkIf anyWaylandWM {
         Service = {
           Restart = "on-failure";
-          RestartSec = "5s";
+          RestartSec = "10s";
         };
       };
     };
