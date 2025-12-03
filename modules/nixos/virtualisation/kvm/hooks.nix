@@ -78,9 +78,24 @@ in
             partOf = mkForce [ "vfio-dgpu-available.target" ];
           };
         })
+        # Conditionally manage Ollama service with GPU availability
         (mkIf config.services.ollama.enable {
           ollama = {
             after = mkForce [ ];
+            wantedBy = mkForce [ "vfio-dgpu-available.target" ];
+            partOf = [ "vfio-dgpu-available.target" ];
+          };
+        })
+        # Conditionally manage llama-cpp service with GPU availability
+        (mkIf config.${namespace}.services.llama-cpp.enable {
+          llama-cpp = {
+            after = mkForce [ ];
+            wantedBy = mkForce [ "vfio-dgpu-available.target" ];
+            partOf = [ "vfio-dgpu-available.target" ];
+          };
+          # Also manage llama-swap if enabled
+          llama-swap = mkIf config.${namespace}.services.llama-cpp.swapEnabled {
+            after = mkForce [ "llama-cpp.service" ];
             wantedBy = mkForce [ "vfio-dgpu-available.target" ];
             partOf = [ "vfio-dgpu-available.target" ];
           };

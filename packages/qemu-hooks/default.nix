@@ -412,7 +412,7 @@ stdenv.mkDerivation {
     echo "Detaching device $chosen_id_full from ${vmDomainName}..."
 
     # Use --persistent to hot-unplug AND update the persistent configuration
-    virsh detach-device ${vmDomainName} --persistent /dev/stdin << 'EOF_'
+    virsh detach-device ${vmDomainName} --persistent /dev/stdin << EOF_
     <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
         <vendor id='0x$chosen_vendor'/>
@@ -454,7 +454,7 @@ stdenv.mkDerivation {
     # This single command hot-plugs the device (if VM is running) AND
     # saves the change to the VM's configuration for future boots.
     # It reads the device XML from standard input via the heredoc.
-    virsh attach-device ${vmDomainName} --persistent /dev/stdin << 'EOF_'
+    virsh attach-device ${vmDomainName} --persistent /dev/stdin << EOF_
     <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
         <vendor id='0x$chosen_vendor'/>
