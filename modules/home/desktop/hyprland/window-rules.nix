@@ -141,6 +141,7 @@ in
           name = "mpv";
           "match:class" = "^(mpv)$";
           float = true;
+          pin = true;
           center = true;
           size = "1200 725";
           idle_inhibit = "focus";
@@ -155,6 +156,23 @@ in
         {
           name = "dialogs-float-title";
           "match:title" = "^(Open File|branchdialog|Confirm to replace files|File Operation Progress)$";
+          float = true;
+        }
+
+        # Modal dialogs and popup windows - broader pattern matching
+        {
+          name = "modal-dialogs-initial-class";
+          "match:class" = "^(dialog|popup|modal|utility)$";
+          float = true;
+        }
+        {
+          name = "modal-dialogs-class-pattern";
+          "match:class" = ".*(dialog|Dialog|DIALOG|modal|Modal|popup|Popup).*";
+          float = true;
+        }
+        {
+          name = "modal-dialogs-title-pattern";
+          "match:title" = ".*(dialog|Dialog|DIALOG|modal|Modal).*";
           float = true;
         }
 
@@ -200,7 +218,7 @@ in
           "match:namespace" = "notifications";
           blur = true;
           blur_popups = true;
-          ignorealpha = 0.69;
+          ignore_alpha = 0.69;
         }
       ];
     };
