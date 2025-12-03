@@ -11,6 +11,7 @@ let
   cfg = config.${namespace}.cli.shells.nushell;
 
   inherit (config.lib.stylix) colors;
+
   # Helper function to create conditional Nushell integrations
   mkNushellIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
 in
@@ -41,6 +42,58 @@ in
         		shape_internal: { fg: "${colors.base08}" }
         		shape_unknown: { fg: "${colors.base0E}" }
         	}
+        	keybindings: [
+        		{
+        			name: fzf_file_search
+        			modifier: control
+        			keycode: char_t
+        			mode: [emacs vi_insert vi_normal]
+        			event: {
+        				send: executehostcommand
+        				cmd: "commandline edit --insert (fzf-file-widget)"
+        			}
+        		}
+        		{
+        			name: fzf_dir_search
+        			modifier: alt
+        			keycode: char_c
+        			mode: [emacs vi_insert vi_normal]
+        			event: {
+        				send: executehostcommand
+        				cmd: "cd (fzf-dir-widget); commandline edit --replace '''"
+        			}
+        		}
+        	]
+        }
+
+        # Helper function to find git root directory
+        def --env get-git-root [] {
+          let result = (do -i { git rev-parse --show-toplevel } | complete)
+          if $result.exit_code == 0 {
+            $result.stdout | str trim
+          } else {
+            $env.PWD
+          }
+        }
+
+        # Context-aware fzf file search (searches from git root if in a repo)
+        def --env fzf-file-widget [] {
+          let root = (get-git-root)
+          cd $root
+          let selection = (fd --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'if (ls {} | get type.0) == "dir" { eza --tree --color=always {} | head -200 } else { bat -n --color=always --line-range :500 {} }')
+          if ($selection | is-not-empty) {
+            $selection
+          }
+        }
+
+        # Context-aware fzf directory search (searches from git root if in a repo)
+        def --env fzf-dir-widget [] {
+          let root = (get-git-root)
+          cd $root
+          let selection = (fd --type=d --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'eza --tree --color=always {} | head -200')
+          if ($selection | is-not-empty) {
+            cd $selection
+          }
         }
       '';
 
@@ -89,6 +142,7 @@ in
       broot.enableNushellIntegration = mkNushellIntegration "broot";
       carapace.enableNushellIntegration = mkNushellIntegration "carapace";
       direnv.enableNushellIntegration = mkNushellIntegration "direnv";
+      # fzf doesn't have enableNushellIntegration - using custom widgets instead
       yazi.enableNushellIntegration = mkNushellIntegration "yazi";
       zoxide.enableNushellIntegration = mkNushellIntegration "zoxide";
     };
