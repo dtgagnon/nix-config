@@ -15,9 +15,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      jellyfin-mpv-shim
-    ];
+    xdg.mimeApps.defaultApplications = {
+      "audio/*" = "mpv.desktop";
+      "video/*" = "mpv.desktop";
+      "video/mp4" = "mpv.desktop";
+      "video/x-matroska" = "mpv.desktop";
+    };
 
     programs.mpv = {
       enable = true;
@@ -58,7 +61,7 @@ in
         # Screenshots
         screenshot-format = "png";
         screenshot-png-compression = 8;
-        screenshot-template = "~/Pictures/Screenshots/%F (%P) %n";
+        screenshot-template = "~/Pictures/screenshots/%F (%P) %n";
 
         # Streaming optimizations for Jellyfin
         cache = true;
@@ -99,18 +102,6 @@ in
         quality-menu
         sponsorblock
       ];
-    };
-
-    # XDG desktop entry for Jellyfin MPV Shim
-    xdg.desktopEntries.jellyfin-mpv-shim = mkIf config.${namespace}.desktop.addons.mpv.enable {
-      name = "Jellyfin MPV Shim";
-      genericName = "Jellyfin Media Player";
-      comment = "Cast media from Jellyfin to MPV";
-      exec = "jellyfin-mpv-shim";
-      icon = "jellyfin";
-      terminal = false;
-      type = "Application";
-      categories = [ "AudioVideo" "Video" "Player" ];
     };
   };
 }

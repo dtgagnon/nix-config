@@ -5,9 +5,8 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce;
+  inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
-  inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.mako;
 in
 {
@@ -21,7 +20,7 @@ in
       pkgs.jq
     ];
 
-    services.mako = mkForce {
+    services.mako = {
       enable = true;
       settings = {
         "default-timeout" = 5000;
@@ -39,13 +38,6 @@ in
         "border-size" = 1;
 
         "max-icon-size" = 12;
-
-        ## Already handled by stylix
-        # background-color = "${colors.base00}80";
-        # text-color = "${colors.base05}";
-        # border-color = "${colors.base03}";
-        # progress-color = "over ${colors.base0E}";
-        # icon-path = "${pkgs.catppuccin-papirus}/share/icons/Papirus-Dark";
       };
     };
   };

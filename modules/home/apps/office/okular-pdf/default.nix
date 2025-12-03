@@ -17,5 +17,9 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.kdePackages.okular ];
+
+    xdg.mimeApps.defaultApplications = {
+      "application/pdf" = "org.kde.okular.desktop";
+    };
   };
 }
