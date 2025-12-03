@@ -34,6 +34,7 @@ in
       enable = true;
       clearDefaultKeybinds = true;
       settings = {
+        font-size = config.stylix.fonts.sizes.terminal;
         keybind = [
           # Close Surface
           "ctrl+alt+w=close_surface"

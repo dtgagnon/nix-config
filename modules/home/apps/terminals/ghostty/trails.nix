@@ -11,132 +11,169 @@ in
   glitter_comet = ''
     /*─────────────────────────────────────────────────────────────────────────
      *  glitter_comet.glsl — sparkly cursor trail whose density follows motion
-     *    • bursts of “glitter” appear only along the cursor travel segment
-     *    • faster/longer jumps raise the sparkle density
+     *    • bursts of "glitter" appear as the cursor moves to either an adjacent column or row
+     *    • effect does not render for cursor jumps beyond 10 columns, nor for greater than a single row
      *    • Stylix colours drive tint and opacity without extra shader edits
      *────────────────────────────────────────────────────────────────────────*/
 
-    // inputs - screen size helper
-    vec2 ndc(vec2 value, float isPos) {
-      // Map from pixels to NDC where Y dimension spans [-1, 1]
-      return (value * 2.0 - iResolution.xy * isPos) / iResolution.y;
+    /* ───── Configuration ────────────────────────────────────────────────── */
+    const float DURATION = 2.5;           /* particle lifetime (s)              */
+    const float BIN_INTERVAL = 0.12;      /* time between particle spawn bins   */
+    const float PARTICLE_COUNT = 25.0;    /* particles per bin                  */
+    const float MAX_COL_JUMP = 10.0;      /* max horizontal jump to render      */
+    const float MAX_ROW_JUMP = 1.0;       /* max vertical jump to render        */
+    const float PARTICLE_SIZE = 0.003;    /* base particle radius (NDC)         */
+    const float FALL_SPEED = 0.15;        /* downward drift speed               */
+    const float SPREAD = 0.08;            /* horizontal spread multiplier       */
+    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base0A}"; alpha = 0.9; }}) / vec4(255.0,255.0,255.0,255.0);
+    const vec4 GLITTER_ACCENT = vec4(${mkRGBA_valOnly { hex = "#${colors.base0D}"; alpha = 0.7; }}) / vec4(255.0,255.0,255.0,255.0);
+    /* ─────────────────────────────────────────────────────────────────────── */
+
+    /* 2D random hash for particle generation */
+    float hash(vec2 p) {
+        p = fract(p * vec2(123.456, 789.123));
+        p += dot(p, p + 45.678);
+        return fract(p.x * p.y);
     }
 
-    // Distance helper to a segment A->B
-    float sdSegment(vec2 p, vec2 a, vec2 b, out float param) {
-      vec2 pa = p - a;
-      vec2 ba = b - a;
-      float denom = max(dot(ba, ba), 1e-5);
-      param = clamp(dot(pa, ba) / denom, 0.0, 1.0);
-      return length(pa - ba * param);
+    /* pixel → NDC conversion */
+    vec2 ndc(vec2 px, float isPos) {
+        return (px * 2.0 - iResolution.xy * isPos) / iResolution.y;
     }
 
-    // Randomizer
-    float hash(vec3 p) {
-      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+    /* ease out cubic */
+    float easeOut(float t) {
+        return 1.0 - pow(1.0 - t, 3.0);
     }
 
-    //Tuneable Values in NDC units
-    const vec4 GLITTER_COLOR = vec4(${mkRGBA_valOnly { hex = "#${colors.base06}"; alpha = 1.0; }}) / vec4(255.0, 255.0, 255.0, 1.0);
-    const float GLITTER_WIDTH = 0.05;
-    const float MIN_DENSITY = 0.9;
-    const float MAX_DENSITY = 1.0;
-    const float BRIGHTNESS = 0.75;
-    const float GLITTER_PERIOD = 1.5;
-    const float GLITTER_FALL_DISTANCE = 0.4;
-    const float GLITTER_LIFETIME = 0.7;
-    const float GLITTER_FRONT_THICKNESS = 0.1;
+    /* ease in cubic */
+    float easeIn(float t) {
+        return t * t * t;
+    }
 
-    //ShaderToy entry, pixel coords, output colors
+    /* twinkle animation for sparkle */
+    float twinkle(float t, float seed) {
+        float phase = fract(seed * 7.123);
+        float pulse = sin((t + phase) * 12.0 + seed * 6.28) * 0.5 + 0.5;
+        return pulse * pulse;
+    }
+
     void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-      #if !defined(WEB)
-        vec4 base = texture(iChannel0, fragCoord / iResolution.xy); //Sample existing framebuffer/background
-      #else
-        vec4 base = vec4(0.0); //Starting color
-      #endif
+        /* base terminal buffer */
+        #if !defined(WEB)
+        fragColor = texture(iChannel0, fragCoord / iResolution.xy);
+        #endif
 
-      //Ghostty-provided uniforms for terminal cursor state
-      //Cursor position before and after movement
-      vec4 curRect = iCurrentCursor;
-      vec4 prvRect = iPreviousCursor;
+        /* current fragment in NDC */
+        vec2 fragNDC = ndc(fragCoord, 1.0);
 
-      //Compute cursor center in pixel space before and after movement
-      vec2 curCentrePx = curRect.xy + vec2(curRect.z * 0.5, -curRect.w * 0.5);
-      vec2 prvCentrePx = prvRect.xy + vec2(prvRect.z * 0.5, -prvRect.w * 0.5);
+        /* cursor movement delta in columns/rows */
+        vec2 cursorDelta = iCurrentCursor.xy - iPreviousCursor.xy;
+        float colJump = abs(cursorDelta.x / iCurrentCursor.z);
+        float rowJump = abs(cursorDelta.y / iCurrentCursor.w);
 
-      //NDC positions for all relevant points
-      vec2 cur = ndc(curCentrePx, 1.0);
-      vec2 prv = ndc(prvCentrePx, 1.0);
-      vec2 P = ndc(fragCoord, 1.0);
+        /* cursor bounds in NDC for clamping */
+        vec2 cursorTopNDC = ndc(iCurrentCursor.xy, 1.0);
+        vec2 cursorBottomNDC = ndc(iCurrentCursor.xy + vec2(0.0, iCurrentCursor.w), 1.0);
+        float cursorMinY = min(cursorTopNDC.y, cursorBottomNDC.y);
+        float cursorMaxY = max(cursorTopNDC.y, cursorBottomNDC.y);
 
-      // Cursor size in NDC
-      vec2 cursorSizeNdc = (iCurrentCursor.zw * 2.0) / iResolution.y;
-      float cursorMaxNdc = macx(cursorSizeNdc.x, cursorSizeNdc.y);
+        vec3 glitterAccum = vec3(0.0);
+        float alphaAccum = 0.0;
 
-      // NDC centers already computer as `cur` and `prv`
-      float travelNdc = length (cur - prv);
+        /* iterate through time bins within DURATION */
+        float maxBins = ceil(DURATION / BIN_INTERVAL);
+        for (float binIdx = 0.0; binIdx < maxBins; binIdx += 1.0) {
+            /* calculate bin spawn time */
+            float binTime = iTimeCursorChange + binIdx * BIN_INTERVAL;
+            float binAge = iTime - binTime;
 
-      //Optional same-line suppression
-      bool sameLine = abs(ndc(curRect.xy, 1.0).y - ndc(prvRect.xy, 1.0).y) < 1e-6;
-      bool suppressSameLine = HIDE_TRAILS_ON_THE_SAME_LINE && sameLine;
+            /* skip bins not yet spawned or older than DURATION */
+            if (binAge < 0.0 || binAge > DURATION) continue;
 
-      //Gate tiny moves (suppress tiny moves)
-      bool smallMove = (travelNdc <= DRAW_THRESHOLD * cursorMaxNdc);
+            /* only check movement threshold for the first bin */
+            if (binIdx == 0.0 && (colJump > MAX_COL_JUMP || rowJump > MAX_ROW_JUMP)) {
+                continue;
+            }
 
-      //Motion fade after the last cursor change
-      float moveElapsed = max(iTime - iTimeCursorChange, 0.0);
-      float motionPhase = clamp(moveElapsed / GLITTER_LIFETIME, 0.0, 1.0);
-      float motionFade = 1.0 - smoothstep(0.0, 1.0, motionPhase);
+            float progress = binAge / DURATION;
+            float fade = 1.0 - easeIn(progress);
 
-      //Segment distance field in NDC units
-      float segParam;
-      float distToSeg = sdSegment(P, prv, cur, segParam);
-      vec2 basePoint = mix(prv, cur, segParam);
+            /* cursor trail start/end in NDC */
+            vec2 cursorStart = ndc(iPreviousCursor.xy + iPreviousCursor.zw * 0.5, 1.0);
+            vec2 cursorEnd = ndc(iCurrentCursor.xy + iCurrentCursor.zw * 0.5, 1.0);
+            vec2 trailVector = cursorEnd - cursorStart;
 
-      //Trail thickness mask around the segment (area around the line from A->B (before pos. to after pos.))
-      // smoothstep expects ascending edges; use inner then outer radius so the trail mask stays confined to the cursor path while allowing vertical drift
-      float trail = 1.0 - smoothstep(GLITTER_WIDTH * 0.2, GLITTER_WIDTH, distToSeg);
+            /* motion intensity determines particle density */
+            float intensity = min(1.0, length(cursorDelta) / (iCurrentCursor.z * 3.0));
+            float activeParticles = PARTICLE_COUNT * intensity;
 
-      //Falling glitter band below the path, expressed in normalized "fall space"
-      float drop = P.y - basePoint.y; //NDC delta along Y-axis
-      float dropNorm = clamp(drop / max(GLITTER_FALL_DISTANCE, 1e-4), 0.0, 1.0);
-      float timeline = iTime / GLITTER_PERIOD;
+            /* generate particles for this bin */
+            for (float i = 0.0; i < PARTICLE_COUNT; i += 1.0) {
+                if (i >= activeParticles) break;
 
-      //Stable per-cell phasing: grid in pixel space with fixed cell size for sparkles?
-      const float cellSizePx = 2.0; //~2px cells
-      vec2 sparkleCell = floor(fragCoord.xy / cellSizePx);
-      float cellSeed = hash(vec3(sparkleCell, 37.0));
-      float t = timeline + cellSeed;
-      float cycleProg = fract(t);
-      float cycleIndex = floor(t);
+                /* unique seed per particle AND bin */
+                vec2 seed = vec2(i * 0.127, binTime * 0.031 + binIdx * 13.579);
 
-      //Falling band front and tail in normalized [0,1] space
-      float fallHead = cycleProg;
-      float fallTail = max(fallHead - GLITTER_FRONT_THICKNESS, 0.0);
-      float leadingEdge = 1.0 - smoothstep(fallHead, fallHead + GLITTER_FRONT_THICKNESS, dropNorm);
-      float trailingEdge = 1.0 - (1.0 - smoothstep(fallTail, fallTail + GLITTER_FRONT_THICKNESS, dropNorm));
-      float fallMask = leadingEdge * trailingEdge * smoothstep(0.0, GLITTER_FRONT_THICKNESS, dropNorm);
+                /* spawn position along trail */
+                float spawnPos = hash(seed);
+                vec2 particleOrigin = mix(cursorStart, cursorEnd, spawnPos);
 
-      //Denisty responds to travel distance in NDC, clamped to [0,1]
-      float travelNorm = clamp(travelNdc, 0.0, 1.0);
-      float densityFactor = clamp(travelNorm * 10.0, 0.0, 1.0);
-      float density = mix(MIN_DENSITY, MAX_DENSITY, densityFactor) * motionFade;
+                /* random offset perpendicular to motion */
+                vec2 perpendicular = vec2(-trailVector.y, trailVector.x);
+                if (length(perpendicular) > 0.0) {
+                    perpendicular = normalize(perpendicular);
+                }
+                float offsetAmount = (hash(seed + vec2(1.5, 2.7)) - 0.5) * SPREAD;
+                particleOrigin += perpendicular * offsetAmount;
 
-      //Spawn decision per-cell per-cycle
-      float sparkle = hash(vec3(sparkleCell, cycleIndex));
-      float spawn = step(1.0 - density, sparkle);
+                /* particle animation over time */
+                float particleAge = progress + hash(seed + vec2(3.1, 4.2)) * 0.2;
+                particleAge = clamp(particleAge, 0.0, 1.0);
 
-      //Fade out within a cycle so specks twinkle
-      float fade = 1.0 - smoothstep(0.33, 1.0, cycleProg);
+                /* drift motion */
+                vec2 drift = vec2(
+                    (hash(seed + vec2(5.3, 6.4)) - 0.5) * 0.05,
+                    -FALL_SPEED
+                ) * particleAge;
 
-      //Travel mask in consistent units; suppress tiny moves and optional same-line
-      float travelMask = (smallMove || suppressSameLine) ? 0.0 : travelNorm;
+                vec2 particlePos = particleOrigin + drift;
 
-      //Final glitter mask
-      float glitter = trail * fallMask * spawn * fade * travelMask * motionFade;
+                /* clamp particle Y position to cursor bounds */
+                particlePos.y = clamp(particlePos.y, cursorMinY, cursorMaxY);
 
-      vec3 colour = mix(base.rgb, GLITTER_COLOR.rgb, glitter * BRIGHTNESS);
-      fragColor = vec4(colour, base.a);
+                /* distance to particle */
+                float dist = length(fragNDC - particlePos);
+
+                /* particle size variation */
+                float sizeVar = 0.5 + hash(seed + vec2(7.5, 8.6)) * 0.5;
+                float radius = PARTICLE_SIZE * sizeVar;
+
+                /* soft circle with glow */
+                float particleShape = smoothstep(radius * 2.0, 0.0, dist);
+                float coreShape = smoothstep(radius, 0.0, dist);
+
+                /* sparkle intensity */
+                float sparkle = twinkle(particleAge, hash(seed + vec2(9.7, 10.8)));
+                float alpha = particleShape * fade * (0.3 + sparkle * 0.7);
+
+                /* color variation between primary and accent */
+                float colorMix = hash(seed + vec2(11.9, 12.1));
+                vec3 particleColor = mix(GLITTER_COLOR.rgb, GLITTER_ACCENT.rgb, colorMix);
+
+                /* bright core */
+                particleColor = mix(particleColor, vec3(1.0), coreShape * sparkle * 0.5);
+
+                glitterAccum += particleColor * alpha;
+                alphaAccum += alpha;
+            }
+        }
+
+        /* composite glitter over terminal buffer */
+        if (alphaAccum > 0.0) {
+            vec3 blendedColor = mix(fragColor.rgb, glitterAccum / max(alphaAccum, 0.001), min(alphaAccum, 1.0));
+            fragColor.rgb = blendedColor;
+        }
     }
   '';
   blaze = ''
