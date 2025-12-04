@@ -55,7 +55,7 @@ in
       network-tools = enabled;
       opencode = enabled;
       shells = { nushell = enabled; zsh = enabled; };
-      ssh = enabled;
+      ssh = { enable = true; extraIdentityFiles = [ "~/.ssh/oranix" ]; };
       web-browser = enabled;
       yazi = enabled;
       zoxide = enabled;

@@ -4,14 +4,15 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.cli.ssh;
   username = config.${namespace}.user.name;
 in
 {
   options.${namespace}.cli.ssh = {
     enable = mkBoolOpt true "Enable ssh";
+    extraIdentityFiles = mkOpt (types.listOf types.str) [ ] "Additional identity file paths to try after the default, in order given.";
   };
 
   config = mkIf cfg.enable {
@@ -24,7 +25,7 @@ in
         "*" = {
           # Auth + access
           identitiesOnly = true;
-          identityFile = [ "~/.ssh/${username}-key" ];
+          identityFile = [ "~/.ssh/${username}-key" ] ++ cfg.extraIdentityFiles;
           addKeysToAgent = "yes";
           #NOTE Use a specific agent if you have one (1Password, gnome-keyring, etc.)
           # identityAgent = "~/.1password/agent.sock";

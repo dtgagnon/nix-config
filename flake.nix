@@ -43,6 +43,7 @@
           # proxmox-nixos.overlays.x86_64-linux #NOTE Not in use - can remove
           odooAdds.overlays.default
           mcp-servers-nix.overlays.default
+          n8n-private.overlays.default
         ];
 
         systems.modules.nixos = with inputs; [
@@ -213,9 +214,9 @@
     ags.inputs.nixpkgs.follows = "nixpkgs";
     nixd.url = "github:nix-community/nixd";
 
-    ## misc repos
+    ## custom repos
+    n8n-private.url = "git+ssh://git@github.com/dtgagnon/n8n-nix-overlay";
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
-    odooAdds.inputs.nixpkgs.follows = "nixpkgs";
 
     ## ai tools
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
