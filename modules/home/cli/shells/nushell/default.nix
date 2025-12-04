@@ -6,7 +6,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf getExe;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.shells.nushell;
 
@@ -80,7 +80,7 @@ in
         def --env fzf-file-widget [] {
           let root = (get-git-root)
           cd $root
-          let selection = (fd --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'if (ls {} | get type.0) == "dir" { eza --tree --color=always {} | head -200 } else { bat -n --color=always --line-range :500 {} }')
+          let selection = (${getExe pkgs.fd} --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'if (ls {} | get type.0) == "dir" { eza --tree --color=always {} | head -200 } else { bat -n --color=always --line-range :500 {} }')
           if ($selection | is-not-empty) {
             $selection
           }
@@ -90,7 +90,7 @@ in
         def --env fzf-dir-widget [] {
           let root = (get-git-root)
           cd $root
-          let selection = (fd --type=d --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'eza --tree --color=always {} | head -200')
+          let selection = (${getExe pkgs.fd} --type=d --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'eza --tree --color=always {} | head -200')
           if ($selection | is-not-empty) {
             cd $selection
           }

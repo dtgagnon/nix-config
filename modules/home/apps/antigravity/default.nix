@@ -115,15 +115,19 @@ in
 
     home.file = {
       # For compatibility with Hyprland, to tell it the keyring to use.
-      ".antigravity/argv.json".text = ''
-        {
-          "password-store": "gnome-libsecret",
-          "enable-crash-reporter": false,
-          "crash-reporter-id": "e832de61-f47a-4c08-811e-4a1a2e81e2aa"
-        }
-      '';
       # ".antigravity/extensions/extensions.json".text = ''
       # '';
     };
+
+    home.activation.configure-antigravity = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run rm -f $HOME/.antigravity/argv.json
+      run cat <<EOF > $HOME/.antigravity/argv.json
+      {
+        "password-store": "gnome-libsecret",
+        "enable-crash-reporter": false,
+        "crash-reporter-id": "e832de61-f47a-4c08-811e-4a1a2e81e2aa"
+      }
+      EOF
+    '';
   };
 }
