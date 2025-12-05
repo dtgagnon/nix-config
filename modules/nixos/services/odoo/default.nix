@@ -2,6 +2,7 @@
 , config
 , inputs
 , namespace
+, pkgs
 , ...
 }:
 let
@@ -15,6 +16,9 @@ in
     enable = mkBoolOpt false "Enable Odoo via upstream nixpkgs module";
     db = {
       enableLocalPostgres = mkBoolOpt true "Enable simple local PostgreSQL provisioning";
+    };
+    mcp = {
+      enable = mkBoolOpt false "Enable Odoo MCP server";
     };
   };
 
@@ -31,7 +35,10 @@ in
     services.odoo = {
       enable = true;
       autoInit = true;
-      autoInitExtraFlags = [ "--load-language=en_US" "--without-demo=all" ];
+      autoInitExtraFlags = [
+        "--load-language=en_US"
+        "--without-demo=all"
+      ];
       addons = [
         ocaAddons.account-analytic
         ocaAddons.account-financial-reporting
@@ -51,6 +58,7 @@ in
         ocaAddons.management-system
         ocaAddons.manufacture
         ocaAddons.mis-builder
+        ocaAddons.odoorpc
         ocaAddons.partner-contact
         ocaAddons.product-attribute
         ocaAddons.project
@@ -106,6 +114,20 @@ in
           ensureClauses.login = true;
         }
       ];
+    };
+
+    systemd.services.odoo-mcp = mkIf cfg.mcp.enable {
+      description = "Odoo MCP Server";
+      after = [ "odoo.service" ];
+      partOf = [ "odoo.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        User = "odoo";
+        Group = "odoo";
+        ExecStart = "${lib.getExe pkgs.odoo-mcp}";
+        Restart = "always";
+        RestartSec = "10s";
+      };
     };
   };
 }
