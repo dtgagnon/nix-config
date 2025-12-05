@@ -1,7 +1,8 @@
-{ lib
-, config
-, osConfig
-, ...
+{
+  lib,
+  config,
+  osConfig,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -12,16 +13,16 @@ in
     spirenix.desktop.hyprland.extraSettings = {
       exec-once =
         let
-          execCmds = ([
-            "gnome-keyring-daemon --start --components=secrets"
-            "playerctld daemon"
-            "solaar --window hide --battery-icons regular"
-          ] ++ cfg.extraExec);
+          execCmds = (
+            [
+              "gnome-keyring-daemon --start --components=secrets"
+              "playerctld daemon"
+              "solaar --window hide --battery-icons regular"
+            ]
+            ++ cfg.extraExec
+          );
         in
-        if osConfig.programs.hyprland.withUWSM then
-          map (c: "uwsm app -- ${c}") execCmds
-        else execCmds;
-
+        if osConfig.programs.hyprland.withUWSM then map (c: "uwsm app -- ${c}") execCmds else execCmds;
 
       monitor = cfg.monitors ++ [
         "Virtual-1,3440x1440,0x0,1"
@@ -83,7 +84,7 @@ in
       };
 
       misc = {
-        new_window_takes_over_fullscreen = 2;
+        #TODO: new_window_takes_over_fullscreen = 2; # Deprecated by PR #12033 (Nov 2025). Replacement is 'misc:on_focus_under_fullscreen'
         initial_workspace_tracking = 0;
         disable_hyprland_logo = true;
         disable_autoreload = true;

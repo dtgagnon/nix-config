@@ -65,6 +65,20 @@ in
       };
     };
 
-    spirenix.desktop.addons.sysbar.sysTrayApps = [ "aw-qt" ];
+    spirenix.desktop.addons.sysbar.sysTrayApps = [
+      {
+        name = "aw-qt";
+        package = pkgs.activitywatch;
+      }
+    ];
+
+    # Override aw-qt service to add startup delay for system tray availability
+    systemd.user.services.aw-qt = mkIf anyWaylandWM {
+      Service = {
+        # Give waybar's system tray time to fully initialize
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+        RestartSec = "5s";
+      };
+    };
   };
 }

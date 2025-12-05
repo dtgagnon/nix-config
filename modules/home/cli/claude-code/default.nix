@@ -19,6 +19,9 @@ let
         --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
         --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})'
     '';
+    meta = {
+      mainProgram = "claude";
+    };
   };
 in
 {
