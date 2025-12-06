@@ -14,70 +14,95 @@ in
     home.file.".claude/skills/odoo/SKILL.md".text = ''
       ---
       name: odoo
-      description: Access and administer Odoo ERP database at 100.100.2.1:8069 via JSON-RPC
+      description: Access Odoo ERP at 100.100.2.1:8069 using OdooRPC Python library
       ---
 
-      # Odoo Database Administration
+      # Odoo Database Access with OdooRPC
 
-      You have access to an Odoo ERP system via the `odoo` MCP server. The server connects to `http://100.100.2.1:8069`.
+      Use the OdooRPC Python library to interact with Odoo at `100.100.2.1:8069`.
 
-      ## Available Tools
+      ## Connection Setup
 
-      - **login** - Authenticate with the Odoo database (required before other operations)
-        - `db`: Database name
-        - `user`: Username  
-        - `password`: Password
+      ```python
+      import odoorpc
 
-      - **search_read** - Search and read records from any model
-        - `model`: Model name (e.g., "res.partner", "sale.order")
-        - `domain`: Search domain filter (e.g., `[["is_company", "=", true]]`)
-        - `fields`: Optional list of fields to return
-        - `limit`: Optional max records to return
-
-      - **write** - Update existing records
-        - `model`: Model name
-        - `ids`: List of record IDs to update
-        - `vals`: Object with field values to update
-
-      - **execute** - Execute any method on a model
-        - `model`: Model name
-        - `method`: Method name
-        - `args`: Positional arguments
-        - `kwargs`: Keyword arguments
-
-      - **inspect_model** - Get field definitions for a model
-        - `model`: Model name
-
-      ## Workflow
-
-      1. Always **login** first before performing any other operations
-      2. Use **inspect_model** to discover available fields on a model
-      3. Use **search_read** to query data
-      4. Use **write** or **execute** to modify data
-
-      ## Common Odoo Models
-
-      - `res.partner` - Contacts/customers
-      - `res.users` - System users
-      - `sale.order` - Sales orders
-      - `purchase.order` - Purchase orders
-      - `account.move` - Invoices/journal entries
-      - `product.product` - Products
-      - `stock.picking` - Inventory transfers
-      - `project.project` - Projects
-      - `project.task` - Tasks
-
-      ## Example Queries
-
+      odoo = odoorpc.ODOO('100.100.2.1', port=8069)
+      odoo.login('DATABASE_NAME', 'USERNAME', 'PASSWORD')
       ```
-      # Login first
-      login(db="mydb", user="admin", password="admin")
 
-      # Get all companies
-      search_read(model="res.partner", domain=[["is_company", "=", true]], fields=["name", "email"])
+      ## Core Operations
 
-      # Inspect a model's fields
-      inspect_model(model="sale.order")
+      ### Browse Records
+      ```python
+      Partner = odoo.env['res.partner']
+      partner = Partner.browse(1)
+      print(partner.name)
+      ```
+
+      ### Search and Read
+      ```python
+      # Search returns IDs
+      ids = Partner.search([('is_company', '=', True)], limit=10)
+
+      # Read returns field values
+      data = Partner.read(ids, ['name', 'email'])
+
+      # Combined search_read
+      records = Partner.search_read([('is_company', '=', True)], ['name', 'email'], limit=10)
+      ```
+
+      ### Create Records
+      ```python
+      new_id = Partner.create({'name': 'New Partner', 'email': 'new@example.com'})
+      ```
+
+      ### Update Records
+      ```python
+      Partner.write([partner_id], {'name': 'Updated Name'})
+      # Or via browse
+      partner.name = 'Updated Name'
+      ```
+
+      ### Delete Records
+      ```python
+      Partner.unlink([partner_id])
+      ```
+
+      ### Execute Methods
+      ```python
+      result = Partner.execute('method_name', arg1, arg2, kwarg=value)
+      ```
+
+      ## Common Models
+
+      | Model | Purpose |
+      |-------|---------|
+      | res.partner | Contacts/customers |
+      | res.users | System users |
+      | sale.order | Sales orders |
+      | purchase.order | Purchase orders |
+      | account.move | Invoices/journals |
+      | product.product | Products |
+      | stock.picking | Inventory transfers |
+      | project.task | Tasks |
+
+      ## Domain Filter Syntax
+
+      ```python
+      # Operators: =, !=, >, <, >=, <=, like, ilike, in, not in
+      [('field', 'operator', value)]
+
+      # AND (default)
+      [('is_company', '=', True), ('country_id.code', '=', 'US')]
+
+      # OR
+      ['|', ('name', 'ilike', 'test'), ('email', 'ilike', 'test')]
+      ```
+
+      ## Inspect Model Fields
+
+      ```python
+      fields = odoo.env['res.partner'].fields_get()
       ```
     '';
   };

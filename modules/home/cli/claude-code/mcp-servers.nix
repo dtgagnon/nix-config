@@ -37,15 +37,6 @@ in
         # Claude Code will expand ${GITHUB_READ_TOKEN} at runtime
         headers.Authorization = "Bearer \${GITHUB_READ_TOKEN}";
       };
-      odoo = {
-        transport = "stdio";
-        command = "nix";
-        args = [
-          "run"
-          "/home/dtgagnon/nix-config/nixos#packages.x86_64-linux.odoo-mcp"
-          "--"
-        ];
-      };
     };
   };
 }

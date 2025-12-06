@@ -1,12 +1,29 @@
-{ lib, config, modulesPath, ... }:
 {
-  imports = [
+  lib,
+  config,
+  inputs,
+  modulesPath,
+  ...
+}:
+let
+  inherit (inputs) nixos-hardware;
+in
+{
+  imports = with nixos-hardware.nixosModules; [
+    (modulesPath + "/installer/scan/not-detected.nix")
+    common-cpu-intel
+    common-pc
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   spirenix.hardware.storage.boot = {
     enable = true;
-    bootloader.configLimit = 10;
+    bootloader.configLimit = 3;
+    kernel.params = [
+      "systemd.log_target=console"
+      "systemd.show_status=true"
+      "systemd.journald.forward_to_console=1"
+    ];
     kernel.initrd = {
       forceLuks = false;
       availableKernelModules = [
@@ -27,10 +44,4 @@
 
   # Swap is configured in disk-config.nix (4GB with random encryption)
   swapDevices = [ ];
-
-  # Networking
-  networking = {
-    useDHCP = lib.mkDefault true;
-    hostName = "oracle";
-  };
 }
