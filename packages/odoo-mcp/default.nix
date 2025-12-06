@@ -15,7 +15,7 @@ let
     import http.cookiejar
 
     # Configuration
-    HOST = "localhost"
+    HOST = "100.100.2.1"
     PORT = 8069
     PROTOCOL = "http"
     URL = f"{PROTOCOL}://{HOST}:{PORT}/jsonrpc"

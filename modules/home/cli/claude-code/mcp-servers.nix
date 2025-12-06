@@ -1,7 +1,8 @@
-{ lib
-, config
-, namespace
-, ...
+{
+  lib,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -19,7 +20,11 @@ in
       nixos = {
         transport = "stdio";
         command = "nix";
-        args = [ "run" "github:utensils/mcp-nixos" "--" ];
+        args = [
+          "run"
+          "github:utensils/mcp-nixos"
+          "--"
+        ];
       };
       ref = {
         type = "http";
@@ -31,6 +36,15 @@ in
         url = "https://api.githubcopilot.com/mcp/";
         # Claude Code will expand ${GITHUB_READ_TOKEN} at runtime
         headers.Authorization = "Bearer \${GITHUB_READ_TOKEN}";
+      };
+      odoo = {
+        transport = "stdio";
+        command = "nix";
+        args = [
+          "run"
+          "/home/dtgagnon/nix-config/nixos#packages.x86_64-linux.odoo-mcp"
+          "--"
+        ];
       };
     };
   };
