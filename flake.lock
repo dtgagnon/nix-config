@@ -2879,7 +2879,6 @@
         "manufacture": "manufacture",
         "mis-builder": "mis-builder",
         "nixpkgs": "nixpkgs_11",
-        "odoorpc": "odoorpc",
         "partner-contact": "partner-contact",
         "product-attribute": "product-attribute",
         "project": "project",
@@ -2901,33 +2900,17 @@
         "web-api": "web-api"
       },
       "locked": {
-        "lastModified": 1764964052,
-        "narHash": "sha256-tBO/Xm+K96rwaGwmicAk8O/CiFYZKfH48TWLKUUNgEc=",
+        "lastModified": 1764990890,
+        "narHash": "sha256-EMdYLzBRnXizu3ZPLB8WKtV/6Z8CfF+4aM9mzLC8mx4=",
         "ref": "refs/heads/main",
-        "rev": "4532af6b5371238f17fa5f955d5484f1e617645f",
-        "revCount": 95,
+        "rev": "95a0632ad408dbc15edd45f36e29c3dacd867ed5",
+        "revCount": 96,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },
       "original": {
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
-      }
-    },
-    "odoorpc": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1684225024,
-        "narHash": "sha256-59txgRhZ6CWCamv3BVSGDDZ5Q1RDW7wC1TEsen/OD6M=",
-        "owner": "oca",
-        "repo": "odoorpc",
-        "rev": "c93ebd0221e1bf6a6ca380d614b07c59cf11732e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oca",
-        "repo": "odoorpc",
-        "type": "github"
       }
     },
     "opencode": {

@@ -58,7 +58,6 @@ in
         ocaAddons.management-system
         ocaAddons.manufacture
         ocaAddons.mis-builder
-        ocaAddons.odoorpc
         ocaAddons.partner-contact
         ocaAddons.product-attribute
         ocaAddons.project

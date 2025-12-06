@@ -19,15 +19,28 @@ in
 
       # Odoo Database Access with OdooRPC
 
-      Use the OdooRPC Python library to interact with Odoo at `100.100.2.1:8069`.
+      Use OdooRPC to interact with Odoo at `100.100.2.1:8069`.
 
-      ## Connection Setup
+      ## Execution
 
-      ```python
+      Run Python with OdooRPC using:
+      ```bash
+      nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "CODE"
+      ```
+
+      Example one-liner:
+      ```bash
+      nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "import odoorpc; odoo = odoorpc.ODOO('100.100.2.1', port=8069); print(odoo.db.list())"
+      ```
+
+      Multi-line example:
+      ```bash
+      nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "
       import odoorpc
-
       odoo = odoorpc.ODOO('100.100.2.1', port=8069)
-      odoo.login('DATABASE_NAME', 'USERNAME', 'PASSWORD')
+      odoo.login('DATABASE', 'USER', 'PASSWORD')
+      print(odoo.env.user.name)
+      "
       ```
 
       ## Core Operations
