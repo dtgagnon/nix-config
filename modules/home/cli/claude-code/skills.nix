@@ -14,31 +14,40 @@ in
     home.file.".claude/skills/odoo/SKILL.md".text = ''
       ---
       name: odoo
-      description: Access Odoo ERP at 100.100.2.1:8069 using OdooRPC Python library
+      description: Access Odoo ERP at 100.100.1.2:8069 using OdooRPC Python library
       ---
 
       # Odoo Database Access with OdooRPC
 
-      Use OdooRPC to interact with Odoo at `100.100.2.1:8069`.
+      Use OdooRPC to interact with Odoo at `100.100.1.2:8069`.
+
+      ## Authentication
+
+      Use the `ODOO_API_KEY` environment variable (injected automatically):
+      ```python
+      import os, odoorpc
+      odoo = odoorpc.ODOO('100.100.1.2', port=8069)
+      odoo.login('odoo', 'claude@localhost', os.environ['ODOO_API_KEY'])
+      ```
 
       ## Execution
 
-      Run Python with OdooRPC using:
+      Run Python with OdooRPC:
       ```bash
       nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "CODE"
       ```
 
-      Example one-liner:
+      Example - list databases:
       ```bash
-      nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "import odoorpc; odoo = odoorpc.ODOO('100.100.2.1', port=8069); print(odoo.db.list())"
+      nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "import odoorpc; odoo = odoorpc.ODOO('100.100.1.2', port=8069); print(odoo.db.list())"
       ```
 
-      Multi-line example:
+      Example - authenticated query:
       ```bash
       nix run /home/dtgagnon/nix-config/nixos#odoorpc -- -c "
-      import odoorpc
-      odoo = odoorpc.ODOO('100.100.2.1', port=8069)
-      odoo.login('DATABASE', 'USER', 'PASSWORD')
+      import os, odoorpc
+      odoo = odoorpc.ODOO('100.100.1.2', port=8069)
+      odoo.login('odoo', 'claude@localhost', os.environ['ODOO_API_KEY'])
       print(odoo.env.user.name)
       "
       ```

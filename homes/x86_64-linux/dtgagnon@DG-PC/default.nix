@@ -1,10 +1,11 @@
-{ lib
-, pkgs
-, config
-, # , osConfig ? { }
+{
+  lib,
+  pkgs,
+  config,
+  # , osConfig ? { }
   # , format ? "unknown"
-  namespace
-, ...
+  namespace,
+  ...
 }:
 let
   inherit (lib.${namespace}) enabled mkRGBA;
@@ -25,12 +26,21 @@ in
       jellyfin-client = enabled;
       kiro = enabled;
       looking-glass-client = enabled;
-      music-player = { enable = true; player = "rmcp"; };
+      music-player = {
+        enable = true;
+        player = "rmcp";
+      };
       obsidian = enabled;
-      office = { libreoffice = enabled; okular-pdf = enabled; };
+      office = {
+        libreoffice = enabled;
+        okular-pdf = enabled;
+      };
       proton-cloud = enabled;
       # super-productivity = enabled;
-      terminals.ghostty = { enable = true; trail = null; };
+      terminals.ghostty = {
+        enable = true;
+        trail = null;
+      };
       thunderbird = enabled;
       todoist = enabled;
       # vscode = enabled;
@@ -54,8 +64,14 @@ in
       neovim = enabled;
       network-tools = enabled;
       opencode = enabled;
-      shells = { nushell = enabled; zsh = enabled; };
-      ssh = { enable = true; extraIdentityFiles = [ "~/.ssh/oranix" ]; };
+      shells = {
+        nushell = enabled;
+        zsh = enabled;
+      };
+      ssh = {
+        enable = true;
+        extraIdentityFiles = [ "~/.ssh/oranix" ];
+      };
       web-browser = enabled;
       yazi = enabled;
       zoxide = enabled;
@@ -71,7 +87,7 @@ in
       hyprland = {
         enable = true;
         monitors = [
-          "DP-1,3440x1440@144,0x0,1"
+          "DP-1,7680x2160@120,0x0,1"
           "HDMI-A-5, disable"
         ];
         extraConfig = ''
@@ -122,6 +138,7 @@ in
     anthropic_api = { };
     deepseek_api = { };
     moonshot_api = { };
+    odoo_api_key = { };
     openai_api = { };
     openrouter_api = { };
     ref_api = { };

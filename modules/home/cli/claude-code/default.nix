@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -17,7 +18,8 @@ let
     postBuild = ''
       wrapProgram $out/bin/claude \
         --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
-        --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})'
+        --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})' \
+        --run 'export ODOO_API_KEY=$(cat ${config.sops.secrets.odoo_api_key.path})'
     '';
     meta = {
       mainProgram = "claude";
