@@ -1,10 +1,11 @@
-{ lib
-, pkgs
-, config
-, inputs
-, system
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  system,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types;
@@ -25,19 +26,22 @@ in
       enable = true;
       package = pkgs.vscodium;
       profiles.default = {
-        extensions = with pkgs.vscode-extensions; [
-          vscodevim.vim
-          sainnhe.gruvbox-material
+        extensions =
+          with pkgs.vscode-extensions;
+          [
+            vscodevim.vim
+            sainnhe.gruvbox-material
 
-          github.copilot
-          github.copilot-chat
-          continue.continue
+            github.copilot
+            github.copilot-chat
+            continue.continue
 
-          mkhl.direnv
-          jnoortheen.nix-ide
-          arrterian.nix-env-selector
+            mkhl.direnv
+            jnoortheen.nix-ide
+            arrterian.nix-env-selector
 
-        ] ++ cfg.extensions;
+          ]
+          ++ cfg.extensions;
       };
     };
 

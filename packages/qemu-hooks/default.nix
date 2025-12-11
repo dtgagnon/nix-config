@@ -323,14 +323,30 @@ stdenv.mkDerivation {
     #!${pkgs.stdenv.shell}
     set -e
 
+    # Timeout wrapper to prevent indefinite blocking
+    run_with_timeout() {
+      local timeout=$1
+      shift
+      ${pkgs.coreutils-full}/bin/timeout "$timeout" "$@"
+    }
+
     # Use a temporary file for the XML definition and ensure it gets cleaned up on script exit
     VM_XML=$(mktemp)
     trap "rm -f $VM_XML" EXIT
 
     # Get the list of USB devices currently defined in the VM's configuration
-    ATTACHED_USBS=( $(virsh dumpxml ${vmDomainName} | \
+    # Capture full XML for reuse to avoid redundant dumpxml calls
+    echo "[virsh-check-usb] Fetching VM XML configuration..."
+    if ! VM_XML_CONTENT=$(run_with_timeout 10 ${getExe' pkgs.libvirt "virsh"} dumpxml ${vmDomainName} 2>&1); then
+      echo "[virsh-check-usb] WARNING: Failed to fetch VM XML (timeout or error), skipping USB check"
+      echo "[virsh-check-usb] Error output: $VM_XML_CONTENT"
+      exit 0
+    fi
+
+    # Parse USB devices from the captured XML
+    ATTACHED_USBS=( $(echo "$VM_XML_CONTENT" | \
     ${pkgs.xmlstarlet}/bin/xmlstarlet sel -t -m "/domain/devices/hostdev[@type='usb']" \
-    -v "source/vendor/@id" -o ":" -v "source/product/@id" -nl | \
+    -v "source/vendor/@id" -o ":" -v "source/product/@id" -nl 2>/dev/null | \
     sed -e 's/0x\([0-9a-f]*\)/\1/g') )
 
     # If no USBs are attached in the first place, there's nothing to do
@@ -339,14 +355,15 @@ stdenv.mkDerivation {
       exit 0
     fi
 
-    # Dump the current XML configuration to our temporary file so we can edit it
-    virsh dumpxml ${vmDomainName} > "$VM_XML"
+    # Write the already-captured XML to our temporary file so we can edit it
+    echo "$VM_XML_CONTENT" > "$VM_XML"
     MODIFIED=false
 
     for usb in "''${ATTACHED_USBS[@]}"; do
       # For each device in the config, check if it's actually connected to the host system
-      if ! ${pkgs.usbutils}/bin/lsusb | grep -q "$usb"; then
-        echo "USB device $usb is defined in VM but not connected to host. Removing..."
+      echo "[virsh-check-usb] Checking if USB device $usb is connected..."
+      if ! run_with_timeout 5 ${pkgs.usbutils}/bin/lsusb 2>/dev/null | grep -q "$usb"; then
+        echo "[virsh-check-usb] USB device $usb is defined in VM but not connected to host. Removing..."
         vendor=$(echo "$usb" | cut -d':' -f1)
         product=$(echo "$usb" | cut -d':' -f2)
 
@@ -359,8 +376,14 @@ stdenv.mkDerivation {
     # If we removed any devices, MODIFIED will be true
     # We then redefine the VM using the cleaned-up configuration file
     if [ "$MODIFIED" = true ]; then
-      echo "Applying updated USB configuration to ${vmDomainName}..."
-      virsh define "$VM_XML"
+      echo "[virsh-check-usb] Applying updated USB configuration to ${vmDomainName}..."
+      if ! run_with_timeout 10 ${getExe' pkgs.libvirt "virsh"} define "$VM_XML" 2>&1; then
+        echo "[virsh-check-usb] WARNING: Failed to redefine VM (timeout or error), continuing anyway"
+        exit 0
+      fi
+      echo "[virsh-check-usb] Successfully updated USB configuration"
+    else
+      echo "[virsh-check-usb] No USB devices needed removal, configuration unchanged"
     fi
     EOF
 
@@ -371,7 +394,7 @@ stdenv.mkDerivation {
     set -e
 
     # Get the vendor:product IDs of USB devices defined in the VM
-    ATTACHED_IDS=( $(virsh dumpxml ${vmDomainName} | \
+    ATTACHED_IDS=( $(${getExe' pkgs.libvirt "virsh"} dumpxml ${vmDomainName} | \
     ${pkgs.xmlstarlet}/bin/xmlstarlet sel -t -m "/domain/devices/hostdev[@type='usb']" -v "source/vendor/@id" -o ":" -v "source/product/@id" -nl | \
     sed 's/0x//g') )
 
@@ -412,7 +435,7 @@ stdenv.mkDerivation {
     echo "Detaching device $chosen_id_full from ${vmDomainName}..."
 
     # Use --persistent to hot-unplug AND update the persistent configuration
-    virsh detach-device ${vmDomainName} --persistent /dev/stdin << EOF_
+    ${getExe' pkgs.libvirt "virsh"} detach-device ${vmDomainName} --persistent /dev/stdin << EOF_
     <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
         <vendor id='0x$chosen_vendor'/>
@@ -454,7 +477,7 @@ stdenv.mkDerivation {
     # This single command hot-plugs the device (if VM is running) AND
     # saves the change to the VM's configuration for future boots.
     # It reads the device XML from standard input via the heredoc.
-    virsh attach-device ${vmDomainName} --persistent /dev/stdin << EOF_
+    ${getExe' pkgs.libvirt "virsh"} attach-device ${vmDomainName} --persistent /dev/stdin << EOF_
     <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
         <vendor id='0x$chosen_vendor'/>

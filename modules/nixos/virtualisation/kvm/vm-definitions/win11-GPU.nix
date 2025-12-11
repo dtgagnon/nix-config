@@ -1,6 +1,12 @@
 { pkgs
+, kvmfrSize ? [ 64 ]
 , ...
 }:
+let
+  # Convert MB to bytes (MB * 1024 * 1024)
+  kvmfrSizeMB = builtins.elemAt kvmfrSize 0;
+  kvmfrSizeBytes = kvmfrSizeMB * 1024 * 1024;
+in
 pkgs.writeText "win11-GPU.xml" ''
   <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
     <name>win11-GPU</name>
@@ -283,7 +289,7 @@ pkgs.writeText "win11-GPU.xml" ''
       <qemu:arg value='-device'/>
       <qemu:arg value='{&quot;driver&quot;:&quot;ivshmem-plain&quot;,&quot;id&quot;:&quot;shmem0&quot;,&quot;memdev&quot;:&quot;looking-glass&quot;}'/>
       <qemu:arg value='-object'/>
-      <qemu:arg value='{&quot;qom-type&quot;:&quot;memory-backend-file&quot;,&quot;id&quot;:&quot;looking-glass&quot;,&quot;mem-path&quot;:&quot;/dev/kvmfr0&quot;,&quot;size&quot;:67108864,&quot;share&quot;:true}'/>
+      <qemu:arg value='{&quot;qom-type&quot;:&quot;memory-backend-file&quot;,&quot;id&quot;:&quot;looking-glass&quot;,&quot;mem-path&quot;:&quot;/dev/kvmfr0&quot;,&quot;size&quot;:${toString kvmfrSizeBytes},&quot;share&quot;:true}'/>
       <qemu:arg value='-fw_cfg'/>
       <qemu:arg value='opt/ovmf/X-PciMmio64Mb,string=65536'/>
     </qemu:commandline>

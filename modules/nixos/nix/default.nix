@@ -35,8 +35,7 @@ in
     nix =
       let
         user = config.${namespace}.user.name;
-        # allUsers = lib.attrNames (lib.filterAttrs (n: v: v.isNormalUser) config.users.users);
-        users = [ "root" "dtgagnon" ] /* ++ allUsers */ ++ optional config.services.hydra.enable "hydra";
+        allUsers = lib.attrNames (lib.filterAttrs (_n: v: v.isNormalUser) config.users.users);
 
         isHomeManagerDirenvEnabled =
           if config.home-manager.users ? ${user}
@@ -60,8 +59,8 @@ in
           log-lines = 50;
           sandbox = "relaxed";
           auto-optimise-store = true;
-          trusted-users = users;
-          allowed-users = users;
+          trusted-users = [ "root" "dtgagnon" ] ++ optional config.services.hydra.enable "hydra";
+          allowed-users = [ "root" ] ++ allUsers;
           substituters = [
             "https://cache.nixos.org"
             "https://nix-community.cachix.org"

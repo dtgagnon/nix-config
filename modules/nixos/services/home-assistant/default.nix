@@ -162,6 +162,7 @@ in
         "radarr"
         "reddit"
         "sabnzbd"
+        "samsungtv"
         "sonarr"
         "tailscale"
         "tplink"
@@ -190,6 +191,8 @@ in
         locationsharinglib #google_maps
         typedmonarchmoney #monarch_money
         python-kasa #kasa devices
+        kegtron-ble #ibeacon
+        samsungtvws #samsung TV (WebSocket)
 
         # # HomeKit
         # base36

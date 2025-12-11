@@ -31,6 +31,15 @@ in
     };
 
     xdg.configFile = {
+      "Antigravity/product.json".text = ''
+        {
+          "extensionsGallery": {
+            "serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+            "itemUrl": "https://marketplace.visualstudio.com/items",
+            "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index"
+          }
+        }
+      '';
       "Antigravity/User/settings.json".text = ''
         {
           // Editor & System Settings

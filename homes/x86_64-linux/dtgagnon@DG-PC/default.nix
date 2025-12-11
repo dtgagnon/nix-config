@@ -1,11 +1,10 @@
-{
-  lib,
-  pkgs,
-  config,
-  # , osConfig ? { }
+{ lib
+, pkgs
+, config
+, # , osConfig ? { }
   # , format ? "unknown"
-  namespace,
-  ...
+  namespace
+, ...
 }:
 let
   inherit (lib.${namespace}) enabled mkRGBA;
@@ -87,7 +86,7 @@ in
       hyprland = {
         enable = true;
         monitors = [
-          "DP-1,7680x2160@120,0x0,1"
+          "DP-1,7680x2160@60,0x0,1.25"
           "HDMI-A-5, disable"
         ];
         extraConfig = ''

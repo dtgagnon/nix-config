@@ -69,7 +69,10 @@ in
       kvm = {
         enable = true;
         vmDomains = [ "win11-GPU" ];
-        lookingGlass.enable = true;
+        lookingGlass = {
+          enable = true;
+          kvmfrSize = [ 256 ];
+        };
         vfio.enable = true;
         vfio.mode = "dynamic";
         diagnostics.enable = true;

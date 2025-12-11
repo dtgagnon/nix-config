@@ -58,7 +58,12 @@ in
       };
 
       activitywatch-watcher-aw-watcher-window-wayland = mkIf anyWaylandWM {
+        Unit = {
+          After = [ "wayland-session@Hyprland.target" ];
+        };
         Service = {
+          # Give Hyprland compositor time to initialize socket
+          ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
           Restart = "on-failure";
           RestartSec = "10s";
         };
