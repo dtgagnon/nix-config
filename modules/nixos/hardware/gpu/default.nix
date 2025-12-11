@@ -46,8 +46,8 @@ let
         in
         builtins.foldl' (acc: ch: acc * 16 + hexDigits.${ch}) 0 chars;
 
-      busDec = builtins.toString (hexToDec busHex);
-      devDec = builtins.toString (hexToDec devHex);
+      busDec = toString (hexToDec busHex);
+      devDec = toString (hexToDec devHex);
     in
     "PCI:${busDec}:${devDec}:${funcStr}";
 in

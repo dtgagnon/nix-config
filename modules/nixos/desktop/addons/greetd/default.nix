@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf concatStringsSep getExe;
+  inherit (lib) mkIf getExe;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.greetd;
 in
@@ -15,11 +15,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Add session wrapper scripts for GPU selection
+    environment.systemPackages = mkIf config.spirenix.virtualisation.kvm.vfio.enable [
+      pkgs.spirenix.hyprland-gpu-tools
+    ];
+
     services.greetd = {
       enable = true;
       settings = {
         default_session = {
-          command = concatStringsSep " " [
+          command = lib.concatStringsSep " " [
             "${getExe pkgs.tuigreet}"
             "--remember"
             "--remember-user-session"
@@ -33,10 +38,8 @@ in
           ];
           user = "greeter";
         };
-        initial_session = {
-          command = "--cmd hyprland-uwsm";
-          user = "dtgagnon";
-        };
+        # NOTE: initial_session removed to allow GPU session selection at login
+        # The previous command was malformed anyway (--cmd is a tuigreet flag, not a command)
       };
     };
 
@@ -58,6 +61,8 @@ in
 
     # Create a symlink for tuigreet sessions
     environment.etc."greetd/environments".text = ''
+      ${lib.optionalString config.${namespace}.virtualisation.kvm.vfio.enable "hyprland-uwsm-dgpu"}
+      ${lib.optionalString config.${namespace}.virtualisation.kvm.vfio.enable "hyprland-uwsm-igpu"}
       hyprland-uwsm
       Hyprland
       GNOME

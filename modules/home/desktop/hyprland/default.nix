@@ -91,7 +91,9 @@ in
         # misc
         wl-clipboard
         playerctl
-      ];
+      ]
+      ++ lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
+        pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
         "image/*" = "nsxiv.desktop";
@@ -101,25 +103,46 @@ in
       };
     })
 
-    # Configure Hyprland to use Intel iGPU when VFIO is enabled
-    # This prevents Hyprland from holding file descriptors to the NVIDIA dGPU
+    # Configure Hyprland GPU selection when VFIO is enabled
+    # Supports dynamic GPU selection via session wrappers (hyprland-uwsm-dgpu, hyprland-uwsm-igpu)
+    # or automatic detection based on VFIO state
     (mkIf (cfg.enable && osConfig.${namespace}.virtualisation.kvm.vfio.enable) {
       xdg.configFile."uwsm/env-hyprland" = mkIf osConfig.programs.hyprland.withUWSM {
         text = ''
-          export AQ_DRM_DEVICES=${config.home.homeDirectory}/.config/hypr/intel-iGPU
+          # GPU selection for Hyprland with VFIO passthrough
+          # Modes: dgpu, igpu, auto (set via HYPRLAND_GPU_MODE env var from wrapper scripts)
+          #
+          # Session selection:
+          # - hyprland-uwsm-dgpu → Forces NVIDIA RTX 4090 (high performance)
+          # - hyprland-uwsm-igpu → Forces Intel iGPU (VM-compatible)
+          # - hyprland-uwsm → Auto-detects based on VFIO state
+          #
+          # See: https://github.com/hyprwm/Hyprland/issues/8679
+          # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer)
 
-          #NOTE: Restrict EGL to Mesa only, preventing NVIDIA's libEGL from opening the dGPU render node.
-          #NOTE: This prevents Hyprland from holding file descriptors to /dev/dri/renderD129 (NVIDIA).
-          #NOTE: Allows dynamic GPU unbinding for VFIO passthrough without crashing Hyprland
-          #NOTE: See: https://github.com/hyprwm/Hyprland/issues/8679 (upstream bug - AQ_DRM_DEVICES doesn't restrict EGL layer)
-          export __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json
+          GPU_MODE="''${HYPRLAND_GPU_MODE:-auto}"
+          eval "$(${pkgs.spirenix.hyprland-gpu-tools}/bin/hyprland-gpu-env $GPU_MODE)"
         '';
       };
 
       home.sessionVariables = mkIf (!osConfig.programs.hyprland.withUWSM) {
+        # Fallback for non-UWSM sessions (legacy - prefer UWSM)
         AQ_DRM_DEVICES = "${config.home.homeDirectory}/.config/hypr/intel-iGPU";
         __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
       };
+
+      # Ensure GPU device symlinks exist
+      home.activation.hyprlandGpuSymlinks = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.config/hypr
+
+        # Intel iGPU symlink (busId format: 0000:00:02.0 → pci-0000:00:02.0)
+        $DRY_RUN_CMD ln -sf /dev/dri/by-path/pci-${osConfig.${namespace}.hardware.gpu.iGPU.busId}-card \
+          ${config.home.homeDirectory}/.config/hypr/intel-iGPU
+
+        # NVIDIA dGPU symlink (busId format: 0000:01:00.0 → pci-0000:01:00.0)
+        $DRY_RUN_CMD ln -sf /dev/dri/by-path/pci-${osConfig.${namespace}.hardware.gpu.dGPU.busId}-card \
+          ${config.home.homeDirectory}/.config/hypr/nvidia-dGPU
+      '';
     })
   ];
 }
