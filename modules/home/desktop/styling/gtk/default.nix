@@ -18,6 +18,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = [ pkgs.gtk3.out ];
     gtk = lib.mkForce {
       enable = true;
       theme = {

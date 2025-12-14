@@ -23,7 +23,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
+  config = mkIf (cfg.enable && cfg.vfio.enable && cfg.vfio.dgpuBootCfg == "host") {
     # Ensure the hook scripts have the tools they need
     environment.systemPackages = [
       cfg.hooksPackage
@@ -54,7 +54,7 @@ in
             serviceConfig = { Type = "oneshot"; };
             script = ''
               # Initialize state file if it doesn't exist
-              # In dynamic mode, GPU is bound to nvidia driver at boot
+              # In host mode, GPU is bound to nvidia driver at boot
               if [ ! -f /var/lib/systemd/vfio-dgpu-state ]; then
                 echo "State file does not exist, initializing to 0 (dGPU available on host)"
                 echo "0" > /var/lib/systemd/vfio-dgpu-state

@@ -1,15 +1,22 @@
-{ lib
-, pkgs
-, config
-, inputs
-, system
-, osConfig
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  system,
+  osConfig,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkMerge mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled disabled mkDeepAttrsOpt;
+  inherit (lib.${namespace})
+    mkBoolOpt
+    mkOpt
+    enabled
+    disabled
+    mkDeepAttrsOpt
+    ;
   cfg = config.${namespace}.desktop.hyprland;
 in
 {
@@ -29,7 +36,9 @@ in
     extraSettings = mkDeepAttrsOpt { } "Additional settings to add to the Hyprland config";
     extraWinRules = mkDeepAttrsOpt { } "Window rules for Hyprland";
     extraAddons = mkDeepAttrsOpt { } "Additional addons to enable";
-    extraExec = mkOpt (types.listOf types.str) [ ] "Use for conditional exec-once additions in other modules";
+    extraExec =
+      mkOpt (types.listOf types.str) [ ]
+        "Use for conditional exec-once additions in other modules";
   };
 
   config = mkMerge [
@@ -67,33 +76,36 @@ in
         };
       };
 
-      home.packages = with pkgs; [
-        # core dependencies
-        libinput
-        glib
-        gtk3.out
-        wayland
+      home.packages =
+        with pkgs;
+        [
+          # core dependencies
+          libinput
+          glib
+          gtk3.out
+          wayland
 
-        # basic features
-        ## terminal
-        cfg.terminal.package
-        ## screen shots
-        grim
-        slurp
-        hyprshot
-        swappy
-        ## image viewer
-        nsxiv
-        ## monitor controls
-        ddcutil
-        brightnessctl
+          # basic features
+          ## terminal
+          cfg.terminal.package
+          ## screen shots
+          grim
+          slurp
+          hyprshot
+          swappy
+          ## image viewer
+          nsxiv
+          ## monitor controls
+          ddcutil
+          brightnessctl
 
-        # misc
-        wl-clipboard
-        playerctl
-      ]
-      ++ lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
-        pkgs.spirenix.hyprland-gpu-tools;
+          # misc
+          wl-clipboard
+          playerctl
+        ]
+        ++
+          lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
+            pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
         "image/*" = "nsxiv.desktop";
@@ -104,24 +116,27 @@ in
     })
 
     # Configure Hyprland GPU selection when VFIO is enabled
-    # Supports dynamic GPU selection via session wrappers (hyprland-uwsm-dgpu, hyprland-uwsm-igpu)
-    # or automatic detection based on VFIO state
+    # GPU env vars (AQ_DRM_DEVICES, __EGL_VENDOR_LIBRARY_FILENAMES) are now set by
+    # launcher scripts (hyprland-uwsm, hyprland-uwsm-dgpu, hyprland-uwsm-igpu)
+    #
+    # Session selection:
+    # - hyprland-uwsm-dgpu → Forces NVIDIA RTX 4090 (high performance)
+    # - hyprland-uwsm-igpu → Forces Intel iGPU (VM-compatible)
+    # - hyprland-uwsm → Auto-detects based on VFIO state
+    #
+    # See: https://github.com/hyprwm/Hyprland/issues/8679
+    # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer, hence __EGL_VENDOR_LIBRARY_FILENAMES)
     (mkIf (cfg.enable && osConfig.${namespace}.virtualisation.kvm.vfio.enable) {
-      xdg.configFile."uwsm/env-hyprland" = mkIf osConfig.programs.hyprland.withUWSM {
+      # Override hyprland.desktop when using UWSM to point directly to Hyprland binary
+      # UWSM will source ~/.config/uwsm/env-hyprland (created by launcher scripts) before starting
+      xdg.dataFile."wayland-sessions/hyprland.desktop" = mkIf osConfig.programs.hyprland.withUWSM {
         text = ''
-          # GPU selection for Hyprland with VFIO passthrough
-          # Modes: dgpu, igpu, auto (set via HYPRLAND_GPU_MODE env var from wrapper scripts)
-          #
-          # Session selection:
-          # - hyprland-uwsm-dgpu → Forces NVIDIA RTX 4090 (high performance)
-          # - hyprland-uwsm-igpu → Forces Intel iGPU (VM-compatible)
-          # - hyprland-uwsm → Auto-detects based on VFIO state
-          #
-          # See: https://github.com/hyprwm/Hyprland/issues/8679
-          # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer)
-
-          GPU_MODE="''${HYPRLAND_GPU_MODE:-auto}"
-          eval "$(${pkgs.spirenix.hyprland-gpu-tools}/bin/hyprland-gpu-env $GPU_MODE)"
+          [Desktop Entry]
+          Type=Application
+          Name=Hyprland
+          Comment=Hyprland compositor managed by UWSM
+          Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/Hyprland
+          X-GDM-SessionRegisters=true
         '';
       };
 

@@ -1,13 +1,64 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf getExe;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.greetd;
+
+  # Create desktop entries for GPU session variants (for session menu in tuigreet)
+  gpuSessionEntries = pkgs.runCommand "gpu-session-entries" { } ''
+    mkdir -p $out/share/wayland-sessions
+
+    cat > $out/share/wayland-sessions/hyprland-gpu-auto.desktop << EOF
+    [Desktop Entry]
+    Name=Hyprland (GPU Auto)
+    Comment=Hyprland with UWSM - auto GPU detection
+    Exec=${pkgs.spirenix.hyprland-gpu-tools}/bin/hyprland-uwsm
+    Type=Application
+    EOF
+
+    ${lib.optionalString config.${namespace}.virtualisation.kvm.vfio.enable ''
+      cat > $out/share/wayland-sessions/hyprland-gpu-dgpu.desktop << EOF
+      [Desktop Entry]
+      Name=Hyprland (GPU dGPU)
+      Comment=Hyprland with UWSM - force NVIDIA dGPU
+      Exec=${pkgs.spirenix.hyprland-gpu-tools}/bin/hyprland-uwsm-dgpu
+      Type=Application
+      EOF
+
+      cat > $out/share/wayland-sessions/hyprland-gpu-igpu.desktop << EOF
+      [Desktop Entry]
+      Name=Hyprland (GPU iGPU)
+      Comment=Hyprland with UWSM - force Intel iGPU
+      Exec=${pkgs.spirenix.hyprland-gpu-tools}/bin/hyprland-uwsm-igpu
+      Type=Application
+      EOF
+    ''}
+  '';
+
+  # Combine with system session entries for --sessions flag
+  # Note: tuigreet requires explicit paths to directories containing .desktop files
+  sessionPath = lib.concatStringsSep ":" [
+    "${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
+    "${config.services.displayManager.sessionData.desktops}/share/xsessions"
+    "${gpuSessionEntries}/share/wayland-sessions"
+  ];
+
+  # Session commands for /etc/greetd/environments (fallback for tuigreet)
+  sessionCommands = lib.concatStringsSep "\n" (
+    [
+      "hyprland-uwsm"
+    ]
+    ++ lib.optionals config.${namespace}.virtualisation.kvm.vfio.enable [
+      "hyprland-uwsm-dgpu"
+      "hyprland-uwsm-igpu"
+    ]
+  );
 in
 {
   options.${namespace}.desktop.addons.greetd = {
@@ -15,10 +66,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    # Add session wrapper scripts for GPU selection
-    environment.systemPackages = mkIf config.spirenix.virtualisation.kvm.vfio.enable [
+    # Add session wrapper scripts (hyprland-uwsm, hyprland-uwsm-dgpu, hyprland-uwsm-igpu)
+    environment.systemPackages = [
       pkgs.spirenix.hyprland-gpu-tools
     ];
+
+    # Create /etc/greetd/environments file for session discovery
+    environment.etc."greetd/environments".text = sessionCommands;
 
     services.greetd = {
       enable = true;
@@ -33,13 +87,11 @@ in
             ''--power-reboot "systemctl reboot"''
             "--asterisks"
             "--time"
-            # Commenting out auto-start of Hyprland to allow manual session selection
-            # "--cmd Hyprland"
+            # Point to session desktop entries for session discovery
+            "--sessions '${sessionPath}'"
           ];
           user = "greeter";
         };
-        # NOTE: initial_session removed to allow GPU session selection at login
-        # The previous command was malformed anyway (--cmd is a tuigreet flag, not a command)
       };
     };
 
@@ -56,18 +108,5 @@ in
       TTYVHangup = true;
       TTYVTDisallocate = true;
     };
-
-    # boot.kernelParams = [ "console=tty1" ];
-
-    # Create a symlink for tuigreet sessions
-    environment.etc."greetd/environments".text = ''
-      ${lib.optionalString config.${namespace}.virtualisation.kvm.vfio.enable "hyprland-uwsm-dgpu"}
-      ${lib.optionalString config.${namespace}.virtualisation.kvm.vfio.enable "hyprland-uwsm-igpu"}
-      hyprland-uwsm
-      Hyprland
-      GNOME
-      nushell
-      bash
-    '';
   };
 }

@@ -91,6 +91,11 @@ in
         disable_autoreload = true;
       };
 
+      debug = {
+        # Keep stdout/stderr logs enabled so short startup banners and warnings are retained
+        disable_logs = false;
+      };
+
       master = {
         new_on_top = true;
         new_status = "master";

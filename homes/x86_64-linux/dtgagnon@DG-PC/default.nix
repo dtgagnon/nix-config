@@ -86,8 +86,9 @@ in
       hyprland = {
         enable = true;
         monitors = [
-          "DP-1,7680x2160@60,0x0,1.25"
-          "HDMI-A-5, disable"
+          # "DP-1,7680x2160@60,0x0,1.25"
+          "HDMI-A-5,7680x2160@120,0x0,1.25"
+          # "HDMI-A-5, disable"
         ];
         extraConfig = ''
           general {

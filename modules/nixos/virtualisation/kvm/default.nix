@@ -24,7 +24,7 @@ in
     };
     vfio = {
       enable = mkBoolOpt false "Enable VFIO Configuration";
-      mode = mkOpt (types.enum [ "static" "dynamic" ]) "dynamic" "dynamic: GPU is bound to host at boot. Hooks are required. static: GPU is bound to vfio-pci at boot";
+      dgpuBootCfg = mkOpt (types.enum [ "vfio" "host" ]) "host" "Driver bound to dGPU at boot: 'vfio' = bound to vfio-pci for VMs. 'host' = bound to host GPU driver (nvidia/amdgpu), switched to vfio-pci when VM starts.";
       deviceIds = mkOpt (types.listOf types.str) dGPU.deviceIds "The hardware vendor:product IDs to pass through to the VM";
     };
 
@@ -139,17 +139,7 @@ in
       '';
     })
 
-    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "static") {
-      boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
-      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" ];
-      boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
-      boot.extraModprobeConfig = ''
-        options vfio-pci ids=${lib.concatStringsSep "," cfg.vfio.deviceIds}
-        softdep nvidia pre: vfio-pci
-      '';
-    })
-
-    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
+    (mkIf (cfg.vfio.enable && cfg.vfio.dgpuBootCfg == "host") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nouveau" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
       boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
@@ -162,6 +152,18 @@ in
         modesetting.enable = mkForce false;
         nvidiaPersistenced = mkForce true;
       };
+    })
+
+    #NOTE: vfio mode is pretty niche. Only useful if you need the vfio-pci driver to have the dGPU at boot.
+    #NOTE: This is necessary to pre-empt nvidia or other default drivers from grabbing the dGPU before vfio-pci can.
+    (mkIf (cfg.vfio.enable && cfg.vfio.dgpuBootCfg == "vfio") {
+      boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
+      boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" ];
+      boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
+      boot.extraModprobeConfig = ''
+        options vfio-pci ids=${lib.concatStringsSep "," cfg.vfio.deviceIds}
+        softdep nvidia pre: vfio-pci
+      '';
     })
   ];
 }

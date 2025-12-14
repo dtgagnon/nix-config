@@ -21,7 +21,7 @@ in
 
     bootloader = {
       type = mkOpt (types.enum [ "systemd-boot" "grub" ]) "systemd-boot" "Type of bootloader to use";
-      configLimit = mkOpt types.int 5 "Number of generations to keep";
+      configLimit = mkOpt types.int 15 "Number of generations to keep";
       editor = mkBoolOpt false "Whether to enable bootloader editor";
     };
 

@@ -35,6 +35,10 @@ in
       nvidiaOpen = true;
       nvidiaPrime = true;
     };
+    keyboard = {
+      enable = true;
+      model = "qk65v1";
+    };
     storage.boot.enable = true;
   };
 
