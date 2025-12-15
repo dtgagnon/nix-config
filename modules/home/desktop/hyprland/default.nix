@@ -1,12 +1,11 @@
-{
-  lib,
-  pkgs,
-  config,
-  inputs,
-  system,
-  osConfig,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, inputs
+, system
+, osConfig
+, namespace
+, ...
 }:
 let
   inherit (lib) mkMerge mkIf types;
@@ -104,8 +103,8 @@ in
           playerctl
         ]
         ++
-          lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
-            pkgs.spirenix.hyprland-gpu-tools;
+        lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
+          pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
         "image/*" = "nsxiv.desktop";

@@ -21,8 +21,17 @@ in
             ]
             ++ cfg.extraExec
           );
+          # Add monitor init when PiP is enabled
+          pipExecCmds =
+            if osConfig.spirenix.hardware.monitors.pip.enable or false then
+              execCmds ++ [ "hypr-monitor-init" ]
+            else
+              execCmds;
         in
-        if osConfig.programs.hyprland.withUWSM then map (c: "uwsm app -- ${c}") execCmds else execCmds;
+        if osConfig.programs.hyprland.withUWSM then
+          map (c: "uwsm app -- ${c}") pipExecCmds
+        else
+          pipExecCmds;
 
       monitor = cfg.monitors ++ [
         # "Virtual-1,7680x2160,0x0,1"

@@ -83,6 +83,10 @@ in
 
         # General Desktop
         "$mod_SHIFT_CTRL, L, exec, $lock"
+
+        # Submap entry points
+        "$mod, D, submap, display"
+        "$mod, M, submap, media"
       ];
 
       # Repeating (hold-able) binds
@@ -106,6 +110,30 @@ in
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow 2"
       ];
+    };
+    wayland.windowManager.hyprland.submaps = {
+      display.settings = {
+        bind = [
+          ", i, exec, hypr-pip"
+          ", i, submap, reset"
+          ", escape, submap, reset"
+        ];
+      };
+      media.settings = {
+        bindel = [
+          ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+"
+          ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-"
+        ];
+        bindl = [
+          ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          ", XF86AudioPlay, exec, playerctl play-pause"
+          ", XF86AudioPrev, exec, playerctl previous"
+          ", XF86AudioNext, exec, playerctl next"
+        ];
+        bind = [
+          ", escape, submap, reset"
+        ];
+      };
     };
   };
 }

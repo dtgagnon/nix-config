@@ -161,6 +161,97 @@ let
     echo "== $(date -Iseconds) starting Hyprland as $USER ==" >>"$LOG_FILE"
     exec ${inputs.hyprland.packages.${system}.hyprland}/bin/Hyprland >>"$LOG_FILE" 2>&1
   '';
+
+  # Monitor initialization script - sets default monitors based on GPU mode
+  monitorInit = writeShellScriptBin "hypr-monitor-init" ''
+    #!${stdenv.shell}
+    # hypr-monitor-init - Set default monitor configuration based on GPU mode
+
+    CONFIG_FILE="/etc/hyprland-pip-monitors.json"
+    HYPRCTL="${inputs.hyprland.packages.${system}.hyprland}/bin/hyprctl"
+    JQ="${pkgs.jq}/bin/jq"
+
+    # Exit gracefully if config doesn't exist (PiP not configured for this host)
+    [ -f "$CONFIG_FILE" ] || exit 0
+
+    # Read monitor config from JSON
+    DGPU_MONITOR=$($JQ -r '.dgpuMonitor.name' "$CONFIG_FILE")
+    DGPU_SPEC=$($JQ -r '.dgpuMonitor.spec' "$CONFIG_FILE")
+    IGPU_MONITOR=$($JQ -r '.igpuMonitor.name' "$CONFIG_FILE")
+    IGPU_SPEC=$($JQ -r '.igpuMonitor.spec' "$CONFIG_FILE")
+
+    # Detect GPU mode from AQ_DRM_DEVICES
+    if echo "$AQ_DRM_DEVICES" | ${pkgs.gnugrep}/bin/grep -q "nvidia-dGPU"; then
+      # dGPU mode: Enable HDMI (dGPU), disable DP (iGPU)
+      $HYPRCTL keyword monitor "$DGPU_MONITOR,$DGPU_SPEC" || true
+      $HYPRCTL keyword monitor "$IGPU_MONITOR,disable" || true
+    else
+      # iGPU mode: Enable DP (iGPU), disable HDMI (dGPU)
+      $HYPRCTL keyword monitor "$IGPU_MONITOR,$IGPU_SPEC" || true
+      $HYPRCTL keyword monitor "$DGPU_MONITOR,disable" || true
+    fi
+  '';
+
+  # PiP toggle script - toggles the "other" monitor based on GPU mode
+  pipToggle = writeShellScriptBin "hypr-pip" ''
+    #!${stdenv.shell}
+    # hypr-pip - Toggle Picture-in-Picture monitor
+
+    CONFIG_FILE="/etc/hyprland-pip-monitors.json"
+    HYPRCTL="${inputs.hyprland.packages.${system}.hyprland}/bin/hyprctl"
+    JQ="${pkgs.jq}/bin/jq"
+    NOTIFY="${pkgs.libnotify}/bin/notify-send"
+
+    # Error if config doesn't exist
+    if [ ! -f "$CONFIG_FILE" ]; then
+      $NOTIFY -u critical "PiP Toggle" "Monitor config not found"
+      exit 1
+    fi
+
+    # Read monitor config from JSON
+    DGPU_MONITOR=$($JQ -r '.dgpuMonitor.name' "$CONFIG_FILE")
+    DGPU_SPEC=$($JQ -r '.dgpuMonitor.spec' "$CONFIG_FILE")
+    IGPU_MONITOR=$($JQ -r '.igpuMonitor.name' "$CONFIG_FILE")
+    IGPU_SPEC=$($JQ -r '.igpuMonitor.spec' "$CONFIG_FILE")
+
+    # Detect GPU mode and determine toggle target
+    if echo "$AQ_DRM_DEVICES" | ${pkgs.gnugrep}/bin/grep -q "nvidia-dGPU"; then
+      # dGPU mode: toggle iGPU monitor
+      TOGGLE_MONITOR="$IGPU_MONITOR"
+      TOGGLE_SPEC="$IGPU_SPEC"
+    else
+      # iGPU mode: toggle dGPU monitor
+      TOGGLE_MONITOR="$DGPU_MONITOR"
+      TOGGLE_SPEC="$DGPU_SPEC"
+    fi
+
+    # Check if monitor exists (handles physical disconnection)
+    if ! $HYPRCTL monitors all -j | $JQ -e ".[] | select(.name == \"$TOGGLE_MONITOR\")" >/dev/null 2>&1; then
+      $NOTIFY -u critical "PiP Toggle" "Monitor $TOGGLE_MONITOR not connected"
+      exit 1
+    fi
+
+    # Get current monitor state
+    MONITOR_STATE=$($HYPRCTL monitors all -j | $JQ -r ".[] | select(.name == \"$TOGGLE_MONITOR\") | .disabled")
+
+    if [ "$MONITOR_STATE" = "true" ]; then
+      # Monitor is disabled, enable it
+      if $HYPRCTL keyword monitor "$TOGGLE_MONITOR,$TOGGLE_SPEC" 2>/dev/null; then
+        $NOTIFY -u low "PiP Toggle" "Enabled $TOGGLE_MONITOR (PiP mode)"
+      else
+        $NOTIFY -u critical "PiP Toggle" "Failed to enable $TOGGLE_MONITOR"
+        exit 1
+      fi
+    else
+      # Monitor is enabled, disable it
+      if $HYPRCTL keyword monitor "$TOGGLE_MONITOR,disable" 2>/dev/null; then
+        $NOTIFY -u low "PiP Toggle" "Disabled $TOGGLE_MONITOR"
+      else
+        $NOTIFY -u critical "PiP Toggle" "Failed to disable $TOGGLE_MONITOR"
+        exit 1
+      fi
+    fi
+  '';
 in
 symlinkJoin {
   name = "hyprland-gpu-tools";
@@ -173,10 +264,12 @@ symlinkJoin {
     launcherDgpu
     launcherIgpu
     hyprlandRunner
+    monitorInit
+    pipToggle
   ];
 
   meta = with lib; {
-    description = "Hyprland GPU detection utility, env setup, and UWSM launchers";
+    description = "Hyprland GPU detection utility, env setup, UWSM launchers, and PiP monitor tools";
     platforms = platforms.linux;
   };
 }
