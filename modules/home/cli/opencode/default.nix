@@ -21,7 +21,7 @@ in
         "$schema": "https://opencode.ai/config.json",
 
         "theme": "catppuccin",
-        "model": "ollama/gpt-oss:20b",
+        "model": "ollama/qwen3:14b-32k",
 
         "mcp": {
           "nixos": {
@@ -34,11 +34,6 @@ in
             "type": "local",
             "command": [ "npx", "-y", "@executeautomation/playwright-mcp-server" ]
           },
-          "sequential-thinking": {
-            "enabled": true,
-            "type": "local",
-            "command": [ "npx", "-y", "@modelcontextprotocol/server-sequential-thinking" ]
-          }
         },
 
         "provider": {
