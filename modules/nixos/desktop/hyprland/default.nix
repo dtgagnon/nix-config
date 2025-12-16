@@ -35,7 +35,7 @@ in
       electron-support = enabled;
       greetd = enabled;
       keyring = enabled;
-      network-manager = enabled;
+      comms = enabled;
       thunar = enabled;
     };
 
