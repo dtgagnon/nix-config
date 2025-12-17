@@ -74,7 +74,7 @@ in
           kvmfrSize = [ 256 ];
         };
         vfio.enable = true;
-        vfio.mode = "dynamic";
+        vfio.dgpuBootCfg = "host";
         diagnostics.enable = true;
       };
     };

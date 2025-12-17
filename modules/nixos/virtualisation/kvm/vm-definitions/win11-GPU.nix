@@ -1,6 +1,7 @@
-{ pkgs
-, kvmfrSize ? [ 64 ]
-, ...
+{
+  pkgs,
+  kvmfrSize ? [ 64 ],
+  ...
 }:
 let
   # Convert MB to bytes (MB * 1024 * 1024)

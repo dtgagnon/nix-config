@@ -35,6 +35,21 @@ in
       nvidiaOpen = true;
       nvidiaPrime = true;
     };
+    monitors.pip = {
+      enable = true;
+      dgpuMonitor = {
+        name = "HDMI-A-5";
+        spec = "7680x2160@120,0x0,1";
+      };
+      igpuMonitor = {
+        name = "DP-1";
+        spec = "7680x2160@60,0x0,1.25";
+      };
+    };
+    keyboard = {
+      enable = true;
+      model = "qk65v1";
+    };
     storage.boot.enable = true;
   };
 

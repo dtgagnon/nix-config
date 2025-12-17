@@ -21,14 +21,10 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [
-      pkgs.spirenix.antigravity
+      pkgs.antigravity
       inputs.nixd.packages.${system}.nixd
       pkgs.google-chrome
     ];
-
-    home.sessionVariables = {
-      CHROME_BIN = "${pkgs.google-chrome}/bin/google-chrome-stable";
-    };
 
     xdg.configFile = {
       "Antigravity/product.json".text = ''

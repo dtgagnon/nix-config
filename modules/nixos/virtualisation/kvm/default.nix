@@ -24,11 +24,11 @@ in
     };
     vfio = {
       enable = mkBoolOpt false "Enable VFIO Configuration";
-      mode = mkOpt (types.enum [ "static" "dynamic" ]) "dynamic" "dynamic: GPU is bound to host at boot. Hooks are required. static: GPU is bound to vfio-pci at boot";
+      dgpuBootCfg = mkOpt (types.enum [ "vfio" "host" ]) "host" "Driver bound to dGPU at boot: 'vfio' = bound to vfio-pci for VMs. 'host' = bound to host GPU driver (nvidia/amdgpu), switched to vfio-pci when VM starts.";
       deviceIds = mkOpt (types.listOf types.str) dGPU.deviceIds "The hardware vendor:product IDs to pass through to the VM";
     };
 
-    #NOTE: Unsure what to do with these options right now. Not sure what they each do for me.
+    #TODO: Unsure what to do with these options right now. Not sure what they each do for me.
     # # Use `machinectl` and then `machinectl status <name>` to get the unit "*.scope" of the VM
     # machineUnits = mkOpt (listOf str) [ ] "The systemd *.scope units to wait for before starting Scream";
     # disableEFIfb = mkOpt types.bool false "Disables the usage of the EFI framebuffer on boot.";
@@ -139,7 +139,24 @@ in
       '';
     })
 
-    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "static") {
+    (mkIf (cfg.vfio.enable && cfg.vfio.dgpuBootCfg == "host") {
+      boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nouveau" ];
+      boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
+      boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
+      boot.kernelModules = [ "vendor_reset" ];
+      services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
+      boot.kernelParams = [
+        "video=vesafb:off,efifb:off"
+      ];
+      hardware.nvidia = {
+        modesetting.enable = mkForce false;
+        nvidiaPersistenced = mkForce true;
+      };
+    })
+
+    #NOTE: vfio mode is pretty niche. Only useful if you need the vfio-pci driver to have the dGPU at boot.
+    #NOTE: This is necessary to pre-empt nvidia or other default drivers from grabbing the dGPU before vfio-pci can.
+    (mkIf (cfg.vfio.enable && cfg.vfio.dgpuBootCfg == "vfio") {
       boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nvidia" "nouveau" ];
       boot.kernelParams = mkIf (dGPU.mfg == "nvidia") [ "video=efifb:off" ];
       boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
@@ -147,27 +164,6 @@ in
         options vfio-pci ids=${lib.concatStringsSep "," cfg.vfio.deviceIds}
         softdep nvidia pre: vfio-pci
       '';
-    })
-
-    (mkIf (cfg.vfio.enable && cfg.vfio.mode == "dynamic") {
-      boot.blacklistedKernelModules = mkIf (dGPU.mfg == "nvidia") [ "nouveau" ];
-      boot.initrd.kernelModules = [ "vfio" "vfio_pci" "vfio_iommu_type1" ];
-      boot.extraModulePackages = [ config.hardware.nvidia.package config.boot.kernelPackages.vendor-reset ];
-      boot.kernelModules = [ "vendor_reset" ];
-      services.udev.packages = [ pkgs.spirenix.vendor-reset-udev-rules ];
-      boot.kernelParams = [
-        # "vfio-pci.disable_vga=1"
-        "video=vesafb:off,efifb:off"
-        # (mkForce "nvidia-drm.modeset=0")
-        # (mkForce "nvidia-drm.fbdev=0")
-      ];
-      hardware.nvidia = {
-        modesetting.enable = mkForce false;
-        nvidiaPersistenced = mkForce true;
-        # enable = true; #NOTE Explictly enabled to test if this has impact on dynamic vfio passthrough set up, which boots with vfio-pci taking nvidia gpu right away.
-        # powerManagement.enable = mkForce false; #NOTE Not sure of the impacts of this after successful __EGL_VENDOR_LIBRARY_FILENAMES addition below
-      };
-      # services.xserver.videoDrivers = mkForce [ "modesetting" "nvidia" ]; # Assumes intel iGPU as host primary
     })
   ];
 }

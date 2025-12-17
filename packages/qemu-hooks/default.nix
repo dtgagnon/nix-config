@@ -1,22 +1,24 @@
-{ lib
-, pkgs
-, stdenv
-, vmDomainName ? "win11-GPU" #TODO: update this to accept a list of the vmDomains I want this to work for
-, gpuBusId ? "" #config.${namespace}.hardware.gpu.dGPU.busId
-, dgpuDeviceIds ? [ ":" ":" ] #config.${namespace}.hardware.gpu.dGPU.deviceIds
-, ...
+{
+  lib,
+  pkgs,
+  stdenv,
+  vmDomainName ? "win11-GPU", # TODO: update this to accept a list of the vmDomains I want this to work for
+  gpuBusId ? "", # config.${namespace}.hardware.gpu.dGPU.busId
+  dgpuDeviceIds ? [
+    ":"
+    ":"
+  ], # config.${namespace}.hardware.gpu.dGPU.deviceIds
+  ...
 }:
 let
   inherit (lib) replaceStrings getExe';
   inherit (lib.lists) head last;
 
   gpuAudioBusId = replaceStrings [ ".0" ] [ ".1" ] gpuBusId;
-  parsedDeviceIds = map
-    (id: {
-      vendor = builtins.elemAt (builtins.split ":" id) 0;
-      product = builtins.elemAt (builtins.split ":" id) 2;
-    })
-    dgpuDeviceIds;
+  parsedDeviceIds = map (id: {
+    vendor = builtins.elemAt (builtins.split ":" id) 0;
+    product = builtins.elemAt (builtins.split ":" id) 2;
+  }) dgpuDeviceIds;
   gpuIds = head parsedDeviceIds;
   gpuAudioIds = last parsedDeviceIds;
 in
@@ -111,21 +113,83 @@ stdenv.mkDerivation {
       fi
     }
 
+    # Helper function to safely unload modules with retries
+    unload_module_with_retry() {
+      local module=$1
+      local attempts=3
+      local wait_time=1
+
+      # If module isn't loaded, we're done
+      if ! lsmod | grep -q "^$module "; then
+        return 0
+      fi
+
+      echo "[HOOK] Attempting to unload $module..."
+      
+      for ((i=1; i<=attempts; i++)); do
+        if modprobe -r "$module" 2>/dev/null; then
+          echo "[HOOK] Successfully unloaded $module"
+          return 0
+        fi
+        
+        # Check if it was unloaded by someone else or a dependency removal
+        if ! lsmod | grep -q "^$module "; then
+           echo "[HOOK] $module is no longer loaded."
+           return 0
+        fi
+
+        echo "[HOOK] Attempt $i/$attempts: Failed to unload $module. Retrying in ''${wait_time}s..."
+        sleep $wait_time
+      done
+
+      echo "[ERROR] Failed to unload $module after $attempts attempts."
+      return 1
+    }
+
     echo "[HOOK] Starting GPU passthrough to VFIO..."
 
     # Stop services
     echo "[HOOK] Stopping services..."
     echo "1" > /var/lib/systemd/vfio-dgpu-state
 
-    # Kill dGPU processes
+    # Kill dGPU processes with verification
     DGPU_DEVICES="/dev/nvidia*"
     if ${getExe' pkgs.psmisc "fuser"} ''$DGPU_DEVICES 2>&1; then
-      echo "[HOOK] Killing processes:"
+      echo "[HOOK] Killing processes using Nvidia devices..."
+      set +e
       ${getExe' pkgs.psmisc "fuser"} -vk ''$DGPU_DEVICES
+      exit_code=$?
+      set -e
+
+      if [ $exit_code -eq 0 ]; then
+        echo "[HOOK] Successfully sent kill signals."
+      elif [ $exit_code -eq 1 ]; then
+        echo "[HOOK] No processes found to kill (race condition handled)."
+      else
+        echo "[ERROR] fuser failed with exit code $exit_code"
+        exit 1
+      fi
+      
+      # Wait for processes to actually exit
+      echo "[HOOK] Waiting for processes to exit..."
+      for i in {1..10}; do
+        if ! ${getExe' pkgs.psmisc "fuser"} ''$DGPU_DEVICES 2>&1 >/dev/null; then
+           echo "[HOOK] All processes have exited."
+           break
+        fi
+        echo "[HOOK] waiting... ($i/10)"
+        sleep 1
+      done
+      
+      # Final check
+      if ${getExe' pkgs.psmisc "fuser"} ''$DGPU_DEVICES 2>&1 >/dev/null; then
+         echo "[WARNING] Some processes are still holding the device. Forcing continue, but module unload may fail."
+         ${getExe' pkgs.psmisc "fuser"} -v ''$DGPU_DEVICES
+      fi
     else
       echo "[HOOK] No processes found using dGPU"
     fi
-    sleep 2
+    sleep 1
 
     # Unbind devices from host driver FIRST
     echo "[HOOK] Unbinding devices from host drivers..."
@@ -138,8 +202,7 @@ stdenv.mkDerivation {
     echo "[HOOK] Unloading NVIDIA modules..."
     for module in nvidia_uvm nvidia_drm nvidia_modeset nvidia i2c_nvidia_gpu; do
       if lsmod | grep -q "^$module "; then
-        echo "[HOOK] Unloading $module module..."
-        modprobe -r "$module" || {
+        unload_module_with_retry "$module" || {
           echo "[ERROR] Failed to unload '$module'. Module may have reloaded or is in use."
           echo "[ERROR] Aborting script."
           exit 1

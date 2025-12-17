@@ -9,7 +9,13 @@
 }:
 let
   inherit (lib) mkMerge mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt enabled disabled mkDeepAttrsOpt;
+  inherit (lib.${namespace})
+    mkBoolOpt
+    mkOpt
+    enabled
+    disabled
+    mkDeepAttrsOpt
+    ;
   cfg = config.${namespace}.desktop.hyprland;
 in
 {
@@ -29,7 +35,9 @@ in
     extraSettings = mkDeepAttrsOpt { } "Additional settings to add to the Hyprland config";
     extraWinRules = mkDeepAttrsOpt { } "Window rules for Hyprland";
     extraAddons = mkDeepAttrsOpt { } "Additional addons to enable";
-    extraExec = mkOpt (types.listOf types.str) [ ] "Use for conditional exec-once additions in other modules";
+    extraExec =
+      mkOpt (types.listOf types.str) [ ]
+        "Use for conditional exec-once additions in other modules";
   };
 
   config = mkMerge [
@@ -67,31 +75,36 @@ in
         };
       };
 
-      home.packages = with pkgs; [
-        # core dependencies
-        libinput
-        glib
-        gtk3.out
-        wayland
+      home.packages =
+        with pkgs;
+        [
+          # core dependencies
+          libinput
+          glib
+          gtk3.out
+          wayland
 
-        # basic features
-        ## terminal
-        cfg.terminal.package
-        ## screen shots
-        grim
-        slurp
-        hyprshot
-        swappy
-        ## image viewer
-        nsxiv
-        ## monitor controls
-        ddcutil
-        brightnessctl
+          # basic features
+          ## terminal
+          cfg.terminal.package
+          ## screen shots
+          grim
+          slurp
+          hyprshot
+          swappy
+          ## image viewer
+          nsxiv
+          ## monitor controls
+          ddcutil
+          brightnessctl
 
-        # misc
-        wl-clipboard
-        playerctl
-      ];
+          # misc
+          wl-clipboard
+          playerctl
+        ]
+        ++
+        lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
+          pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
         "image/*" = "nsxiv.desktop";
@@ -101,25 +114,49 @@ in
       };
     })
 
-    # Configure Hyprland to use Intel iGPU when VFIO is enabled
-    # This prevents Hyprland from holding file descriptors to the NVIDIA dGPU
+    # Configure Hyprland GPU selection when VFIO is enabled
+    # GPU env vars (AQ_DRM_DEVICES, __EGL_VENDOR_LIBRARY_FILENAMES) are now set by
+    # launcher scripts (hyprland-uwsm, hyprland-uwsm-dgpu, hyprland-uwsm-igpu)
+    #
+    # Session selection:
+    # - hyprland-uwsm-dgpu → Forces NVIDIA RTX 4090 (high performance)
+    # - hyprland-uwsm-igpu → Forces Intel iGPU (VM-compatible)
+    # - hyprland-uwsm → Auto-detects based on VFIO state
+    #
+    # See: https://github.com/hyprwm/Hyprland/issues/8679
+    # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer, hence __EGL_VENDOR_LIBRARY_FILENAMES)
     (mkIf (cfg.enable && osConfig.${namespace}.virtualisation.kvm.vfio.enable) {
-      xdg.configFile."uwsm/env-hyprland" = mkIf osConfig.programs.hyprland.withUWSM {
+      # Override hyprland.desktop when using UWSM to point directly to Hyprland binary
+      # UWSM will source ~/.config/uwsm/env-hyprland (created by launcher scripts) before starting
+      xdg.dataFile."wayland-sessions/hyprland.desktop" = mkIf osConfig.programs.hyprland.withUWSM {
         text = ''
-          export AQ_DRM_DEVICES=${config.home.homeDirectory}/.config/hypr/intel-iGPU
-
-          #NOTE: Restrict EGL to Mesa only, preventing NVIDIA's libEGL from opening the dGPU render node.
-          #NOTE: This prevents Hyprland from holding file descriptors to /dev/dri/renderD129 (NVIDIA).
-          #NOTE: Allows dynamic GPU unbinding for VFIO passthrough without crashing Hyprland
-          #NOTE: See: https://github.com/hyprwm/Hyprland/issues/8679 (upstream bug - AQ_DRM_DEVICES doesn't restrict EGL layer)
-          export __EGL_VENDOR_LIBRARY_FILENAMES=/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json
+          [Desktop Entry]
+          Type=Application
+          Name=Hyprland
+          Comment=Hyprland compositor managed by UWSM
+          Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/Hyprland
+          X-GDM-SessionRegisters=true
         '';
       };
 
       home.sessionVariables = mkIf (!osConfig.programs.hyprland.withUWSM) {
+        # Fallback for non-UWSM sessions (legacy - prefer UWSM)
         AQ_DRM_DEVICES = "${config.home.homeDirectory}/.config/hypr/intel-iGPU";
         __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
       };
+
+      # Ensure GPU device symlinks exist
+      home.activation.hyprlandGpuSymlinks = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.config/hypr
+
+        # Intel iGPU symlink (busId format: 0000:00:02.0 → pci-0000:00:02.0)
+        $DRY_RUN_CMD ln -sf /dev/dri/by-path/pci-${osConfig.${namespace}.hardware.gpu.iGPU.busId}-card \
+          ${config.home.homeDirectory}/.config/hypr/intel-iGPU
+
+        # NVIDIA dGPU symlink (busId format: 0000:01:00.0 → pci-0000:01:00.0)
+        $DRY_RUN_CMD ln -sf /dev/dri/by-path/pci-${osConfig.${namespace}.hardware.gpu.dGPU.busId}-card \
+          ${config.home.homeDirectory}/.config/hypr/nvidia-dGPU
+      '';
     })
   ];
 }

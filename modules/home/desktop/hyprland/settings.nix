@@ -21,11 +21,21 @@ in
             ]
             ++ cfg.extraExec
           );
+          # Add monitor init when PiP is enabled
+          pipExecCmds =
+            if osConfig.spirenix.hardware.monitors.pip.enable or false then
+              execCmds ++ [ "hypr-monitor-init" ]
+            else
+              execCmds;
         in
-        if osConfig.programs.hyprland.withUWSM then map (c: "uwsm app -- ${c}") execCmds else execCmds;
+        if osConfig.programs.hyprland.withUWSM then
+          map (c: "uwsm app -- ${c}") pipExecCmds
+        else
+          pipExecCmds;
 
       monitor = cfg.monitors ++ [
-        "Virtual-1,7680x2160,0x0,1"
+        # "Virtual-1,7680x2160,0x0,1"
+        ",preferred,auto,1"
         #TODO: Figure out if this should be used or not `",preferred,auto,1"`
       ];
 
@@ -88,6 +98,11 @@ in
         initial_workspace_tracking = 0;
         disable_hyprland_logo = true;
         disable_autoreload = true;
+      };
+
+      debug = {
+        # Keep stdout/stderr logs enabled so short startup banners and warnings are retained
+        disable_logs = false;
       };
 
       master = {
