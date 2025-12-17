@@ -12,6 +12,7 @@ in
   config = mkIf cfg.enable {
     # Declare secrets in home-manager sops (userspace only)
     sops.secrets = {
+      n8n_access_token = { };
       ref_api = { };
       github_read_token = { };
     };
@@ -24,6 +25,18 @@ in
           "run"
           "github:utensils/mcp-nixos"
           "--"
+        ];
+      };
+      n8n-mcp = {
+        type = "stdio";
+        command = "npx";
+        arg = [
+          "-y"
+          "supergateway"
+          "--streamableHttp"
+          "http://localhost:5678/mcp-server/http"
+          "--header"
+          "authorization:Bearer \${N8N_ACCESS_TOKEN}"
         ];
       };
       ref = {
