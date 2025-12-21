@@ -16,6 +16,7 @@ in
           execCmds = (
             [
               "gnome-keyring-daemon --start --components=secrets"
+              "blueman-applet"
               "playerctld daemon"
               "solaar --window hide --battery-icons regular"
             ]

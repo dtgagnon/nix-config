@@ -203,6 +203,9 @@
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.nixpkgs.follows = "nixpkgs";
 
+    quickshell.url = "github:quickshell-mirror/quickshell";
+    quickshell.inputs.nixpkgs.follows = "nixpkgs";
+
     stylix.url = "github:danth/stylix";
     # stylix.url = "github:nix-community/stylix/0c32a193b72d9461b4041737fc56c86b4e4e9d10";
     stylix.inputs.nixpkgs.follows = "nixpkgs";

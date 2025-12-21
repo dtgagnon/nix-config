@@ -46,7 +46,8 @@ in
               "github:utensils/mcp-nixos",
               "--"
             ]
-          },
+          }
+        },
         "security": {
           "auth": {
             "selectedType": "oauth-personal"

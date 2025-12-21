@@ -80,6 +80,7 @@ in
       addons = {
         hellwal = enabled;
         kde-connect = enabled;
+        quickshell = enabled;
         rofi.style = "slim";
         weylus = enabled;
       };
