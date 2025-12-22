@@ -12,7 +12,7 @@ in
 {
   options.${namespace}.desktop.addons.sysbar = {
     enable = mkBoolOpt false "Enable system bar (waybar or ags)";
-    backend = mkOpt (types.enum [ "waybar" "ags" ]) "waybar" "Which system bar backend to use";
+    backend = mkOpt (types.enum [ "waybar" "ags" "quickshell" ]) "quickshell" "Which system bar backend to use";
 
     sysTrayApps = mkOpt (types.listOf (types.either types.str (types.submodule {
       options = {
@@ -25,6 +25,7 @@ in
 
   config = mkIf cfg.enable {
     spirenix.desktop.addons.sysbar = {
+      quickshell.enable = mkIf (cfg.backend == "quickshell") true;
       waybar.enable = mkIf (cfg.backend == "waybar") true;
       ags.enable = mkIf (cfg.backend == "ags") true;
     };

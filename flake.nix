@@ -84,6 +84,7 @@
 
         homes.modules = with inputs; [
           ags.homeManagerModules.default
+          noctalia.homeModules.default
           sops-nix.homeManagerModules.sops
           stylix.homeModules.stylix
         ];
@@ -205,6 +206,8 @@
 
     quickshell.url = "github:quickshell-mirror/quickshell";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    noctalia.inputs.nixpkgs.follows = "nixpkgs";
 
     stylix.url = "github:danth/stylix";
     # stylix.url = "github:nix-community/stylix/0c32a193b72d9461b4041737fc56c86b4e4e9d10";

@@ -80,7 +80,7 @@ in
       addons = {
         hellwal = enabled;
         kde-connect = enabled;
-        quickshell = enabled;
+        quickshell.premade = "noctalia-shell";
         rofi.style = "slim";
         weylus = enabled;
       };
