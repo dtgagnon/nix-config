@@ -49,7 +49,6 @@ in
     cli = {
       # aider = enabled;
       bat = enabled;
-      bottom = enabled;
       broot = enabled;
       carapace = enabled;
       claude-code = enabled;
@@ -80,7 +79,7 @@ in
       addons = {
         hellwal = enabled;
         kde-connect = enabled;
-        quickshell.premade = "noctalia-shell";
+        sysbar.quickshell.premade = "noctalia-shell";
         rofi.style = "slim";
         weylus = enabled;
       };
@@ -131,6 +130,7 @@ in
 
     services = {
       activity-watch = enabled;
+      apollo = enabled;
       syncthing = enabled;
     };
   };
