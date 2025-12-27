@@ -26,6 +26,12 @@ in
       pkgs.google-chrome
     ];
 
+    # Set Chrome environment variables for Playwright/browser integration
+    home.sessionVariables = {
+      CHROME_BIN = "${pkgs.google-chrome}/bin/google-chrome-stable";
+      CHROME_PATH = "${pkgs.google-chrome}/bin/google-chrome-stable";
+    };
+
     xdg.configFile = {
       "Antigravity/product.json".text = ''
         {
@@ -44,7 +50,6 @@ in
           "antigravity.browserCDPPort": 9222,
           "antigravity.browserUserProfilePath": "${config.home.homeDirectory}/.gemini/antigravity-browser-profile",
           "antigravity.chatFontSize": "default",
-          "antigravity.chromeBinaryPath": "${pkgs.google-chrome}/bin/google-chrome-stable",
           "antigravity.explainAndFixInCurrentConversation": true,
           "antigravity.marketplaceExtensionGalleryServiceURL": "https://marketplace.visualstudio.com/_apis/public/gallery",
           "antigravity.marketplaceExtensionGallerySource": "https://marketplace.visualstudio.com/_apis/public/gallery",
@@ -106,7 +111,11 @@ in
               "nix",
               "typescript",
               "typescriptreact"
-          ]
+          ],
+
+          // Rust settings
+          "rust-analyzer.rustfmt.overrideCommand": null,
+          "rust-analyzer.check.overrideCommand": null
         }
       ''
       + cfg.extraConfig;
