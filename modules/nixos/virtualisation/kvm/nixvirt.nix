@@ -19,42 +19,53 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && builtins.hasAttr "NixVirt" inputs) {
-    virtualisation.libvirt = {
-      enable = true;
-      connections."qemu:///system" = {
-        domains = map (name: {
-          definition = pkgs.callPackage ./vm-definitions/${name}.nix {
-            inherit (cfg.lookingGlass) kvmfrSize;
-          };
-        }) cfg.vmDomains;
-        pools = [
-          {
-            definition = NixVirt.lib.pool.writeXML {
-              name = "default";
-              uuid = "ec93320c-83fc-4b8d-a67d-2eef519cc3fd";
-              type = "dir";
-              target.path = "/var/lib/libvirt/images";
-            };
-          }
-          {
-            definition = NixVirt.lib.pool.writeXML {
-              name = "isos";
-              uuid = "7f532314-d910-4237-99ed-ca3441e006a1";
-              type = "dir";
-              target.path = "/var/lib/libvirt/isos";
-            };
-          }
-          {
-            definition = NixVirt.lib.pool.writeXML {
-              name = "nvram";
-              uuid = "adda15d7-edf3-4b16-a968-19317c30805a";
-              type = "dir";
-              target.path = "/var/lib/libvirt/qemu/nvram";
-            };
-          }
-        ];
+  config = mkIf (cfg.enable && builtins.hasAttr "NixVirt" inputs) (
+    let
+      vmDefinitions = map (name: pkgs.callPackage ./vm-definitions/${name}.nix {
+        inherit lib config namespace;
+        inherit (cfg.lookingGlass) kvmfrSize;
+      }) cfg.vmDomains;
+    in
+    {
+      virtualisation.libvirt = {
+        enable = true;
+        connections."qemu:///system" = {
+          domains = map (vmDef: {
+            definition = vmDef.definition;
+          }) vmDefinitions;
+          pools = [
+            {
+              definition = NixVirt.lib.pool.writeXML {
+                name = "default";
+                uuid = "ec93320c-83fc-4b8d-a67d-2eef519cc3fd";
+                type = "dir";
+                target.path = "/var/lib/libvirt/images";
+              };
+            }
+            {
+              definition = NixVirt.lib.pool.writeXML {
+                name = "isos";
+                uuid = "7f532314-d910-4237-99ed-ca3441e006a1";
+                type = "dir";
+                target.path = "/var/lib/libvirt/isos";
+              };
+            }
+            {
+              definition = NixVirt.lib.pool.writeXML {
+                name = "nvram";
+                uuid = "adda15d7-edf3-4b16-a968-19317c30805a";
+                type = "dir";
+                target.path = "/var/lib/libvirt/qemu/nvram";
+              };
+            }
+          ];
+        };
       };
-    };
-  };
+
+      # Install WINIX desktop entry for VM definitions that provide one
+      environment.systemPackages = lib.flatten (map (vmDef:
+        lib.optional (vmDef ? desktopEntry) vmDef.desktopEntry
+      ) vmDefinitions);
+    }
+  );
 }

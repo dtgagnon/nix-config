@@ -37,6 +37,7 @@ in
 
     services = {
       audio = enabled;
+      copyparty = enabled;
       davfs = enabled;
       keyd = enabled;
       n8n = enabled;

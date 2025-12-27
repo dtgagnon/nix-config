@@ -5,11 +5,11 @@
 , ...
 }:
 let
-  inherit (lib) mkIf types concatStringsSep;
+  inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.copyparty;
 
-  extraArgs = concatStringsSep " " cfg.extraArgs;
+  extraArgs = lib.concatStringsSep " " cfg.extraArgs;
 in
 {
   options.${namespace}.services.copyparty = {

@@ -54,7 +54,8 @@ in
       spirenix.desktop = {
         addons = {
           # Utilities
-          mako = enabled; # notifications
+          # Only enable mako when using waybar sysbar (quickshell provides its own notification server)
+          mako = mkIf (config.${namespace}.desktop.addons.sysbar.backend == "waybar") enabled;
           rofi = enabled; # launcher
           fuzzel = disabled; # app launcher, disabled in favor of rofi
           wlsunset = enabled; # color temperature manager
