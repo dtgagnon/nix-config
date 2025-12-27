@@ -26,7 +26,6 @@ in
 
     cli = {
       bat = enabled;
-      bottom = enabled;
       broot = enabled;
       carapace = enabled;
       eza = enabled;
