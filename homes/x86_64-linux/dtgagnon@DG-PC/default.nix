@@ -43,6 +43,7 @@ in
       thunderbird = enabled;
       todoist = enabled;
       # vscode = enabled;
+      yell = enabled;
       zen = enabled;
     };
 

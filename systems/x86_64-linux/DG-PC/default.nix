@@ -108,13 +108,10 @@ in
   };
 
   sops.secrets = {
-    # Loc
     city = { };
     elevation = { };
     latlong = { };
 
-    # APIs
-    anthropic_api = { };
     deepseek_api = { };
     moonshot_api = { };
     openai_api = { };

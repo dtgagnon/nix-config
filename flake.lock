@@ -478,6 +478,35 @@
         "type": "github"
       }
     },
+    "deep-filter-model": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1684833371,
+        "narHash": "sha256-/cTmhRy+6piFnZr/Ja0/lyyMKfYA5T4e0ibCpNck1GI=",
+        "type": "tarball",
+        "url": "https://github.com/Rikorose/DeepFilterNet/raw/main/models/DeepFilterNet3_onnx.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/Rikorose/DeepFilterNet/raw/main/models/DeepFilterNet3_onnx.tar.gz"
+      }
+    },
+    "deep-filter-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1729154110,
+        "narHash": "sha256-JxvK5/PX29o23Pq9cNpTSyuAB7j9HszzDGHC2fOw74Y=",
+        "owner": "Rikorose",
+        "repo": "DeepFilterNet",
+        "rev": "d375b2d8309e0935d165700c91da9de862a99c31",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Rikorose",
+        "repo": "DeepFilterNet",
+        "type": "github"
+      }
+    },
     "deploy-rs": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -1015,6 +1044,24 @@
     "flake-utils_5": {
       "inputs": {
         "systems": "systems_13"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_6": {
+      "inputs": {
+        "systems": "systems_16"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -2095,11 +2142,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1766811548,
-        "narHash": "sha256-LLDHs+cDUjmibjbl+9ZtGk4GuRaU7Ymsoy8PgVvnqeo=",
+        "lastModified": 1767110633,
+        "narHash": "sha256-+UXqBOaolVTXTK5XsMrqJnM7gBqfZvr958vw1ym+xPs=",
         "ref": "refs/heads/main",
-        "rev": "dda6090cf460403fb9e4a013b3d974112e512bcc",
-        "revCount": 18,
+        "rev": "b98176c994a5963768b58d771495669926f96397",
+        "revCount": 19,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/n8n-nix-overlay"
       },
@@ -2220,11 +2267,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1765422539,
-        "narHash": "sha256-zCINY6kFNf+rrSKVqBq5/KYj9uiZ4RnMw4P3VQuftXY=",
+        "lastModified": 1767108696,
+        "narHash": "sha256-ZaVIAnTtXoXC8EfoLenJWKdsEyghEd88kpkBlX5lMGU=",
         "ref": "refs/heads/main",
-        "rev": "7cd106cb565aed4f758646236b7f61817607bbd4",
-        "revCount": 101,
+        "rev": "88078d0185c4154c780c95cbe44488882b45ca7f",
+        "revCount": 103,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -2637,6 +2684,22 @@
     },
     "nixpkgs_15": {
       "locked": {
+        "lastModified": 1744536153,
+        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_16": {
+      "locked": {
         "lastModified": 1765472234,
         "narHash": "sha256-9VvC20PJPsleGMewwcWYKGzDIyjckEz8uWmT0vCDYK0=",
         "owner": "nixos",
@@ -2930,11 +2993,11 @@
         "web-api": "web-api"
       },
       "locked": {
-        "lastModified": 1767064500,
-        "narHash": "sha256-bmL7Ay0VCoKCE8rF95Q7EUBPjV6dRFMbCbL53ar+SKk=",
+        "lastModified": 1767067754,
+        "narHash": "sha256-ItkoSDphO3BqolijkW5j8D9DBUToEsQI8i9IdvdYbHo=",
         "ref": "refs/heads/main",
-        "rev": "6ba473e6d48fcda36a140e6aeb5660979bd56c79",
-        "revCount": 108,
+        "rev": "2f34018da1f73ce5ce8ac5b0a0e8abbbabf9bffa",
+        "revCount": 110,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },
@@ -2959,6 +3022,54 @@
         "owner": "sst",
         "repo": "opencode",
         "type": "github"
+      }
+    },
+    "parakeet-decoder": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-+YkfoIUOvJlCizRASYdBeuUi7mGyF280f1xuqB53jhA=",
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/decoder_joint-model.onnx"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/decoder_joint-model.onnx"
+      }
+    },
+    "parakeet-encoder": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Zc8xJ9Fq9/AeQPEbDmXbSs91jJ7sWWMvgy6dYnzWCVw=",
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/encoder-model.onnx"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/encoder-model.onnx"
+      }
+    },
+    "parakeet-encoder-data": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Z/8EQlp1KIBwqkqbG1EUNV1I/kGtd6FJZo8SXa9L3/8=",
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/encoder-model.onnx.data"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/encoder-model.onnx.data"
+      }
+    },
+    "parakeet-vocab": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-gXUPTxI3SJHstyO/leGZ3pu689K76Uii89yHCe8vtf8=",
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/vocab.txt"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main/vocab.txt"
       }
     },
     "partner-contact": {
@@ -3179,6 +3290,27 @@
         "type": "github"
       }
     },
+    "quickshell_2": {
+      "inputs": {
+        "nixpkgs": [
+          "yell",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764663772,
+        "narHash": "sha256-sHqLmm0wAt3PC4vczJeBozI1/f4rv9yp3IjkClHDXDs=",
+        "owner": "quickshell-mirror",
+        "repo": "quickshell",
+        "rev": "26531fc46ef17e9365b03770edd3fb9206fcb460",
+        "type": "github"
+      },
+      "original": {
+        "owner": "quickshell-mirror",
+        "repo": "quickshell",
+        "type": "github"
+      }
+    },
     "reporting-engine": {
       "flake": false,
       "locked": {
@@ -3252,6 +3384,7 @@
         "spirenixvim": "spirenixvim",
         "stablepkgs": "stablepkgs",
         "stylix": "stylix",
+        "yell": "yell",
         "zen-browser": "zen-browser"
       }
     },
@@ -3269,6 +3402,24 @@
         "owner": "rust-lang",
         "ref": "nightly",
         "repo": "rust-analyzer",
+        "type": "github"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_15"
+      },
+      "locked": {
+        "lastModified": 1765334520,
+        "narHash": "sha256-jTof2+ir9UPmv4lWksYO6WbaXCC0nsDExrB9KZj7Dz4=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "db61f666aea93b28f644861fbddd37f235cc5983",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
         "type": "github"
       }
     },
@@ -3335,6 +3486,18 @@
         "owner": "oca",
         "repo": "server-ux",
         "type": "github"
+      }
+    },
+    "silero-vad": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-dWmqQIGYJxSr4RqVzIPQCBrqFOGl3EABwMMAUh7fQFk=",
+        "type": "file",
+        "url": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx"
       }
     },
     "snowfall-lib": {
@@ -3638,6 +3801,21 @@
       }
     },
     "systems_15": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_16": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
@@ -4143,10 +4321,40 @@
         "type": "github"
       }
     },
+    "yell": {
+      "inputs": {
+        "deep-filter-model": "deep-filter-model",
+        "deep-filter-src": "deep-filter-src",
+        "flake-utils": "flake-utils_6",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "parakeet-decoder": "parakeet-decoder",
+        "parakeet-encoder": "parakeet-encoder",
+        "parakeet-encoder-data": "parakeet-encoder-data",
+        "parakeet-vocab": "parakeet-vocab",
+        "quickshell": "quickshell_2",
+        "rust-overlay": "rust-overlay",
+        "silero-vad": "silero-vad"
+      },
+      "locked": {
+        "lastModified": 1767108996,
+        "narHash": "sha256-UQZlyT1YdxeFuXPnfT+aI6iweol79F/Wsnz18QGXF04=",
+        "ref": "refs/heads/main",
+        "rev": "ba224a3cbd9f921f9014df5c7850062c7fe12bc1",
+        "revCount": 73,
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/yell"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/yell"
+      }
+    },
     "zen-browser": {
       "inputs": {
         "home-manager": "home-manager_3",
-        "nixpkgs": "nixpkgs_15"
+        "nixpkgs": "nixpkgs_16"
       },
       "locked": {
         "lastModified": 1766359145,

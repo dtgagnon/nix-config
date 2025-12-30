@@ -136,12 +136,29 @@ in
       boot.kernel.sysctl = {
         "net.ipv4.conf.all.src_valid_mark" = true;
         "net.ipv4.conf.default.src_valid_mark" = true;
+
+        # Tailscale exit node: allow kernel to forward packets between interfaces
+        # Required for: clients using this host as exit node → ProtonVPN → internet
+        # Safe to remove if: exit node functionality is no longer needed
+        "net.ipv4.ip_forward" = true;
+        "net.ipv6.conf.all.forwarding" = true;
         # "net.netfilter.nf_log_all_netns" = 1;
       };
 
       # Let systemd-networkd manage DHCP, not legacy networking
       networking = {
-        firewall.checkReversePath = "loose";
+        firewall = {
+          checkReversePath = "loose";
+
+          # Tailscale exit node security: only allow Tailscale-managed forwarding
+          # Tailscale's ts-forward chain handles exit node traffic; all other forwarding dropped
+          # Safe to remove if: ip_forward is disabled (policy DROP has no effect without forwarding)
+          # NOTE: No extraStopCommands - policy stays DROP even if firewall stops (safer default)
+          extraCommands = ''
+            iptables -P FORWARD DROP
+            ip6tables -P FORWARD DROP
+          '';
+        };
         useDHCP = false;
       };
 
@@ -162,7 +179,7 @@ in
         script = ''
           # Route *.ts.net via MagicDNS on the tailnet
           resolvectl dns tailscale0 100.100.100.100
-          resolvectl domain tailscale0 "~.aegean-interval.ts.net"
+          resolvectl domain tailscale0 "~aegean-interval.ts.net"
         '';
         serviceConfig = {
           Type = "oneshot";
