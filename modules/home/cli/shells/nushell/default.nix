@@ -14,6 +14,9 @@ let
 
   # Helper function to create conditional Nushell integrations
   mkNushellIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
+
+  # Import custom Nushell commands
+  customCommands = import ./nucommands.nix { inherit pkgs lib; };
 in
 {
   options.${namespace}.cli.shells.nushell = {
@@ -66,35 +69,7 @@ in
         	]
         }
 
-        # Helper function to find git root directory
-        def --env get-git-root [] {
-          let result = (do -i { git rev-parse --show-toplevel } | complete)
-          if $result.exit_code == 0 {
-            $result.stdout | str trim
-          } else {
-            $env.PWD
-          }
-        }
-
-        # Context-aware fzf file search (searches from git root if in a repo)
-        def --env fzf-file-widget [] {
-          let root = (get-git-root)
-          cd $root
-          let selection = (${getExe pkgs.fd} --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'if (ls {} | get type.0) == "dir" { eza --tree --color=always {} | head -200 } else { bat -n --color=always --line-range :500 {} }')
-          if ($selection | is-not-empty) {
-            $selection
-          }
-        }
-
-        # Context-aware fzf directory search (searches from git root if in a repo)
-        def --env fzf-dir-widget [] {
-          let root = (get-git-root)
-          cd $root
-          let selection = (${getExe pkgs.fd} --type=d --hidden --strip-cwd-prefix --max-depth 6 --exclude .git --exclude result --exclude .result --exclude 'result-*' --exclude .direnv --exclude .cache --exclude node_modules --exclude target --exclude dist --exclude dist-newstyle --exclude .stack-work --exclude __pycache__ --exclude .pytest_cache --exclude .mypy_cache --exclude .cargo --exclude .venv --exclude venv | fzf --preview 'eza --tree --color=always {} | head -200')
-          if ($selection | is-not-empty) {
-            cd $selection
-          }
-        }
+        ${customCommands}
       '';
 
       shellAliases = {
