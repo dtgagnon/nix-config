@@ -82,19 +82,19 @@ in
           # Patch addresses: https://github.com/NVIDIA/open-gpu-kernel-modules/commit/3e230516034d29e84ca023fe95e284af5cd5a065
           # Check if fixed in driver version >= 580.x or when nixpkgs updates stable/latest channels with the fix.
           package =
-            if cfg.nvidiaOpen then
-              config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel} // {
-                open = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel}.open.overrideAttrs (old: {
-                  patches = (old.patches or [ ]) ++ [
-                    (pkgs.fetchpatch {
-                      name = "get_dev_pagemap.patch";
-                      url = "https://github.com/NVIDIA/open-gpu-kernel-modules/commit/3e230516034d29e84ca023fe95e284af5cd5a065.patch";
-                      hash = "sha256-BhL4mtuY5W+eLofwhHVnZnVf0msDj7XBxskZi8e6/k8=";
-                    })
-                  ];
-                });
-              }
-            else
+            # if cfg.nvidiaOpen then
+            #   config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel} // {
+            #     open = config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel}.open.overrideAttrs (old: {
+            #       patches = (old.patches or [ ]) ++ [
+            #         (pkgs.fetchpatch {
+            #           name = "get_dev_pagemap.patch";
+            #           url = "https://github.com/NVIDIA/open-gpu-kernel-modules/commit/3e230516034d29e84ca023fe95e284af5cd5a065.patch";
+            #           hash = "sha256-BhL4mtuY5W+eLofwhHVnZnVf0msDj7XBxskZi8e6/k8=";
+            #         })
+            #       ];
+            #     });
+            #   }
+            # else
               config.boot.kernelPackages.nvidiaPackages.${cfg.nvidiaChannel};
           modesetting.enable = true;
           powerManagement = {

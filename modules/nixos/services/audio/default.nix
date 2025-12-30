@@ -43,10 +43,11 @@ in
     (mkIf cfg.useMpd {
       services.mpd = {
         enable = true;
-        musicDirectory = "/srv/media/music";
-        playlistDirectory = "/srv/media/music/playlists";
-        network = {
-          listenAddress = "0.0.0.0";
+        openFirewall = true;
+        settings = {
+          music_directory = "/srv/media/music";
+          playlist_directory = "/srv/media/music/playlists";
+          bind_to_address = "0.0.0.0";
           port = 6600;
         };
       };

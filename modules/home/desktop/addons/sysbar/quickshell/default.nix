@@ -61,7 +61,7 @@ in
             transparent = false;
             showOutline = false;
             showCapsule = true;
-            capsuleOpacity = 1;
+            # capsuleOpacity = 1; # Conflicted with Stylix-managed values in upstream module
             floating = false;
             marginVertical = 0.25;
             marginHorizontal = 0.25;
@@ -212,12 +212,12 @@ in
             allowPanelsOnScreenWithoutBar = true;
           };
           ui = {
-            fontDefault = config.${namespace}.desktop.styling.core.fonts.sansSerif.name;
-            fontFixed = config.${namespace}.desktop.styling.core.fonts.monospace.name;
+            # fontDefault = config.${namespace}.desktop.styling.core.fonts.sansSerif.name; # Conflicted with Stylix-managed values in upstream module
+            # fontFixed = config.${namespace}.desktop.styling.core.fonts.monospace.name; # Conflicted with Stylix-managed values in upstream module
             fontDefaultScale = 1;
             fontFixedScale = 1;
             tooltipsEnabled = true;
-            panelBackgroundOpacity = 0.85;
+            # panelBackgroundOpacity = 0.85; # Conflicted with Stylix-managed values in upstream module
             panelsAttachedToBar = true;
             settingsPanelMode = "attached";
           };
@@ -390,7 +390,7 @@ in
           dock = {
             enabled = true;
             displayMode = "auto_hide";
-            backgroundOpacity = 1;
+            # backgroundOpacity = 1; # Conflicted with Stylix-managed values in upstream module
             floatingRatio = 1;
             size = 1;
             onlySameOutput = true;
@@ -443,7 +443,7 @@ in
             monitors = [ ];
             location = "bottom_left";
             overlayLayer = true;
-            backgroundOpacity = 0.85;
+            # backgroundOpacity = 0.85; # Conflicted with Stylix-managed values in upstream module
             respectExpireTimeout = false;
             lowUrgencyDuration = 3;
             normalUrgencyDuration = 8;
@@ -464,7 +464,7 @@ in
             location = "top_left";
             autoHideMs = 2000;
             overlayLayer = true;
-            backgroundOpacity = 1;
+            # backgroundOpacity = 1; # Conflicted with Stylix-managed values in upstream module
             enabledTypes = [
               0
               1

@@ -1,9 +1,10 @@
 { lib
 , config
+, pkgs
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf getExe;
   cfg = config.spirenix.desktop.hyprland;
 in
 {
@@ -87,6 +88,10 @@ in
         # Submap entry points
         "$mod, D, submap, display"
         "$mod, M, submap, media"
+
+        # Yell dictation
+        # Shift + Space: PRESS (Toggle Start)
+        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"ToggleRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'"
       ];
 
       # Repeating (hold-able) binds
@@ -103,6 +108,12 @@ in
         "$mod_SHIFT, code:35, exec, border_size=$(hyprctl -j getoption general:border_size | jq '.int') ; hyprctl keyword general:border_size $(($border_size - 1))"
         "$mod_CTRL_SHIFT, code:34, exec, border_rounding=$(hyprctl -j getoption decoration:rounding | jq '.int') ; hyprctl keyword decoration:rounding $(($border_rounding + 1))"
         "$mod_CTRL_SHIFT, code:35, exec, border_rounding=$(hyprctl -j getoption decoration:rounding | jq '.int') ; hyprctl keyword decoration:rounding $(($border_rounding - 1))"
+      ];
+
+      # Release binds
+      # Shift + Space: RELEASE (Stop if held > 250ms)
+      bindr = [
+        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'"
       ];
 
       # Mouse

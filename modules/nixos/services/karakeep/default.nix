@@ -39,8 +39,8 @@ in
       targets.karakeep = {
         description = "karakeep bookmarking service target - groups karakeep services";
         after = [ "network-online.target" ];
+        wants = [ "network-online.target" "karakeep-web.service" "karakeep-workers.service" ] ++ (lib.optional cfg.enableHeadlessBrowser "karakeep-browser.service");
         wantedBy = [ "multi-user.target" ];
-        wants = [ "karakeep-web.service" "karakeep-workers.service" ] ++ (lib.optional cfg.enableHeadlessBrowser "karakeep-browser.service");
       };
       services = {
         karakeep-migrate = {
