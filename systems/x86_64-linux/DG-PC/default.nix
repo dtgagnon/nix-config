@@ -37,8 +37,34 @@ in
 
     services = {
       audio = enabled;
-      copyparty = enabled;
+      copyparty = {
+        enable = true;
+        accounts = {
+          dtgagnon = "tmp";
+        };
+        volumes = [
+          {
+            urlPath = "/documents";
+            path = "/home/dtgagnon/Documents";
+            accs = { rwmda = [ "dtgagnon" ]; };
+            flags = [ "daw" ];
+          }
+          {
+            urlPath = "/pictures";
+            path = "/home/dtgagnon/Pictures";
+            accs = { rwmda = [ "dtgagnon" ]; };
+            flags = [ "daw" ];
+          }
+          {
+            urlPath = "/proj";
+            path = "/home/dtgagnon/proj";
+            accs = { rwmda = [ "dtgagnon" ]; };
+            flags = [ "daw" ];
+          }
+        ];
+      };
       davfs = enabled;
+      apollo = enabled;
       keyd = enabled;
       n8n = enabled;
       # llama-cpp = enabled; # Replaced Ollama with llama.cpp + llama-swap

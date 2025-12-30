@@ -130,7 +130,6 @@ in
 
     services = {
       activity-watch = enabled;
-      apollo = enabled;
       syncthing = enabled;
     };
   };
