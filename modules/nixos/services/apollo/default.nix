@@ -40,16 +40,28 @@ let
                        'if(FALSE)  # Disabled FetchContent - using system boost'
     '';
 
-    # Build Apollo's web UI with vendored package-lock.json
+    # Build Apollo's web UI with security patches for vite and esbuild
     ui = pkgs.buildNpmPackage {
       pname = "${pname}-ui";
       inherit version src;
 
-      npmDepsHash = "sha256-vuPjiQ7hWNJX6fd4u9y8YjcB2U4Zt0vDclj0E7GbadQ=";
-
+      # Update package.json and use vendored package-lock.json with security fixes
       postPatch = ''
+        # Update vite to ^5.4.21 to fix CVE-2025-62522 and other vulnerabilities
+        substituteInPlace package.json \
+          --replace-fail '"vite": "4.5.14"' '"vite": "^5.4.21"'
+
+        # Add overrides to force secure esbuild version (fixes CVE-2024-23334)
+        ${pkgs.jq}/bin/jq '. + {"overrides": {"esbuild": "^0.25.0"}}' package.json > package.json.tmp
+        mv package.json.tmp package.json
+
+        # Use vendored package-lock.json with updated dependencies
         cp ${./package-lock.json} ./package-lock.json
       '';
+
+      npmDepsHash = "sha256-hkM+2J9qNlVCQDUPRvnGFTPSE/2XzPeOD5KUaMyCTHk=";
+
+      npmFlags = [ "--legacy-peer-deps" ];
 
       installPhase = ''
         runHook preInstall
