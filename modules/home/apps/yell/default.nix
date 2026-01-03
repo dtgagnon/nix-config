@@ -89,21 +89,34 @@ in
       socket_path = "auto"
 
       [llm]
-      # API Base URL (default: ollama local)
-      # For OpenAI: https://api.openai.com/v1
-      api_base = "http://localhost:11434/v1"
+      # --- Global LLM Settings ---
 
-      # API Key (default: "ollama")
-      # For OpenAI: sk-...
-      api_key = "ollama"
-
-      # Model name
-      # For OpenAI: gpt-5-nano
-      model = "gemma3:4b"
-
-      # System Prompt
+      # System Prompt Base (Define the persona)
       system_prompt = "You are a semantic text router for a dictation app. Your job is to manage a text buffer based on user input. Output valid JSON only."
 
+      # Custom Instructions (Define your preferences). These are appended to the system prompt.
+      instructions = "Always use American English spelling. Be concise."
+
+      # --- Multi-Model Architecture ---
+      # The system relies on two stages:
+      # 1. Router: Fast, zero-shot classification (Dictate vs Command vs Flush)
+      # 2. Processor: Smart rewriting and formatting for commands
+
+      [llm.router]
+      # Provider: openai, anthropic, ollama, open-router, llama-cpp, google
+      provider = "ollama"
+      # Model: Should be small and fast (e.g., functiongemma, llama3.2:1b)
+      model = "functiongemma"
+      api_base = "http://localhost:11434/v1"
+      api_key = "ollama"
+
+      [llm.processor]
+      # Provider: Can be different from router (e.g., Anthropic for intelligence)
+      provider = "ollama"
+      # Model: Should be capable of following complex rewriting instructions
+      model = "gemma3:4b"
+      api_base = "http://localhost:11434/v1"
+      api_key = "ollama"
 
       [logging]
       # Log level: trace, debug, info, warn, error
