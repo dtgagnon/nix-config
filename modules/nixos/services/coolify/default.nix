@@ -11,7 +11,6 @@ let
     mkIf
     mkMerge
     types
-    optionalString
     ;
   cfg = config.spirenix.services.coolify;
 

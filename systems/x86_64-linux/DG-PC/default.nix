@@ -64,7 +64,7 @@ in
         ];
       };
       davfs = enabled;
-      apollo = enabled;
+      # apollo = enabled;
       keyd = enabled;
       n8n = enabled;
       # llama-cpp = enabled; # Replaced Ollama with llama.cpp + llama-swap

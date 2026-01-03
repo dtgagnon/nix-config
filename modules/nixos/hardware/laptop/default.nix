@@ -15,12 +15,12 @@ in
 
   config = mkIf cfg.enable {
     services.logind = {
-      lidSwitch = "ignore";
-      lidSwitchExternalPower = "ignore";
-      extraConfig = ''
-        HandleLidSwitchDocked=ignore
-        LidSwitchIgnoreInhibited=no
-      '';
+      settings.Login = {
+        HandleLidSwitch = "ignore";
+        HandleLidSwitchExternalPower = "ignore";
+        HandleLidSwitchDocked = "ignore";
+        LidSwitchIgnoreInhibited = "no";
+      };
     };
   };
 }

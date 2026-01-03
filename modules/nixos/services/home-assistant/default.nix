@@ -53,9 +53,9 @@ in
           unit_system = "us_customary";
           temperature_unit = "F";
           time_zone = "US/Eastern";
+          internal_url = "http://100.100.1.2:8123";
         };
         http = {
-          server_host = [ "100.100.1.2" ];
           server_port = 8123;
         };
         recorder.db_url = "postgresql://@/hass";
@@ -245,7 +245,7 @@ in
         # bluetooth-data-tools
         # dbus-fast
         # esphome-dashboard-api
-        # govee-ble
+        govee-ble
         # ha-ffmpeg
         # habluetooth
         # hassil
