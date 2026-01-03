@@ -31,6 +31,9 @@ in
 
         [features]
         web_search_request = true
+        apply_patch_freeform = true
+        unified_exec = true
+        shell_snapshot = true
 
         [mcp_servers.nixos]
             command = "nix"
