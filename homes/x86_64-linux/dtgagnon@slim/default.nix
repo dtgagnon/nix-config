@@ -12,24 +12,14 @@ let
 in
 {
   spirenix = {
+    desktop.styling.core.theme = "catppuccin-mocha";
+
     user = {
       fullName = "Derek Gagnon";
       email = "gagnon.derek@gmail.com";
     };
 
-    apps = {
-      discord = enabled;
-      office.okular-pdf = enabled;
-      terminals = {
-        ghostty = {
-          enable = true;
-          dark-theme = "catppuccin-frappe";
-          light-theme = "catppuccin-latte";
-        };
-      };
-      zen = enabled;
-    };
-
+    # Server mode - desktop apps and styling removed
     cli = {
       bat = enabled;
       broot = enabled;
@@ -47,23 +37,7 @@ in
       zoxide = enabled;
     };
 
-    desktop = {
-      styling.core = {
-        enable = true;
-        cursor = {
-          package = pkgs.bibata-cursors;
-          name = "Bibata-Modern-Ice";
-          size = 24;
-        };
-        theme = "catppuccin-frappe";
-        wallpaper = pkgs.spirenix.wallpapers.wallpapers.catppuccin.skull-popcolor;
-      };
-      styling.stylix = {
-        enable = true;
-        polarity = "dark";
-      };
-    };
-
+    # Keep syncthing for config sync
     services.syncthing = enabled;
   };
 
