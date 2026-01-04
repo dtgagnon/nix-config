@@ -93,17 +93,8 @@ in
 
       caddy = {
         enable = true;
-        email = "gagnon.derek@gmail.com";
+        email = "gagnon.derek@proton.me";
         tailnetName = "aegean-interval";
-
-        # Serve static website from Nix store
-        extraVirtualHosts."spirenet.link" = {
-          extraConfig = ''
-            encode gzip
-            root * ${inputs.spirenet-dashboard.packages.${pkgs.system}.default}
-            file_server
-          '';
-        };
       };
     };
 
@@ -126,6 +117,16 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
+    };
+  };
+
+  # SpireNet dashboard (uses standard services namespace)
+  services.spirenet-dashboard = {
+    enable = true;
+    domain = "spirenet.link";
+    tailscale = {
+      enable = true;
+      port = 443;
     };
   };
 

@@ -74,6 +74,10 @@
           nixarr.nixosModules.default
         ];
 
+        systems.hosts.slim.modules = with inputs; [
+          spirenet-dashboard.nixosModules.default
+        ];
+
         homes.packages = with inputs; [
           zen-browser.packages.twilight
         ];

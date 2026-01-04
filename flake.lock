@@ -3511,11 +3511,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767475995,
-        "narHash": "sha256-gPe9xXj2VxXo8/fOBFdDToOr8XiFblg7F5ou54qSFQU=",
+        "lastModified": 1767502789,
+        "narHash": "sha256-g2MvVP+Zws3EbRlTGW9qK0iXanNqWPIzXBwc7Tj6MTc=",
         "ref": "refs/heads/main",
-        "rev": "1f9a501ad25f28b5aaaec3b582eda86142285750",
-        "revCount": 4,
+        "rev": "8db741ecbe36ed62cf10fc49713c0bb0f8484bdf",
+        "revCount": 6,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/spirenet-dashboard"
       },
