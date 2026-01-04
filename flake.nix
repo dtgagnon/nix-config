@@ -85,7 +85,10 @@
           stylix.homeModules.stylix
         ];
 
-        deploy = lib.mkDeploy { inherit (inputs) self; };
+        deploy = lib.mkDeploy {
+          inherit (inputs) self;
+          overrides = import ./deployments;
+        };
 
         outputs-builder = channels: {
           formatter = channels.nixpkgs.nixfmt-rfc-style;

@@ -4321,11 +4321,11 @@
         "silero-vad": "silero-vad"
       },
       "locked": {
-        "lastModified": 1767385874,
-        "narHash": "sha256-7qf9DlR2LwTqw2jZd8ZffizoeWt1+VFi3CzChRyGU8M=",
+        "lastModified": 1767493535,
+        "narHash": "sha256-COGp89Pyf864aLp7rlj19tZeY/LdYkSQovJfTHHslas=",
         "ref": "feat/improved-smart-commands",
-        "rev": "d5ba1274010ed82c98daec79e97bc6edbbb5db8c",
-        "revCount": 84,
+        "rev": "6df1b07f4e014473d44267319409990a437d3df8",
+        "revCount": 96,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },
