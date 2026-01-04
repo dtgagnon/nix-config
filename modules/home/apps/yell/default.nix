@@ -106,7 +106,7 @@ in
       # Provider: openai, anthropic, ollama, open-router, llama-cpp, google
       provider = "ollama"
       # Model: Should be small and fast (e.g., functiongemma, llama3.2:1b)
-      model = "functiongemma"
+      model = "yell-functiongemma"
       api_base = "http://localhost:11434/v1"
       api_key = "ollama"
 

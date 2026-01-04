@@ -35,8 +35,7 @@ in rec {
               } // lib.optionalAttrs (user != null) {
                 user = "root";
                 sshUser = user;
-              } // lib.optionalAttrs
-                (host.config.system.security.sudo.enable or false);
+              };
             };
           };
         }) { } names;

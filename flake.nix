@@ -74,10 +74,6 @@
           nixarr.nixosModules.default
         ];
 
-        systems.hosts."DGPC-WSL".modules = with inputs; [
-          nixos-wsl.nixosModules.default
-        ];
-
         homes.packages = with inputs; [
           zen-browser.packages.twilight
         ];
@@ -143,8 +139,9 @@
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
-    nixos-wsl.url = "github:nix-community/nixos-wsl";
-    nixos-wsl.inputs.nixpkgs.follows = "stablepkgs";
+    # NOTE Re-enable if using WSL
+    # nixos-wsl.url = "github:nix-community/nixos-wsl";
+    # nixos-wsl.inputs.nixpkgs.follows = "stablepkgs";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
