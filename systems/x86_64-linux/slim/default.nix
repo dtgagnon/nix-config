@@ -1,6 +1,7 @@
 { lib
 , namespace
 , pkgs
+, inputs
 , ...
 }:
 let
@@ -12,7 +13,12 @@ in
     ./hardware.nix
   ];
 
+  # ============================================================================
+  # Boot Configuration
+  # ============================================================================
+
   fileSystems."/boot".options = [ "umask=0077" ];
+
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;
@@ -23,6 +29,7 @@ in
         editor = false;
       };
     };
+
     initrd = {
       systemd.enable = true;
       systemd.emergencyAccess = true;
@@ -30,28 +37,57 @@ in
       availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
       kernelModules = [ "dm-snapshot" ];
     };
+
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
   };
 
+  # ============================================================================
+  # Networking
+  # ============================================================================
+
+  networking = {
+    hostName = "slim";
+
+    firewall = {
+      enable = true;
+      # SSH only - public access via Tailscale Funnel (no ports 80/443 needed!)
+      allowedTCPPorts = [ 22 22022 ];
+      # Tailscale interface is fully trusted
+      trustedInterfaces = [ "tailscale0" ];
+      # Hardening: Drop forwarding by default
+      extraCommands = ''
+        iptables -P FORWARD DROP
+        ip6tables -P FORWARD DROP
+      '';
+    };
+  };
+
+  # ============================================================================
+  # Spirenix Module Configuration
+  # ============================================================================
+
   spirenix = {
+    # Suites
     suites = {
       headless = enabled;
       networking = enabled;
     };
 
-    # Server mode - desktop removed
+    # Hardware (server mode - desktop removed)
     hardware = {
-      keyboard = enabled; # console keyboard layout (needed for physical access/recovery)
-      laptop = enabled; # battery, lid, power management
+      keyboard = enabled; # Console keyboard layout (needed for physical access/recovery)
+      laptop = enabled; # Battery, lid, power management
     };
 
+    # Security
     security = {
       pam = enabled;
       sudo = enabled;
       sops-nix = enabled;
     };
 
+    # Services
     services = {
       coolify = enabled;
 
@@ -60,17 +96,18 @@ in
         email = "gagnon.derek@gmail.com";
         tailnetName = "aegean-interval";
 
-        proxiedServices = {
-          # Service directory/dashboard at spirenet.link
-          dashboard = {
-            backend = "http://localhost:8080";
-            domain = "spirenet.link";
-            useTailscale = false; # Public domain
-          };
+        # Serve static website from Nix store
+        extraVirtualHosts."spirenet.link" = {
+          extraConfig = ''
+            encode gzip
+            root * ${inputs.spirenet-dashboard.packages.${pkgs.system}.default}
+            file_server
+          '';
         };
       };
     };
 
+    # System
     system.enable = true;
     system.preservation = {
       enable = true;
@@ -80,10 +117,10 @@ in
         "/var/log/caddy"
         "/var/lib/fail2ban"
         "/var/log/audit"
-        "/var/www"
       ];
     };
 
+    # Tools
     tools = {
       comma = enabled;
       general = enabled;
@@ -92,33 +129,11 @@ in
     };
   };
 
-  # Simple website server
-  systemd.services.simple-website = {
-    description = "Simple static website";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+  # ============================================================================
+  # Security Hardening
+  # ============================================================================
 
-    serviceConfig = {
-      ExecStart = "${pkgs.python3}/bin/python -m http.server 8080 --directory /var/www";
-      Restart = "on-failure";
-      User = "www-data";
-      Group = "www-data";
-    };
-  };
-
-  # Create www-data user
-  users.users.www-data = {
-    isSystemUser = true;
-    group = "www-data";
-  };
-  users.groups.www-data = { };
-
-  # Create website directory
-  systemd.tmpfiles.rules = [
-    "d /var/www 0755 www-data www-data - -"
-  ];
-
-  # Security hardening
+  # Fail2ban intrusion prevention
   services.fail2ban = {
     enable = true;
     maxretry = 5;
@@ -133,6 +148,22 @@ in
       "192.168.0.0/16" # Local networks
     ];
   };
+
+  # Auditd for intrusion detection
+  security.auditd.enable = true;
+  security.audit = {
+    enable = true;
+    rules = [
+      "-a always,exit -F arch=b64 -S execve -k exec"
+      "-w /etc/passwd -p wa -k passwd_changes"
+      "-w /etc/shadow -p wa -k shadow_changes"
+      "-w /etc/ssh/sshd_config -p wa -k sshd_changes"
+    ];
+  };
+
+  # ============================================================================
+  # Automated Maintenance
+  # ============================================================================
 
   # Automated security updates
   system.autoUpgrade = {
@@ -155,38 +186,9 @@ in
     dates = [ "03:30" ];
   };
 
-  # auditd for intrusion detection
-  security.auditd.enable = true;
-  security.audit = {
-    enable = true;
-    rules = [
-      "-a always,exit -F arch=b64 -S execve -k exec"
-      "-w /etc/passwd -p wa -k passwd_changes"
-      "-w /etc/shadow -p wa -k shadow_changes"
-      "-w /etc/ssh/sshd_config -p wa -k sshd_changes"
-    ];
-  };
-
-  # Firewall configuration
-  networking = {
-    hostName = "slim";
-
-    firewall = {
-      enable = true;
-
-      # SSH only - public access via Tailscale Funnel (no ports 80/443 needed!)
-      allowedTCPPorts = [ 22 22022 ];
-
-      # Tailscale interface is fully trusted
-      trustedInterfaces = [ "tailscale0" ];
-
-      # Hardening: Drop forwarding by default
-      extraCommands = ''
-        iptables -P FORWARD DROP
-        ip6tables -P FORWARD DROP
-      '';
-    };
-  };
+  # ============================================================================
+  # System Version
+  # ============================================================================
 
   system.stateVersion = "24.11";
 }

@@ -3381,6 +3381,7 @@
         "quickshell": "quickshell",
         "snowfall-lib": "snowfall-lib",
         "sops-nix": "sops-nix",
+        "spirenet-dashboard": "spirenet-dashboard",
         "spirenixvim": "spirenixvim",
         "stablepkgs": "stablepkgs",
         "stylix": "stylix",
@@ -3539,6 +3540,26 @@
         "owner": "Mic92",
         "repo": "sops-nix",
         "type": "github"
+      }
+    },
+    "spirenet-dashboard": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767475995,
+        "narHash": "sha256-gPe9xXj2VxXo8/fOBFdDToOr8XiFblg7F5ou54qSFQU=",
+        "ref": "refs/heads/main",
+        "rev": "1f9a501ad25f28b5aaaec3b582eda86142285750",
+        "revCount": 4,
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/spirenet-dashboard"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/spirenet-dashboard"
       }
     },
     "spirenixvim": {
