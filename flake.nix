@@ -208,6 +208,12 @@
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Experimental: Hyprland Remote Desktop PRs (for RustDesk/remote desktop support)
+    experimental-hyprland-rdp.url = "github:3l0w/Hyprland/feat/input-capture-impl";
+    experimental-hyprland-rdp.inputs.nixpkgs.follows = "nixpkgs";
+    experimental-xdph-rdp.url = "github:toneengo/xdg-desktop-portal-hyprland/feat/remote-desktop-impl";
+    experimental-xdph-rdp.inputs.nixpkgs.follows = "nixpkgs";
+
     quickshell.url = "github:quickshell-mirror/quickshell";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
     noctalia.url = "github:noctalia-dev/noctalia-shell";
@@ -233,7 +239,7 @@
     yell.inputs.nixpkgs.follows = "nixpkgs";
 
     ## ai tools
-    nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    nix-llm-agents.url = "github:numtide/llm-agents.nix";
     ### mcp servers
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
     mcp-servers-nix.inputs.nixpkgs.follows = "nixpkgs";

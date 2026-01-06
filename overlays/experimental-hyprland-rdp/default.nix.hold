@@ -1,0 +1,10 @@
+{ inputs, ... }:
+_final: prev: {
+  # Override Hyprland with PR #7919 (input capture protocol implementation)
+  hyprland = inputs.experimental-hyprland-rdp.packages.${prev.stdenv.hostPlatform.system}.hyprland;
+
+  # Override xdg-desktop-portal-hyprland with PR #308 (RemoteDesktop portal support)
+  # This PR includes the changes from PR #268 (Input Capture portal)
+  xdg-desktop-portal-hyprland =
+    inputs.experimental-xdph-rdp.packages.${prev.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+}

@@ -16,7 +16,7 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      nur.repos.lonerOrz.gemini-cli
+      gemini-cli
       nodejs
       playwright-driver.browsers
       playwright-mcp
