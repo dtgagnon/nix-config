@@ -50,6 +50,7 @@ in
     services = {
       audio = { enable = true; useMpd = true; };
       odoo = enabled;
+      nextcloud = enabled;
     };
 
     system = {
