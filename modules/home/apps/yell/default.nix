@@ -52,6 +52,8 @@ in
       # Dump audio to disk for debugging (debug_input.wav, debug_output.wav)
       # WARNING: Creates large files!
       dump_audio = false
+      # Use VAD Gate in PTT mode (true = silence is filtered out even when button held)
+      vad_in_ptt = true
 
       [vad]
       # Speech probability threshold (0.0-1.0)
@@ -74,7 +76,7 @@ in
       # Language code (currently only "en" supported)
       language = "en"
       # Transcription timeout in seconds
-      timeout_s = 30
+      timeout_sec = 30
 
       [formatter]
       # Auto-capitalize first letter after punctuation (.!?\n)
@@ -125,7 +127,7 @@ in
       # - info: General informational messages (recommended)
       # - warn: Warning messages
       # - error: Error messages only
-      level = "info"
+      level = "debug"
 
       # Log format: text or json
       # - text: Human-readable format (recommended for terminal)

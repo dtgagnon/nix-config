@@ -29,8 +29,9 @@ in
       plugins = with pkgs.nushellPlugins; [
         query
         gstat
-        highlight
-        desktop_notifications
+        # TODO: Re-enable when plugin versions match Nushell again.
+        # highlight
+        # desktop_notifications
       ];
 
       extraConfig = ''

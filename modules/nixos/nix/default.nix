@@ -55,6 +55,8 @@ in
           experimental-features = lib.mkDefault "nix-command flakes pipe-operators";
           allowed-uris = [ "ssh://git@github.com" ];
           http-connections = 50;
+          max-jobs = 2;
+          cores = 8;
           warn-dirty = false;
           log-lines = 50;
           sandbox = "relaxed";
