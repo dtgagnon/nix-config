@@ -1,8 +1,8 @@
 { ... }:
-_final: prev:
+final: prev:
 let
-  pyPkgs = prev.python3Packages;
-
+  # Use final so we pick up python package overrides from later overlays.
+  pyPkgs = final.python3Packages;
   psycopgDrivers = builtins.filter (drv: drv != null) [
     (if pyPkgs ? psycopg then pyPkgs.psycopg else null)
     (if pyPkgs ? psycopg2 then pyPkgs.psycopg2 else null)
@@ -32,4 +32,18 @@ in
       }
     )
   );
+
+  python3Packages = prev.python3Packages.overrideScope (pyfinal: pyprev: {
+    extract-msg = pyprev.extract-msg.overridePythonAttrs (old: {
+      pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "beautifulsoup4" ];
+      pythonRuntimeDepsCheck = false;
+    });
+  });
+
+  python313Packages = prev.python313Packages.overrideScope (pyfinal: pyprev: {
+    extract-msg = pyprev.extract-msg.overridePythonAttrs (old: {
+      pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "beautifulsoup4" ];
+      pythonRuntimeDepsCheck = false;
+    });
+  });
 }
