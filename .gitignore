@@ -11,3 +11,6 @@ GEMINI.md
 .aider*
 .claude
 .windsurf
+
+# Private configuration docs
+modules/home/apps/thunderbird/MAIL_SETUP.md

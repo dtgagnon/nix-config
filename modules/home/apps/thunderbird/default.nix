@@ -22,19 +22,21 @@ let
     "common/showunreademailcount" = true;
 
     # Monitoring
-    #NOTE: Monitored folders are typically at: ~/.thunderbird/<profile>/ImapMail/<server>/<folder>.msf || ~/.thunderbird/<profile>/Mail/<account>/<folder>.msf for local folders
+    # NOTE: Thunderbird uses Maildir storage in ~/Mail/ (converted from mbox 2026-01-05)
+    # All accounts use maildirstore format with email addresses as directory names
+    # Structure: ~/Mail/<email-address>/<folder>/cur/ (messages) and .msf (index)
     accounts = [
       # Main Inboxes
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/imap.gmail.com/INBOX.msf"; color = "#9CAF88"; } # Personal Gmail
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/imap.gmail-1.com/INBOX.msf"; color = "#FBCEB1"; } # Awrightpath
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/imap.gmail-2.com/INBOX.msf"; color = "#00008B"; } # STSDiesel
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/INBOX.msf"; color = "#69558A"; } # Proton
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/Folders.sbd/DTG Engineering.msf"; color = "#4682B4"; }
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/Folders.sbd/DTG Engineering.sbd/Banking.msf"; color = "#4682B4"; }
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/Folders.sbd/DTG Engineering.sbd/catch-all.msf"; color = "#4682B4"; }
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/Folders.sbd/DTG Engineering.sbd/Regulatory Affairs.msf"; color = "#4682B4"; }
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/Folders.sbd/DTG Engineering.sbd/Rent.msf"; color = "#4682B4"; }
-      { path = "/home/${username}/.thunderbird/${username}/ImapMail/127.0.0.1/Folders.sbd/DTG Engineering.sbd/Shipping.msf"; color = "#4682B4"; }
+      { path = "/home/${username}/Mail/gagnon.derek@gmail.com/INBOX.msf"; color = "#9CAF88"; } # Personal Gmail
+      { path = "/home/${username}/Mail/dgagnon@awrightpath.net/INBOX.msf"; color = "#FBCEB1"; } # Awrightpath
+      { path = "/home/${username}/Mail/dgagnon@stsdiesel.com/INBOX.msf"; color = "#00008B"; } # STSDiesel
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/INBOX.msf"; color = "#69558A"; } # Proton
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/Folders.DTG Engineering.msf"; color = "#4682B4"; }
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/Folders.DTG Engineering.Banking.msf"; color = "#4682B4"; }
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/Folders.DTG Engineering.catch-all.msf"; color = "#4682B4"; }
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/Folders.DTG Engineering.Regulatory Affairs.msf"; color = "#4682B4"; }
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/Folders.DTG Engineering.Rent.msf"; color = "#4682B4"; }
+      { path = "/home/${username}/Mail/gagnon.derek@protonmail.com/Folders.DTG Engineering.Shipping.msf"; color = "#4682B4"; }
     ];
     "common/allowsuppressingunread" = false;
     "common/ignoreStartUnreadCount" = false;
@@ -85,8 +87,52 @@ in
       sessionVariables.MAIL_CLIENT = "thunderbird";
       packages = [
         pkgs.thunderbird
+        pkgs.notmuch
+        pkgs.mblaze  # Maildir utilities
+        pkgs.msmtp   # SMTP sending
         # pkgs.birdtray
       ];
+    };
+
+    # Notmuch email indexing and search for LLM agent access
+    # Maildir storage: ~/Mail/ (converted from mbox 2026-01-05)
+    # All accounts use Maildir format with email addresses as directory names
+    programs.notmuch = {
+      enable = true;
+      new = {
+        tags = [ "new" "inbox" ];
+        ignore = [ ".msf" ".dat" "tmp/" ];
+      };
+      search = {
+        excludeTags = [ "deleted" "spam" "trash" ];
+      };
+      maildir = {
+        synchronizeFlags = true;
+      };
+      hooks = {
+        # Auto-tag emails by account on initial indexing
+        postNew = ''
+          # Tag by account based on path
+          notmuch tag +gmail -- path:gagnon.derek@gmail.com/** and tag:new
+          notmuch tag +proton -- path:gagnon.derek@protonmail.com/** and tag:new
+          notmuch tag +awrightpath -- path:dgagnon@awrightpath.net/** and tag:new
+          notmuch tag +stsdiesel -- path:dgagnon@stsdiesel.com/** and tag:new
+          notmuch tag +local -- path:local/** and tag:new
+
+          # Remove 'new' tag after processing
+          notmuch tag -new -- tag:new
+        '';
+      };
+      extraConfig = {
+        database = {
+          path = "${config.home.homeDirectory}/Mail";
+        };
+        user = {
+          name = "Derek Gagnon";
+          primary_email = "gagnon.derek@gmail.com";
+          other_email = "gagnon.derek@protonmail.com;dgagnon@awrightpath.net;dgagnon@stsdiesel.com";
+        };
+      };
     };
 
     spirenix.desktop.hyprland.extraExec = [ "thunderbird" ];
