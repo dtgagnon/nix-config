@@ -1,14 +1,14 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkIf types;
-  inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (lib) mkIf;
+  inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.xdg;
-in {
+in
+{
   options.${namespace}.desktop.addons.xdg = {
     enable = mkBoolOpt false "manage xdg config";
   };
@@ -29,7 +29,7 @@ in {
         enable = true;
         createDirectories = true;
         extraConfig = {
-          XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
+          XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/screenshots";
         };
       };
     };

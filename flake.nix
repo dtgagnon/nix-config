@@ -47,6 +47,7 @@
         ];
 
         systems.modules.nixos = with inputs; [
+          copyparty.nixosModules.default
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
           impermanence.nixosModules.impermanence
@@ -191,6 +192,9 @@
     nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications+services
+    copyparty.url = "github:9001/copyparty";
+    copyparty.inputs.nixpkgs.follows = "nixpkgs";
+
     ghostty.url = "github:ghostty-org/ghostty";
     ghostty.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -235,7 +239,7 @@
     spirenet-dashboard.inputs.nixpkgs.follows = "nixpkgs";
     n8n-private.url = "git+ssh://git@github.com/dtgagnon/n8n-nix-overlay";
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
-    yell.url = "git+ssh://git@github.com/dtgagnon/yell?ref=feat/improved-smart-commands";
+    yell.url = "git+ssh://git@github.com/dtgagnon/yell";
     yell.inputs.nixpkgs.follows = "nixpkgs";
 
     ## ai tools

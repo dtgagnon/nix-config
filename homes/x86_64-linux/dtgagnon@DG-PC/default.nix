@@ -23,7 +23,6 @@ in
       element = enabled;
       inkscape = enabled;
       jellyfin-client = enabled;
-      kiro = enabled;
       looking-glass-client = enabled;
       music-player = {
         enable = true;
@@ -42,13 +41,11 @@ in
       };
       thunderbird = enabled;
       todoist = enabled;
-      # vscode = enabled;
       yell = enabled;
       zen = enabled;
     };
 
     cli = {
-      # aider = enabled;
       bat = enabled;
       broot = enabled;
       carapace = enabled;
@@ -86,11 +83,7 @@ in
       };
       hyprland = {
         enable = true;
-        monitors = [
-          # Monitor configuration handled dynamically:
-          # - System level: spirenix.hardware.monitors.pip in hardware.nix
-          # - Runtime: hypr-monitor-init exec-once script
-        ];
+        monitors = [ ];
         extraConfig = ''
           general {
             col.active_border = ${
@@ -116,8 +109,8 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          theme = "nord";
-          wallpaper = pkgs.spirenix.wallpapers.wallpapers.flat-blue-mountains;
+          # theme = "nord";
+          wallpaper = pkgs.spirenix.wallpapers.wallpapers.electric-fractal-filament-wide-rust-white-blue;
         };
         stylix = {
           enable = true;
@@ -131,6 +124,7 @@ in
 
     services = {
       activity-watch = enabled;
+      copyparty-client = enabled;
       syncthing = enabled;
     };
   };
@@ -138,11 +132,13 @@ in
   sops.secrets = {
     anthropic_api = { };
     deepseek_api = { };
+    dtgagnon-copyparty-pass = { };
     moonshot_api = { };
     odoo_api_key = { };
     openai_api = { };
     openrouter_api = { };
     ref_api = { };
+    wallhaven_api = { };
   };
 
   home.stateVersion = "24.11";

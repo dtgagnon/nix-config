@@ -14,7 +14,7 @@ in
       # Defaults
       "$mod" = "${cfg.hyprModifier}";
       "$terminal" = "ghostty";
-      "$menu" = "rofi -show drun";
+      "$menu" = "rofi -show drun"; # "noctalia-shell ipc call launcher toggle"
       "$lock" = "hyprlock";
 
       bind = [
@@ -23,9 +23,8 @@ in
         "$mod_ALT, Return, exec, $terminal"
         "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
-        "$mod_ALT, P, exec, fuzzel"
         "$mod, B, exec, zen"
-        "$mod_ALT, V, exec, [workspace 1] kiro"
+        "$mod_ALT, V, exec, [workspace 1] antigravity"
         "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 1000 --clipboard-only"
         "$mod_SHIFT_CTRL, Z, exec, hyprshot -z -m region -t 1000 -o ~/Pictures/screenshots -f screenshot-$(date +%Y%m%d-%H%M%S).png"
 
@@ -111,7 +110,7 @@ in
       ];
 
       # Release binds
-      # Shift + Space: RELEASE (Stop if held > 250ms)
+      # SUPER + Z: RELEASE (Stop if held > 250ms)
       bindr = [
         "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'"
       ];

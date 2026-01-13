@@ -66,6 +66,7 @@ in
           hyprlock = enabled;
           sysbar = enabled;
           wlogout = enabled;
+          xdg = enabled;
 
           # Media
           mpv = enabled; # video player with Jellyfin support

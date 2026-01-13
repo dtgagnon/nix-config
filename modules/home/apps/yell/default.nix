@@ -92,12 +92,8 @@ in
 
       [llm]
       # --- Global LLM Settings ---
-
-      # System Prompt Base (Define the persona)
-      system_prompt = "You are a semantic text router for a dictation app. Your job is to manage a text buffer based on user input. Output valid JSON only."
-
       # Custom Instructions (Define your preferences). These are appended to the system prompt.
-      instructions = "Always use American English spelling. Be concise."
+      instructions = "Always use American English spelling. Be concise. Use markdown compliant formatting."
 
       # --- Multi-Model Architecture ---
       # The system relies on two stages:
@@ -116,7 +112,7 @@ in
       # Provider: Can be different from router (e.g., Anthropic for intelligence)
       provider = "ollama"
       # Model: Should be capable of following complex rewriting instructions
-      model = "gemma3:4b"
+      model = "gemma3n:e4b"
       api_base = "http://localhost:11434/v1"
       api_key = "ollama"
 

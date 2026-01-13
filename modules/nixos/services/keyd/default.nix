@@ -5,8 +5,15 @@
 , ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf mkOption types;
+  inherit (lib) mkEnableOption mkIf mkOption optionals types;
   cfg = config.${namespace}.services.keyd;
+  keyboardCfg = config.${namespace}.hardware.keyboard;
+  mouseCfg = config.${namespace}.hardware.mouse;
+  keyboardIds =
+    if keyboardCfg.enable then
+      (if keyboardCfg.ids == [ ] then [ "*" ] else keyboardCfg.ids)
+    else
+      [ ];
 in
 {
   options.${namespace}.services.keyd = {
@@ -24,7 +31,7 @@ in
     services.keyd = {
       enable = true;
       keyboards.default = {
-        ids = [ "*" ];
+        ids = keyboardIds ++ optionals mouseCfg.enable mouseCfg.ids;
         settings = {
           main = {
             capslock = null;

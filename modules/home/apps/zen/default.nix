@@ -17,6 +17,8 @@ in
   config = mkIf cfg.enable {
     home.packages = [ inputs.zen-browser.packages.${system}.default ];
 
+    home.sessionVariables.BROWSER = "zen-beta";
+
     xdg.mimeApps.defaultApplications = {
       "application/x-extension-htm" = "zen-beta.desktop";
       "application/x-extension-html" = "zen-beta.desktop";

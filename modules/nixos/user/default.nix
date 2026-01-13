@@ -33,6 +33,7 @@ in
         (user: {
           users.users.${user} = {
             isNormalUser = true;
+            uid = if user == "dtgagnon" then 1001 else null;
             inherit (cfg) extraGroups shell;
             hashedPasswordFile = config.sops.secrets."${user}-password".path;
             home = "/home/${user}";

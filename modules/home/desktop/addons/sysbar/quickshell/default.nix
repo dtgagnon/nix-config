@@ -124,34 +124,6 @@ in
               ];
               right = [
                 {
-                  hideMode = "alwaysExpanded";
-                  icon = "rocket";
-                  id = "CustomButton";
-                  leftClickExec = "qs -c noctalia-shell ipc call launcher toggle";
-                  leftClickUpdateText = false;
-                  maxTextLength = {
-                    horizontal = 10;
-                    vertical = 10;
-                  };
-                  middleClickExec = "";
-                  middleClickUpdateText = false;
-                  parseJson = false;
-                  rightClickExec = "";
-                  rightClickUpdateText = false;
-                  showIcon = true;
-                  textCollapse = "";
-                  textCommand = "";
-                  textIntervalMs = 3000;
-                  textStream = false;
-                  wheelDownExec = "";
-                  wheelDownUpdateText = false;
-                  wheelExec = "";
-                  wheelMode = "unified";
-                  wheelUpExec = "";
-                  wheelUpUpdateText = false;
-                  wheelUpdateText = false;
-                }
-                {
                   id = "Tray";
                   blacklist = [ ];
                   colorizeIcons = false;
@@ -265,7 +237,7 @@ in
             videoSource = "portal";
           };
           wallpaper = {
-            enabled = false;
+            enabled = true;
             overviewEnabled = false;
             directory = "${config.home.homeDirectory}/Pictures/wallpapers";
             monitorDirectories = [ ];
@@ -280,17 +252,17 @@ in
             transitionType = "random";
             transitionEdgeSmoothness = 0.05;
             panelPosition = "follow_bar";
-            hideWallpaperFilenames = false;
-            useWallhaven = false;
+            hideWallpaperFilenames = true;
+            useWallhaven = true;
             wallhavenQuery = "";
             wallhavenSorting = "relevance";
             wallhavenOrder = "desc";
             wallhavenCategories = "111";
-            wallhavenPurity = "100";
-            wallhavenRatios = "";
+            wallhavenPurity = "111";
+            wallhavenRatios = "32x9";
             wallhavenResolutionMode = "atleast";
-            wallhavenResolutionWidth = "7680";
-            wallhavenResolutionHeight = "2160";
+            wallhavenResolutionWidth = "5120";
+            wallhavenResolutionHeight = "1440";
           };
           appLauncher = {
             enableClipboardHistory = false;
@@ -461,7 +433,7 @@ in
           };
           osd = {
             enabled = true;
-            location = "top_left";
+            location = "bottom_left";
             autoHideMs = 2000;
             overlayLayer = true;
             # backgroundOpacity = 1; # Conflicted with Stylix-managed values in upstream module

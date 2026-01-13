@@ -10,9 +10,10 @@ let
 in
 {
   options.${namespace}.hardware.keyboard = {
-    enable = mkBoolOpt false "Whether or not to configure keyboard settings.";
+    enable = mkBoolOpt true "Whether or not to configure keyboard settings.";
 
     model = mkOpt (types.enum [ "generic" "qk65v1" ]) "generic" "Keyboard model";
+    ids = mkOpt (types.listOf types.str) [ ] "Keyboard device ids to include in keyd configs.";
   };
 
   config = mkIf cfg.enable {

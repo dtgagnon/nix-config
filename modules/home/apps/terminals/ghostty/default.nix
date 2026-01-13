@@ -114,6 +114,8 @@ in
         window-padding-x = 10;
         window-padding-y = 10;
         window-decoration = false;
+        shell-integration = "detect";
+        shell-integration-features = "title";
       };
       # themes = { }; # Custom created themes to add to $HOME/.config/ghostty/themes
     };

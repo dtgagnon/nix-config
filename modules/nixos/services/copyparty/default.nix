@@ -9,169 +9,114 @@ let
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.copyparty;
 
-  extraArgs = lib.concatStringsSep " " cfg.extraArgs;
-  globalSettings =
-    {
-      i = cfg.address;
-      p = cfg.port;
-    }
-    // cfg.settings;
-  cfgEtcPath = lib.removePrefix "/etc/" cfg.cfgFile;
-  renderList = items: lib.concatStringsSep ", " (map toString items);
-  renderGlobalLine = key: value:
-    if lib.isBool value then
-      lib.optional (value) key
-    else if lib.isList value then
-      [ "${key}: ${renderList value}" ]
-    else
-      [ "${key}: ${toString value}" ];
-  renderGlobal =
-    lib.flatten (lib.mapAttrsToList renderGlobalLine globalSettings);
-  renderAccsValue = value:
-    if lib.isList value then
-      renderList value
-    else
-      toString value;
-  renderAccs = accs:
-    let
-      accLines = lib.mapAttrsToList (perm: value: "${perm}: ${renderAccsValue value}") accs;
-    in
-    if accLines == [ ] then
-      [ ]
-    else
-      [ "accs:" ] ++ map (line: "  ${line}") accLines;
-  renderFlags = volume:
-    let
-      flagLines =
-        volume.flags
-        ++ lib.mapAttrsToList (flag: value: "${flag}: ${toString value}") volume.flagArgs;
-    in
-    if flagLines == [ ] then
-      [ ]
-    else
-      [ "flags:" ] ++ map (line: "  ${line}") flagLines;
-  renderVolume = volume:
-    let
-      volumePath = if volume.path != null then volume.path else cfg.dataDir;
-      header = [ "[${volume.urlPath}]" ];
-      body =
-        [ "  ${volumePath}" ]
-        ++ map (line: "  ${line}") (renderAccs volume.accs)
-        ++ map (line: "  ${line}") (renderFlags volume);
-    in
-    header ++ body;
-  effectiveVolumes =
-    if cfg.volumes == [ ] then
-      [
-        {
-          urlPath = "/";
-          path = cfg.dataDir;
-          accs = { rw = "*"; };
-          flags = [ ];
-          flagArgs = { };
-        }
-      ]
-    else
-      cfg.volumes;
-  renderVolumes = lib.concatMap renderVolume effectiveVolumes;
-  renderAccounts =
-    let
-      accountLines = lib.mapAttrsToList (user: password: "${user}: ${password}") cfg.accounts;
-    in
-    if accountLines == [ ] then
-      [ ]
-    else
-      [ "[accounts]" ] ++ map (line: "  ${line}") accountLines;
-  renderIncludes = map (path: "% ${path}") cfg.includes;
-  configText =
-    if cfg.cfgText != null then
-      cfg.cfgText
-    else
-      lib.concatStringsSep "\n"
-        (
-          [ "[global]" ]
-          ++ map (line: "  ${line}") renderGlobal
-          ++ renderAccounts
-          ++ renderVolumes
-          ++ renderIncludes
-          ++ cfg.extraConfig
-        ) + "\n";
+  addAdminAccess = volumes:
+    lib.mapAttrs
+      (_name: vol:
+        let
+          access = vol.access or { };
+          aVal = access.A or null;
+          aList =
+            if aVal == null then
+              [ ]
+            else if lib.isList aVal then
+              aVal
+            else
+              [ aVal ];
+          newA =
+            if lib.elem "*" aList || lib.elem "@admin" aList then
+              aList
+            else
+              aList ++ [ "@admin" ];
+        in
+        vol // { access = access // { A = newA; }; }
+      )
+      volumes;
 in
 {
   options.${namespace}.services.copyparty = {
-    enable = mkBoolOpt false "Enable the copyparty file sharing service.";
-    package = mkOpt types.package pkgs.copyparty-most "Package providing the copyparty binary.";
-    dataDir = mkOpt types.str "/var/lib/copyparty" "Directory for uploaded files and state.";
-    address = mkOpt types.str "0.0.0.0" "Address the service listens on.";
-    port = mkOpt types.port 3923 "Port the service listens on.";
-    cfgFile = mkOpt types.str "/etc/copyparty/copyparty.conf" "Copyparty configuration file path.";
-    cfgText = mkOpt (types.nullOr types.lines) null "Raw copyparty configuration file contents. Overrides generated config.";
-    settings = mkOpt
-      (types.attrsOf (types.oneOf [
-        types.bool
-        types.int
-        types.str
-        (types.listOf (types.oneOf [ types.int types.str ]))
-      ]))
-      { } "Values written to the [global] section; booleans become flags, lists are comma-separated.";
-    accounts = mkOpt (types.attrsOf types.str) { } "Accounts written to the [accounts] section (plaintext passwords).";
-    volumes = mkOpt
-      (types.listOf (types.submodule ({ ... }: {
-        options = {
-          urlPath = mkOpt types.str "/" "URL path for the volume.";
-          path = mkOpt (types.nullOr types.str) null "Filesystem path for the volume.";
-          accs = mkOpt (types.attrsOf (types.oneOf [ types.str (types.listOf types.str) ])) { }
-            "Permission map for the volume (e.g. { r = \"*\"; rw = [ \"user\" ]; }).";
-          flags = mkOpt (types.listOf types.str) [ ] "Volflags without arguments.";
-          flagArgs = mkOpt (types.attrsOf (types.oneOf [ types.str types.int ])) { } "Volflags with arguments.";
-        };
-      }))) [ ] "Volumes written to the config file.";
-    extraConfig = mkOpt (types.listOf types.str) [ ] "Additional raw lines appended to the config file.";
-    includes = mkOpt (types.listOf types.str) [ ] "Include paths appended as % directives.";
-    extraArgs = mkOpt (types.listOf types.str) [ ] "Additional command-line arguments passed to copyparty.";
-    user = mkOpt types.str "copyparty" "User account running the service.";
-    group = mkOpt types.str "copyparty" "Group owning service files.";
-    openFirewall = mkBoolOpt false "Open the firewall for the configured port.";
+    enable = mkBoolOpt false "Enable the copyparty file sharing server.";
+    package = mkOpt types.package pkgs.copyparty "Package providing the copyparty binary.";
+    storeRoot = mkOpt types.str "/srv/files" "Path of a primary root directory for volumes";
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = lib.hasPrefix "/etc/" cfg.cfgFile;
-        message = "${namespace}.services.copyparty.cfgFile must be under /etc so it can be managed declaratively.";
-      }
-    ];
+    services.copyparty = {
+      enable = true;
+      package = cfg.package;
 
-    users.users.${cfg.user} = {
-      isSystemUser = true;
-      home = cfg.dataDir;
-      group = cfg.group;
-    };
+      # mkHashWrapper = true;
+      # user = "copyparty";
+      # group = "copyparty";
 
-    users.groups.${cfg.group} = { };
+      openFilesLimit = 4096;
+      settings = {
+        i = "100.100.1.2";
+        no-reload = true;
+        hist = "/var/cache/copyparty";
+        ban-pw = 0; # Disable password-fail banning until client auth is stable
+      };
+      globalExtraConfig = "";
 
-    systemd.tmpfiles.rules = [
-      "d '${cfg.dataDir}' 0750 ${cfg.user} ${cfg.group} - -"
-    ];
+      accounts = {
+        dtgagnon.passwordFile = "${config.sops.secrets.dtgagnon-copyparty-pass.path}";
+        gachan.passwordFile = "${config.sops.secrets.gachan-copyparty-pass.path}";
+      };
+      groups = {
+        admin = [ "dtgagnon" ];
+        family = [ "dtgagnon" "gachan" ];
+      };
 
-    environment.etc."${cfgEtcPath}".text = configText;
-
-    systemd.services.copyparty = {
-      description = "Copyparty file sharing service";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        User = cfg.user;
-        Group = cfg.group;
-        WorkingDirectory = cfg.dataDir;
-        ExecStart = "${cfg.package}/bin/copyparty -c ${cfg.cfgFile}" +
-          lib.optionalString (extraArgs != "") " ${extraArgs}";
-        Restart = "on-failure";
+      volumes = addAdminAccess {
+        "/" = {
+          path = "${cfg.storeRoot}";
+          access = { };
+          flags = {
+            fk = 4;
+            scan = 60;
+            e2d = false;
+            d2t = true;
+            nohash = "\.iso$";
+          };
+        };
+        "/public" = {
+          path = "${cfg.storeRoot}/public";
+          access = {
+            rG = [ "*" ];
+            wmd = [ "@family" ];
+          };
+          flags = {
+            fk = 4;
+            scan = 60;
+            e2d = true;
+            d2t = true;
+            nohash = "\.iso$";
+          };
+        };
+        "/dtgagnon" = {
+          path = "${cfg.storeRoot}/dtgagnon";
+          access = {
+            A = [ "dtgagnon" ];
+          };
+          flags = {
+            scan = 60;
+            d2t = true;
+          };
+        };
+        "/gachan" = {
+          path = "${cfg.storeRoot}/gachan";
+          access = {
+            rwmd = [ "gachan" ];
+          };
+          flags = {
+            scan = 60;
+            d2t = true;
+          };
+        };
       };
     };
-
-    networking.firewall = mkIf cfg.openFirewall {
-      allowedTCPPorts = [ cfg.port ];
+    sops.secrets = {
+      dtgagnon-copyparty-pass.owner = "copyparty";
+      gachan-copyparty-pass.owner = "copyparty";
     };
   };
 }

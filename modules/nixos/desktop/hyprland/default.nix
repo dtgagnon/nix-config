@@ -26,6 +26,13 @@ in
       withUWSM = true;
     };
 
+    services.keyd.keyboards.default.settings = mkIf config.${namespace}.services.keyd.enable {
+      meta = {
+        scrollleft = "M-f13";
+        scrollright = "M-f14";
+      };
+    };
+
     nix.settings = {
       extra-substituters = [ "https://hyprland.cachix.org" ];
       extra-trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];

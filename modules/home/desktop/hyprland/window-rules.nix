@@ -31,15 +31,15 @@ in
           center = true;
           size = "1200 800";
           border_size = 0;
-          opacity = "0.9 override 0.8 override";
+          opacity = "0.92 override 0.8 override";
         }
 
         # Higher opacity for terminals running neovim (makes blur more visible, text more readable)
-        # Matches nushell's window title pattern: "~/path> vi" or "~/path> nvim filename"
         {
           name = "terminal-nvim-opacity";
-          "match:title" = ".*> n?vi(m)?.*";
-          opacity = "0.95 override 0.9 override";
+          "match:class" = "^(com.mitchellh.ghostty)$";
+          "match:title" = ".*> (n?vim?|vi)(\\s.*)?$";
+          opacity = "1.0 override 0.9 override";
         }
 
         # Workspace assignments
