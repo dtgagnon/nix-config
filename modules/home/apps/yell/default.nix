@@ -59,16 +59,16 @@ in
       # Speech probability threshold (0.0-1.0)
       # Higher = less sensitive, fewer false positives
       # Lower = more sensitive, may trigger on background noise
-      threshold = 0.5
+      threshold = 0.45
 
       # Minimum silence duration in milliseconds before speech ends
       # Lower = faster response, may cut off slow speech
       # Higher = more tolerance for pauses
-      min_silence_duration_ms = 500
+      min_silence_duration_ms = 700
 
       # Minimum speech duration in milliseconds to be valid
       # Filters out very short audio artifacts
-      min_speech_duration_ms = 1000
+      min_speech_duration_ms = 500
 
       [transcription]
       # Model type (currently only "parakeet" supported)

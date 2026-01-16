@@ -20,7 +20,8 @@ let
         --run 'export N8N_ACCESS_TOKEN=$(cat ${config.sops.secrets.n8n_access_token.path})' \
         --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
         --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})' \
-        --run 'export ODOO_API_KEY=$(cat ${config.sops.secrets.odoo_api_key.path})'
+        --run 'export ODOO_API_KEY=$(cat ${config.sops.secrets.odoo_api_key.path})' \
+        --run 'set -a; source ${config.sops.secrets.mxroute_env.path}; set +a'
     '';
     meta = {
       mainProgram = "claude";
@@ -43,6 +44,7 @@ in
       package = claude-wrapped;
       settings = {
         includeCoAuthoredBy = false;
+        spinnerTipsEnabled = false;
         theme = "dark";
         env = {
           "DISABLE_AUTOUPDATER" = 1;

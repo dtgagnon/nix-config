@@ -25,9 +25,10 @@ in
       Unit.StartLimitIntervalSec = 30;
       Unit.StartLimitBurst = 3;
       Service = {
-        # Clean up stale FUSE mount before attempting to mount
-        # The "-" prefix allows this to fail without stopping the service
-        ExecStartPre = lib.mkBefore [
+        # Override to include both mkdir (from upstream rclone module) and stale mount cleanup
+        # The "-" prefix allows fusermount to fail without stopping the service
+        ExecStartPre = lib.mkForce [
+          "${pkgs.coreutils}/bin/mkdir -p ${cfg.mountPoint}"
           "-${pkgs.fuse}/bin/fusermount -uz ${cfg.mountPoint}"
         ];
         # Add delay between restart attempts

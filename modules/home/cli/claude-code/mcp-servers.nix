@@ -15,6 +15,7 @@ in
       n8n_access_token = { };
       ref_api = { };
       github_read_token = { };
+      mxroute_env = { };
     };
 
     programs.claude-code.mcpServers = {
@@ -24,6 +25,15 @@ in
         args = [
           "run"
           "github:utensils/mcp-nixos"
+          "--"
+        ];
+      };
+      mxroute = {
+        transport = "stdio";
+        command = "nix";
+        args = [
+          "run"
+          "github:dtgagnon/nix-config#mcp-servers"
           "--"
         ];
       };

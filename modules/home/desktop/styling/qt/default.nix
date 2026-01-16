@@ -33,6 +33,7 @@ in
       QT_SCALE_FACTOR = mkForce (toString cfg.scaling);
       QT_QPA_PLATFORM = "wayland;xcb";
       QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      QT_ICON_THEME = config.${namespace}.desktop.styling.core.gtk.iconTheme.name;
     };
   };
 }

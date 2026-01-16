@@ -90,7 +90,13 @@ in
 
         # Yell dictation
         # Shift + Space: PRESS (Toggle Start)
-        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"ToggleRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'"
+        (lib.optional
+        config.spirenix.apps.yell.enable
+        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"ToggleRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
+        # Manual submission of dictation buffer
+        (lib.optional
+        config.spirenix.apps.yell.enable
+        "$mod_CTRL, Z, exec, yell submit")
       ];
 
       # Repeating (hold-able) binds
@@ -112,7 +118,9 @@ in
       # Release binds
       # SUPER + Z: RELEASE (Stop if held > 250ms)
       bindr = [
-        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'"
+        (lib.optional
+        config.spirenix.apps.yell.enable
+        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
       ];
 
       # Mouse

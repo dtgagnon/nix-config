@@ -56,7 +56,6 @@ in
         ocaAddons.hr
         ocaAddons.knowledge
         ocaAddons.management-system
-        ocaAddons.manufacture
         ocaAddons.mis-builder
         ocaAddons.partner-contact
         ocaAddons.product-attribute
@@ -68,10 +67,6 @@ in
         ocaAddons.server-auth
         ocaAddons.server-tools
         ocaAddons.server-ux
-        ocaAddons.stock-logistics-shopfloor
-        ocaAddons.stock-logistics-tracking
-        ocaAddons.stock-logistics-transport
-        ocaAddons.stock-logistics-warehouse
         ocaAddons.timesheet
         ocaAddons.web
         ocaAddons.web-api

@@ -36,8 +36,7 @@ in
           )
         );
 
-      # Base configuration for SABnzbd
-      # Contains all the default settings that will be written to the INI file
+      # Base configuration for SABnzbd (non-secret settings)
       sabnzbdConfig = {
         misc = {
           # Dynamic host binding based on firewall settings
@@ -53,22 +52,6 @@ in
           local_ranges = concatStringsCommaIfExists cfg.whitelistRanges;
           permissions = "775";
         };
-        servers = {
-          newshosting = {
-            username = "${config.sops.placeholder."newshosting/username"}";
-            password = "'${config.sops.placeholder."newshosting/password"}'";
-            enable = 1;
-            name = "newshosting";
-            fillserver = 0;
-            connections = 100;
-            ssl = 1;
-            host = "news.newshosting.com";
-            timeout = 60;
-            displayname = "Newshosting";
-            port = 563;
-            retention = 0;
-          };
-        };
         logging = {
           log_level = 1;
           log_size = 5242880;
@@ -82,15 +65,23 @@ in
         };
       };
 
-      # Turn nix above into INI format expected by sabnzbd
-      sabnzbdINI = lib.generators.toINI
-        {
-          mkKeyValue = k: v:
-            if lib.isAttrs v
-            then "[[${k}]]\n" + lib.generators.toINIWithGlobalSection { } { globalSection = v; }
-            else lib.generators.mkKeyValueDefault { } "=" k v;
-        }
-        sabnzbdConfig;
+      # Server credentials template for sops injection
+      serverCredentials = ''
+        [servers]
+        [[newshosting]]
+        username = ${config.sops.placeholder."newshosting/username"}
+        password = '${config.sops.placeholder."newshosting/password"}'
+        enable = 1
+        name = newshosting
+        fillserver = 0
+        connections = 100
+        ssl = 1
+        host = news.newshosting.com
+        timeout = 60
+        displayname = Newshosting
+        port = 563
+        retention = 0
+      '';
 
     in
     mkIf cfg.enable {
@@ -100,13 +91,23 @@ in
         package = cfg.package;
         user = "${cfg.user}";
         group = "${cfg.group}";
-        configFile = "${cfg.stateDir}/sabnzbd.ini";
+        settings = {
+          misc = sabnzbdConfig.misc;
+          logging = sabnzbdConfig.logging;
+          cleanup = sabnzbdConfig.cleanup;
+        };
       };
 
-      # Systemd service dependencies
+      # Systemd service dependencies and secrets injection
       systemd.services.sabnzbd = {
         after = [ "tailscaled.service" ];
         requires = [ "tailscaled.service" ];
+        preStart = lib.mkAfter ''
+          # Inject server credentials with secrets into the config file
+          if ! grep -q "^\[servers\]" /var/lib/sabnzbd/sabnzbd.ini 2>/dev/null; then
+            cat ${config.sops.templates."sabnzbd-servers".path} >> /var/lib/sabnzbd/sabnzbd.ini
+          fi
+        '';
       };
 
       # Firewall configuration
@@ -124,10 +125,6 @@ in
       # Directory structure setup
       # Creates all necessary directories with appropriate permissions
       systemd.tmpfiles.rules = [
-        # Base state directory
-        "d '${cfg.stateDir}' 0700 usenet media - -"
-        "f '${cfg.stateDir}/sabnzbd.ini' 0750 usenet media - ${config.sops.templates."sabnzbd.ini".path}"
-
         # Media directory structure
         # All directories owned by usenet:media with appropriate permissions
         "d '${config.spirenix.services.arrs.mediaDir}/usenet'             0755 usenet media - -"
@@ -147,8 +144,8 @@ in
           "newshosting/password".owner = "${cfg.user}";
         };
         templates = {
-          "sabnzbd.ini" = {
-            content = sabnzbdINI;
+          "sabnzbd-servers" = {
+            content = serverCredentials;
             owner = "${cfg.user}";
           };
         };

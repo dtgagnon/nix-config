@@ -44,7 +44,7 @@ in
         after = [ "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
-          Type = "notify";
+          Type = "simple";
           User = "qbittorrent";
           ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --confirm-legal-notice";
           WorkingDirectory = "${cfg.dataDir}";

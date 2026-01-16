@@ -2830,11 +2830,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1768085223,
-        "narHash": "sha256-qjCVz5wc9ee1bMOyB60BwEdaKEKYidvkLgwMmZlXiIs=",
+        "lastModified": 1768599226,
+        "narHash": "sha256-MWTOL973SyM6pyfl1CWEPMVQi0eL2RV+NwWDDrnXIRc=",
         "ref": "refs/heads/main",
-        "rev": "5753e05856121027ab4d82d0941244f460bdb7fb",
-        "revCount": 109,
+        "rev": "fe819b26bc2afb749a3b947897acab632d2175e4",
+        "revCount": 110,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -3557,11 +3557,11 @@
         "web-api": "web-api"
       },
       "locked": {
-        "lastModified": 1768231867,
-        "narHash": "sha256-WQY1yulbA0eqDcDpuXFNE+XFlwgcY3Cy2ebyhY+avY4=",
+        "lastModified": 1768446508,
+        "narHash": "sha256-TZS9BEqB9ljB3xS3gV1QA6f3Xw4WREbCcIECMDXH1Jw=",
         "ref": "refs/heads/main",
-        "rev": "f69688a4c4f1e607afa3b01d5ab14fa0e7b99dab",
-        "revCount": 119,
+        "rev": "e8ba80f387367ae73c1be8232ea56fda7b253453",
+        "revCount": 120,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },
@@ -4881,11 +4881,11 @@
         "silero-vad": "silero-vad"
       },
       "locked": {
-        "lastModified": 1767895287,
-        "narHash": "sha256-/bAWl9aYx47COlwNbIRHuLXRs+W+YJYL0NHy1QmiGPE=",
+        "lastModified": 1768338710,
+        "narHash": "sha256-J3jr90vWUCA77bYyxVWMYAQEE6MTgWhZdPEFduLRGa8=",
         "ref": "refs/heads/main",
-        "rev": "3ae7c6fe96046aaea612cb0cffa8cb5b6e6de480",
-        "revCount": 101,
+        "rev": "3354ff131dacb390ef842fbe71d754f622a9aea8",
+        "revCount": 117,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },
