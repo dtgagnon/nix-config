@@ -97,6 +97,10 @@
 
         outputs-builder = channels: {
           formatter = channels.nixpkgs.nixfmt;
+          packages = {
+            mcp-mxroute = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-mxroute { };
+            mcp-libreoffice = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-libreoffice { };
+          };
         };
 
         # topology = with inputs;
