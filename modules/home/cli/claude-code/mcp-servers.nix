@@ -62,7 +62,7 @@ in
           ];
         };
       })
-      (mkIf osConfig.${namespace}.services.n8n.enable {
+      (mkIf (osConfig.${namespace}.services.n8n.enable or false) {
         n8n-mcp = {
           type = "stdio";
           command = "npx";

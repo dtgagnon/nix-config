@@ -3,7 +3,7 @@
 , config
 , inputs
 , system
-, osConfig
+, osConfig ? { }
 , namespace
 , ...
 }:
@@ -45,7 +45,7 @@ in
       wayland.windowManager.hyprland = {
         enable = true;
         package = inputs.hyprland.packages.${system}.hyprland;
-        systemd.enable = if osConfig.programs.hyprland.withUWSM then false else true;
+        systemd.enable = if (osConfig.programs.hyprland.withUWSM or false) then false else true;
         xwayland.enable = false;
         inherit (cfg) extraConfig;
         settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
@@ -105,7 +105,7 @@ in
           playerctl
         ]
         ++
-        lib.optional osConfig.${namespace}.virtualisation.kvm.vfio.enable
+        lib.optional (osConfig.${namespace}.virtualisation.kvm.vfio.enable or false)
           pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
@@ -127,10 +127,10 @@ in
     #
     # See: https://github.com/hyprwm/Hyprland/issues/8679
     # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer, hence __EGL_VENDOR_LIBRARY_FILENAMES)
-    (mkIf (cfg.enable && osConfig.${namespace}.virtualisation.kvm.vfio.enable) {
+    (mkIf (cfg.enable && (osConfig.${namespace}.virtualisation.kvm.vfio.enable or false)) {
       # Override hyprland.desktop when using UWSM to point directly to Hyprland binary
       # UWSM will source ~/.config/uwsm/env-hyprland (created by launcher scripts) before starting
-      xdg.dataFile."wayland-sessions/hyprland.desktop" = mkIf osConfig.programs.hyprland.withUWSM {
+      xdg.dataFile."wayland-sessions/hyprland.desktop" = mkIf (osConfig.programs.hyprland.withUWSM or false) {
         text = ''
           [Desktop Entry]
           Type=Application
@@ -141,7 +141,7 @@ in
         '';
       };
 
-      home.sessionVariables = mkIf (!osConfig.programs.hyprland.withUWSM) {
+      home.sessionVariables = mkIf (!(osConfig.programs.hyprland.withUWSM or false)) {
         # Fallback for non-UWSM sessions (legacy - prefer UWSM)
         AQ_DRM_DEVICES = "${config.home.homeDirectory}/.config/hypr/intel-iGPU";
         __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";

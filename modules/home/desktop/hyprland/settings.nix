@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  osConfig,
+  osConfig ? { },
   ...
 }:
 let
@@ -29,7 +29,7 @@ in
             else
               execCmds;
         in
-        if osConfig.programs.hyprland.withUWSM then
+        if (osConfig.programs.hyprland.withUWSM or false) then
           map (c: "uwsm app -- ${c}") pipExecCmds
         else
           pipExecCmds;
