@@ -7,6 +7,7 @@
 let
   inherit (lib) mkIf types mkEnableOption mkOption;
   cfg = config.${namespace}.apps.office.libreoffice;
+  mcp-libreoffice = pkgs.${namespace}.mcp-libreoffice;
 in
 {
   options.${namespace}.apps.office.libreoffice = {
@@ -21,9 +22,16 @@ in
       type = types.listOf types.package;
       description = "Additional packages (e.g., dictionaries)";
     };
+    mcpExtension = mkEnableOption "MCP extension for AI assistant integration";
   };
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs."libreoffice-${cfg.branch}" ] ++ cfg.extraOfficePkgs;
+
+    # Symlink MCP extension to user's LibreOffice extensions directory
+    home.file = mkIf cfg.mcpExtension {
+      ".local/share/libreoffice/extensions/libreoffice-mcp-extension.oxt".source =
+        "${mcp-libreoffice}/share/libreoffice/extensions/libreoffice-mcp-extension.oxt";
+    };
   };
 }

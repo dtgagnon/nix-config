@@ -4,6 +4,7 @@
   fetchFromGitHub,
   python3,
   bash,
+  zip,
 }:
 let
   src = fetchFromGitHub {
@@ -25,12 +26,14 @@ stdenvNoCC.mkDerivation {
 
   inherit src;
 
+  nativeBuildInputs = [ zip ];
+
   dontBuild = true;
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/lib/mcp-libreoffice $out/bin
+    mkdir -p $out/lib/mcp-libreoffice $out/bin $out/share/libreoffice/extensions
 
     # Copy the source module
     cp -r src $out/lib/mcp-libreoffice/
@@ -42,6 +45,16 @@ exec ${pythonEnv}/bin/python3 $out/lib/mcp-libreoffice/src/libremcp.py "\$@"
 EOF
 
     chmod +x $out/bin/mcp-libreoffice
+
+    # Build the LibreOffice extension (.oxt)
+    pushd plugin
+    zip -r $out/share/libreoffice/extensions/libreoffice-mcp-extension.oxt \
+      META-INF/ \
+      pythonpath/ \
+      *.xml \
+      *.txt \
+      -x "*.pyc" "*/__pycache__/*"
+    popd
 
     runHook postInstall
   '';
