@@ -2,10 +2,11 @@
   lib,
   config,
   namespace,
+  osConfig ? { },
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkMerge;
   cfg = config.${namespace}.cli.claude-code;
 in
 {
@@ -18,48 +19,63 @@ in
       mxroute-env = { };
     };
 
-    programs.claude-code.mcpServers = {
-      nixos = {
-        type = "stdio";
-        command = "nix";
-        args = [
-          "run"
-          "github:utensils/mcp-nixos"
-          "--"
-        ];
-      };
-      mxroute = {
-        type = "stdio";
-        command = "nix";
-        args = [
-          "run"
-          "github:dtgagnon/nix-config#mcp-servers"
-          "--"
-        ];
-      };
-      n8n-mcp = {
-        type = "stdio";
-        command = "npx";
-        args = [
-          "-y"
-          "supergateway"
-          "--streamableHttp"
-          "http://localhost:5678/mcp-server/http"
-          "--header"
-          "authorization:Bearer \${N8N_ACCESS_TOKEN}"
-        ];
-      };
-      ref = {
-        type = "http";
-        # Claude Code will expand ${REF_API_KEY} at runtime
-        url = "https://api.ref.tools/mcp?apiKey=\${REF_API_KEY}";
-      };
-      github = {
-        type = "http";
-        url = "https://api.githubcopilot.com/mcp/";
-        # Claude Code will expand ${GITHUB_READ_TOKEN} at runtime
-        headers.Authorization = "Bearer \${GITHUB_READ_TOKEN}";
-      };
-    };
+    programs.claude-code.mcpServers = mkMerge [
+      {
+        nixos = {
+          type = "stdio";
+          command = "nix";
+          args = [
+            "run"
+            "github:utensils/mcp-nixos"
+            "--"
+          ];
+        };
+        mxroute = {
+          type = "stdio";
+          command = "nix";
+          args = [
+            "run"
+            "github:dtgagnon/nix-config#mcp-mxroute"
+            "--"
+          ];
+        };
+        ref = {
+          type = "http";
+          # Claude Code will expand ${REF_API_KEY} at runtime
+          url = "https://api.ref.tools/mcp?apiKey=\${REF_API_KEY}";
+        };
+        github = {
+          type = "http";
+          url = "https://api.githubcopilot.com/mcp/";
+          # Claude Code will expand ${GITHUB_READ_TOKEN} at runtime
+          headers.Authorization = "Bearer \${GITHUB_READ_TOKEN}";
+        };
+      }
+      (mkIf config.${namespace}.apps.office.libreoffice.enable {
+        libreoffice = {
+          type = "stdio";
+          command = "nix";
+          args = [
+            "run"
+            "github:dtgagnon/nix-config#mcp-libreoffice"
+            "--"
+          ];
+        };
+      })
+      (mkIf osConfig.${namespace}.services.n8n.enable {
+        n8n-mcp = {
+          type = "stdio";
+          command = "npx";
+          args = [
+            "-y"
+            "supergateway"
+            "--streamableHttp"
+            "http://localhost:5678/mcp-server/http"
+            "--header"
+            "authorization:Bearer \${N8N_ACCESS_TOKEN}"
+          ];
+        };
+      })
+    ];
   };
 }
