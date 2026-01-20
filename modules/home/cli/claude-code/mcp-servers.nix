@@ -15,12 +15,12 @@ in
       n8n_access_token = { };
       ref_api = { };
       github_read_token = { };
-      mxroute_env = { };
+      mxroute-env = { };
     };
 
     programs.claude-code.mcpServers = {
       nixos = {
-        transport = "stdio";
+        type = "stdio";
         command = "nix";
         args = [
           "run"
@@ -29,7 +29,7 @@ in
         ];
       };
       mxroute = {
-        transport = "stdio";
+        type = "stdio";
         command = "nix";
         args = [
           "run"
@@ -40,7 +40,7 @@ in
       n8n-mcp = {
         type = "stdio";
         command = "npx";
-        arg = [
+        args = [
           "-y"
           "supergateway"
           "--streamableHttp"

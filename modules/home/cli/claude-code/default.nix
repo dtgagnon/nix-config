@@ -21,7 +21,7 @@ let
         --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
         --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})' \
         --run 'export ODOO_API_KEY=$(cat ${config.sops.secrets.odoo_api_key.path})' \
-        --run 'set -a; source ${config.sops.secrets.mxroute_env.path}; set +a'
+        --run 'set -a; source ${config.sops.secrets.mxroute-env.path}; set +a'
     '';
     meta = {
       mainProgram = "claude";
