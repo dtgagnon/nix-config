@@ -8,147 +8,150 @@ let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.arrs.sabnzbd;
+  arrsMediaDir = config.${namespace}.services.arrs.mediaDir;
 in
 {
-  # Module options configuration
-  # Defines all user-configurable settings for the SABnzbd service
   options.${namespace}.services.arrs.sabnzbd = {
     enable = mkBoolOpt false "Enable the sabnzbd service";
-    user = mkOpt types.str "usenet" "The user that the sabnzbd will run as";
+    user = mkOpt types.str "sabnzbd" "The user that sabnzbd will run as";
     group = mkOpt types.str "media" "The group that sabnzbd belongs to";
-
-    stateDir = mkOpt types.path "${config.spirenix.services.arrs.dataDir}/sabnzbd" "Directory for Sabnzbd state";
     package = mkOpt types.package pkgs.sabnzbd "The package to use for SABnzbd";
-    guiPort = mkOpt types.port 8081 "The port that SABnzbd's GUI will listen on for incomming connections.";
     openFirewall = mkBoolOpt false "Open firewall for SABnzbd";
-    whitelistHostnames = mkOpt (types.listOf types.str) [ config.networking.hostName ] "A list of hostnames that are allowed to connect to SABnzbd";
-    whitelistRanges = mkOpt (types.listOf types.str) [ "100.100.0.0/16" ] "A list of IP ranges that are allowed to connect to SABnzbd";
+    whitelistRanges = mkOpt (types.listOf types.str) [ "100.100.0.0/16" ] "IP ranges allowed to connect to SABnzbd";
   };
 
-  config =
-    let
-      # Helper function to safely concatenate strings with commas
-      # Only adds commas if the input list is non-empty
-      concatStringsCommaIfExists = with lib.strings;
-        stringList: (
-          optionalString (builtins.length stringList > 0) (
-            concatStringsSep "," stringList
-          )
-        );
+  config = mkIf cfg.enable {
+    sops = {
+      secrets = {
+        "sabnzbd/api-key" = { };
+        "sabnzbd/nzb-key" = { };
+        "newshosting/username" = { };
+        "newshosting/password" = { };
+      };
+      templates."sabnzbd-servers" = {
+        owner = cfg.user;
+        group = cfg.group;
+        content = ''
+          [misc]
+          api_key = ${config.sops.placeholder."sabnzbd/api-key"}
+          nzb_key = ${config.sops.placeholder."sabnzbd/nzb-key"}
 
-      # Base configuration for SABnzbd (non-secret settings)
-      sabnzbdConfig = {
+          [servers]
+          [[newshosting]]
+          name = newshosting
+          displayname = Newshosting
+          host = news.newshosting.com
+          port = 563
+          username = ${config.sops.placeholder."newshosting/username"}
+          password = ${config.sops.placeholder."newshosting/password"}
+          connections = 100
+          ssl = 1
+          enable = 1
+          fillserver = 0
+          timeout = 60
+          retention = 0
+        '';
+      };
+    };
+    services.sabnzbd = {
+      enable = true;
+      package = cfg.package;
+      user = cfg.user;
+      group = cfg.group;
+      openFirewall = cfg.openFirewall;
+
+      # Allow SABnzbd to manage its own config (API keys, categories, etc.)
+      allowConfigWrite = true;
+
+      # Inject server credentials via sops
+      secretFiles = [ config.sops.templates."sabnzbd-servers".path ];
+
+      settings = {
         misc = {
-          # Dynamic host binding based on firewall settings
-          host =
-            if cfg.openFirewall
-            then "0.0.0.0"  # Listen on all interfaces if firewall is open
-            else "100.100.1.2"; # Listen only on localhost if firewall is closed
-          port = cfg.guiPort;
-          download_dir = "${config.spirenix.services.arrs.mediaDir}/downloads/usenet/.incomplete";
-          complete_dir = "${config.spirenix.services.arrs.mediaDir}/downloads/usenet/complete";
-          dirscan_dir = "${config.spirenix.services.arrs.mediaDir}/usenet/watch";
-          # host_whitelist = concatStringsCommaIfExists cfg.whitelistHostnames;
-          local_ranges = concatStringsCommaIfExists cfg.whitelistRanges;
+          host = if cfg.openFirewall then "0.0.0.0" else "100.100.1.2";
+          port = 8081;
+          download_dir = "${arrsMediaDir}/downloads/usenet/.incomplete";
+          complete_dir = "${arrsMediaDir}/downloads/usenet/complete";
+          dirscan_dir = "${arrsMediaDir}/downloads/usenet/watch";
+          local_ranges = lib.concatStringsSep "," cfg.whitelistRanges;
           permissions = "775";
         };
         logging = {
           log_level = 1;
           log_size = 5242880;
-          enable_cherrypy_logging = 0;
           log_backups = 5;
         };
-        cleanup = {
-          enable_duplicate_detection = 1;
-          enable_meta_duplicate_detection = 0;
-          clean_up_download_dir = 1;
-        };
-      };
-
-      # Server credentials template for sops injection
-      serverCredentials = ''
-        [servers]
-        [[newshosting]]
-        username = ${config.sops.placeholder."newshosting/username"}
-        password = '${config.sops.placeholder."newshosting/password"}'
-        enable = 1
-        name = newshosting
-        fillserver = 0
-        connections = 100
-        ssl = 1
-        host = news.newshosting.com
-        timeout = 60
-        displayname = Newshosting
-        port = 563
-        retention = 0
-      '';
-
-    in
-    mkIf cfg.enable {
-      # Main service configuration
-      services.sabnzbd = {
-        enable = true;
-        package = cfg.package;
-        user = "${cfg.user}";
-        group = "${cfg.group}";
-        settings = {
-          misc = sabnzbdConfig.misc;
-          logging = sabnzbdConfig.logging;
-          cleanup = sabnzbdConfig.cleanup;
-        };
-      };
-
-      # Systemd service dependencies and secrets injection
-      systemd.services.sabnzbd = {
-        after = [ "tailscaled.service" ];
-        requires = [ "tailscaled.service" ];
-        preStart = lib.mkAfter ''
-          # Inject server credentials with secrets into the config file
-          if ! grep -q "^\[servers\]" /var/lib/sabnzbd/sabnzbd.ini 2>/dev/null; then
-            cat ${config.sops.templates."sabnzbd-servers".path} >> /var/lib/sabnzbd/sabnzbd.ini
-          fi
-        '';
-      };
-
-      # Firewall configuration
-      networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ cfg.guiPort ];
-
-      # System user and group configuration
-      users = {
-        groups.${cfg.group} = { };
-        users.${cfg.user} = {
-          isSystemUser = true;
-          group = "${cfg.group}";
-        };
-      };
-
-      # Directory structure setup
-      # Creates all necessary directories with appropriate permissions
-      systemd.tmpfiles.rules = [
-        # Media directory structure
-        # All directories owned by usenet:media with appropriate permissions
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet'             0755 usenet media - -"
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet/.incomplete' 0755 usenet media - -"
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet/.watch'      0755 usenet media - -"
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet/manual'      0775 usenet media - -"
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet/liadarr'     0775 usenet media - -"
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet/radarr'      0775 usenet media - -"
-        "d '${config.spirenix.services.arrs.mediaDir}/usenet/sonarr'      0775 usenet media - -"
-      ];
-
-      # Secrets management
-      # Configures secure storage for sensitive credentials
-      sops = {
-        secrets = {
-          "newshosting/username".owner = "${cfg.user}";
-          "newshosting/password".owner = "${cfg.user}";
-        };
-        templates = {
-          "sabnzbd-servers" = {
-            content = serverCredentials;
-            owner = "${cfg.user}";
+        categories = {
+          "*" = {
+            name = "*";
+            order = 0;
+            pp = 3;
+            script = "None";
+            dir = "";
+            newzbin = "";
+            priority = 0;
+          };
+          movies = {
+            name = "movies";
+            order = 1;
+            pp = "";
+            script = "Default";
+            dir = "";
+            newzbin = "";
+            priority = -100;
+          };
+          tv = {
+            name = "tv";
+            order = 2;
+            pp = "";
+            script = "Default";
+            dir = "";
+            newzbin = "";
+            priority = -100;
+          };
+          music = {
+            name = "music";
+            order = 3;
+            pp = "";
+            script = "Default";
+            dir = "";
+            newzbin = "";
+            priority = -100;
+          };
+          software = {
+            name = "software";
+            order = 4;
+            pp = "";
+            script = "Default";
+            dir = "";
+            newzbin = "";
+            priority = -100;
+          };
+          books = {
+            name = "books";
+            order = 5;
+            pp = "";
+            script = "Default";
+            dir = "";
+            newzbin = "";
+            priority = -100;
           };
         };
       };
     };
+
+    # Require tailscale for network access
+    systemd.services.sabnzbd = {
+      after = [ "tailscaled.service" ];
+      requires = [ "tailscaled.service" ];
+    };
+
+    # Media directory structure
+    systemd.tmpfiles.rules = [
+      "d '${arrsMediaDir}/downloads/usenet'             0775 ${cfg.user} ${cfg.group} - -"
+      "d '${arrsMediaDir}/downloads/usenet/.incomplete' 0775 ${cfg.user} ${cfg.group} - -"
+      "d '${arrsMediaDir}/downloads/usenet/complete'    0775 ${cfg.user} ${cfg.group} - -"
+      "d '${arrsMediaDir}/downloads/usenet/watch'       0775 ${cfg.user} ${cfg.group} - -"
+    ];
+  };
 }
