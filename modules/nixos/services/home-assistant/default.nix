@@ -22,6 +22,9 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Add hass user to media group for access to /srv/media
+    users.users.hass.extraGroups = [ "media" ];
+
     # AI/LLM Integration:
     # - When Ollama is enabled: Uses native "ollama" integration
     # - When llama-cpp is enabled: Uses "openai" integration with custom endpoint
@@ -54,6 +57,9 @@ in
           temperature_unit = "F";
           time_zone = "US/Eastern";
           internal_url = "http://100.100.1.2:8123";
+          media_dirs = {
+            media = "/srv/media";
+          };
         };
         http = {
           server_port = 8123;
