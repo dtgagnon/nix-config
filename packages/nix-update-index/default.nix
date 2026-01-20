@@ -10,13 +10,13 @@ let
     set -euo pipefail
 
     filename="index-${pkgs.stdenv.hostPlatform.system}"
-    release="https://github.com/Mic92/nix-index-database/releases/latest/download/''${filename}"
+    release="https://github.com/nix-community/nix-index-database/releases/latest/download/''${filename}"
 
     mkdir -p ~/.cache/nix-index
 
     pushd ~/.cache/nix-index > /dev/null
 
-    ${pkgs.wget}/bin/wget -q -N https://github.com/Mic92/nix-index-database/releases/latest/download/$filename
+    ${pkgs.wget}/bin/wget -q -N "$release"
 
     ln -f ''${filename} files
 
