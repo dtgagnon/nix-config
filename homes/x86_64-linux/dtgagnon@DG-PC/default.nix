@@ -30,7 +30,10 @@ in
       };
       obsidian = enabled;
       office = {
-        libreoffice = enabled;
+        libreoffice = {
+          enable = true;
+          mcpExtension = true;
+        };
         okular-pdf = enabled;
       };
       proton-cloud = enabled;
