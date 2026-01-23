@@ -25,6 +25,7 @@ in
 
     fonts.packages = with pkgs; [
       carlito
+      corefonts
 
       font-awesome
 

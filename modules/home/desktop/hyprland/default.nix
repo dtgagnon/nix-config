@@ -128,7 +128,7 @@ in
     # See: https://github.com/hyprwm/Hyprland/issues/8679
     # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer, hence __EGL_VENDOR_LIBRARY_FILENAMES)
     (mkIf (cfg.enable && (osConfig.${namespace}.virtualisation.kvm.vfio.enable or false)) {
-      # Override hyprland.desktop when using UWSM to point directly to Hyprland binary
+      # Override hyprland.desktop when using UWSM to use start-hyprland wrapper
       # UWSM will source ~/.config/uwsm/env-hyprland (created by launcher scripts) before starting
       xdg.dataFile."wayland-sessions/hyprland.desktop" = mkIf (osConfig.programs.hyprland.withUWSM or false) {
         text = ''
@@ -136,7 +136,7 @@ in
           Type=Application
           Name=Hyprland
           Comment=Hyprland compositor managed by UWSM
-          Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/Hyprland
+          Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/start-hyprland
           X-GDM-SessionRegisters=true
         '';
       };

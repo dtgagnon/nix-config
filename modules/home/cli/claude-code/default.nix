@@ -10,6 +10,15 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.claude-code;
 
+  # Direnv initialization script for bash sessions spawned by Claude Code
+  direnvInitScript = pkgs.writeText "claude-bash-init.sh" ''
+    if command -v direnv >/dev/null 2>&1; then
+      if [ -n "$CLAUDECODE" ]; then
+        eval "$(DIRENV_LOG_FORMAT= direnv export bash)"
+      fi
+    fi
+  '';
+
   # Wrapped claude-code package that injects secrets as environment variables
   claude-wrapped = pkgs.symlinkJoin {
     name = "claude-code-wrapped";
@@ -17,6 +26,7 @@ let
     buildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/claude \
+        ${lib.optionalString cfg.direnvIntegration "--set BASH_ENV ${direnvInitScript}"} \
         --run 'export N8N_ACCESS_TOKEN=$(cat ${config.sops.secrets.n8n_access_token.path})' \
         --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
         --run 'export GITHUB_READ_TOKEN=$(cat ${config.sops.secrets.github_read_token.path})' \
@@ -35,6 +45,7 @@ in
   options.${namespace}.cli.claude-code = {
     enable = mkBoolOpt false "Enable the claude ai assistant cli tool";
     router = mkBoolOpt false "Enable the claude-code-router package for allow other LLMs to be used";
+    direnvIntegration = mkBoolOpt true "Auto-load direnv environments in Claude Code bash sessions";
   };
 
   config = mkIf cfg.enable {

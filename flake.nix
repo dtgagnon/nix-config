@@ -212,9 +212,8 @@
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
-    hyprland-plugins.inputs.nixpkgs.follows = "nixpkgs";
+    hyprland-plugins.inputs.hyprland.follows = "hyprland";
 
     # Experimental: Hyprland Remote Desktop PRs (for RustDesk/remote desktop support)
     experimental-hyprland-rdp.url = "github:3l0w/Hyprland/feat/input-capture-impl";

@@ -21,6 +21,7 @@ in
       antigravity = enabled;
       discord = enabled;
       element = enabled;
+      freecad = enabled;
       inkscape = enabled;
       jellyfin-client = enabled;
       looking-glass-client = enabled;
@@ -127,6 +128,7 @@ in
 
     services = {
       activity-watch = enabled;
+      audio-record = enabled;
       copyparty-client = enabled;
       syncthing = enabled;
     };

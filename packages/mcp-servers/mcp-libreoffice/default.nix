@@ -418,6 +418,30 @@ with open(sys.argv[1], 'w') as f:
     f.write('\n'.join(result))
 PYPATCH
     python3 /tmp/patch_ai.py pythonpath/ai_interface.py
+
+    # Fix JSON parsing with detailed error handling and logging
+    cat > /tmp/fix_json_parse.py << 'FIXJSON'
+import sys
+with open(sys.argv[1], 'r') as f:
+    content = f.read()
+
+# Add debug logging and proper UTF-8 error handling
+content = content.replace(
+    "body = self.rfile.read(content_length).decode('utf-8')",
+    "body_bytes = self.rfile.read(content_length)\n            logger.debug(f\"Read {len(body_bytes)} bytes (expected {content_length})\")\n            body = body_bytes.decode('utf-8', errors='strict')"
+)
+
+# Improve JSON error message with position info
+content = content.replace(
+    'self._send_response(400, {"error": "Invalid JSON"})',
+    'logger.error(f"JSON parse error at pos {e.pos}: {e.msg}, body preview: {body[:100]}")\n                    self._send_response(400, {"error": f"Invalid JSON at pos {e.pos}: {e.msg}"})'
+)
+
+with open(sys.argv[1], 'w') as f:
+    f.write(content)
+FIXJSON
+    python3 /tmp/fix_json_parse.py pythonpath/ai_interface.py
+
     zip -r $out/share/libreoffice/extensions/libreoffice-mcp-extension.oxt \
       META-INF/ \
       pythonpath/ \
