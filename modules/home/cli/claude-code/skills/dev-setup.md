@@ -5,34 +5,16 @@ description: Initialize development project with Nix flake, direnv, devShell, an
 
 # Development Project Setup
 
-Set up a complete Nix-based development environment for any new project. This creates reproducible, isolated environments with full LSP support.
+Create reproducible, isolated Nix development environments with LSP support.
 
-## Required Components
+## Required Files
 
-Every new project MUST have these four components:
+1. `flake.nix` - Dependencies, outputs, dev shells
+2. `.envrc` - Contains `use flake` for direnv
+3. `shell.nix` - Dev shell with tooling
+4. `.claude/settings.local.json` - LSP config
 
-1. **`flake.nix`** - Project dependencies, build outputs, and dev shells
-2. **`.envrc`** - Direnv integration for automatic shell loading
-3. **`shell.nix`** - Development shell with all tooling
-4. **`.claude/settings.local.json`** - LSP configuration for Claude Code
-
-## Usage
-
-When the user asks to set up a new project or initialize a development environment, create all four files based on the project type.
-
-## Step 1: Identify Project Type
-
-Ask the user or detect from existing files:
-- **Nix**: Pure Nix project (modules, packages, configs)
-- **Python**: Python application or library
-- **Node/TypeScript**: JavaScript/TypeScript project
-- **Rust**: Rust application or library
-- **Go**: Go application or module
-- **Multi-language**: Combination of the above
-
-## Step 2: Create flake.nix
-
-### Minimal Template (Pure Nix)
+## flake.nix Template
 
 ```nix
 {
@@ -41,15 +23,36 @@ Ask the user or detect from existing files:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+
+    # Rust projects only:
+    # rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.''${system};
-      in
-      {
+        pkgs = nixpkgs.legacyPackages.${system};
+
+        # Python projects:
+        # python = pkgs.python312;
+        # pythonPackages = python.pkgs;
+
+        # Rust projects (requires rust-overlay input):
+        # overlays = [ (import inputs.rust-overlay) ];
+        # pkgs = import nixpkgs { inherit system overlays; };
+        # rust = pkgs.rust-bin.stable.latest.default.override {
+        #   extensions = [ "rust-src" "rust-analyzer" ];
+        # };
+
+      in {
         devShells.default = import ./shell.nix { inherit pkgs; };
+        # Python: { inherit pkgs python pythonPackages; }
+        # Rust: { inherit pkgs rust; }
+
+        # Optional package output:
+        # packages.default = pythonPackages.buildPythonApplication { ... };
+        # packages.default = pkgs.rustPlatform.buildRustPackage { ... };
+        # packages.default = pkgs.buildGoModule { vendorHash = null; ... };
 
         formatter = pkgs.nixfmt-rfc-style;
       }
@@ -57,156 +60,61 @@ Ask the user or detect from existing files:
 }
 ```
 
-### Python Template
+## shell.nix Template
 
 ```nix
-{
-  description = "Python project";
-
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-  };
-
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.''${system};
-        python = pkgs.python312;
-        pythonPackages = python.pkgs;
-      in
-      {
-        devShells.default = import ./shell.nix { inherit pkgs python pythonPackages; };
-
-        packages.default = pythonPackages.buildPythonApplication {
-          pname = "project-name";
-          version = "0.1.0";
-          src = ./.;
-          # dependencies...
-        };
-
-        formatter = pkgs.nixfmt-rfc-style;
-      }
-    );
-}
-```
-
-### Node/TypeScript Template
-
-```nix
-{
-  description = "TypeScript project";
-
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-  };
-
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.''${system};
-      in
-      {
-        devShells.default = import ./shell.nix { inherit pkgs; };
-
-        formatter = pkgs.nixfmt-rfc-style;
-      }
-    );
-}
-```
-
-### Rust Template
-
-```nix
-{
-  description = "Rust project";
-
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay.url = "github:oxalica/rust-overlay";
-  };
-
-  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        overlays = [ (import rust-overlay) ];
-        pkgs = import nixpkgs { inherit system overlays; };
-        rust = pkgs.rust-bin.stable.latest.default.override {
-          extensions = [ "rust-src" "rust-analyzer" ];
-        };
-      in
-      {
-        devShells.default = import ./shell.nix { inherit pkgs rust; };
-
-        packages.default = pkgs.rustPlatform.buildRustPackage {
-          pname = "project-name";
-          version = "0.1.0";
-          src = ./.;
-          cargoLock.lockFile = ./Cargo.lock;
-        };
-
-        formatter = pkgs.nixfmt-rfc-style;
-      }
-    );
-}
-```
-
-### Go Template
-
-```nix
-{
-  description = "Go project";
-
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-  };
-
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.''${system};
-      in
-      {
-        devShells.default = import ./shell.nix { inherit pkgs; };
-
-        packages.default = pkgs.buildGoModule {
-          pname = "project-name";
-          version = "0.1.0";
-          src = ./.;
-          vendorHash = null; # or specific hash
-        };
-
-        formatter = pkgs.nixfmt-rfc-style;
-      }
-    );
-}
-```
-
-## Step 3: Create shell.nix
-
-### Pure Nix Shell
-
-```nix
-{ pkgs }:
+{ pkgs
+# Python: , python, pythonPackages
+# Rust: , rust
+}:
 
 pkgs.mkShell {
   name = "project-dev";
 
   packages = with pkgs; [
-    # Nix tooling
+    # Always include
+    git
+
+    # Nix projects
     nixd
     nixfmt-rfc-style
-    nil
-    nix-diff
 
-    # General utilities
-    git
-    jq
+    # Python projects
+    # python
+    # pythonPackages.pip
+    # pythonPackages.pytest
+    # pyright
+
+    # Node/TypeScript projects
+    # nodejs
+    # pnpm
+    # typescript
+    # typescript-language-server
+
+    # Rust projects
+    # rust  # from flake let bindings
+    # cargo-watch
+
+    # Go projects
+    # go
+    # gopls
+    # gotools
   ];
+}
+```
 
-  shellHook = '''
-    echo "Development environment loaded"
-  '
+## .claude/settings.local.json
+
+```json
+{
+  "lspServers": {
+    "nix": { "command": "nixd" },
+    "python": { "command": "pyright-langserver", "args": ["--stdio"] },
+    "typescript": { "command": "typescript-language-server", "args": ["--stdio"] },
+    "rust": { "command": "rust-analyzer" },
+    "go": { "command": "gopls" }
+  }
+}
+```
+
+Include only the LSPs relevant to your project.
