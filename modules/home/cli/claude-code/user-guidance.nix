@@ -24,30 +24,15 @@ let
 
     ## New Project Setup Requirements
 
-    When starting ANY new coding project, ALWAYS set up the following foundational infrastructure:
+    When starting ANY new coding project, ALWAYS use the `/dev-setup` skill to set up the development environment. This skill handles all foundational infrastructure automatically.
 
-    1. **Flake (`flake.nix`)**: Create a Nix flake to define:
-       - Project dependencies and development tools
-       - Build outputs (packages, apps, etc.)
-       - Development shells with all required tooling
-       - Locked dependency versions for reproducibility
+    The following components are MANDATORY for all new projects:
+    1. **Flake (`flake.nix`)**: Project dependencies, build outputs, dev shells, locked versions
+    2. **Direnv (`.envrc`)**: Auto-load dev shell with `use flake`
+    3. **Development Shell (`shell.nix`)**: Toolchains, formatters, linters, LSPs (always include `nixd` for Nix projects)
+    4. **Claude Code LSP (`.claude/settings.local.json`)**: LSP server config pointing to devShell binaries
 
-    2. **Direnv (`.envrc`)**: Configure direnv integration:
-       - Add `use flake` to automatically load the dev shell when entering the directory
-       - Ensures consistent environment for all developers
-       - Eliminates "works on my machine" issues
-
-    3. **Development Shell**: Define comprehensive `devShells` in a shell.nix file:
-       - Language-specific toolchains (compilers, interpreters, etc.)
-       - Build tools and package managers
-       - Formatters, linters, and LSP servers (ALWAYS include `nixd` for Nix projects)
-       - Project-specific CLI tools and utilities
-       - Shell hooks for automatic setup (environment variables, initialization scripts)
-       Import any `devShells` into the flake.
-
-    4. **Claude Code LSP**: Create `.claude/settings.local.json` with `lspServers` config pointing to LSP binaries available in the devShell. Common LSPs: `nixd` (Nix), `typescript-language-server` (TS/JS), `pyright` (Python), `rust-analyzer` (Rust), `gopls` (Go).
-
-    **This is MANDATORY for all new projects** - no exceptions. These four components ensure reproducible, isolated development environments with full LSP support.
+    **ALWAYS run `/dev-setup` first** - it ensures reproducible, isolated development environments with full LSP support.
   '';
 in
 {
