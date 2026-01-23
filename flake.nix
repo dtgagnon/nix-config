@@ -85,6 +85,7 @@
 
         homes.modules = with inputs; [
           ags.homeManagerModules.default
+          emma.homeManagerModules.default
           noctalia.homeModules.default
           sops-nix.homeManagerModules.sops
           stylix.homeModules.stylix
@@ -243,7 +244,7 @@
     n8n-private.url = "git+ssh://git@github.com/dtgagnon/n8n-nix-overlay";
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
     yell.url = "git+ssh://git@github.com/dtgagnon/yell";
-    yell.inputs.nixpkgs.follows = "nixpkgs";
+    emma.url = "github:dtgagnon/emma";
 
     ## ai tools
     nix-llm-agents.url = "github:numtide/llm-agents.nix";
