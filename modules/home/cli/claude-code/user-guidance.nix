@@ -40,12 +40,14 @@ let
     3. **Development Shell**: Define comprehensive `devShells` in a shell.nix file:
        - Language-specific toolchains (compilers, interpreters, etc.)
        - Build tools and package managers
-       - Formatters, linters, and LSP servers
+       - Formatters, linters, and LSP servers (ALWAYS include `nixd` for Nix projects)
        - Project-specific CLI tools and utilities
        - Shell hooks for automatic setup (environment variables, initialization scripts)
        Import any `devShells` into the flake.
 
-    **This is MANDATORY for all new projects** - no exceptions. These three components ensure reproducible, isolated development environments that work consistently across machines and over time.
+    4. **Claude Code LSP**: Create `.claude/settings.local.json` with `lspServers` config pointing to LSP binaries available in the devShell. Common LSPs: `nixd` (Nix), `typescript-language-server` (TS/JS), `pyright` (Python), `rust-analyzer` (Rust), `gopls` (Go).
+
+    **This is MANDATORY for all new projects** - no exceptions. These four components ensure reproducible, isolated development environments with full LSP support.
   '';
 in
 {

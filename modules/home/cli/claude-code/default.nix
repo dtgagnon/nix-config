@@ -60,6 +60,7 @@ in
         env = {
           "DISABLE_AUTOUPDATER" = 1;
           "ENABLE_EXPERIMENTAL_MCP_CLI" = true;
+          "ENABLE_LSP_TOOL" = true;
         };
         models = {
           opus = { };
