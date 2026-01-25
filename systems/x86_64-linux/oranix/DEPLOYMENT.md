@@ -14,12 +14,12 @@ Ensure everything is in place to run nixos-anywhere and install minimal NixOS on
    - Services: Coolify, Tailscale, OpenSSH
    - Comprehensive README with deployment instructions
 
-2. **nixos-anywhere Infrastructure** (`installer/install.sh`)
-   - Full-featured installation script with nixos-anywhere integration
+2. **nixos-anywhere Infrastructure** (`justfile` recipes)
+   - Single-command deployment via `just deploy-vps`
    - Automated SSH host key generation
-   - Age key generation from SSH host keys
-   - SOPS integration and .sops.yaml management
-   - Interactive prompts for all deployment steps
+   - Age key derivation from SSH host keys
+   - Automatic .sops.yaml updates and rekeying
+   - No interactive prompts - fully automated
 
 3. **Secrets** (nix-secrets)
    - ✅ Tailscale auth key configured
@@ -60,39 +60,30 @@ Ensure everything is in place to run nixos-anywhere and install minimal NixOS on
 
 ## Age Key and Secrets Workflow
 
-### How install.sh Handles Age Keys
+### How the Deploy Recipes Handle Age Keys
 
-The `installer/install.sh` script has comprehensive age key automation:
+The `justfile` deploy recipes handle age key automation automatically:
 
-1. **SSH Host Key Generation** (lines 145-157)
+1. **SSH Host Key Generation**
    - Generates `ssh_host_ed25519_key` pair for target host
    - Stored in `$temp/$persist_dir/etc/ssh/`
    - Included in nixos-anywhere `--extra-files`
    - Ensures consistent host identity across reboots
 
-2. **Host Age Key Generation** (lines 204-226)
-   - After nixos-anywhere completes, prompts: "Generate host (ssh-based) age key?"
-   - Uses `ssh-keyscan` to get SSH host key from target
-   - Converts to age key using `ssh-to-age`
+2. **Host Age Key Derivation**
+   - Derives age key from SSH public key using `ssh-to-age`
+   - Done **before** deployment (not after)
    - Automatically updates `nix-secrets/.sops.yaml` with new host age key
-   - Creates anchor: `&oracle` for the host key
+   - Creates anchor: `&oranix` for the host key
 
-3. **User Age Key Generation** (lines 229-270)
-   - Prompts: "Generate user age key?"
-   - Generates fresh age key pair using `age-keygen`
-   - Extracts public key and adds to `.sops.yaml` with anchor: `&dtgagnon_oracle`
-   - Creates host-specific secrets file: `nix-secrets/sops/oracle.yaml`
-   - Stores user's **secret key** in `oracle.yaml` at path `["keys"]["age"]`
+3. **SOPS Creation Rules**
+   - Calls `just add-creation-rules` to update `.sops.yaml`
+   - Both `oranix.yaml` and `shared.yaml` get access to the host age key
 
-4. **SOPS Creation Rules** (lines 317-319)
-   - Automatically adds creation rules to `.sops.yaml`
-   - Both `oracle.yaml` and `shared.yaml` get access to:
-     - Host age key: `&oracle`
-     - User age key: `&dtgagnon_oracle`
-
-5. **Rekey and Update** (lines 319-322)
+4. **Rekey and Update**
    - Runs `just rekey` to re-encrypt all secrets with new keys
-   - Updates flake input to pick up new `.sops.yaml`
+   - Updates flake input via `nix flake update nix-secrets`
+   - Secrets are ready to decrypt on first boot
 
 ### Secrets Architecture
 
@@ -116,64 +107,62 @@ The `installer/install.sh` script has comprehensive age key automation:
 
 ## Deployment Workflow Options
 
-### Option A: Use installer/install.sh (Recommended)
+### Option A: Use justfile recipes (Recommended)
 
 **Pros:**
-- Handles all automation (SSH keys, age keys, sops configuration)
-- Interactive prompts guide you through process
-- Automatic secrets setup
-- Well-tested workflow
-
-**Cons:**
-- Not wrapped in just recipes
-- Requires running from `installer/` directory
-- Long interactive process
-
-**Steps:**
-```bash
-cd /home/dtgagnon/nix-config/nixos/installer
-./install.sh -n oracle -d <ORACLE_IP> -k ~/.ssh/dtgagnon-key
-```
-
-### Option B: Direct nixos-anywhere
-
-**Pros:**
-- Faster, non-interactive
-- Single command deployment
-
-**Cons:**
-- Manual age key setup afterward
-- Manual sops configuration
-- No automated secrets management
+- Single-command deployment (no interactive prompts)
+- Automatic SSH key generation and age key derivation
+- Automatic .sops.yaml updates and rekeying
+- Secrets decrypt on first boot
+- Well-integrated with existing sops recipes
 
 **Steps:**
 ```bash
 cd /home/dtgagnon/nix-config/nixos
-nix run github:nix-community/nixos-anywhere -- \
-  --flake .#oracle \
-  root@<ORACLE_IP>
+
+# For VPS/cloud with impermanence (oranix/oracle)
+just deploy-vps oranix <ORACLE_IP> ubuntu
+
+# Or for generic deployment without impermanence
+just deploy oranix <ORACLE_IP> ubuntu
 ```
 
-### Option C: Create Just Recipe Wrapper
+**What it does automatically:**
+1. Generates SSH host key (pre-deployment)
+2. Derives age key from SSH public key
+3. Updates `.sops.yaml` with host age key anchor
+4. Adds creation rules for host + shared secrets
+5. Rekeys all secrets with the new host key
+6. Updates nix-secrets flake input
+7. Deploys with nixos-anywhere `--extra-files`
 
-**Pros:**
-- Simple just command interface
-- Reproducible from justfile
-- Can customize for oracle-specific needs
+### Option B: Register existing host (Two-phase deploy)
 
-**Cons:**
-- Requires creating new recipe
-- Still needs manual age key handling if not using install.sh
+Use this if the host already has an SSH key you want to keep:
+
+```bash
+cd /home/dtgagnon/nix-config/nixos
+
+# First deploy without sops secrets working
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#oranix \
+  ubuntu@<ORACLE_IP>
+
+# After boot, register the generated SSH key with sops
+just register-host-key oranix <ORACLE_IP>
+
+# Then rebuild on the target to apply secrets
+ssh root@<ORACLE_IP> "cd /etc/nixos && nixos-rebuild switch --flake .#oranix"
+```
 
 ## Critical Files
 
 - `/home/dtgagnon/nix-config/nixos/systems/x86_64-linux/oracle/default.nix` - Main configuration
 - `/home/dtgagnon/nix-config/nixos/systems/x86_64-linux/oracle/disk-config.nix` - Disk partitioning
 - `/home/dtgagnon/nix-config/nixos/systems/x86_64-linux/oracle/hardware.nix` - Hardware settings
-- `/home/dtgagnon/nix-config/nixos/installer/install.sh` - Installation automation
-- `/home/dtgagnon/nix-config/nixos/justfile` - Just recipes
-- `../nix-secrets/.sops.yaml` - SOPS configuration (to be updated)
-- `../nix-secrets/sops/oracle.yaml` - Oracle-specific secrets (to be created)
+- `/home/dtgagnon/nix-config/nixos/justfile` - Deployment recipes
+- `../nix-secrets/.sops.yaml` - SOPS configuration
+- `../nix-secrets/sops/oranix.yaml` - Oranix-specific secrets
 
 ## Implementation Plan
 
@@ -255,49 +244,35 @@ nix flake show --impure 2>&1 | grep oracle
 nix build --dry-run .#nixosConfigurations.oracle.config.system.build.toplevel
 ```
 
-### Phase 2: Execute Deployment (20-30 minutes)
+### Phase 2: Execute Deployment
 
-#### 2.1 Run installer/install.sh
+#### 2.1 Run deployment via justfile
 
 ```bash
-cd ~/nix-config/nixos/installer
+cd ~/nix-config/nixos
 
-./install.sh \
-  -n oracle \
-  -d <ORACLE_PUBLIC_IP> \
-  -k ~/.ssh/oranix \
-  -u ubuntu \
-  --port 22 \
-  --impermanence
+# Single command - fully automated
+just deploy-vps oranix <ORACLE_PUBLIC_IP> ubuntu
 ```
 
-**Interactive Prompt Guide:**
+**What Happens Automatically:**
 
-| Prompt | Answer | Why |
-|--------|--------|-----|
-| "Run nixos-anywhere installation?" | **YES** | Starts deployment |
-| "Manually set LUKS passphrase?" | **NO** | No LUKS on oracle config |
-| "Generate new hardware config?" | **NO** | Already in repo |
-| *Wait for reboot (1-2 min)* | - | System reboots automatically |
-| "Has your system restarted?" | **YES** | Confirm reboot completed |
-| "Generate host (ssh-based) age key?" | **YES** | ⚠️ CRITICAL for secrets |
-| "Generate user age key?" | **NO** | You already have one |
-| "Add ssh fingerprints for git?" | **YES** | Enables git operations |
-| "Copy full nix-config?" | **YES** | Enables manual rebuild |
-| "Rebuild immediately?" | **NO** | Verify first |
+1. Generates SSH host key in temp directory
+2. Derives age key from SSH public key using `ssh-to-age`
+3. Updates `nix-secrets/.sops.yaml` with new `&oranix` anchor
+4. Adds creation rules for `oranix.yaml` and `shared.yaml`
+5. Runs `just rekey` to re-encrypt all secrets with oranix's key
+6. Updates `nix-secrets` flake input
+7. Clears known_hosts entries for target
+8. Runs `nixos-anywhere` with `--extra-files` containing SSH key
+9. SSH key saved to `/persist/etc/ssh/ssh_host_ed25519_key`
+10. System reboots with secrets decrypting on first boot
 
-**What Happens Behind the Scenes:**
-
-1. `install.sh` generates SSH host key → saved to `/persist/etc/ssh/ssh_host_ed25519_key`
-2. `nixos-anywhere` partitions disk, installs NixOS, reboots
-3. Script converts SSH key to age key using `ssh-to-age`
-4. Updates `nix-secrets/.sops.yaml` with new `&oracle` anchor
-5. Runs `just rekey` to re-encrypt all secrets with oracle's key
-6. Your user key (`&dtgagnon`) + oracle's host key (`&oracle`) can both decrypt
+**No interactive prompts!** The entire process is automated.
 
 #### 2.2 Commit Age Key Updates
 
-After install.sh completes successfully:
+After deployment completes successfully:
 
 ```bash
 cd ~/nix-config/nix-secrets
@@ -452,11 +427,11 @@ sudo nixos-rebuild switch --impure --flake .#oracle
 ```bash
 # On workstation
 cd ~/nix-config/nix-secrets
-sops -d sops/oracle.yaml  # Uses &dtgagnon key
+sops -d sops/oranix.yaml  # Uses &dtgagnon key
 
 # Re-provision new instance
-cd ~/nix-config/nixos/installer
-./install.sh -n oracle -d <NEW_IP> -k ~/.ssh/oranix -u ubuntu --impermanence
+cd ~/nix-config/nixos
+just deploy-vps oranix <NEW_IP> ubuntu
 # Generates new host key, updates .sops.yaml, rekeys automatically
 ```
 
@@ -480,40 +455,41 @@ cd ~/nix-config/nixos/installer
 - Can decrypt oracle secrets from your workstation
 - Survives host reinstalls/failures
 
-**Oracle Host Key (`&oracle`):**
+**Oranix Host Key (`&oranix`):**
 - Derived from `/persist/etc/ssh/ssh_host_ed25519_key`
-- Generated during deployment by `install.sh`
+- Generated during deployment by `just deploy-vps`
 - Available automatically on boot (no manual copying)
-- Oracle can decrypt its own secrets
+- Oranix can decrypt its own secrets
 
 **Both keys can decrypt = No lockout:**
-- If oracle fails → use your user key to decrypt from workstation
-- If you lose user key → oracle still boots and decrypts
-- If you lose SSH host key → re-run install.sh to generate new one
+- If oranix fails → use your user key to decrypt from workstation
+- If you lose user key → oranix still boots and decrypts
+- If you lose SSH host key → re-run `just deploy-vps` to generate new one
 
 ### The Circular Dependency Myth
 
 You mentioned concern about the "chicken-egg problem" - here's why it's not actually a problem:
 
-1. **install.sh generates SSH key BEFORE installation**
+1. **Deploy recipe generates SSH key BEFORE installation**
    - Key exists in temp directory
-   - Passed to nixos-anywhere via `--extra-files`
+   - Age key derived immediately from the public key
+   - Key passed to nixos-anywhere via `--extra-files`
    - Installed to `/persist/etc/ssh/` during deployment
 
-2. **Age key derived AFTER installation completes**
-   - SSH daemon starts with the pre-generated key
-   - `ssh-keyscan` retrieves public key
-   - Converted to age format
-   - Added to `.sops.yaml`
+2. **Age key added to .sops.yaml BEFORE deployment**
+   - `just update-host-age-key` adds the anchor
+   - `just add-creation-rules` updates creation rules
+   - `just rekey` re-encrypts all secrets
+   - `nix flake update nix-secrets` updates the lock
 
-3. **Secrets rekeyed BEFORE first rebuild**
-   - `just rekey` re-encrypts with new oracle key
-   - Flake input updated to latest nix-secrets
-   - First rebuild uses already-encrypted secrets
+3. **Secrets ready on first boot**
+   - SSH key is already in place
+   - sops-nix derives age key from SSH key
+   - Secrets decrypt immediately
 
 **Timeline ensures no lockout:**
 ```
-Generate SSH key → Install NixOS → Derive age key → Rekey secrets → First rebuild
+Generate SSH key → Derive age key → Update .sops.yaml → Rekey → Deploy → First boot with secrets
 ```
 
 ## Maintenance Guide
@@ -560,44 +536,45 @@ df -h /var/lib/coolify
 - `systems/x86_64-linux/oracle/README.md` - Comprehensive documentation
 
 **Deployment:**
-- `installer/install.sh` - Main deployment orchestrator
-- `installer/helpers.sh` - Helper functions for prompts/sops
-- `justfile` - Just recipes (rebuild, rekey, etc.)
-- `scripts/system-flake-rebuild.sh` - To be created (Phase 1.1)
-- `scripts/check-sops.sh` - To be created (Phase 1.1)
+- `justfile` - Main deployment recipes (deploy, deploy-vps, deploy-luks, etc.)
 
 **Secrets:**
-- `../nix-secrets/.sops.yaml` - Encryption key configuration (updated by install.sh)
-- `../nix-secrets/sops/oracle.yaml` - Oracle-specific secrets (needs real Tailscale key)
+- `../nix-secrets/.sops.yaml` - Encryption key configuration (updated by deploy recipes)
+- `../nix-secrets/sops/oranix.yaml` - Oranix-specific secrets
 - `modules/nixos/security/sops-nix/default.nix` - SOPS module configuration
 
 ## Summary
 
 ### What's Already Perfect
 
-✅ Oracle NixOS configuration is complete and minimal (1GB RAM optimized)
-✅ Disko handles partitioning automatically (Btrfs + preservation)
-✅ install.sh automates everything (SSH keys, age keys, sops setup)
-✅ Dual-key encryption prevents lockout scenarios
-✅ Comprehensive README documents the architecture
+- Oracle/Oranix NixOS configuration is complete and minimal (1GB RAM optimized)
+- Disko handles partitioning automatically (Btrfs + preservation)
+- Justfile recipes automate everything (SSH keys, age keys, sops setup)
+- Dual-key encryption prevents lockout scenarios
+- Comprehensive README documents the architecture
 
 ### What Needs Action
 
-1. **Create `scripts/` directory** (Phase 1.1) - 2 minutes
-2. **Verify disk device** on Oracle instance (Phase 1.2) - 1 minute
-3. **Add real Tailscale key** to secrets (Phase 1.3) - 2 minutes
-4. **Run installer/install.sh** (Phase 2) - 20-30 minutes
-5. **Backup SSH host key** (Phase 5) - 2 minutes
+1. **Verify disk device** on Oracle instance (Phase 1.2)
+2. **Add real Tailscale key** to secrets (Phase 1.3)
+3. **Run `just deploy-vps`** (Phase 2) - single command
+4. **Backup SSH host key** (Phase 5)
 
-### The Magic of install.sh
+### The Magic of Justfile Recipes
 
-The script handles **all complexity**:
-- ✅ Generates SSH host keys before installation
-- ✅ Derives age keys automatically from SSH keys
-- ✅ Updates `.sops.yaml` with proper anchors
-- ✅ Rekeys all secrets with new oracle key
-- ✅ Ensures dual-key redundancy (your key + oracle's key)
-- ✅ Syncs nix-config and nix-secrets to target
-- ✅ Provides clear prompts for each decision point
+The `deploy-vps` recipe handles **all complexity** in a single command:
+- Generates SSH host keys before installation
+- Derives age keys automatically from SSH keys
+- Updates `.sops.yaml` with proper anchors
+- Adds creation rules for host-specific and shared secrets
+- Rekeys all secrets with new host key
+- Updates nix-secrets flake input
+- Deploys with nixos-anywhere
+- Secrets decrypt on first boot
 
-You just answer prompts and verify each phase succeeds. No manual key copying, no complex sops commands, no lockout risk.
+No interactive prompts, no manual key copying, no complex sops commands, no lockout risk.
+
+```bash
+# Single command deployment
+just deploy-vps oranix <IP> ubuntu
+```

@@ -132,3 +132,153 @@ add-to-shared USER HOST:
 add-creation-rules USER HOST:
     just add-host-sops-file {{USER}} {{HOST}} && \
     just add-to-shared {{USER}} {{HOST}}
+
+#
+# ========== Remote Deployment Recipes ==========
+#
+# These recipes automate NixOS deployment with sops-nix secrets bootstrapping.
+# SSH host keys are pre-generated and injected, with age keys derived and added
+# to .sops.yaml before deployment so secrets decrypt on first boot.
+
+# Deploy NixOS to a remote host via nixos-anywhere (no LUKS)
+# Usage: just deploy oranix oranix-2.example.com ubuntu
+deploy HOST TARGET USER="ubuntu" PERSIST_DIR="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    temp=$(mktemp -d)
+    trap "rm -rf $temp" EXIT
+
+    # Determine SSH key path (with optional impermanence)
+    ssh_dir="$temp{{PERSIST_DIR}}/etc/ssh"
+
+    # Generate SSH host key
+    echo -e "\x1B[32m[+] Generating SSH host key for {{HOST}}...\x1B[0m"
+    install -d -m755 "$ssh_dir"
+    ssh-keygen -t ed25519 -f "$ssh_dir/ssh_host_ed25519_key" -N "" -C "{{HOST}}"
+    chmod 600 "$ssh_dir/ssh_host_ed25519_key"
+
+    # Derive age key from SSH public key
+    echo -e "\x1B[32m[+] Deriving age public key...\x1B[0m"
+    AGE_KEY=$(cat "$ssh_dir/ssh_host_ed25519_key.pub" | nix shell nixpkgs#ssh-to-age -c ssh-to-age)
+    echo -e "\x1B[34m[*] Age key: $AGE_KEY\x1B[0m"
+
+    # Update sops configuration
+    echo -e "\x1B[32m[+] Updating .sops.yaml with host age key...\x1B[0m"
+    just update-host-age-key {{HOST}} "$AGE_KEY"
+    just add-creation-rules dtgagnon {{HOST}}
+
+    # Rekey secrets with new host key
+    echo -e "\x1B[32m[+] Rekeying secrets...\x1B[0m"
+    just rekey
+
+    # Update flake lock to pick up new .sops.yaml
+    echo -e "\x1B[32m[+] Updating nix-secrets flake input...\x1B[0m"
+    nix flake update nix-secrets
+
+    # Clear known_hosts entries for target
+    echo -e "\x1B[32m[+] Clearing known_hosts for {{TARGET}}...\x1B[0m"
+    sed -i "/{{HOST}}/d; /{{TARGET}}/d" ~/.ssh/known_hosts 2>/dev/null || true
+
+    # Deploy with nixos-anywhere
+    echo -e "\x1B[32m[+] Deploying {{HOST}} to {{TARGET}}...\x1B[0m"
+    nix run github:nix-community/nixos-anywhere -- \
+        --extra-files "$temp" \
+        --flake .#{{HOST}} \
+        {{USER}}@{{TARGET}}
+
+    echo -e "\x1B[32m[+] Done! Verify with: ssh root@{{TARGET}} 'systemctl status sops-nix'\x1B[0m"
+
+# Deploy NixOS to a VPS/cloud host (no LUKS, with impermanence)
+# Usage: just deploy-vps oranix oranix-2.example.com ubuntu
+deploy-vps HOST TARGET USER="ubuntu": (deploy HOST TARGET USER "/persist")
+
+# Deploy NixOS with LUKS encryption (bare metal)
+# Usage: just deploy-luks newhost 192.168.1.100 "my-luks-password" nixos
+deploy-luks HOST TARGET PASSWORD USER="nixos" PERSIST_DIR="/persist":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    temp=$(mktemp -d)
+    trap "rm -rf $temp" EXIT
+
+    # Determine SSH key path (with impermanence)
+    ssh_dir="$temp{{PERSIST_DIR}}/etc/ssh"
+
+    # Generate SSH host key
+    echo -e "\x1B[32m[+] Generating SSH host key for {{HOST}}...\x1B[0m"
+    install -d -m755 "$ssh_dir"
+    ssh-keygen -t ed25519 -f "$ssh_dir/ssh_host_ed25519_key" -N "" -C "{{HOST}}"
+    chmod 600 "$ssh_dir/ssh_host_ed25519_key"
+
+    # Derive age key from SSH public key
+    echo -e "\x1B[32m[+] Deriving age public key...\x1B[0m"
+    AGE_KEY=$(cat "$ssh_dir/ssh_host_ed25519_key.pub" | nix shell nixpkgs#ssh-to-age -c ssh-to-age)
+    echo -e "\x1B[34m[*] Age key: $AGE_KEY\x1B[0m"
+
+    # Update sops configuration
+    echo -e "\x1B[32m[+] Updating .sops.yaml with host age key...\x1B[0m"
+    just update-host-age-key {{HOST}} "$AGE_KEY"
+    just add-creation-rules dtgagnon {{HOST}}
+
+    # Rekey secrets with new host key
+    echo -e "\x1B[32m[+] Rekeying secrets...\x1B[0m"
+    just rekey
+
+    # Update flake lock to pick up new .sops.yaml
+    echo -e "\x1B[32m[+] Updating nix-secrets flake input...\x1B[0m"
+    nix flake update nix-secrets
+
+    # Clear known_hosts entries for target
+    echo -e "\x1B[32m[+] Clearing known_hosts for {{TARGET}}...\x1B[0m"
+    sed -i "/{{HOST}}/d; /{{TARGET}}/d" ~/.ssh/known_hosts 2>/dev/null || true
+
+    # Deploy with nixos-anywhere and LUKS password
+    echo -e "\x1B[32m[+] Deploying {{HOST}} to {{TARGET}} with LUKS...\x1B[0m"
+    nix run github:nix-community/nixos-anywhere -- \
+        --extra-files "$temp" \
+        --disk-encryption-keys /tmp/disko-password <(echo "{{PASSWORD}}") \
+        --flake .#{{HOST}} \
+        {{USER}}@{{TARGET}}
+
+    echo -e "\x1B[32m[+] Done! Verify with: ssh root@{{TARGET}} 'systemctl status sops-nix'\x1B[0m"
+
+# Derive and display age key from a remote host's SSH key (for existing hosts)
+# Usage: just derive-age-key hostname.example.com
+derive-age-key TARGET PORT="22":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    target_key=$(ssh-keyscan -p {{PORT}} -t ssh-ed25519 {{TARGET}} 2>&1 | grep ssh-ed25519 | cut -f2- -d" ")
+    if [ -z "$target_key" ]; then
+        echo -e "\x1B[31m[!] Failed to get SSH key from {{TARGET}}\x1B[0m"
+        exit 1
+    fi
+    age_key=$(echo "$target_key" | nix shell nixpkgs#ssh-to-age -c ssh-to-age)
+    echo -e "\x1B[32m[+] Age key for {{TARGET}}:\x1B[0m"
+    echo "$age_key"
+
+# Register an existing host's SSH key with sops (for manual bootstrapping)
+# Usage: just register-host-key hostname hostname.example.com
+register-host-key HOST TARGET PORT="22":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo -e "\x1B[32m[+] Fetching SSH key from {{TARGET}}...\x1B[0m"
+    target_key=$(ssh-keyscan -p {{PORT}} -t ssh-ed25519 {{TARGET}} 2>&1 | grep ssh-ed25519 | cut -f2- -d" ")
+    if [ -z "$target_key" ]; then
+        echo -e "\x1B[31m[!] Failed to get SSH key from {{TARGET}}\x1B[0m"
+        exit 1
+    fi
+    AGE_KEY=$(echo "$target_key" | nix shell nixpkgs#ssh-to-age -c ssh-to-age)
+    echo -e "\x1B[34m[*] Age key: $AGE_KEY\x1B[0m"
+
+    echo -e "\x1B[32m[+] Updating .sops.yaml...\x1B[0m"
+    just update-host-age-key {{HOST}} "$AGE_KEY"
+    just add-creation-rules dtgagnon {{HOST}}
+
+    echo -e "\x1B[32m[+] Rekeying secrets...\x1B[0m"
+    just rekey
+
+    echo -e "\x1B[32m[+] Updating nix-secrets flake input...\x1B[0m"
+    nix flake update nix-secrets
+
+    echo -e "\x1B[32m[+] Done! Host {{HOST}} is now registered for sops-nix.\x1B[0m"
