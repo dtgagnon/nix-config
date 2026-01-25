@@ -69,28 +69,38 @@ in
         };
         statusLine = {
           type = "command";
-          command = ''
+          command = let
+            colors = config.lib.stylix.colors;
+            c = base: "\\033[38;2;${toString colors."${base}-rgb-r"};${toString colors."${base}-rgb-g"};${toString colors."${base}-rgb-b"}m";
+          in ''
             input=$(cat)
             MODEL=$(echo "$input" | jq -r '.model.display_name')
             DIR=$(echo "$input" | jq -r '.workspace.current_dir')
             DIRNAME=$(basename "$DIR")
             TIME=$(date +"%I:%M %p")
 
-            # Get git info if in a git repo
+            # Stylix colors (injected at build time)
+            C_DIR=$'${c "base0D"}'
+            C_GIT=$'${c "base0E"}'
+            C_MODEL=$'${c "base0A"}'
+            C_TIME=$'${c "base05"}'
+            C_SEP=$'${c "base03"}'
+            C_RESET=$'\033[0m'
+
+            # Git info - symbol only shown when in a git repo
             GIT_INFO=""
             if git -C "$DIR" rev-parse --git-dir > /dev/null 2>&1; then
               BRANCH=$(git -C "$DIR" branch --show-current 2>/dev/null)
-              # Get git status indicators
               STATUS=""
               if [ -n "$(git -C "$DIR" status --porcelain 2>/dev/null)" ]; then
                 STATUS="*"
               fi
               if [ -n "$BRANCH" ]; then
-                GIT_INFO="  $BRANCH$STATUS"
+                GIT_INFO=" ''${C_GIT}  $BRANCH$STATUS''${C_RESET}"
               fi
             fi
 
-            echo "➜ $DIRNAME$GIT_INFO │ $MODEL │ $TIME"
+            echo "''${C_DIR}$DIRNAME''${C_RESET}$GIT_INFO ''${C_SEP}│''${C_RESET} ''${C_MODEL}$MODEL''${C_RESET} ''${C_SEP}│''${C_RESET} ''${C_TIME}$TIME''${C_RESET}"
           '';
         };
       };

@@ -63,8 +63,8 @@ in
           addressFamily = "any"; # use v4+v6 over tailnet
         };
 
-        "oranix-2" = {
-          hostname = "129.80.114.148";
+        "oranix" = {
+          hostname = "132.145.148.42";
           user = "ubuntu";
           identityFile = [ "~/.ssh/oranix" ];
         };
