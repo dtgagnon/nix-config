@@ -64,7 +64,7 @@ in
         };
 
         "oranix" = {
-          hostname = "132.145.148.42";
+          hostname = "150.136.100.228";
           user = "ubuntu";
           identityFile = [ "~/.ssh/oranix" ];
         };

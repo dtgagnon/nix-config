@@ -1,4 +1,5 @@
 SOPS_FILE := "../nix-secrets/.sops.yaml"
+YQ := "nix run nixpkgs#yq-go --"
 
 # default recipe to display help information
 default:
@@ -50,23 +51,24 @@ build-host HOST:
 # ========== Nix-Secrets manipulation recipes ==========
 #
 
-# Update all keys in sops/*.yaml files in nix-secrets to match the creation rules keys
+# Update all keys in yaml files in nix-secrets to match the creation rules keys
 rekey:
-  cd ../nix-secrets && for file in $(ls ./*.yaml); do \
-    sops updatekeys -y $file; \
-  done && \
-    (pre-commit run --all-files || true) && \
+  cd ../nix-secrets && \
+    for file in $(find . -name "*.yaml" -not -name ".sops.yaml"); do \
+      echo "Rekeying $file" && \
+      nix run nixpkgs#sops -- updatekeys -y "$file"; \
+    done && \
     git add -u && (git commit -m "chore: rekey" || true) && git push
 
 # Update an age key anchor or add a new one
 update-age-key FIELD KEYNAME KEY:
     # NOTE: Due to quirks this is purposefully not using a single yq expression
-    if [[ -n "$(yq '(.keys.{{FIELD}}[] | select(anchor == "{{KEYNAME}}"))' {{SOPS_FILE}})" ]]; then \
+    if [[ -n "$({{YQ}} '(.keys.{{FIELD}}[] | select(anchor == "{{KEYNAME}}"))' {{SOPS_FILE}})" ]]; then \
         echo "Updating existing key" && \
-        yq -i '(.keys.{{FIELD}}[] | select(anchor == "{{KEYNAME}}")) = "{{KEY}}"' {{SOPS_FILE}}; \
+        {{YQ}} -i '(.keys.{{FIELD}}[] | select(anchor == "{{KEYNAME}}")) = "{{KEY}}"' {{SOPS_FILE}}; \
     else \
         echo "Adding new key" && \
-        yq -i '.keys.{{FIELD}} += ["{{KEY}}"] | .keys.{{FIELD}}[-1] anchor = "{{KEYNAME}}"' {{SOPS_FILE}}; \
+        {{YQ}} -i '.keys.{{FIELD}} += ["{{KEY}}"] | .keys.{{FIELD}}[-1] anchor = "{{KEYNAME}}"' {{SOPS_FILE}}; \
     fi
 
 # Update an existing user age key anchor or add a new one
@@ -77,22 +79,28 @@ update-user-age-key USER HOST KEY:
 update-host-age-key HOST KEY:
   just update-age-key hosts {{HOST}} {{KEY}}
 
-# Automatically create a host.yaml file for host-specific secrets
+# Automatically create or update a host.yaml creation rule
 add-host-sops-file USER HOST:
-    if [[ -z "$(yq '.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml"))' {{SOPS_FILE}})" ]]; then \
+    if [[ -z "$({{YQ}} '.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml"))' {{SOPS_FILE}})" ]]; then \
         echo "Adding new host file creation rule" && \
-        yq -i '.creation_rules += {"path_regex": "sops/{{HOST}}\.yaml$", "key_groups": [{"age": ["{{USER}}", "{{HOST}}"]}]}' {{SOPS_FILE}} && \
-        yq -i '(.creation_rules[] | select(.path_regex == "sops/{{HOST}}\.yaml$")).key_groups[].age[0] alias = "{{USER}}"' {{SOPS_FILE}} && \
-        yq -i '(.creation_rules[] | select(.path_regex == "sops/{{HOST}}\.yaml$")).key_groups[].age[1] alias = "{{HOST}}"' {{SOPS_FILE}}; \
+        {{YQ}} -i '.creation_rules += {"path_regex": "sops/{{HOST}}\.yaml$", "key_groups": [{"age": ["{{USER}}", "{{HOST}}"]}]}' {{SOPS_FILE}} && \
+        {{YQ}} -i '(.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml"))).key_groups[].age[0] alias = "{{USER}}"' {{SOPS_FILE}} && \
+        {{YQ}} -i '(.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml"))).key_groups[].age[1] alias = "{{HOST}}"' {{SOPS_FILE}}; \
+    elif [[ -z "$({{YQ}} '.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml")).key_groups[].age[] | select(alias == "{{HOST}}")' {{SOPS_FILE}})" ]]; then \
+        echo "Adding {{HOST}} key to existing creation rule" && \
+        {{YQ}} -i '(.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml"))).key_groups[].age += ["{{HOST}}"]' {{SOPS_FILE}} && \
+        {{YQ}} -i '(.creation_rules[] | select(.path_regex | contains("{{HOST}}\\.yaml"))).key_groups[].age[-1] alias = "{{HOST}}"' {{SOPS_FILE}}; \
+    else \
+        echo "Host key already exists in creation rule"; \
     fi
 
 # Automatically add the host key to the shared.yaml creation rule
 add-to-shared USER HOST:
-    if [[ -n "$(yq '.creation_rules[] | select(.path_regex == "shared\\.yaml$")' {{SOPS_FILE}})" ]]; then \
-        if [[ -z "$(yq '.creation_rules[] | select(.path_regex == "shared\\.yaml$").key_groups[].age[] | select(alias == "{{HOST}}")' {{SOPS_FILE}})" ]]; then \
+    if [[ -n "$({{YQ}} '.creation_rules[] | select(.path_regex == "shared\\.yaml$")' {{SOPS_FILE}})" ]]; then \
+        if [[ -z "$({{YQ}} '.creation_rules[] | select(.path_regex == "shared\\.yaml$").key_groups[].age[] | select(alias == "{{HOST}}")' {{SOPS_FILE}})" ]]; then \
             echo "Adding {{HOST}} to shared.yaml rule" && \
-            yq -i '(.creation_rules[] | select(.path_regex == "shared\\.yaml$")).key_groups[].age += ["{{HOST}}"]' {{SOPS_FILE}} && \
-            yq -i '(.creation_rules[] | select(.path_regex == "shared\\.yaml$")).key_groups[].age[-1] alias = "{{HOST}}"' {{SOPS_FILE}}; \
+            {{YQ}} -i '(.creation_rules[] | select(.path_regex == "shared\\.yaml$")).key_groups[].age += ["{{HOST}}"]' {{SOPS_FILE}} && \
+            {{YQ}} -i '(.creation_rules[] | select(.path_regex == "shared\\.yaml$")).key_groups[].age[-1] alias = "{{HOST}}"' {{SOPS_FILE}}; \
         else \
             echo "Host key already exists in shared.yaml rule"; \
         fi; \

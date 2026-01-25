@@ -141,6 +141,12 @@ in
     #   ".gemini" # Codeium data directory
     # ];
 
+    # Hide duplicate Chrome entry in rofi (nixpkgs ships two .desktop files)
+    xdg.desktopEntries."com.google.Chrome" = {
+      name = "Google Chrome";
+      noDisplay = true;
+    };
+
     # For compatibility with Hyprland, to tell it the keyring to use.
     home.file = {
       ".antigravity/argv.json".text = builtins.toJSON {

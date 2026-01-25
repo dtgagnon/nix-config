@@ -60,7 +60,7 @@ in
           # dtgagnon uses shared.yaml; other users use host-specific sops file
           sops.secrets = let
             sharedFile = lib.optionalAttrs (user == "dtgagnon") {
-              sopsFile = "${secretsPath}/shared.yaml";
+              sopsFile = "${secretsPath}/sops/shared.yaml";
             };
           in {
             "${user}-password" = { neededForUsers = true; } // sharedFile;
