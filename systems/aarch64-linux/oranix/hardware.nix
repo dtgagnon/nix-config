@@ -1,18 +1,12 @@
 {
   lib,
   config,
-  inputs,
   modulesPath,
   ...
 }:
-let
-  inherit (inputs) nixos-hardware;
-in
 {
-  imports = with nixos-hardware.nixosModules; [
+  imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    common-cpu-intel
-    common-pc
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
@@ -27,17 +21,17 @@ in
     kernel.initrd = {
       forceLuks = false;
       availableKernelModules = [
-        "xhci_pci"
         "virtio_pci"
         "virtio_scsi"
+        "virtio_blk"
+        "virtio_net"
         "sd_mod"
-        "sr_mod"
       ];
     };
   };
 
-  # Oracle VPS typically uses virtio for networking
-  boot.kernelModules = [ "virtio_net" ];
+  # Oracle Ampere A1 uses virtio for networking and block devices
+  boot.kernelModules = [ "virtio_net" "virtio_blk" ];
 
   # Enable firmware updates
   hardware.enableRedistributableFirmware = true;

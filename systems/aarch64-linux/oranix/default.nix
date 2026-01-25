@@ -18,7 +18,7 @@ in
       sudo = enabled;
       sops-nix = {
         enable = true;
-        targetHost = "oracle";
+        targetHost = "oranix";
       };
     };
 
@@ -49,14 +49,14 @@ in
     virtualisation.kvm.enable = false;
   };
 
-  # Oracle VPS specific settings
+  # Oracle Ampere A1 uses UEFI boot
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
 
   # Enable serial console for Oracle Cloud Shell Access
-  boot.kernelParams = [ "console=ttyS0,115200" "console=tty1" ];
+  boot.kernelParams = [ "console=ttyAMA0,115200" "console=tty1" ];
 
   # Firewall configuration
   networking.firewall = {

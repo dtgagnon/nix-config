@@ -1,11 +1,11 @@
-# Disk configuration for Oracle VPS - designed for nixos-anywhere deployment
+# Disk configuration for Oracle Ampere A1 VPS - designed for nixos-anywhere deployment
 # No LUKS encryption on root to allow unattended remote deployment
 {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/sda"; # Adjust based on Oracle VPS disk (typically /dev/sda)
+        device = "/dev/sda"; # Oracle Ampere A1 typically uses /dev/sda
         content = {
           type = "gpt";
           partitions = {
@@ -20,7 +20,7 @@
               };
             };
             swap = {
-              size = "4G"; # Adjust based on VPS RAM
+              size = "2G"; # Minimal swap for 24GB RAM - just for edge cases
               content = {
                 type = "swap";
                 randomEncryption = true; # Encrypt swap on each boot
