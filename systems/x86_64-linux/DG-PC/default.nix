@@ -52,7 +52,35 @@ in
       environment.sessionVariables = {
         CODEX_HOME = "$HOME/.config/codex";
       };
-      preservation = enabled;
+      preservation = {
+        enable = true;
+        users.dtgagnon = {
+          directories = [
+            "myVMs"
+            "nix-config"
+            "proj"
+            ".claude"
+            ".config"
+            ".config/discord"
+            ".config/hypr"
+            ".config/obsidian"
+            ".config/rofi"
+            ".config/syncthing"
+            ".config/VSCodium"
+            ".icons"
+            ".local/share/activitywatch"
+            ".local/share/bottles"
+            ".local/share/direnv"
+            ".local/share/keyrings"
+            ".local/share/rofi"
+            ".local/share/zoxide"
+            ".thunderbird"
+            ".vscode-oss"
+            "vfio-vm-info"
+          ];
+          files = [ ".claude.json" ];
+        };
+      };
     };
 
     tools = {

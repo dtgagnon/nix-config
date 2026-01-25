@@ -10,10 +10,126 @@ let
   cfg = config.${namespace}.system.preservation;
 
   users = snowfallHostUserList host;
+
+  # Helper to extract the name from an item (string or attrset)
+  itemName = item:
+    if builtins.isString item then item
+    else item.directory or item.file or "";
+
+  # Apply exclusions to a list of items
+  applyExclusions = items: exclusions:
+    lib.filter (item: !(lib.elem (itemName item) exclusions)) items;
+
+  # Tier definitions - progressively include more items
+  tierSystemDirs = {
+    minimal = [
+      { directory = "/var/lib/nixos"; inInitrd = true; }
+      "/var/lib/systemd/coredump"
+      "/var/lib/systemd/rfkill"
+      "/var/lib/systemd/timers"
+      "/var/log"
+    ];
+    server = tierSystemDirs.minimal;
+    full = tierSystemDirs.server ++ [
+      "/etc/secureboot"
+      "/etc/greetd"
+      "/var/lib/bluetooth"
+      "/var/lib/fprint"
+      "/var/lib/fwupd"
+      { directory = "/var/lib/libvirt"; user = "qemu-libvirtd"; group = "qemu-libvirtd"; mode = "0750"; }
+      { directory = "/var/lib/qemu"; user = "qemu-libvirtd"; group = "qemu-libvirtd"; mode = "0750"; }
+      "/var/lib/power-profiles-daemon"
+      { directory = "/var/lib/colord"; user = "colord"; group = "colord"; mode = "0754"; }
+    ];
+  };
+
+  tierSystemFiles = {
+    minimal = [
+      { file = "/etc/machine-id"; inInitrd = true; how = "symlink"; configureParent = true; }
+      { file = "/etc/ssh/ssh_host_ed25519_key"; mode = "0600"; how = "symlink"; createLinkTarget = true; }
+      { file = "/etc/ssh/ssh_host_ed25519_key.pub"; mode = "0644"; how = "symlink"; createLinkTarget = true; }
+      { file = "/var/lib/systemd/random-seed"; how = "symlink"; inInitrd = true; configureParent = true; }
+    ];
+    server = tierSystemFiles.minimal;
+    full = tierSystemFiles.server ++ [
+      "/var/lib/usbguard/rules.conf"
+    ];
+  };
+
+  tierHomeDirs = {
+    minimal = [
+      { directory = ".ssh"; mode = "0700"; }
+    ];
+    server = tierHomeDirs.minimal ++ [
+      { directory = ".pki"; mode = "0700"; }
+      { directory = ".gnupg"; mode = "0700"; }
+      ".local/state/nix"
+    ];
+    full = tierHomeDirs.server ++ [
+      "Apps"
+      "Documents"
+      "Downloads"
+      "Games"
+      "Music"
+      "Pictures"
+      "Sync"
+      "Videos"
+      ".config/syncthing"
+      ".local/state/nvim"
+      ".local/state/syncthing"
+      ".local/state/wireplumber"
+      { directory = ".zen"; mode = "0700"; }
+    ];
+  };
+
+  tierHomeFiles = {
+    minimal = [
+      ".histfile"
+    ];
+    server = tierHomeFiles.minimal;
+    full = tierHomeFiles.server;
+  };
+
+  # Get effective items for current tier with exclusions applied
+  effectiveSystemDirs = applyExclusions tierSystemDirs.${cfg.tier} cfg.exclude.systemDirs ++ cfg.extraSysDirs;
+  effectiveSystemFiles = applyExclusions tierSystemFiles.${cfg.tier} cfg.exclude.systemFiles ++ cfg.extraSysFiles;
+  effectiveHomeDirs = applyExclusions tierHomeDirs.${cfg.tier} cfg.exclude.homeDirs ++ cfg.extraHomeDirs;
+  effectiveHomeFiles = applyExclusions tierHomeFiles.${cfg.tier} cfg.exclude.homeFiles ++ cfg.extraHomeFiles;
+
+  # User submodule for per-user configuration
+  userSubmodule = types.submodule {
+    options = {
+      home = mkOpt (types.nullOr types.str) null "Home directory (if not /home/<user>)";
+      directories = mkOpt (types.listOf (types.either types.str types.attrs)) [ ] "User-specific directories";
+      files = mkOpt (types.listOf (types.either types.str types.attrs)) [ ] "User-specific files";
+    };
+  };
+
 in
 {
   options.${namespace}.system.preservation = with types; {
     enable = mkBoolOpt false "Enable the preservation impermanence framework";
+
+    # Simple tier selection (default = "full" for backward compat)
+    tier = mkOpt (enum [ "minimal" "server" "full" ]) "full" ''
+      Persistence tier:
+      - minimal: Core system only (machine-id, nixos, logs, ssh keys)
+      - server: Minimal + common server needs (no GUI/desktop apps)
+      - full: Everything (current behavior, default)
+    '';
+
+    # Exclusions - remove specific items from tier defaults
+    exclude = {
+      systemDirs = mkOpt (listOf str) [ ] "System directories to exclude from tier defaults";
+      systemFiles = mkOpt (listOf str) [ ] "System files to exclude from tier defaults";
+      homeDirs = mkOpt (listOf str) [ ] "Home directories to exclude from tier defaults";
+      homeFiles = mkOpt (listOf str) [ ] "Home files to exclude from tier defaults";
+    };
+
+    # Per-user configuration (replaces hardcoded user blocks)
+    users = mkOpt (attrsOf userSubmodule) { } "Per-user persistence configuration";
+
+    # Existing options (kept for compatibility)
     extraUser = {
       user = mkOpt str "" "Declare additional users";
       homeDirs = mkOpt (listOf (either str attrs)) [ ] "Declare extra user home directories to persist";
@@ -32,116 +148,55 @@ in
       enable = true;
       preserveAt."/persist" = {
 
-        # Preserve system directories
-        directories = [
-          "/etc/secureboot"
-          "/etc/greetd"
-          "/var/lib/bluetooth"
-          "/var/lib/fprint"
-          "/var/lib/fwupd"
-          { directory = "/var/lib/libvirt"; user = "qemu-libvirtd"; group = "qemu-libvirtd"; mode = "0750"; }
-          { directory = "/var/lib/qemu"; user = "qemu-libvirtd"; group = "qemu-libvirtd"; mode = "0750"; }
-          "/var/lib/power-profiles-daemon"
-          "/var/lib/systemd/coredump"
-          "/var/lib/systemd/rfkill"
-          "/var/lib/systemd/timers"
-          "/var/log"
-          { directory = "/var/lib/nixos"; inInitrd = true; }
-          { directory = "/var/lib/colord"; user = "colord"; group = "colord"; mode = "0754"; }
-        ]
-        # ++ lib.optional config.services.ollama.enable "/var/lib/ollama"
-        # ++ lib.optional config.${namespace}.services.llama-cpp.enable "/var/lib/llama-cpp"
-        ++ cfg.extraSysDirs;
+        # Preserve system directories based on tier
+        directories = effectiveSystemDirs;
 
-        # preserve system files
-        files = [
-          { file = "/etc/machine-id"; inInitrd = true; how = "symlink"; configureParent = true; }
-          { file = "/etc/ssh/ssh_host_ed25519_key"; mode = "0600"; how = "symlink"; createLinkTarget = true; }
-          { file = "/etc/ssh/ssh_host_ed25519_key.pub"; mode = "0644"; how = "symlink"; createLinkTarget = true; }
-          "/var/lib/usbguard/rules.conf"
+        # Preserve system files based on tier
+        files = effectiveSystemFiles;
 
-          # creates a symlink on the volatile root
-          # creates an empty directory on the persistent volume, i.e. /persistent/var/lib/systemd
-          # does not create an empty file at the symlink's target (would require `createLinkTarget = true`)
-          { file = "/var/lib/systemd/random-seed"; how = "symlink"; inInitrd = true; configureParent = true; }
-        ] ++ cfg.extraSysFiles;
-
-        # preserve user-specific files, implies ownership
+        # Preserve user-specific files, implies ownership
         users = mkMerge [
-          # Persisting directories and files to apply to all users.
+          # Apply tier defaults to all users from snowfallHostUserList
           (builtins.foldl' lib.recursiveUpdate { }
             (map
               (user: {
                 ${user} = {
-                  directories = [
-                    "Apps"
-                    "Documents"
-                    "Downloads"
-                    "Games"
-                    "Music"
-                    "Pictures"
-                    "Sync"
-                    "Videos"
-                    ".config/syncthing"
-                    ".local/state/nix"
-                    ".local/state/nvim"
-                    ".local/state/syncthing"
-                    ".local/state/wireplumber"
-                    { directory = ".pki"; mode = "0700"; }
-                    { directory = ".ssh"; mode = "0700"; }
-                    { directory = ".zen"; mode = "0700"; }
-                  ] ++ cfg.extraHomeDirs;
-                  files = [
-                    ".histfile"
-                  ] ++ cfg.extraHomeFiles;
+                  directories = effectiveHomeDirs;
+                  files = effectiveHomeFiles;
                 };
               })
-              (snowfallHostUserList host)
+              users
             )
           )
 
-          # Additional persisting directories and files to be defined for each user.
+          # Per-user configurations from cfg.users option
+          (builtins.mapAttrs
+            (username: userCfg: {
+              directories = userCfg.directories;
+              files = userCfg.files;
+            } // lib.optionalAttrs (userCfg.home != null) {
+              home = userCfg.home;
+            })
+            cfg.users
+          )
+
+          # Root user special case (home is /root)
           {
-            dtgagnon = {
-              directories = [
-                "myVMs"
-                "nix-config"
-                "proj"
-                ".config"
-                ".config/discord"
-                ".config/hypr"
-                ".config/obsidian"
-                ".config/rofi"
-                ".config/syncthing"
-                ".config/VSCodium"
-                ".local/share/activitywatch"
-                ".local/share/bottles"
-                ".local/share/direnv"
-                ".local/share/keyrings"
-                ".local/share/rofi"
-                ".local/share/zoxide"
-                ## Testing the below if I want to keep them
-                ".claude"
-                { directory = ".gnupg"; mode = "0700"; }
-                ".icons"
-                ".thunderbird"
-                ".vscode-oss"
-                "vfio-vm-info"
-              ] ++ cfg.extraHomeDirs;
-              files = [ ".claude.json" ] ++ cfg.extraHomeFiles;
-            };
             root = {
-              # specify user home when it is not `/home/${user}`
               home = "/root";
               directories = [
                 { directory = ".ssh"; mode = "0700"; }
               ];
             };
-            ${cfg.extraUser.user} = {
-              directories = [ ] ++ cfg.extraUser.homeDirs;
-              files = [ ] ++ cfg.extraUser.homeFiles;
-            };
           }
+
+          # Legacy extraUser support (kept for compatibility)
+          (lib.optionalAttrs (cfg.extraUser.user != "") {
+            ${cfg.extraUser.user} = {
+              directories = cfg.extraUser.homeDirs;
+              files = cfg.extraUser.homeFiles;
+            };
+          })
         ];
       };
     };
@@ -182,7 +237,7 @@ in
             "/home/${username}/.local/share".d = { user = "${username}"; group = "users"; mode = "0755"; };
             "/home/${username}/.local/state".d = { user = "${username}"; group = "users"; mode = "0755"; };
           })
-          (snowfallHostUserList host)
+          users
         )
       );
   };

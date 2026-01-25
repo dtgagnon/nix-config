@@ -102,6 +102,7 @@ in
     system.enable = true;
     system.preservation = {
       enable = true;
+      tier = "server";
       extraSysDirs = [
         "/var/lib/coolify"
         "/var/lib/caddy"

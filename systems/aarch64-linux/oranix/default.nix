@@ -35,7 +35,10 @@ in
 
     system = {
       enable = true;
-      preservation = enabled;
+      preservation = {
+        enable = true;
+        tier = "minimal";
+      };
     };
 
     tools = {
