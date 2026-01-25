@@ -79,6 +79,10 @@
           spirenet-dashboard.nixosModules.default
         ];
 
+        systems.hosts.oranix.modules = with inputs; [
+          spirenet-dashboard.nixosModules.default
+        ];
+
         homes.packages = with inputs; [
           zen-browser.packages.twilight
         ];
