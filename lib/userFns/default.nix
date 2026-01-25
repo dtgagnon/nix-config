@@ -4,7 +4,9 @@
 {
   snowfallHostUserList = (host:
     let
-      homes = lib.snowfall.home.get-target-homes-metadata ../../homes/x86_64-linux;
+      x86Homes = lib.snowfall.home.get-target-homes-metadata ../../homes/x86_64-linux;
+      armHomes = lib.snowfall.home.get-target-homes-metadata ../../homes/aarch64-linux;
+      homes = x86Homes ++ armHomes;
 
       filteredHomes =
         lib.filter

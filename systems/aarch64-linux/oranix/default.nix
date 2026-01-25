@@ -56,7 +56,10 @@ in
   };
 
   # Enable serial console for Oracle Cloud Shell Access
-  boot.kernelParams = [ "console=ttyAMA0,115200" "console=tty1" ];
+  boot.kernelParams = [
+    "console=ttyAMA0,115200"
+    "console=tty1"
+  ];
 
   # Firewall configuration
   networking.firewall = {
@@ -65,6 +68,26 @@ in
     allowedTCPPorts = [ 22 ];
     # Allow Tailscale
     trustedInterfaces = [ "tailscale0" ];
+  };
+
+  # Automated Maintenance (keeps system updated + generates CPU activity)
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:dtgagnon/nix-config#oranix";
+    dates = "daily";
+    operation = "switch";
+    allowReboot = false;
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
+  nix.optimise = {
+    automatic = true;
+    dates = [ "03:30" ];
   };
 
   system.stateVersion = "25.11";
