@@ -33,12 +33,7 @@ in
 
       #NOTE Secrets will be output to /run/secrets.
       #NOTE See modules/nixos/users/default.nix for user secrets.
-      # v General secrets declarations. Most will/should be in their respective modules.
-      secrets = {
-        # "syncthing/webui-password" = { owner = "dtgagnon"; };
-        # "syncthing/key" = { };
-        tailscale-authKey = { };
-      };
+      # Service-specific secrets should be declared in their respective modules.
     };
 
     # Keep age keys safe when using impermanence on the root filesystem.

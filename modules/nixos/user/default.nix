@@ -2,6 +2,7 @@
 , host
 , pkgs
 , config
+, inputs
 , options
 , namespace
 , ...
@@ -10,6 +11,7 @@ let
   inherit (lib) mkAliasDefinitions mkMerge mkIf types;
   inherit (lib.${namespace}) mkOpt mkBoolOpt snowfallHostUserList;
   cfg = config.${namespace}.user;
+  secretsPath = builtins.toString inputs.nix-secrets;
 in
 {
   options.${namespace}.user = with types; {
@@ -55,21 +57,23 @@ in
           };
 
           # User security
-          #NOTE: secrets which are needed for ALL created users are dynamically declared through the functions below. Any additional secrets that fit this criteria need to be added inside the function.
-          sops.secrets = {
-            "${user}-password".neededForUsers = true;
+          # dtgagnon uses shared.yaml; other users use host-specific sops file
+          sops.secrets = let
+            sharedFile = lib.optionalAttrs (user == "dtgagnon") {
+              sopsFile = "${secretsPath}/shared.yaml";
+            };
+          in {
+            "${user}-password" = { neededForUsers = true; } // sharedFile;
 
             # SSH Key deposits
             "ssh-keys/${user}-key" = {
               owner = user;
               path = "/persist/home/${user}/.ssh/${user}-key";
-            };
+            } // sharedFile;
             "ssh-keys/${user}-key.pub" = {
               owner = user;
               path = "/persist/home/${user}/.ssh/${user}-key.pub";
-            };
-
-            # Add more generic user secrets here..
+            } // sharedFile;
           };
 
         })
