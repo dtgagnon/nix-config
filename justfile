@@ -4,47 +4,20 @@ SOPS_FILE := "../nix-secrets/.sops.yaml"
 default:
   @just --list
 
-rebuild-pre: update-nix-secrets
-  @git add --intent-to-add .
-
-rebuild-post:
-  just check-sops
-
-build: rebuild
-
 check:
   nix flake check --impure --keep-going
-  cd nixos-installer && nix flake check --impure --keep-going
 
 check-trace:
   nix flake check --impure --show-trace
-  cd nixos-installer && nix flake check --impure --show-trace
-
-# NOTE: Add --option eval-cache false if you end up caching a failure you can't get around
-rebuild: rebuild-pre
-  scripts/system-flake-rebuild.sh
-
-# Requires sops to be running and you must have reboot after initial rebuild
-rebuild-full: rebuild-pre && rebuild-post
-  scripts/system-flake-rebuild.sh
-
-# Requires sops to be running and you must have reboot after initial rebuild
-rebuild-trace: rebuild-pre && rebuild-post
-  scripts/system-flake-rebuild-trace.sh
 
 update:
   nix flake update
-
-rebuild-update: update rebuild
 
 diff:
   git diff ':!flake.lock'
 
 age-key:
-  nix-shell -p age --run "age-keygen"
-
-check-sops:
-  scripts/check-sops.sh
+  nix shell nixpkgs#age -c age-keygen
 
 update-nix-secrets:
   @(cd ~/src/nix/nix-secrets && git fetch && git rebase > /dev/null) || true
