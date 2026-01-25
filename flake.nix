@@ -240,7 +240,6 @@
 
     ## custom repos
     spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";
-    spirenet-dashboard.inputs.nixpkgs.follows = "nixpkgs";
     n8n-private.url = "git+ssh://git@github.com/dtgagnon/n8n-nix-overlay";
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
     yell.url = "git+ssh://git@github.com/dtgagnon/yell";

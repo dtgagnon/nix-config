@@ -60,6 +60,9 @@ in
           options = {
             vfs-cache-mode = "writes";
             dir-cache-time = "5s";
+            # Enable session cookies to maintain auth state across requests
+            # Helps prevent 401 errors on long-running mounts (copyparty issue #272)
+            use-cookies = true;
           };
         };
       };

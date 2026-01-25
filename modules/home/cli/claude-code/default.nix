@@ -74,6 +74,7 @@ in
             MODEL=$(echo "$input" | jq -r '.model.display_name')
             DIR=$(echo "$input" | jq -r '.workspace.current_dir')
             DIRNAME=$(basename "$DIR")
+            TIME=$(date +"%I:%M %p")
 
             # Get git info if in a git repo
             GIT_INFO=""
@@ -85,11 +86,11 @@ in
                 STATUS="*"
               fi
               if [ -n "$BRANCH" ]; then
-                GIT_INFO=" | $BRANCH$STATUS"
+                GIT_INFO="  $BRANCH$STATUS"
               fi
             fi
 
-            echo "[$MODEL] 📁 $DIRNAME$GIT_INFO"
+            echo "➜ $DIRNAME$GIT_INFO │ $MODEL │ $TIME"
           '';
         };
       };

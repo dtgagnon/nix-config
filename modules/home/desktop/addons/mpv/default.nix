@@ -26,9 +26,10 @@ in
       enable = true;
 
       config = {
-        # Hardware acceleration
-        hwdec = "auto-safe";
-        vo = "gpu";
+        # Hardware acceleration - explicit nvdec avoids buggy vulkan hwdec path in mpv 0.40+
+        hwdec = "nvdec";
+        vo = "gpu-next";
+        gpu-api = "vulkan";
         profile = "gpu-hq";
 
         # Video quality
@@ -68,8 +69,6 @@ in
         demuxer-max-bytes = "512M";
         demuxer-max-back-bytes = "256M";
 
-        # Performance
-        opengl-pbo = true;
       };
 
       bindings = {

@@ -166,13 +166,33 @@ in
   # Automated Maintenance
   # ============================================================================
 
-  # Automated security updates
-  system.autoUpgrade = {
-    enable = true;
-    allowReboot = false; # Manual reboot for server
-    dates = "03:00"; # 3 AM daily
-    flake = "git+file:///persist/home/dtgagnon/nix-config?ref=main#slim";
-    flags = [ "--refresh" "--print-build-logs" ];
+  # Auto-rebuild when GitHub repo updates (replaces autoUpgrade)
+  systemd.services.flake-auto-rebuild = {
+    description = "Auto-rebuild when GitHub repo updates";
+    path = with pkgs; [ git nixos-rebuild nix openssh sudo ];
+    script = ''
+      cd /persist/home/dtgagnon/nix-config
+      git fetch origin main
+      LOCAL=$(git rev-parse HEAD)
+      REMOTE=$(git rev-parse origin/main)
+      if [ "$LOCAL" != "$REMOTE" ]; then
+        echo "Updates found: $LOCAL -> $REMOTE"
+        git pull --ff-only origin main
+        sudo nixos-rebuild switch --flake .#slim
+      fi
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "dtgagnon";
+    };
+  };
+
+  systemd.timers.flake-auto-rebuild = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*:0/15"; # Every 15 minutes
+      Persistent = true;
+    };
   };
 
   # Automatic garbage collection (critical for 128GB disk)

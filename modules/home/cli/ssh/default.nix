@@ -62,6 +62,12 @@ in
           checkHostIP = false;
           addressFamily = "any"; # use v4+v6 over tailnet
         };
+
+        "oranix-2" = {
+          hostname = "129.80.114.148";
+          user = "ubuntu";
+          identityFile = [ "~/.ssh/oranix" ];
+        };
       };
     };
 
