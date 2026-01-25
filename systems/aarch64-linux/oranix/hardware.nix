@@ -1,8 +1,7 @@
-{
-  lib,
-  config,
-  modulesPath,
-  ...
+{ lib
+, config
+, modulesPath
+, ...
 }:
 {
   imports = [
@@ -22,7 +21,6 @@
       forceLuks = false;
       availableKernelModules = [
         "virtio_pci"
-        "virtio_scsi"
         "virtio_blk"
         "virtio_net"
         "sd_mod"
@@ -30,8 +28,11 @@
     };
   };
 
-  # Oracle Ampere A1 uses virtio for networking and block devices
-  boot.kernelModules = [ "virtio_net" "virtio_blk" ];
+  # Post-boot modules for VM resource management
+  boot.kernelModules = [
+    "virtio_balloon" # Dynamic memory management
+    "virtio_rng" # Hardware RNG for better entropy
+  ];
 
   # Enable firmware updates
   hardware.enableRedistributableFirmware = true;

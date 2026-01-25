@@ -25,12 +25,12 @@ in
     services = {
       openssh = enabled;
       tailscale = enabled;
-      coolify = {
-        enable = true;
-        port = 8000;
-        openFirewall = false; # Using Tailscale, no need to expose publicly
-        autoUpdate = true;
-      };
+      # coolify = {
+      #   enable = true;
+      #   port = 8000;
+      #   openFirewall = false; # Using Tailscale, no need to expose publicly
+      #   autoUpdate = true;
+      # };
     };
 
     system = {
@@ -39,7 +39,7 @@ in
     };
 
     tools = {
-      comma = enabled;
+      # comma = enabled;
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
@@ -67,5 +67,5 @@ in
     trustedInterfaces = [ "tailscale0" ];
   };
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.11";
 }

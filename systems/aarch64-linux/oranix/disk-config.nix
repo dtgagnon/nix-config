@@ -23,7 +23,6 @@
               size = "2G"; # Minimal swap for 24GB RAM - just for edge cases
               content = {
                 type = "swap";
-                randomEncryption = true; # Encrypt swap on each boot
               };
             };
             root = {
@@ -46,14 +45,6 @@
                   };
                   "/persist" = {
                     mountpoint = "/persist";
-                    mountOptions = [ "compress=zstd" "noatime" ];
-                  };
-                  "/var-lib-coolify" = {
-                    mountpoint = "/var/lib/coolify";
-                    mountOptions = [ "compress=zstd" "noatime" ];
-                  };
-                  "/var-lib-docker" = {
-                    mountpoint = "/var/lib/docker";
                     mountOptions = [ "compress=zstd" "noatime" ];
                   };
                 };
