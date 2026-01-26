@@ -32,7 +32,7 @@ in
       enable = true;
       preserveAt."/persist" = {
 
-        # Preserve system directories
+        # System directories
         directories = [
           "/etc/secureboot"
           "/etc/greetd"
@@ -53,22 +53,20 @@ in
         # ++ lib.optional config.${namespace}.services.llama-cpp.enable "/var/lib/llama-cpp"
         ++ cfg.extraSysDirs;
 
-        # preserve system files
+        # System files
         files = [
           { file = "/etc/machine-id"; inInitrd = true; how = "symlink"; configureParent = true; }
           { file = "/etc/ssh/ssh_host_ed25519_key"; mode = "0600"; how = "symlink"; createLinkTarget = true; }
           { file = "/etc/ssh/ssh_host_ed25519_key.pub"; mode = "0644"; how = "symlink"; createLinkTarget = true; }
           "/var/lib/usbguard/rules.conf"
 
-          # creates a symlink on the volatile root
-          # creates an empty directory on the persistent volume, i.e. /persistent/var/lib/systemd
-          # does not create an empty file at the symlink's target (would require `createLinkTarget = true`)
+          # Symlink only; use createLinkTarget = true to also create the target file
           { file = "/var/lib/systemd/random-seed"; how = "symlink"; inInitrd = true; configureParent = true; }
         ] ++ cfg.extraSysFiles;
 
-        # preserve user-specific files, implies ownership
+        # User files (ownership implied)
         users = mkMerge [
-          # Persisting directories and files to apply to all users.
+          # Applied to all users
           (builtins.foldl' lib.recursiveUpdate { }
             (map
               (user: {
@@ -100,7 +98,7 @@ in
             )
           )
 
-          # Additional persisting directories and files to be defined for each user.
+          # Per-user additions
           {
             dtgagnon = {
               directories = [
@@ -120,7 +118,7 @@ in
                 ".local/share/keyrings"
                 ".local/share/rofi"
                 ".local/share/zoxide"
-                ## Testing the below if I want to keep them
+                # TODO: evaluate if needed
                 ".claude"
                 { directory = ".gnupg"; mode = "0700"; }
                 ".icons"
@@ -131,8 +129,7 @@ in
               files = [ ".claude.json" ] ++ cfg.extraHomeFiles;
             };
             root = {
-              # specify user home when it is not `/home/${user}`
-              home = "/root";
+              home = "/root"; # non-standard home path
               directories = [
                 { directory = ".ssh"; mode = "0700"; }
               ];
@@ -146,11 +143,10 @@ in
       };
     };
 
-    # systemd-machine-id-commit.service would fail, but it is not relevant
-    # in this specific setup for a persistent machine-id so we disable it
+    # Not needed with persistent machine-id
     systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
 
-    # change default systemd-machine-id-commit service to commit the transient ID to the persistent volume instead
+    # Commit transient ID to persistent volume
     systemd.services.systemd-machine-id-commit = {
       unitConfig.ConditionPathIsMountPoint = [
         "/persist/etc/machine-id"
@@ -160,19 +156,8 @@ in
       ];
     };
 
-    # Create some directories with custom permissions.
-    #
-    # In this configuration the path `/home/butz/.local` is not an immediate parent
-    # of any persisted file, so it would be created with the systemd-tmpfiles default
-    # ownership `root:root` and mode `0755`. This would mean that the user `butz`
-    # could not create other files or directories inside `/home/butz/.local`.
-    #
-    # Therefore systemd-tmpfiles is used to prepare such directories with
-    # appropriate permissions.
-    #
-    # Note that immediate parent directories of persisted files can also be
-    # configured with ownership and permissions from the `parent` settings if
-    # `configureParent = true` is set for the file.
+    # Pre-create intermediate directories with correct ownership (otherwise tmpfiles defaults to root:root 0755).
+    # Note: immediate parents of persisted files can use `configureParent = true` instead.
     systemd.tmpfiles.settings.preservation =
       (builtins.foldl' lib.recursiveUpdate { }
         (map
