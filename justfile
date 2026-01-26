@@ -44,8 +44,13 @@ disko DRIVE PASSWORD:
 sync USER HOST PATH:
 	rsync -av --filter=':- .gitignore' -e "ssh -l {{USER}} -oport=22" . {{USER}}@{{HOST}}:{{PATH}}/nix-config
 
-build-host HOST:
-	NIX_SSHOPTS="-p22" nixos-rebuild --target-host {{HOST}} --use-remote-sudo --show-trace --impure --flake .#"{{HOST}}" switch
+# Build local, target remote - requires local cross-compilation (binfmt) for different architectures
+bltr HOST USER="dtgagnon":
+	nixos-rebuild switch --flake .#{{HOST}} --target-host {{USER}}@{{HOST}} --sudo --show-trace --impure
+
+# Build remote, target remote - sources copied to remote, built natively there
+brtr HOST USER="dtgagnon":
+	nixos-rebuild switch --flake .#{{HOST}} --target-host {{USER}}@{{HOST}} --build-host {{USER}}@{{HOST}} --sudo
 
 #
 # ========== Nix-Secrets manipulation recipes ==========

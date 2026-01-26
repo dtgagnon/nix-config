@@ -70,14 +70,9 @@ in
     trustedInterfaces = [ "tailscale0" ];
   };
 
-  # Automated Maintenance (keeps system updated + generates CPU activity)
-  system.autoUpgrade = {
-    enable = true;
-    flake = "github:dtgagnon/nix-config#oranix";
-    dates = "daily";
-    operation = "switch";
-    allowReboot = false;
-  };
+  # Automated Maintenance disabled - using push-based deployment via deploy-rs
+  # This avoids needing private SSH keys on the VPS for fetching private flake inputs
+  system.autoUpgrade.enable = false;
 
   nix.gc = {
     automatic = true;

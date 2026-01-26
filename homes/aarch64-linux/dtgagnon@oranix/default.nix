@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , namespace
 , ...
 }:
@@ -9,17 +10,27 @@ in
   spirenix = {
     user = {
       fullName = "Derek Gagnon";
-      email = "gagnon.derek@gmail.com";
+      email = "dtgagnon@dtgengineering.com";
     };
 
+    preservation.directories = [
+      "nix-config"
+      { directory = ".ssh"; mode = "0700"; } # For authorized_keys (incoming SSH)
+    ];
+
     cli = {
-      fzf.enable = false;
+      eza = enabled;
+      fastfetch = enabled;
+      fzf = enabled;
       git = enabled;
-      ssh = enabled;
+      ssh.enable = false;
+      yazi = enabled;
+      zoxide = enabled;
     };
 
     security.sops-nix = enabled;
   };
 
+  home.packages = [ pkgs.vim ];
   home.stateVersion = "25.11";
 }
