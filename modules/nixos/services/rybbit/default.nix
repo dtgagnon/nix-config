@@ -1,27 +1,31 @@
-{
-  lib,
-  config,
-  namespace,
-  inputs,
-  ...
+{ lib
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.${namespace}.services.rybbit;
 in
 {
-  imports = [ inputs.rybbix.nixosModules.default ];
-
   options.${namespace}.services.rybbit = {
     enable = mkEnableOption "Rybbit privacy-focused analytics platform";
+
+    useBuiltinProxy = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Use Rybbit's built-in nginx reverse proxy.
+        Set to false when using an external proxy like Pangolin.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
-    # Sops secret containing at minimum: BETTER_AUTH_SECRET=<random-string>
-    # Optionally: CLICKHOUSE_PASSWORD, POSTGRES_PASSWORD, MAPBOX_TOKEN
+    # Sops secret containing env vars for Rybbit
+    # Required: BETTER_AUTH_SECRET=<random-string>
+    # Optional: CLICKHOUSE_PASSWORD, POSTGRES_PASSWORD, MAPBOX_TOKEN
     sops.secrets.rybbit-env = {
-      sopsFile = lib.snowfall.fs.get-file "secrets/rybbit/env.yaml";
-      format = "binary";
       owner = "rybbit";
       group = "rybbit";
       mode = "0400";
@@ -31,8 +35,23 @@ in
     services.rybbit = {
       enable = true;
       secretsFile = config.sops.secrets.rybbit-env.path;
-      settings.disableSignup = lib.mkDefault true;
-      settings.disableTelemetry = lib.mkDefault true;
+
+      # Server/client defaults - bind locally, let proxy handle external access
+      server.port = 3001;
+      server.host = "127.0.0.1";
+      client.port = 3002;
+      client.host = if cfg.useBuiltinProxy then "0.0.0.0" else "127.0.0.1";
+
+      # Enable local databases by default
+      clickhouse.enable = true;
+      postgres.enable = true;
+
+      # Reverse proxy - disable when using external proxy (e.g., Pangolin)
+      nginx.enable = cfg.useBuiltinProxy;
+
+      # Privacy defaults
+      settings.disableSignup = true;
+      settings.disableTelemetry = true;
     };
   };
 }
