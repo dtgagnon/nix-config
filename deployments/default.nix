@@ -18,13 +18,6 @@
     };
   };
 
-  dtg-vps = {
-    profiles.system = {
-      user = "root";
-      sshUser = "dtgagnon";
-    };
-  };
-
   oranix = {
     profiles.system = {
       user = "root";
