@@ -10,6 +10,10 @@ let
   cfg = config.${namespace}.system.preservation;
 
   users = snowfallHostUserList host;
+
+  # Helper to get home-manager preservation config for a user, with fallback to empty
+  getHmPreservation = username:
+    config.home-manager.users.${username}.${namespace}.preservation or { directories = [ ]; files = [ ]; };
 in
 {
   options.${namespace}.system.preservation = with types; {
@@ -118,15 +122,18 @@ in
                 ".local/share/keyrings"
                 ".local/share/rofi"
                 ".local/share/zoxide"
-                # TODO: evaluate if needed
-                ".claude"
                 { directory = ".gnupg"; mode = "0700"; }
                 ".icons"
                 ".thunderbird"
                 ".vscode-oss"
                 "vfio-vm-info"
+                # Commented out - now declared via HM preservation module in cli/claude-code
+                # ".claude"
               ] ++ cfg.extraHomeDirs;
-              files = [ ".claude.json" ] ++ cfg.extraHomeFiles;
+              files = [
+                # Commented out - now declared via HM preservation module in cli/claude-code
+                # ".claude.json"
+              ] ++ cfg.extraHomeFiles;
             };
             root = {
               home = "/root"; # non-standard home path
@@ -139,6 +146,21 @@ in
               files = [ ] ++ cfg.extraUser.homeFiles;
             };
           }
+
+          # Home-manager module declarations - allows HM modules to declare their own preservation needs
+          (builtins.foldl' lib.recursiveUpdate { }
+            (map
+              (username:
+                let hmPres = getHmPreservation username;
+                in {
+                  ${username} = {
+                    directories = hmPres.directories;
+                    files = hmPres.files;
+                  };
+                })
+              users
+            )
+          )
         ];
       };
     };

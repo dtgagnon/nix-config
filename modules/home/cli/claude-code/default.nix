@@ -50,6 +50,12 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Declare preservation needs for this module
+    ${namespace}.preservation = {
+      directories = [ ".claude" ];
+      files = [ ".claude.json" ];
+    };
+
     home.packages = mkIf cfg.router [ pkgs.claude-code-router ];
     programs.claude-code = {
       enable = true;
