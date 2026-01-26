@@ -36,7 +36,7 @@ in
       looking-glass-client = enabled;
       music-player = {
         enable = true;
-        player = "rmcp";
+        player = "rmpc";
       };
       obsidian = enabled;
       office = {

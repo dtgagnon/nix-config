@@ -211,6 +211,8 @@
 
     nixarr.url = "github:rasmus-kirk/nixarr";
 
+    rybbix.url = "github:dtgagnon/rybbix";
+
     opencode.url = "github:sst/opencode";
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake/beta";
