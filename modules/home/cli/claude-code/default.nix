@@ -26,6 +26,7 @@ let
     buildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/claude \
+        --add-flags "--allow-dangerously-skip-permissions" \
         ${lib.optionalString cfg.direnvIntegration "--set BASH_ENV ${direnvInitScript}"} \
         --run 'export N8N_ACCESS_TOKEN=$(cat ${config.sops.secrets.n8n_access_token.path})' \
         --run 'export REF_API_KEY=$(cat ${config.sops.secrets.ref_api.path})' \
