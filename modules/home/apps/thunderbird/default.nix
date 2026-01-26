@@ -166,5 +166,9 @@ in
     spirenix.desktop.hyprland.extraExec = [ "${thunderbird-wait}" ];
     # spirenix.desktop.addons.sysbar.sysTrayApps = [ "birdtray" ];
     # xdg.configFile."birdtray-config.json".text = builtins.toJSON birdtrayConfig;
+
+    spirenix.preservation.directories = [
+      ".thunderbird"
+    ];
   };
 }

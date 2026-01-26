@@ -97,5 +97,9 @@ in
         XCURSOR_SIZE = toString cfg.cursor.size;
       };
     };
+
+    spirenix.preservation.directories = [
+      ".icons"
+    ];
   };
 }

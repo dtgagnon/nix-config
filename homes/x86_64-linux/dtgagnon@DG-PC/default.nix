@@ -17,6 +17,15 @@ in
       email = "gagnon.derek@gmail.com";
     };
 
+    # Personal directories specific to dtgagnon
+    preservation.directories = [
+      "Games"
+      "myVMs"
+      "nix-config"
+      "proj"
+      "vfio-vm-info"
+    ];
+
     apps = {
       antigravity = enabled;
       discord = enabled;

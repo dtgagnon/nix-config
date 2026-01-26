@@ -17,6 +17,10 @@ in
       email = "";
     };
 
+    preservation.directories = [
+      "Games"
+    ];
+
     apps = {
       office.okular-pdf = enabled;
       terminals.ghostty = enabled;

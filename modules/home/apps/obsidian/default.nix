@@ -17,5 +17,9 @@ in
 
   config = mkIf cfg.enable {
     home.packages = [ pkgs.obsidian ];
+
+    spirenix.preservation.directories = [
+      ".config/obsidian"
+    ];
   };
 }

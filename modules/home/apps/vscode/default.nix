@@ -134,5 +134,10 @@ in
       "continue.enableTabAutocomplete": false
       }
     '';
+
+    spirenix.preservation.directories = [
+      ".config/VSCodium"
+      ".vscode-oss"
+    ];
   };
 }

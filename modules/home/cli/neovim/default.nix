@@ -52,5 +52,9 @@ in
         signColumn = true;
       };
     };
+
+    spirenix.preservation.directories = [
+      ".local/state/nvim"
+    ];
   };
 }

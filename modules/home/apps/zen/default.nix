@@ -33,5 +33,9 @@ in
       "x-scheme-handler/https" = "zen-beta.desktop";
       "x-scheme-handler/unknown" = "zen-beta.desktop";
     };
+
+    spirenix.preservation.directories = [
+      { directory = ".zen"; mode = "0700"; }
+    ];
   };
 }

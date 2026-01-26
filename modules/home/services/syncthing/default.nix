@@ -58,9 +58,9 @@ in
       };
     };
 
-    # spirenix.user.home.persistHomeDirs = [
-    #   ".config/syncthing"
-    #   ".local/state/syncthing"
-    # ];
+    spirenix.preservation.directories = [
+      ".config/syncthing"
+      ".local/state/syncthing"
+    ];
   };
 }

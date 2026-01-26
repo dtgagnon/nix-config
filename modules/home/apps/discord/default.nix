@@ -25,5 +25,9 @@ in
     xdg.mimeApps.defaultApplications = {
       "x-scheme-handler/discord" = "discord.desktop";
     };
+
+    spirenix.preservation.directories = [
+      ".config/discord"
+    ];
   };
 }

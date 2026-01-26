@@ -85,5 +85,9 @@ in
         RestartSec = "5s";
       };
     };
+
+    spirenix.preservation.directories = [
+      ".local/share/activitywatch"
+    ];
   };
 }

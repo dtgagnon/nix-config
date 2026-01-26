@@ -16,5 +16,9 @@ in
 
   config = mkIf cfg.enable {
     programs.zoxide.enable = true;
+
+    spirenix.preservation.directories = [
+      ".local/share/zoxide"
+    ];
   };
 }

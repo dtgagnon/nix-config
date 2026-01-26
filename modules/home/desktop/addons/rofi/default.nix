@@ -31,5 +31,10 @@ in
       theme = mkForce cfg.theme;
       inherit (cfg) extraConfig location;
     };
+
+    spirenix.preservation.directories = [
+      ".config/rofi"
+      ".local/share/rofi"
+    ];
   };
 }

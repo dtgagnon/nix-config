@@ -114,6 +114,10 @@ in
         "image/jpg" = "nsxiv.desktop";
         "image/jpeg" = "nsxiv.desktop";
       };
+
+      spirenix.preservation.directories = [
+        ".config/hypr"
+      ];
     })
 
     # Configure Hyprland GPU selection when VFIO is enabled

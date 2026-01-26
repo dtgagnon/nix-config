@@ -19,5 +19,9 @@ in
       enable = true;
       nix-direnv = enabled;
     };
+
+    spirenix.preservation.directories = [
+      ".local/share/direnv"
+    ];
   };
 }

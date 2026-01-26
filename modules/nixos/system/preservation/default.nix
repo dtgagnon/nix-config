@@ -70,70 +70,31 @@ in
 
         # User files (ownership implied)
         users = mkMerge [
-          # Applied to all users
+          # Applied to all users - minimal entries not covered by HM modules
           (builtins.foldl' lib.recursiveUpdate { }
             (map
               (user: {
                 ${user} = {
                   directories = [
-                    "Apps"
-                    "Documents"
-                    "Downloads"
-                    "Games"
-                    "Music"
-                    "Pictures"
-                    "Sync"
-                    "Videos"
-                    ".config/syncthing"
-                    ".local/state/nix"
-                    ".local/state/nvim"
-                    ".local/state/syncthing"
-                    ".local/state/wireplumber"
-                    { directory = ".pki"; mode = "0700"; }
-                    { directory = ".ssh"; mode = "0700"; }
-                    { directory = ".zen"; mode = "0700"; }
+                    ".local/state/nix" # Nix system state
+                    ".local/state/wireplumber" # System audio service
                   ] ++ cfg.extraHomeDirs;
-                  files = [
-                    ".histfile"
-                  ] ++ cfg.extraHomeFiles;
+                  files = [ ] ++ cfg.extraHomeFiles;
                 };
               })
               (snowfallHostUserList host)
             )
           )
 
-          # Per-user additions
+          # Per-user additions - items without corresponding HM modules
           {
             dtgagnon = {
               directories = [
-                "myVMs"
-                "nix-config"
-                "proj"
-                ".config"
-                ".config/discord"
-                ".config/hypr"
-                ".config/obsidian"
-                ".config/rofi"
-                ".config/syncthing"
-                ".config/VSCodium"
-                ".local/share/activitywatch"
-                ".local/share/bottles"
-                ".local/share/direnv"
-                ".local/share/keyrings"
-                ".local/share/rofi"
-                ".local/share/zoxide"
-                { directory = ".gnupg"; mode = "0700"; }
-                ".icons"
-                ".thunderbird"
-                ".vscode-oss"
-                "vfio-vm-info"
-                # Commented out - now declared via HM preservation module in cli/claude-code
-                # ".claude"
+                ".config" # Parent dir for HM-managed subdirs
+                ".local/share/bottles" # System-level gaming/wine
+                ".local/share/keyrings" # System-level keyring
               ] ++ cfg.extraHomeDirs;
-              files = [
-                # Commented out - now declared via HM preservation module in cli/claude-code
-                # ".claude.json"
-              ] ++ cfg.extraHomeFiles;
+              files = [ ] ++ cfg.extraHomeFiles;
             };
             root = {
               home = "/root"; # non-standard home path

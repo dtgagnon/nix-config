@@ -69,5 +69,9 @@ in
       ".ssh/config.d/.keep".text = "# Managed by home-manager";
       ".ssh/sockets/.keep".text = "# Managed by home-manager";
     };
+
+    spirenix.preservation.directories = [
+      { directory = ".ssh"; mode = "0700"; }
+    ];
   };
 }

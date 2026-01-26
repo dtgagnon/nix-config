@@ -40,6 +40,25 @@ in
     '';
   };
 
-  # No config needed - the NixOS preservation module reads these options
-  config = mkIf cfg.enable { };
+  # Base preservation config for all users - HM modules can add to these lists
+  config = mkIf cfg.enable {
+    spirenix.preservation = {
+      directories = [
+        # Standard XDG-like user directories
+        "Apps"
+        "Documents"
+        "Downloads"
+        "Music"
+        "Pictures"
+        "Sync"
+        "Videos"
+        # Security (all users need these)
+        { directory = ".gnupg"; mode = "0700"; }
+        { directory = ".pki"; mode = "0700"; }
+      ];
+      files = [
+        ".histfile"
+      ];
+    };
+  };
 }
