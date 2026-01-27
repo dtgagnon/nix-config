@@ -14,7 +14,7 @@ When the user invokes this skill, guide them through email triage:
 ### Step 1: Review Inbox
 
 ```bash
-emma email list --source default --folder INBOX --limit 20
+emma email list --folder INBOX --limit 20
 ```
 
 ### Step 2: Analyze Emails
@@ -29,9 +29,11 @@ emma analyze email <id>
 The analysis returns:
 - **category**: personal, work, newsletter, promotional, transactional, spam, other
 - **priority**: low, normal, high, urgent
-- **action_required**: boolean
+- **action_required**: boolean (false if user sent the email)
 - **summary**: brief description
-- **suggested_response**: if action needed
+- **suggested_response**: if action needed (not shown for sent emails)
+
+Note: LLM uses configured email addresses to determine if user sent or received the email.
 
 ### Step 3: Take Action
 
@@ -86,12 +88,12 @@ emma email move Archive <id2> --execute
 
 ## Example Session
 
-1. "Let me check your inbox" -> `emma email list --limit 15`
+1. "Let me check your inbox" -> `emma email list --folder INBOX --limit 15`
 2. "I see 3 emails that look important. Let me analyze them."
 3. For each: `emma analyze email <id>`
-4. "Email 1 needs a response. Let me draft a reply."
+4. "Email 1 needs a response (you received it). Let me draft a reply."
 5. `emma analyze draft-reply <id1>`
 6. "Email 2 is a newsletter, moving to Newsletters folder."
 7. `emma email move Newsletters <id2> --execute`
-8. "Email 3 is spam, deleting."
-9. `emma email delete <id3> --permanent --execute`
+8. "Email 3 you sent yourself - no action needed. Email 4 is spam, deleting."
+9. `emma email delete <id4> --permanent --execute`

@@ -10,9 +10,10 @@ Emma (Email Management and Monitoring Assistant) provides LLM-powered email proc
 ## Quick Reference
 
 ```bash
-# View emails
-emma email list --source default --folder INBOX --limit 20
-emma email show                          # Interactive selector
+# View emails (omit --source to use default)
+emma email list --folder INBOX --limit 20
+emma email list --source work --folder INBOX    # Specific account
+emma email show                                  # Interactive selector
 
 # Email operations
 emma email move Archive                  # Interactive + dry-run
@@ -20,7 +21,7 @@ emma email move Archive --execute        # Actually move
 emma email delete                        # Interactive, moves to Trash
 emma email delete --permanent --execute  # Permanently delete
 
-# LLM Analysis
+# LLM Analysis (understands sent vs received based on user email)
 emma analyze email                       # Full analysis (category, priority, sentiment, etc.)
 emma analyze summarize                   # Quick 1-2 sentence summary
 emma analyze draft-reply                 # Generate reply draft
@@ -49,13 +50,17 @@ emma source list    # Show configured sources
 emma config show    # Full config display
 ```
 
-**Configuration**: `~/.config/emma/config.yaml`
+**Configuration**: `~/.config/emma/config.local.yaml`
+
+Email address is the config key. Other fields are optional with smart defaults:
 
 ```yaml
 maildir_accounts:
-  default:
-    path: ~/Mail/gagnon.derek@gmail.com
-    account_name: gmail
+  alice@protonmail.com:
+    default: true                    # Use when --source omitted
+  alice@gmail.com:                   # Empty = all defaults
+  alice@company.com:
+    account_name: work               # Override source name (default: domain)
 
 llm:
   provider: ollama
@@ -63,18 +68,24 @@ llm:
   ollama_base_url: http://localhost:11434
 ```
 
+**Defaults**:
+- `account_name`: derived from domain (e.g., "protonmail", "gmail", "company")
+- `path`: `~/Mail/<email_address>`
+- `default`: false (first account used if none marked)
+
 ## Email Operations
 
 ### List and Browse
 
 ```bash
-# List emails
-emma email list --source default --folder INBOX --limit 50
+# List emails (uses default source if --source omitted)
+emma email list --folder INBOX --limit 50
+emma email list --source gmail --folder INBOX --limit 50
 
 # Interactive browser (fzf-style)
-emma email show                          # All sources
-emma email show default                  # Specific source
-emma email show default INBOX            # Specific folder
+emma email show                          # Default source
+emma email show --source work            # Specific account
+emma email show --source gmail INBOX     # Account + folder
 ```
 
 ### Move Emails
@@ -219,8 +230,8 @@ emma audit export --format json --output audit.json
 ### Triage Inbox
 
 ```bash
-# 1. View recent emails
-emma email show default INBOX
+# 1. View recent emails (uses default source)
+emma email show
 
 # 2. Analyze interesting ones
 emma analyze email

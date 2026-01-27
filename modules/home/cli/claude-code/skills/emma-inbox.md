@@ -13,7 +13,7 @@ When the user invokes this skill:
 
 1. **List recent emails** from the default inbox:
    ```bash
-   emma email list --source default --folder INBOX --limit 10
+   emma email list --folder INBOX --limit 10
    ```
 
 2. **If user wants details** on specific emails, use:
@@ -29,11 +29,11 @@ When the user invokes this skill:
 ## Quick Commands
 
 ```bash
-# List inbox
+# List inbox (uses default source)
 emma email list --limit 20
 
 # Interactive browse
-emma email show default INBOX
+emma email show
 
 # Summarize specific email
 emma analyze summarize <id>
@@ -46,7 +46,7 @@ emma service status
 
 User: "/emma-inbox"
 
-1. Run `emma email list --source default --folder INBOX --limit 10`
+1. Run `emma email list --folder INBOX --limit 10`
 2. Show the user the list of recent emails
 3. Ask if they want to analyze any specific emails
 4. If yes, run `emma analyze email <selected-id>` or `emma analyze summarize <selected-id>`

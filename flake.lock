@@ -588,11 +588,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1769202970,
-        "narHash": "sha256-pAsgERn8p5IIK2Fp4m+76pKBoUKHU/F8Y48ZhohGF9o=",
+        "lastModified": 1769486113,
+        "narHash": "sha256-ha6Nq4cMtqS8OwXxiFq1fyCyvHcJdS6qZqZSTL9Ut7A=",
         "owner": "dtgagnon",
         "repo": "emma",
-        "rev": "160f51d3c92b2913db03ccf8da9f18d0bd809eaf",
+        "rev": "a6f5cef9e5b9acb40d8c5944df020c1fb97f67c5",
         "type": "github"
       },
       "original": {
