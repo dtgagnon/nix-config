@@ -11,9 +11,11 @@ let
   cfg = config.${namespace}.cli.claude-code;
 
   # Direnv initialization script for bash sessions spawned by Claude Code
+  # Guard prevents re-entry when direnv spawns bash subprocesses during evaluation
   direnvInitScript = pkgs.writeText "claude-bash-init.sh" ''
     if command -v direnv >/dev/null 2>&1; then
-      if [ -n "$CLAUDECODE" ]; then
+      if [ -n "$CLAUDECODE" ] && [ -z "$__CLAUDE_DIRENV_LOADED" ]; then
+        export __CLAUDE_DIRENV_LOADED=1
         eval "$(DIRENV_LOG_FORMAT= direnv export bash)"
       fi
     fi
