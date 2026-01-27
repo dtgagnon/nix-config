@@ -63,6 +63,12 @@ in
           addressFamily = "any"; # use v4+v6 over tailnet
           forwardAgent = true; # enable pam-rssh sudo authentication
         };
+
+        "oranix" = {
+          serverAliveInterval = 60;
+          serverAliveCountMax = 3;
+          forwardAgent = true;
+        };
       };
     };
 

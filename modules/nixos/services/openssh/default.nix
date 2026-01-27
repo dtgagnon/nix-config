@@ -58,7 +58,7 @@ in
 {
   options.${namespace}.services.openssh = {
     enable = mkBoolOpt false "Whether or not to configure OpenSSH support.";
-    authorizedKeys = mkOpt (types.listOf types.str) [ default-key ] "The public keys to apply.";
+    authorizedKeys = mkOpt (types.listOf types.path) [ default-key ] "Paths to public key files (read at build time).";
     port = mkOpt types.port 22022 "The port to listen on (in addition to 22).";
     manage-other-hosts = mkBoolOpt true "Whether or not to add other host configurations to SSH config.";
   };
@@ -90,7 +90,7 @@ in
       ${optionalString cfg.manage-other-hosts other-hosts-config}
     '';
 
-    spirenix.user.extraOptions.openssh.authorizedKeys.keys = cfg.authorizedKeys;
+    spirenix.user.extraOptions.openssh.authorizedKeys.keyFiles = cfg.authorizedKeys;
     networking.firewall.allowedTCPPorts = [ cfg.port ];
     security.pam.sshAgentAuth = {
       enable = true;
