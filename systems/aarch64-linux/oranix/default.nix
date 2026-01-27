@@ -50,7 +50,6 @@ in
     virtualisation.kvm.enable = false;
   };
 
-  # Oracle Ampere A1 uses UEFI boot
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -62,18 +61,14 @@ in
     "console=tty1"
   ];
 
+  security.sudo.wheelNeedsPassword = true;
+
   # Firewall configuration
   networking.firewall = {
     enable = true;
-    # Tailscale manages network access, but keep SSH open for initial setup
     allowedTCPPorts = [ 22 ];
-    # Allow Tailscale
     trustedInterfaces = [ "tailscale0" ];
   };
-
-  # Automated Maintenance disabled - using push-based deployment via deploy-rs
-  # This avoids needing private SSH keys on the VPS for fetching private flake inputs
-  system.autoUpgrade.enable = false;
 
   nix.gc = {
     automatic = true;
