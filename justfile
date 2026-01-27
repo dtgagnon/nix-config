@@ -6,10 +6,10 @@ default:
   @just --list
 
 check:
-  nix flake check --impure --keep-going
+  nix flake check --keep-going
 
 check-trace:
-  nix flake check --impure --show-trace
+  nix flake check --show-trace
 
 update:
   nix flake update
@@ -27,7 +27,7 @@ update-nix-secrets:
 iso:
   # If we dont remove this folder, libvirtd VM doesnt run with the new iso...
   rm -rf result
-  nix build --impure .#nixosConfigurations.iso.config.system.build.isoImage && ln -sf result/iso/*.iso latest.iso
+  nix build .#nixosConfigurations.iso.config.system.build.isoImage && ln -sf result/iso/*.iso latest.iso
 
 iso-install DRIVE: iso
   sudo dd if=$(eza --sort changed result/iso/*.iso | tail -n1) of={{DRIVE}} bs=4M status=progress oflag=sync
@@ -46,7 +46,7 @@ sync USER HOST PATH:
 
 # Build local, target remote - requires local cross-compilation (binfmt) for different architectures
 bltr HOST USER="dtgagnon":
-	nixos-rebuild switch --flake .#{{HOST}} --target-host {{USER}}@{{HOST}} --sudo --show-trace --impure
+	nixos-rebuild switch --flake .#{{HOST}} --target-host {{USER}}@{{HOST}} --sudo --show-trace
 
 # Build remote, target remote - sources copied to remote, built natively there
 brtr HOST USER="dtgagnon":
