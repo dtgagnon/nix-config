@@ -1,15 +1,15 @@
-{
-  lib,
-  config,
-  pkgs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib) mkForce mkIf getExe;
+  inherit (lib) mkIf getExe;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.fzf;
-in {
+in
+{
   options.${namespace}.cli.fzf = {
     enable = mkBoolOpt true "Enables fzf";
   };
@@ -28,21 +28,6 @@ in {
       changeDirWidgetOptions = [
         "--preview 'eza --tree --color=always {} | head -200'"
       ];
-
-      colors = with config.lib.stylix.colors.withHashtag; mkForce {
-        "bg" = base00;
-        "bg+" = base02;
-        "fg" = base05;
-        "fg+" = base05;
-        "header" = base0E;
-        "hl" = base08;
-        "hl+" = base08;
-        "info" = base0A;
-        "marker" = base06;
-        "pointer" = base06;
-        "prompt" = base0E;
-        "spinner" = base06;
-      };
 
       defaultOptions = [
         "--border='rounded' --border-label='' --preview-window='border-rounded' --prompt='> '"

@@ -3605,11 +3605,11 @@
         "nixpkgs": "nixpkgs_13"
       },
       "locked": {
-        "lastModified": 1769403239,
-        "narHash": "sha256-iL+OcOlYMZC21dSoQhT8VUTRUwffaqBybJG9m5Pgr/g=",
+        "lastModified": 1769534624,
+        "narHash": "sha256-v6uMGmFcxXxf9/9Am3zyJ12LIGxc4UqJhvhgSeAjMDU=",
         "owner": "dtgagnon",
         "repo": "rybbix",
-        "rev": "d344e2f5732cc8a0499e0e52d5dfe44bd79016f9",
+        "rev": "97367610fe7c4dfe0c1030134325379eb1a24443",
         "type": "github"
       },
       "original": {

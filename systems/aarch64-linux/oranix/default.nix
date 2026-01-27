@@ -61,7 +61,7 @@ in
     "console=tty1"
   ];
 
-  security.sudo.wheelNeedsPassword = true;
+  security.sudo.wheelNeedsPassword = lib.mkForce true;
 
   # Firewall configuration
   networking.firewall = {

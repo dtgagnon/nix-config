@@ -61,6 +61,7 @@ in
           serverAliveCountMax = 3;
           checkHostIP = false;
           addressFamily = "any"; # use v4+v6 over tailnet
+          forwardAgent = true; # enable pam-rssh sudo authentication
         };
       };
     };
