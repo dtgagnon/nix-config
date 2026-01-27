@@ -96,6 +96,11 @@ in
         email = "gagnon.derek@proton.me";
         tailnetName = "aegean-interval";
       };
+
+      rybbit = {
+        enable = true;
+        useBuiltinProxy = false; # Caddy handles reverse proxy
+      };
     };
 
     # System
@@ -117,16 +122,6 @@ in
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
-    };
-  };
-
-  # SpireNet dashboard (uses standard services namespace)
-  services.spirenet-dashboard = {
-    enable = true;
-    domain = "spirenet.link";
-    tailscale = {
-      enable = true;
-      port = 443;
     };
   };
 

@@ -32,19 +32,6 @@ in
       #   baseDomain = "yourdomain.com";  # TODO: Set your domain
       #   email = "you@example.com";       # TODO: Set your email
       # };
-
-      # Rybbit - privacy-focused analytics
-      # rybbit = {
-      #   enable = true;
-      #   useBuiltinProxy = false;  # Pangolin handles ingress
-      # };
-
-      # coolify = {
-      #   enable = true;
-      #   port = 8000;
-      #   openFirewall = false; # Using Tailscale, no need to expose publicly
-      #   autoUpdate = true;
-      # };
     };
 
     system = {

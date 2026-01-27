@@ -22,6 +22,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Persistence for rybbit databases
+    ${namespace}.system.preservation.extraSysDirs = [
+      "/var/lib/rybbit"
+      "/var/lib/clickhouse"
+      "/var/lib/postgresql"
+    ];
+
     # Sops secret containing env vars for Rybbit
     # Required: BETTER_AUTH_SECRET=<random-string>
     # Optional: CLICKHOUSE_PASSWORD, POSTGRES_PASSWORD, MAPBOX_TOKEN
