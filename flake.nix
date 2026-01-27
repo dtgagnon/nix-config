@@ -77,11 +77,11 @@
 
         systems.hosts.slim.modules = with inputs; [
           spirenet-dashboard.nixosModules.default
+          rybbix.nixosModules.default
         ];
 
         systems.hosts.oranix.modules = with inputs; [
           spirenet-dashboard.nixosModules.default
-          rybbix.nixosModules.default
         ];
 
         homes.packages = with inputs; [

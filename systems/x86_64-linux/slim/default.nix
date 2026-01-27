@@ -89,17 +89,9 @@ in
 
     # Services
     services = {
-      coolify = enabled;
-
-      caddy = {
-        enable = true;
-        email = "gagnon.derek@proton.me";
-        tailnetName = "aegean-interval";
-      };
-
       rybbit = {
         enable = true;
-        useBuiltinProxy = false; # Caddy handles reverse proxy
+        useBuiltinProxy = false;
       };
     };
 
