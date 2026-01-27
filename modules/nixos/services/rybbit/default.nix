@@ -1,11 +1,14 @@
 { lib
 , config
+, options
 , namespace
 , ...
 }:
 let
   inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.${namespace}.services.rybbit;
+  # Check if upstream rybbix module is available
+  hasUpstream = options.services ? rybbit;
 in
 {
   options.${namespace}.services.rybbit = {
@@ -21,7 +24,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (lib.optionalAttrs hasUpstream {
     # Persistence for rybbit databases
     ${namespace}.system.preservation.extraSysDirs = [
       "/var/lib/rybbit"
@@ -60,5 +63,5 @@ in
       settings.disableSignup = true;
       settings.disableTelemetry = true;
     };
-  };
+  });
 }
