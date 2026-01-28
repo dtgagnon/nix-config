@@ -1,29 +1,26 @@
 { lib, config, namespace, ... }:
 let
-  inherit (lib) mkIf;
-  inherit (lib.${namespace}) mkBoolOpt;
+  inherit (lib) mkIf types;
+  inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.security.pam;
 in
 {
   options.${namespace}.security.pam = {
     enable = mkBoolOpt false "Enable PAM based rSSH authentication for sudo";
+    authorizedKeyName = mkOpt types.str "dtgagnon-key" "Name of the public key file for pam_rssh authentication (without .pub extension)";
   };
 
-  # TODO: I have no idea what the below settings actually do, so I need to read up on that before enabling all this stuff.
   config = mkIf cfg.enable {
     security.pam = {
-      rssh.enable = true;
-      services.sudo = {
-        rssh = true;
+      rssh = {
+        enable = true;
+        settings = {
+          # Use $user variable substitution supported by pam_rssh
+          # Points to the same keys used by openssh authorized_keys
+          auth_key_file = "/persist/home/$user/.ssh/${cfg.authorizedKeyName}.pub";
+        };
       };
+      services.sudo.rssh = true;
     };
-    # rules.auth.rssh = {
-    #   order = config.rules.auth.ssh_agent_auth.order - 1;
-    #   control = "sufficient";
-    #   modulePath = "${pkgs.pam_rssh}/lib/libpam_rssh.so";
-    #   settings.authorized_keys_command = pkgs.writeShellScript "get-authorized-keys" ''
-    #     cat "/etc/ssh/authorized_keys.d/$1"
-    #   '';
-    # };
   };
 }
