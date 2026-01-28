@@ -44,23 +44,23 @@ in
       services.mpd = {
         enable = true;
         openFirewall = true;
-        extraConfig = ''
-          audio_output {
-            type "httpd"
-            name "HTTP Stream"
-            encoder "lame"
-            port "8001"
-            bitrate "320"
-            format "44100:16:2"
-            always_on "yes"
-            tags "yes"
-          }
-        '';
         settings = {
           music_directory = "/srv/media/music";
           playlist_directory = "/srv/media/music/playlists";
           bind_to_address = "0.0.0.0";
           port = 6600;
+          audio_output = [
+            {
+              type = "httpd";
+              name = "HTTP Stream";
+              encoder = "lame";
+              port = 8001;
+              bitrate = 320;
+              format = "44100:16:2";
+              always_on = "yes";
+              tags = "yes";
+            }
+          ];
         };
       };
     })
