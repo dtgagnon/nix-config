@@ -68,26 +68,27 @@ in
         };
       } cfg.settings;
 
-      rights = lib.mkIf (cfg.rights != { }) cfg.rights;
-    };
-
-    # Default rights: users can read/write their own calendars
-    services.radicale.rights = lib.mkIf (cfg.rights == { }) {
-      root = {
-        user = ".+";
-        collection = "";
-        permissions = "R";
-      };
-      principal = {
-        user = ".+";
-        collection = "{user}";
-        permissions = "RW";
-      };
-      calendars = {
-        user = ".+";
-        collection = "{user}/[^/]+";
-        permissions = "rw";
-      };
+      # Use custom rights if provided, otherwise use sensible defaults
+      rights =
+        if cfg.rights != { }
+        then cfg.rights
+        else {
+          root = {
+            user = ".+";
+            collection = "";
+            permissions = "R";
+          };
+          principal = {
+            user = ".+";
+            collection = "{user}";
+            permissions = "RW";
+          };
+          calendars = {
+            user = ".+";
+            collection = "{user}/[^/]+";
+            permissions = "rw";
+          };
+        };
     };
 
     networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
