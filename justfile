@@ -46,7 +46,7 @@ sync USER HOST PATH:
 
 # Build local, target remote - requires local cross-compilation (binfmt) for different architectures
 bltr HOST USER="dtgagnon":
-	nixos-rebuild switch --flake .#{{HOST}} --target-host {{USER}}@{{HOST}} --sudo --show-trace
+	nixos-rebuild switch --flake .#{{HOST}} --target-host {{USER}}@{{HOST}} --sudo
 
 # Build remote, target remote - sources copied to remote, built natively there
 brtr HOST USER="dtgagnon":
