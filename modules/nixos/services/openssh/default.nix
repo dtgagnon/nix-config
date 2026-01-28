@@ -12,20 +12,14 @@ let
   cfg = config.${namespace}.services.openssh;
 
   user = config.${namespace}.user.name;
-  user-id = builtins.toString user.uid;
+  user-id = toString user.uid;
 
   hasOptinPersistence = config.environment.persistence ? "/persist";
-
-  # TODO: This is a hold-over from old snowfall-lib rev using specialArg `name` to provide hostname. Can be moved to just `host` once the `name` uses are identified.
-  name = host;
-
-  # this is a default user's public ssh key
-  default-key = "${config.sops.secrets."ssh-keys/dtgagnon-key.pub".path}";
 
   # Collects the information about the other hosts
   other-hosts = lib.filterAttrs
     (
-      key: host: key != name && (host.config.${namespace}.user.name or null) != null
+      key: hostCfg: key != host && (hostCfg.config.${namespace}.user.name or null) != null
     )
     ((inputs.self.nixosConfigurations or { }) // (inputs.self.darwinConfigurations or { }));
 
@@ -37,7 +31,7 @@ let
       let
         remote = other-hosts.${name};
         remote-user-name = remote.config.${namespace}.user.name;
-        remote-user-id = builtins.toString remote.config.users.users.${remote-user-name}.uid;
+        remote-user-id = toString remote.config.users.users.${remote-user-name}.uid;
 
         #NOTE: Don't need to use forward-gpg for age keys, but will need to refer to them statically somehow. I'm using age keys only so far.
         forward-gpg = optionalString (config.programs.gnupg.agent.enable && remote.config.programs.gnupg.agent.enable) ''
@@ -49,7 +43,7 @@ let
         Host ${name}
         User ${remote-user-name}
         ForwardAgent yes
-        Port ${builtins.toString cfg.port}
+        Port ${toString cfg.port}
         ${forward-gpg}
       ''
     )
@@ -58,7 +52,7 @@ in
 {
   options.${namespace}.services.openssh = {
     enable = mkBoolOpt false "Whether or not to configure OpenSSH support.";
-    authorizedKeys = mkOpt (types.listOf types.path) [ default-key ] "Paths to public key files (read at build time).";
+    authorizedKeyName = mkOpt types.str "dtgagnon-key" "Name of the keypair to authorize. Path: /persist/home/%u/.ssh/{name}.pub";
     port = mkOpt types.port 22022 "The port to listen on (in addition to 22).";
     manage-other-hosts = mkBoolOpt true "Whether or not to add other host configurations to SSH config.";
   };
@@ -83,6 +77,10 @@ in
           type = "ed25519";
         }
       ];
+
+      authorizedKeysFiles = [
+        "/persist/home/%u/.ssh/${cfg.authorizedKeyName}.pub"
+      ];
     };
 
     #NOTE: Right now, just using tailscale on all my devices for ssh connections - uncomment when regular openssh is needed
@@ -90,11 +88,10 @@ in
       ${optionalString cfg.manage-other-hosts other-hosts-config}
     '';
 
-    spirenix.user.extraOptions.openssh.authorizedKeys.keyFiles = cfg.authorizedKeys;
     networking.firewall.allowedTCPPorts = [ cfg.port ];
     security.pam.sshAgentAuth = {
       enable = true;
-      authorizedKeysFiles = [ "/persist/etc/ssh/authorized_keys.d/%u" ];
+      authorizedKeysFiles = [ "/persist/home/%u/.ssh/${cfg.authorizedKeyName}.pub" ];
     };
   };
 }

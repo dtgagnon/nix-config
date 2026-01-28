@@ -65,8 +65,10 @@ in
         };
 
         "oranix" = {
+          hostname = "100.100.90.1";
           serverAliveInterval = 60;
           serverAliveCountMax = 3;
+          checkHostIP = false;
           forwardAgent = true;
         };
       };
