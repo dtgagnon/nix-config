@@ -21,14 +21,6 @@ in
       enable = true;
       package = pkgs.activitywatch;
       watchers = {
-        aw-watcher-afk = {
-          package = pkgs.activitywatch;
-          settings = {
-            timeout = 300;
-            poll_time = 2;
-          };
-        };
-
         aw-watcher-window-wayland = mkIf anyWaylandWM {
           package = pkgs.aw-watcher-window-wayland;
           settings.poll_time = 1;
@@ -49,14 +41,6 @@ in
         };
       };
 
-      activitywatch-watcher-aw-watcher-afk = {
-        Service = {
-          # DISPLAY needed for pynput's X11 backend fallback
-          Restart = "on-failure";
-          RestartSec = "10s";
-        };
-      };
-
       activitywatch-watcher-aw-watcher-window-wayland = mkIf anyWaylandWM {
         Unit = {
           After = [ "wayland-session@Hyprland.target" ];
@@ -67,22 +51,6 @@ in
           Restart = "on-failure";
           RestartSec = "10s";
         };
-      };
-    };
-
-    spirenix.desktop.addons.sysbar.sysTrayApps = [
-      {
-        name = "aw-qt";
-        package = pkgs.activitywatch;
-      }
-    ];
-
-    # Override aw-qt service to add startup delay for system tray availability
-    systemd.user.services.aw-qt = mkIf anyWaylandWM {
-      Service = {
-        # Give waybar's system tray time to fully initialize
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
-        RestartSec = "5s";
       };
     };
 
