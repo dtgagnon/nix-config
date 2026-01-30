@@ -47,8 +47,14 @@ in
     };
 
     # Use sops template to generate traefik config with real ACME email
+    # Generate TOML from staticConfigOptions since staticConfigFile is null when using options
     sops.templates."traefik-config.toml" = {
-      content = builtins.readFile config.services.traefik.staticConfigFile;
+      content =
+        let
+          tomlFormat = pkgs.formats.toml { };
+          configFile = tomlFormat.generate "traefik.toml" config.services.traefik.staticConfigOptions;
+        in
+        builtins.readFile configFile;
       owner = "root";
       group = "root";
       mode = "0644";
