@@ -34,32 +34,30 @@ in
       mode = "0400";
     };
 
-    sops.secrets."pangolin/acme-email" = {
-      owner = "pangolin";
-      group = "pangolin";
-      mode = "0400";
-    };
+    sops.secrets."pangolin/acme-email" = { };
 
     services.pangolin = {
       enable = true;
       baseDomain = cfg.baseDomain;
       dashboardDomain = "pangolin.${cfg.baseDomain}";
-      # Placeholder - patched by preStart after config is generated
-      letsEncryptEmail = "__PANGOLIN_ACME_EMAIL__";
+      # Use sops placeholder - will be substituted in the template
+      letsEncryptEmail = config.sops.placeholder."pangolin/acme-email";
       openFirewall = true;
       environmentFile = config.sops.secrets."pangolin/env".path;
     };
 
-    # Patch ACME email into traefik config after pangolin generates it
-    systemd.services.pangolin = {
-      preStart = lib.mkAfter ''
-        # Wait for config file to exist (created by upstream preStart)
-        TRAEFIK_CONFIG="/var/lib/pangolin/config/traefik/traefik_config.yml"
-        if [ -f "$TRAEFIK_CONFIG" ] && [ -f "${config.sops.secrets."pangolin/acme-email".path}" ]; then
-          EMAIL=$(${pkgs.coreutils}/bin/cat "${config.sops.secrets."pangolin/acme-email".path}" | ${pkgs.coreutils}/bin/tr -d '\n')
-          ${pkgs.gnused}/bin/sed -i "s|__PANGOLIN_ACME_EMAIL__|$EMAIL|g" "$TRAEFIK_CONFIG"
-        fi
-      '';
+    # Use sops template to generate traefik config with real ACME email
+    sops.templates."traefik-config.toml" = {
+      content = builtins.readFile config.services.traefik.staticConfigFile;
+      owner = "root";
+      group = "root";
+      mode = "0644";
+    };
+
+    # Override Traefik to use the sops-rendered config
+    systemd.services.traefik = {
+      after = [ "sops-nix.service" ];
+      serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${config.sops.templates."traefik-config.toml".path}";
     };
   };
 }

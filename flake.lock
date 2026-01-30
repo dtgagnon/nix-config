@@ -3194,11 +3194,11 @@
         "web-api": "web-api"
       },
       "locked": {
-        "lastModified": 1769620916,
-        "narHash": "sha256-Isykc18LsoLAAYSosOOpvU2Rxgb6DV6n/wzQLi4r9SU=",
+        "lastModified": 1769810313,
+        "narHash": "sha256-uLP9UDF6yxoMprDX8C4qz4q4Xr44/L9Xbfkbdf5RhEI=",
         "ref": "refs/heads/main",
-        "rev": "d54f619d4a2ddd9f5eda738b303a2891b4302c29",
-        "revCount": 121,
+        "rev": "fc237fb59ec01ab4435ff4084a81a4293c883caa",
+        "revCount": 124,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/odooAdds"
       },
