@@ -26,12 +26,10 @@ in
       openssh = enabled;
       tailscale = enabled;
 
-      # Pangolin - tunneled reverse proxy (public ingress)
-      # pangolin = {
-      #   enable = true;
-      #   baseDomain = "yourdomain.com";  # TODO: Set your domain
-      #   email = "you@example.com";       # TODO: Set your email
-      # };
+      pangolin = {
+        enable = true;
+        baseDomain = "spirenet.link";
+      };
     };
 
     system = {

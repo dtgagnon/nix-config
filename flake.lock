@@ -2447,11 +2447,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1769529790,
-        "narHash": "sha256-REoHAtHG3Frsst+pBolQqqf9zd9kleQVtakk38gGP54=",
+        "lastModified": 1769795568,
+        "narHash": "sha256-Z5E36TW6azn+c+665cALZXQOuwnk9h0pX49do159Emg=",
         "ref": "refs/heads/main",
-        "rev": "4a03ec4080bbcfd6fb58ff1624c9ea85988ab2d0",
-        "revCount": 127,
+        "rev": "cc2a35eba0fe9f25e9878ceb2db217ba1aaa0c8b",
+        "revCount": 128,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -2876,11 +2876,11 @@
     },
     "nixpkgs_18": {
       "locked": {
-        "lastModified": 1765186076,
-        "narHash": "sha256-hM20uyap1a0M9d344I692r+ik4gTMyj60cQWO+hAYP8=",
+        "lastModified": 1769018530,
+        "narHash": "sha256-MJ27Cy2NtBEV5tsK+YraYr2g851f3Fl1LpNHDzDX15c=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "addf7cf5f383a3101ecfba091b98d0a1263dc9b8",
+        "rev": "88d3861acdd3d2f0e361767018218e51810df8a1",
         "type": "github"
       },
       "original": {
@@ -3736,6 +3736,18 @@
         "type": "github"
       }
     },
+    "sortformer-model": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-KV4wQJOsMrXL0mSwE5nWfMh7icVMqINQM7b4RviXWmE=",
+        "type": "file",
+        "url": "https://huggingface.co/altunenes/parakeet-rs/resolve/main/diar_streaming_sortformer_4spk-v2.onnx"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://huggingface.co/altunenes/parakeet-rs/resolve/main/diar_streaming_sortformer_4spk-v2.onnx"
+      }
+    },
     "spirenet-dashboard": {
       "inputs": {
         "nixpkgs": "nixpkgs_14"
@@ -4459,14 +4471,15 @@
         "parakeet-vocab": "parakeet-vocab",
         "quickshell": "quickshell_2",
         "rust-overlay": "rust-overlay",
-        "silero-vad": "silero-vad"
+        "silero-vad": "silero-vad",
+        "sortformer-model": "sortformer-model"
       },
       "locked": {
-        "lastModified": 1768531533,
-        "narHash": "sha256-RBPjQMsFZAD12K900N+hDJgqhWzeH7o3LbjNvYWYO6A=",
+        "lastModified": 1769790234,
+        "narHash": "sha256-HDqlKvKtIe97Azvn76s32Jauu3gptLhPgvY0t3NXj2c=",
         "ref": "refs/heads/main",
-        "rev": "e9cd8a23657c0f8b65a8dc888e27f852eed84994",
-        "revCount": 120,
+        "rev": "7452eb1f3adda7ab3caa955c1aaf1ec9bd845979",
+        "revCount": 128,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },
