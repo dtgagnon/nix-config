@@ -216,7 +216,8 @@ in
           disable_signup_without_invite = true;
           disable_user_create_org = true;
           allow_raw_resources = true;
-          enable_integration_api = false;
+          # Must be true - nixpkgs bug creates api.${baseDomain} routers even when false
+          enable_integration_api = true;
           disable_local_sites = false;
           disable_basic_wireguard_sites = true; # Using Tailscale instead
           disable_product_help_banners = true;
@@ -249,10 +250,20 @@ in
         };
       };
 
-      # Ensure database exists before Pangolin starts
-      systemd.services.pangolin = mkIf cfg.geoBlocking.enable {
-        after = [ "pangolin-geolite2-update.service" ];
-        wants = [ "pangolin-geolite2-update.service" ];
+      # Ensure database exists before Pangolin starts + fix .next permissions
+      systemd.services.pangolin = {
+        after = mkIf cfg.geoBlocking.enable [ "pangolin-geolite2-update.service" ];
+        wants = mkIf cfg.geoBlocking.enable [ "pangolin-geolite2-update.service" ];
+        # HACK: Upstream pangolin module copies .next from nix store with read-only permissions,
+        # but Next.js needs to write to .next/cache at runtime. Fix permissions on each start.
+        # TODO: Check if fixed upstream in nixpkgs and remove this workaround.
+        serviceConfig.ExecStartPre = lib.mkAfter [
+          "+${pkgs.writeShellScript "pangolin-fix-next-perms" ''
+            if [ -d /var/lib/pangolin/.next ]; then
+              chmod -R u+w /var/lib/pangolin/.next
+            fi
+          ''}"
+        ];
       };
     }
 
