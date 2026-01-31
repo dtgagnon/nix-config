@@ -29,6 +29,7 @@ in
       pangolin = {
         enable = true;
         baseDomain = "spirenet.link";
+        geoBlocking.enable = true;
       };
     };
 

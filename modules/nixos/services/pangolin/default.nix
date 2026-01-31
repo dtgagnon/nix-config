@@ -8,6 +8,58 @@
 let
   inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.${namespace}.services.pangolin;
+
+  # MaxMind GeoLite2 database paths
+  geoDbDir = "/var/lib/pangolin-geolite2";
+  geoCountryPath = "${geoDbDir}/GeoLite2-Country.mmdb";
+  geoAsnPath = "${geoDbDir}/GeoLite2-ASN.mmdb";
+  geoCountryEtag = "${geoDbDir}/country.etag";
+  geoAsnEtag = "${geoDbDir}/asn.etag";
+
+  # GitHub redistribution URLs
+  geoCountryUrl = "https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-Country.mmdb";
+  geoAsnUrl = "https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-ASN.mmdb";
+
+  # Update script that only downloads if ETag changed
+  updateScript = pkgs.writeShellScript "update-geolite2" ''
+    set -euo pipefail
+
+    mkdir -p "${geoDbDir}"
+    cd "${geoDbDir}"
+
+    download_if_changed() {
+      local url="$1"
+      local dest="$2"
+      local etag_file="$3"
+      local name="$4"
+
+      TMPFILE=$(mktemp)
+      HTTP_CODE=$(${pkgs.curl}/bin/curl -sSL \
+        --etag-compare "$etag_file" \
+        --etag-save "$etag_file.new" \
+        -o "$TMPFILE" \
+        -w "%{http_code}" \
+        "$url")
+
+      if [ "$HTTP_CODE" = "200" ]; then
+        mv "$TMPFILE" "$dest"
+        mv "$etag_file.new" "$etag_file"
+        chown pangolin:pangolin "$dest"
+        chmod 0644 "$dest"
+        echo "$name updated"
+      elif [ "$HTTP_CODE" = "304" ]; then
+        rm -f "$TMPFILE" "$etag_file.new"
+        echo "$name is up-to-date"
+      else
+        rm -f "$TMPFILE" "$etag_file.new"
+        echo "Failed to check $name: HTTP $HTTP_CODE" >&2
+        return 1
+      fi
+    }
+
+    download_if_changed "${geoCountryUrl}" "${geoCountryPath}" "${geoCountryEtag}" "GeoLite2-Country"
+    download_if_changed "${geoAsnUrl}" "${geoAsnPath}" "${geoAsnEtag}" "GeoLite2-ASN"
+  '';
 in
 {
   options.${namespace}.services.pangolin = {
@@ -17,6 +69,17 @@ in
       type = types.str;
       description = "Base domain for Pangolin (e.g., 'example.com'). Services will be subdomains of this.";
       example = "example.com";
+    };
+
+    geoBlocking = {
+      enable = mkEnableOption "geo-blocking support using MaxMind GeoLite2 database";
+
+      updateInterval = mkOption {
+        type = types.str;
+        default = "weekly";
+        description = "How often to check for GeoLite2 database updates (systemd calendar format)";
+        example = "daily";
+      };
     };
   };
 
@@ -69,6 +132,101 @@ in
     systemd.services.traefik = {
       after = [ "sops-nix.service" ];
       serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${config.sops.templates."traefik-config.json".path}";
+    };
+
+    # Base security and feature configuration
+    services.pangolin.settings = {
+      app = {
+        log_level = "info";
+        save_logs = true;
+        log_failed_attempts = true;
+        telemetry = {
+          anonymous_usage = false;
+        };
+        notifications = {
+          product_updates = false;
+          new_releases = true;
+        };
+      };
+
+      server = {
+        # Session lengths (in hours)
+        dashboard_session_length_hours = 168; # 7 days
+        resource_session_length_hours = 168;
+        # Trust proxy headers (1 = trust first proxy)
+        trust_proxy = 1;
+        # CORS configuration
+        cors = {
+          origins = [ "https://pangolin.${cfg.baseDomain}" ];
+          methods = [ "GET" "POST" "PUT" "DELETE" "PATCH" ];
+          allowed_headers = [ "X-CSRF-Token" "Content-Type" ];
+          credentials = true;
+        };
+        # MaxMind databases for geo/ASN blocking (when enabled)
+        maxmind_db_path = mkIf cfg.geoBlocking.enable geoCountryPath;
+        maxmind_asn_path = mkIf cfg.geoBlocking.enable geoAsnPath;
+      };
+
+      rate_limits = {
+        global = {
+          window_minutes = 1;
+          max_requests = 500;
+        };
+        auth = {
+          window_minutes = 1;
+          max_requests = 20; # Stricter limit on auth attempts
+        };
+      };
+
+      # Traefik integration
+      traefik = {
+        cert_resolver = "letsencrypt";
+        prefer_wildcard_cert = false;
+        allow_raw_resources = true;
+      };
+
+      flags = {
+        require_email_verification = false;
+        disable_signup_without_invite = true;
+        disable_user_create_org = true;
+        allow_raw_resources = true;
+        enable_integration_api = false;
+        disable_local_sites = false;
+        disable_basic_wireguard_sites = true; # Using Tailscale instead
+        disable_product_help_banners = true;
+      };
+    };
+
+    # GeoLite2 database update service
+    systemd.services.pangolin-geolite2-update = mkIf cfg.geoBlocking.enable {
+      description = "Update GeoLite2 Country database for Pangolin geo-blocking";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = updateScript;
+        # Retry on failure with backoff
+        Restart = "on-failure";
+        RestartSec = "30s";
+      };
+    };
+
+    # Timer for periodic updates
+    systemd.timers.pangolin-geolite2-update = mkIf cfg.geoBlocking.enable {
+      description = "Periodic GeoLite2 database update for Pangolin";
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = cfg.geoBlocking.updateInterval;
+        Persistent = true; # Run immediately if missed while system was off
+        RandomizedDelaySec = "1h"; # Spread load on upstream server
+      };
+    };
+
+    # Ensure database exists before Pangolin starts
+    systemd.services.pangolin = mkIf cfg.geoBlocking.enable {
+      after = [ "pangolin-geolite2-update.service" ];
+      wants = [ "pangolin-geolite2-update.service" ];
     };
   };
 }
