@@ -89,6 +89,13 @@ in
         example = "daily";
       };
     };
+
+    extraCorsOrigins = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Additional origins to allow for CORS (e.g., Tailnet IPs for direct access)";
+      example = [ "http://100.100.90.1:3002" ];
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -174,7 +181,7 @@ in
           trust_proxy = 1;
           # CORS configuration
           cors = {
-            origins = [ "https://pangolin.${cfg.baseDomain}" ];
+            origins = [ "https://pangolin.${cfg.baseDomain}" ] ++ cfg.extraCorsOrigins;
             methods = [
               "GET"
               "POST"

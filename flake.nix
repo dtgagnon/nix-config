@@ -71,6 +71,7 @@
         ];
 
         systems.hosts.spirepoint.modules = with inputs; [
+          authentik.nixosModules.default
           proxmox-nixos.nixosModules.proxmox-ve
           nixarr.nixosModules.default
         ];
@@ -202,6 +203,7 @@
     nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications+services
+    authentik.url = "github:nix-community/authentik-nix";
     copyparty.url = "github:9001/copyparty";
     copyparty.inputs.nixpkgs.follows = "nixpkgs";
 

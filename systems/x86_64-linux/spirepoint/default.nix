@@ -49,7 +49,13 @@ in
 
     services = {
       audio = { enable = true; useMpd = true; };
-      authentik = enabled;
+      authentik = {
+        enable = true;
+        domain = "auth.spirenet.link";
+        # nginx.enable = false; # Using Pangolin via oranix
+        # listenAddress = "0.0.0.0"; # Default - accessible via Tailscale
+        # port = 9000; # Default
+      };
       copyparty = enabled;
       odoo = enabled;
     };

@@ -31,6 +31,8 @@ in
         enable = true;
         baseDomain = "spirenet.link";
         geoBlocking.enable = true;
+        # Allow CORS from Tailnet for direct dashboard access
+        extraCorsOrigins = [ "http://100.100.90.1:3002" ];
       };
     };
 
