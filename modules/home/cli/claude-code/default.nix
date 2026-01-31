@@ -79,8 +79,8 @@ in
         statusLine = {
           type = "command";
           command = let
-            colors = config.lib.stylix.colors;
-            c = base: "\\033[38;2;${toString colors."${base}-rgb-r"};${toString colors."${base}-rgb-g"};${toString colors."${base}-rgb-b"}m";
+            inherit (lib.${namespace}) mkAnsiFromStylix;
+            c = mkAnsiFromStylix config;
           in ''
             input=$(cat)
             MODEL=$(echo "$input" | jq -r '.model.display_name')
@@ -88,13 +88,41 @@ in
             DIRNAME=$(basename "$DIR")
             TIME=$(date +"%I:%M %p")
 
-            # Stylix colors (injected at build time)
+            # Context consumption
+            CTX_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
+            CTX_INT=''${CTX_PCT%.*}
+
+            # Colors (stylix RGB or ANSI 256 fallback, injected at build time)
             C_DIR=$'${c "base0D"}'
             C_GIT=$'${c "base0E"}'
             C_MODEL=$'${c "base0A"}'
             C_TIME=$'${c "base05"}'
             C_SEP=$'${c "base03"}'
+            C_DIM=$'${c "base02"}'
+            C_CTX_MED=$'${c "base0E"}'
+            C_CTX_HIGH=$'${c "base0F"}'
+            C_CTX_CRIT=$'${c "base08"}'
             C_RESET=$'\033[0m'
+
+            # Build context progress bar (10 segments)
+            FILLED=$((CTX_INT / 10))
+            EMPTY=$((10 - FILLED))
+            BAR=""
+            for i in $(seq 1 $FILLED); do
+              if [ "$i" -le 5 ]; then
+                BAR="$BAR''${C_RESET}━"
+              elif [ "$i" -le 7 ]; then
+                BAR="$BAR''${C_CTX_MED}━"
+              elif [ "$i" -le 9 ]; then
+                BAR="$BAR''${C_CTX_HIGH}━"
+              else
+                BAR="$BAR''${C_CTX_CRIT}━"
+              fi
+            done
+            for i in $(seq 1 $EMPTY); do
+              BAR="$BAR''${C_DIM}─"
+            done
+            BAR="$BAR''${C_RESET}"
 
             # Git info - symbol only shown when in a git repo
             GIT_INFO=""
@@ -109,7 +137,7 @@ in
               fi
             fi
 
-            echo "''${C_DIR}$DIRNAME''${C_RESET}$GIT_INFO ''${C_SEP}│''${C_RESET} ''${C_MODEL}$MODEL''${C_RESET} ''${C_SEP}│''${C_RESET} ''${C_TIME}$TIME''${C_RESET}"
+            echo "''${C_DIR}$DIRNAME''${C_RESET}$GIT_INFO ''${C_SEP}│''${C_RESET} ''${C_MODEL}$MODEL''${C_RESET} ''${C_SEP}│''${C_RESET} $BAR ''${C_SEP}│''${C_RESET} ''${C_TIME}$TIME''${C_RESET}"
           '';
         };
       };
