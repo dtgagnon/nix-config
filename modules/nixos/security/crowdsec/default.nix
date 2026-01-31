@@ -11,22 +11,20 @@ let
     mkOption
     mkIf
     types
-    concatStringsSep
     ;
 
   cfg = config.${namespace}.security.crowdsec;
 
-  # Build the whitelist YAML for the custom parser
-  whitelistYaml = pkgs.writeText "whitelist.yaml" ''
-    name: spirenix/whitelist
-    description: "Whitelist trusted networks and IPs"
-    whitelist:
-      reason: "Trusted network/IP"
-      ip:
-        ${concatStringsSep "\n        " (map (ip: "- \"${ip}\"") cfg.whitelistedIps)}
-      cidr:
-        ${concatStringsSep "\n        " (map (cidr: "- \"${cidr}\"") cfg.whitelistedCidrs)}
-  '';
+  # Whitelist parser for s02-enrich stage
+  whitelistParser = {
+    name = "spirenix/whitelist";
+    description = "Whitelist trusted networks and IPs";
+    whitelist = {
+      reason = "Trusted network/IP";
+      ip = cfg.whitelistedIps;
+      cidr = cfg.whitelistedCidrs;
+    };
+  };
 
   # Default collections to install
   defaultCollections = [
@@ -122,10 +120,32 @@ in
   };
 
   config = mkIf cfg.enable {
-    # Ensure log directory exists with correct permissions
+    # Create static crowdsec user/group (required for persistence with impermanence)
+    users.users.crowdsec = {
+      isSystemUser = true;
+      group = "crowdsec";
+      home = "/var/lib/crowdsec";
+    };
+    users.groups.crowdsec = { };
+
+    # Ensure directories exist with correct permissions
     systemd.tmpfiles.rules = [
       "d /var/log/traefik 0755 root root -"
+      "d /var/lib/crowdsec 0750 crowdsec crowdsec -"
     ];
+
+    # Override to use static user instead of DynamicUser (required for persistence)
+    systemd.services.crowdsec.serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = "crowdsec";
+      Group = "crowdsec";
+    };
+
+    systemd.services.crowdsec-firewall-bouncer-register.serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = "crowdsec";
+      Group = "crowdsec";
+    };
 
     # CrowdSec Local API + Agent
     services.crowdsec = {
@@ -142,22 +162,50 @@ in
         # Custom ban profile with configurable duration
         profiles = [ banProfile ];
 
-        # Whitelist parser for trusted networks
-        parsers.s02Enrich = mkIf (cfg.whitelistedCidrs != [ ] || cfg.whitelistedIps != [ ]) [
-          whitelistYaml
-        ];
+        # Whitelist parser to exclude trusted IPs/CIDRs from detection
+        parsers.s02Enrich = [ whitelistParser ];
       };
 
-      # API settings
+      # API settings (general maps to CrowdSec's config.yaml)
       settings = {
-        api.server.listen_uri = "127.0.0.1:8080";
+        # Credentials file for the agent to authenticate with the local API
+        lapi.credentialsFile = "/var/lib/crowdsec/state/local_api_credentials.yaml";
+
+        general.api.server = {
+          enable = true; # Required for local bouncer registration
+          listen_uri = "127.0.0.1:8080";
+        };
       };
     };
 
-    # Ensure crowdsec service waits for network
+    # Ensure crowdsec service waits for network and clean up stale parser symlinks
+    # HACK: The nixpkgs crowdsec module creates tmpfiles symlinks with hash-based filenames
+    # (e.g., abc123-parsers-s02-enrich.yaml). When config content changes, new symlinks are
+    # created with different hashes, but old ones aren't cleaned up. CrowdSec loads all yaml
+    # files and fails on stale ones. This workaround wipes and recreates symlinks on each start.
+    # TODO: Check if this is fixed upstream in nixpkgs and remove this workaround.
+    # Suspected bug: services.crowdsec tmpfiles should use fixed filenames or clean up old ones.
     systemd.services.crowdsec = {
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
+      serviceConfig.ExecStartPre = lib.mkBefore [
+        "+${pkgs.writeShellScript "crowdsec-cleanup-stale-parsers" ''
+          # Remove all yaml symlinks from config directories (stale ones accumulate)
+          for dir in /etc/crowdsec/parsers/s00-raw \
+                     /etc/crowdsec/parsers/s01-parse \
+                     /etc/crowdsec/parsers/s02-enrich \
+                     /etc/crowdsec/postoverflows/s01-whitelist \
+                     /etc/crowdsec/scenarios \
+                     /etc/crowdsec/contexts \
+                     /etc/crowdsec/notifications; do
+            if [ -d "$dir" ]; then
+              find "$dir" -maxdepth 1 -name "*.yaml" -type l -delete 2>/dev/null || true
+            fi
+          done
+          # Recreate current symlinks via tmpfiles
+          systemd-tmpfiles --create --prefix=/etc/crowdsec
+        ''}"
+      ];
     };
 
     # CrowdSec Firewall Bouncer (blocks at nftables level)
@@ -193,8 +241,13 @@ in
 
     # Persistence for CrowdSec state
     ${namespace}.system.preservation.extraSysDirs = [
-      "var/lib/crowdsec"
-      "var/log/traefik"
+      {
+        directory = "/var/lib/crowdsec";
+        user = "crowdsec";
+        group = "crowdsec";
+        mode = "0750";
+      }
+      "/var/log/traefik"
     ];
   };
 }
