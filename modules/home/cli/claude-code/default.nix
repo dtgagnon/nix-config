@@ -99,22 +99,20 @@ in
             C_TIME=$'${c "base05"}'
             C_SEP=$'${c "base03"}'
             C_DIM=$'${c "base02"}'
-            C_CTX_MED=$'${c "base0E"}'
-            C_CTX_HIGH=$'${c "base0F"}'
+            C_CTX_WARN=$'${c "base09"}'
             C_CTX_CRIT=$'${c "base08"}'
             C_RESET=$'\033[0m'
 
             # Build context progress bar (10 segments)
+            # Optimal: 0-30% | Acceptable: 30-55% | Caution: 55-80% | Unreliable: 80-100%
             FILLED=$((CTX_INT / 10))
             EMPTY=$((10 - FILLED))
             BAR=""
             for i in $(seq 1 $FILLED); do
               if [ "$i" -le 5 ]; then
                 BAR="$BAR''${C_RESET}━"
-              elif [ "$i" -le 7 ]; then
-                BAR="$BAR''${C_CTX_MED}━"
-              elif [ "$i" -le 9 ]; then
-                BAR="$BAR''${C_CTX_HIGH}━"
+              elif [ "$i" -le 8 ]; then
+                BAR="$BAR''${C_CTX_WARN}━"
               else
                 BAR="$BAR''${C_CTX_CRIT}━"
               fi
