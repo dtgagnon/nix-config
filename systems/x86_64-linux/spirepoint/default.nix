@@ -49,9 +49,9 @@ in
 
     services = {
       audio = { enable = true; useMpd = true; };
+      authentik = enabled;
       copyparty = enabled;
       odoo = enabled;
-      nextcloud = enabled;
     };
 
     system = {
