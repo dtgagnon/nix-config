@@ -47,6 +47,24 @@ let
             description = "Environment variable name for this secret. Defaults to uppercase version of the secret name.";
           };
 
+          owner = mkOption {
+            type = types.str;
+            default = "root";
+            description = "Owner of the decrypted secret file at runtime.";
+          };
+
+          group = mkOption {
+            type = types.str;
+            default = "root";
+            description = "Group of the decrypted secret file at runtime.";
+          };
+
+          mode = mkOption {
+            type = types.str;
+            default = "0400";
+            description = "Permissions mode of the decrypted secret file.";
+          };
+
           # Read-only computed attributes
           placeholder = mkOption {
             type = types.str;
@@ -246,6 +264,47 @@ let
             Useful for activation scripts or systemd ExecStartPre.
           '';
         };
+
+        preStartScript = mkOption {
+          type = types.str;
+          readOnly = true;
+          default =
+            let
+              secretsList = attrValues config.secrets;
+              # Generate patching commands for each file
+              # Uses a read-modify-write approach to avoid sed -i which requires fchown
+              # (fchown is blocked by systemd sandboxing)
+              filePatches = concatMapStringsSep "\n" (
+                filePath:
+                let
+                  fileCfg = config.files.${filePath};
+                  group = if fileCfg.group != null then fileCfg.group else fileCfg.owner;
+                  # Generate sed expressions for all secrets (chained with -e)
+                  sedExpressions = concatMapStringsSep " " (secret: ''
+                    -e "s|${secret.placeholder}|$(cat ${escapeShellArg secret.secretPath} | sed 's/[&/\]/\\&/g' | tr -d '\n')|g"
+                  '') secretsList;
+                in
+                ''
+                  # Patch ${filePath}
+                  # Read file, apply all substitutions, write back (avoids sed -i fchown issues)
+                  _content=$(cat ${escapeShellArg filePath})
+                  echo "$_content" | sed ${sedExpressions} > ${escapeShellArg filePath}
+                ''
+              ) (attrNames config.files);
+            in
+            filePatches;
+          description = ''
+            Shell snippet to patch secret placeholders in config files.
+            Use with lib.mkAfter in systemd preStart for services that regenerate
+            their config files during startup (e.g., home-assistant).
+
+            Example:
+            ```nix
+            systemd.services.my-service.preStart = lib.mkAfter
+              config.spirenix.security.sops-nix.inject.my-service.preStartScript;
+            ```
+          '';
+        };
       };
     }
   );
@@ -260,6 +319,9 @@ let
           name = replaceStrings [ "/" ] [ "-" ] secretCfg.sopsPath;
           value = {
             key = secretCfg.sopsPath;
+            owner = secretCfg.owner;
+            group = secretCfg.group;
+            mode = secretCfg.mode;
           };
         }) injectCfg.secrets
       ) (filterAttrs (_: v: v.secrets != { }) injectConfigs);
@@ -313,9 +375,9 @@ let
         local mode="$5"
         shift 5
 
-        # Copy source to temp file
+        # Copy source to temp file in same directory (for atomic mv)
         local tmpfile
-        tmpfile=$(mktemp)
+        tmpfile=$(mktemp -p "$(dirname "$dest")")
         cp "$src" "$tmpfile"
 
         # Apply all sed replacements (pairs of placeholder, secret_file)
@@ -350,8 +412,12 @@ let
         local mode="$4"
         shift 4
 
+        # Create parent directory if needed (before mktemp so we can use it)
+        mkdir -p "$(dirname "$dest")"
+
+        # Create temp file in same directory (for atomic mv)
         local tmpfile
-        tmpfile=$(mktemp)
+        tmpfile=$(mktemp -p "$(dirname "$dest")")
 
         # Write VAR=value pairs (pairs of envvar, secret_file)
         while [ $# -ge 2 ]; do
@@ -371,9 +437,6 @@ let
         # Set ownership and permissions
         chown "$owner:$group" "$tmpfile"
         chmod "$mode" "$tmpfile"
-
-        # Create parent directory if needed
-        mkdir -p "$(dirname "$dest")"
 
         # Atomic move
         mv "$tmpfile" "$dest"

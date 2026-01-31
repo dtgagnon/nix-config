@@ -15,6 +15,7 @@ let
     types
     attrNames
     attrValues
+    unique
     ;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
 
@@ -126,10 +127,14 @@ in
 
           # Security hardening
           ProtectSystem = "strict";
-          ReadWritePaths = [
-            "/run/secrets-env"
-          ]
-          ++ (attrNames (builtins.foldl' (acc: inj: acc // inj.files) { } (attrValues cfg.inject)));
+          ReadWritePaths =
+            let
+              # Collect all file paths from all injections
+              filePaths = attrNames (builtins.foldl' (acc: inj: acc // inj.files) { } (attrValues cfg.inject));
+              # Get parent directories (needed for mktemp -p to create temp files)
+              parentDirs = map builtins.dirOf filePaths;
+            in
+            [ "/run/secrets-env" ] ++ lib.unique parentDirs;
           PrivateTmp = true;
           NoNewPrivileges = true;
         };

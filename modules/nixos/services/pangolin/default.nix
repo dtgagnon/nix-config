@@ -46,24 +46,29 @@ in
       environmentFile = config.sops.secrets."pangolin/env".path;
     };
 
-    # Use sops template to generate traefik config with real ACME email
-    # Generate TOML from staticConfigOptions since staticConfigFile is null when using options
-    sops.templates."traefik-config.toml" = {
-      content =
-        let
-          tomlFormat = pkgs.formats.toml { };
-          configFile = tomlFormat.generate "traefik.toml" config.services.traefik.staticConfigOptions;
-        in
-        builtins.readFile configFile;
+    # Generate dynamic config file for dashboard routes (no secrets, so no sops needed)
+    environment.etc."traefik/dynamic.json" = {
+      text = builtins.toJSON config.services.traefik.dynamicConfigOptions;
+      mode = "0644";
+    };
+
+    # Use sops template for static config with ACME email secret
+    # Add file provider for the dynamic config (dashboard routes)
+    sops.templates."traefik-config.json" = {
+      content = builtins.toJSON (config.services.traefik.staticConfigOptions // {
+        providers = config.services.traefik.staticConfigOptions.providers // {
+          file = { filename = "/etc/traefik/dynamic.json"; };
+        };
+      });
       owner = "root";
       group = "root";
       mode = "0644";
     };
 
-    # Override Traefik to use the sops-rendered config
+    # Override Traefik to use the sops-rendered JSON config
     systemd.services.traefik = {
       after = [ "sops-nix.service" ];
-      serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${config.sops.templates."traefik-config.toml".path}";
+      serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${config.sops.templates."traefik-config.json".path}";
     };
   };
 }
