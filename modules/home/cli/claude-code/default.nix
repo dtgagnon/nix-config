@@ -99,6 +99,7 @@ in
             C_TIME=$'${c "base05"}'
             C_SEP=$'${c "base03"}'
             C_DIM=$'${c "base02"}'
+            C_CTX_ACCEPT=$'${c "base0A"}'
             C_CTX_WARN=$'${c "base09"}'
             C_CTX_CRIT=$'${c "base08"}'
             C_RESET=$'\033[0m'
@@ -107,15 +108,21 @@ in
             # Optimal: 0-30% | Acceptable: 30-55% | Caution: 55-80% | Unreliable: 80-100%
             FILLED=$((CTX_INT / 10))
             EMPTY=$((10 - FILLED))
+
+            # Determine color for entire filled portion based on total percentage
+            if [ "$CTX_INT" -ge 81 ]; then
+              C_BAR="$C_CTX_CRIT"
+            elif [ "$CTX_INT" -ge 56 ]; then
+              C_BAR="$C_CTX_WARN"
+            elif [ "$CTX_INT" -ge 31 ]; then
+              C_BAR="$C_CTX_ACCEPT"
+            else
+              C_BAR=""
+            fi
+
             BAR=""
             for i in $(seq 1 $FILLED); do
-              if [ "$i" -le 5 ]; then
-                BAR="$BAR''${C_RESET}━"
-              elif [ "$i" -le 8 ]; then
-                BAR="$BAR''${C_CTX_WARN}━"
-              else
-                BAR="$BAR''${C_CTX_CRIT}━"
-              fi
+              BAR="$BAR''${C_BAR}━"
             done
             for i in $(seq 1 $EMPTY); do
               BAR="$BAR''${C_DIM}─"
