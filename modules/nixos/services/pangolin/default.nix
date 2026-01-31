@@ -23,9 +23,10 @@ let
   geoCountryEtag = "${geoDbDir}/country.etag";
   geoAsnEtag = "${geoDbDir}/asn.etag";
 
-  # GitHub redistribution URLs
-  geoCountryUrl = "https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-Country.mmdb";
-  geoAsnUrl = "https://raw.githubusercontent.com/GitSquared/node-geolite2-redist/master/redist/GeoLite2-ASN.mmdb";
+  # P3TERX/GeoLite.mmdb - actively maintained redistribution with raw .mmdb files
+  # Updated daily, provides direct downloads without needing MaxMind license key
+  geoCountryUrl = "https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-Country.mmdb";
+  geoAsnUrl = "https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-ASN.mmdb";
 
   # Update script that only downloads if ETag changed
   updateScript = pkgs.writeShellScript "update-geolite2" ''
