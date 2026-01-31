@@ -6,8 +6,15 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkOption mkIf types;
+  inherit (lib)
+    mkEnableOption
+    mkOption
+    mkIf
+    mkMerge
+    types
+    ;
   cfg = config.${namespace}.services.pangolin;
+  crowdsecCfg = config.${namespace}.security.crowdsec;
 
   # MaxMind GeoLite2 database paths
   geoDbDir = "/var/lib/pangolin-geolite2";
@@ -83,150 +90,185 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    # Override upstream's fossorial group with pangolin
-    users.users.pangolin.group = lib.mkForce "pangolin";
-    users.groups.pangolin = { };
+  config = mkIf cfg.enable (mkMerge [
+    # Base Pangolin configuration
+    {
+      # Override upstream's fossorial group with pangolin
+      users.users.pangolin.group = lib.mkForce "pangolin";
+      users.groups.pangolin = { };
 
-    # Sops secrets:
-    #   pangolin/env: SERVER_SECRET (min 32 chars), optionally CF_DNS_API_TOKEN, EMAIL_SMTP_PASS
-    #   pangolin/acme-email: Email address for Let's Encrypt registration
-    sops.secrets."pangolin/env" = {
-      owner = "pangolin";
-      group = "pangolin";
-      mode = "0400";
-    };
+      # Sops secrets:
+      #   pangolin/env: SERVER_SECRET (min 32 chars), optionally CF_DNS_API_TOKEN, EMAIL_SMTP_PASS
+      #   pangolin/acme-email: Email address for Let's Encrypt registration
+      sops.secrets."pangolin/env" = {
+        owner = "pangolin";
+        group = "pangolin";
+        mode = "0400";
+      };
 
-    sops.secrets."pangolin/acme-email" = { };
+      sops.secrets."pangolin/acme-email" = { };
 
-    services.pangolin = {
-      enable = true;
-      baseDomain = cfg.baseDomain;
-      dashboardDomain = "pangolin.${cfg.baseDomain}";
-      # Use sops placeholder - will be substituted in the template
-      letsEncryptEmail = config.sops.placeholder."pangolin/acme-email";
-      openFirewall = true;
-      environmentFile = config.sops.secrets."pangolin/env".path;
-    };
+      services.pangolin = {
+        enable = true;
+        baseDomain = cfg.baseDomain;
+        dashboardDomain = "pangolin.${cfg.baseDomain}";
+        # Use sops placeholder - will be substituted in the template
+        letsEncryptEmail = config.sops.placeholder."pangolin/acme-email";
+        openFirewall = true;
+        environmentFile = config.sops.secrets."pangolin/env".path;
+      };
 
-    # Generate dynamic config file for dashboard routes (no secrets, so no sops needed)
-    environment.etc."traefik/dynamic.json" = {
-      text = builtins.toJSON config.services.traefik.dynamicConfigOptions;
-      mode = "0644";
-    };
+      # Generate dynamic config file for dashboard routes (no secrets, so no sops needed)
+      environment.etc."traefik/dynamic.json" = {
+        text = builtins.toJSON config.services.traefik.dynamicConfigOptions;
+        mode = "0644";
+      };
 
-    # Use sops template for static config with ACME email secret
-    # Add file provider for the dynamic config (dashboard routes)
-    sops.templates."traefik-config.json" = {
-      content = builtins.toJSON (config.services.traefik.staticConfigOptions // {
-        providers = config.services.traefik.staticConfigOptions.providers // {
-          file = { filename = "/etc/traefik/dynamic.json"; };
+      # Use sops template for static config with ACME email secret
+      # Add file provider for the dynamic config (dashboard routes)
+      sops.templates."traefik-config.json" = {
+        content = builtins.toJSON (
+          config.services.traefik.staticConfigOptions
+          // {
+            providers = config.services.traefik.staticConfigOptions.providers // {
+              file = {
+                filename = "/etc/traefik/dynamic.json";
+              };
+            };
+          }
+        );
+        owner = "root";
+        group = "root";
+        mode = "0644";
+      };
+
+      # Override Traefik to use the sops-rendered JSON config
+      systemd.services.traefik = {
+        after = [ "sops-nix.service" ];
+        serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${
+          config.sops.templates."traefik-config.json".path
+        }";
+      };
+
+      # Base security and feature configuration
+      services.pangolin.settings = {
+        app = {
+          log_level = "info";
+          save_logs = true;
+          log_failed_attempts = true;
+          telemetry = {
+            anonymous_usage = false;
+          };
+          notifications = {
+            product_updates = false;
+            new_releases = true;
+          };
         };
-      });
-      owner = "root";
-      group = "root";
-      mode = "0644";
-    };
 
-    # Override Traefik to use the sops-rendered JSON config
-    systemd.services.traefik = {
-      after = [ "sops-nix.service" ];
-      serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${config.sops.templates."traefik-config.json".path}";
-    };
-
-    # Base security and feature configuration
-    services.pangolin.settings = {
-      app = {
-        log_level = "info";
-        save_logs = true;
-        log_failed_attempts = true;
-        telemetry = {
-          anonymous_usage = false;
+        server = {
+          # Session lengths (in hours)
+          dashboard_session_length_hours = 168; # 7 days
+          resource_session_length_hours = 168;
+          # Trust proxy headers (1 = trust first proxy)
+          trust_proxy = 1;
+          # CORS configuration
+          cors = {
+            origins = [ "https://pangolin.${cfg.baseDomain}" ];
+            methods = [
+              "GET"
+              "POST"
+              "PUT"
+              "DELETE"
+              "PATCH"
+            ];
+            allowed_headers = [
+              "X-CSRF-Token"
+              "Content-Type"
+            ];
+            credentials = true;
+          };
+          # MaxMind databases for geo/ASN blocking (when enabled)
+          maxmind_db_path = mkIf cfg.geoBlocking.enable geoCountryPath;
+          maxmind_asn_path = mkIf cfg.geoBlocking.enable geoAsnPath;
         };
-        notifications = {
-          product_updates = false;
-          new_releases = true;
+
+        rate_limits = {
+          global = {
+            window_minutes = 1;
+            max_requests = 80;
+          };
+          auth = {
+            window_minutes = 5;
+            max_requests = 5;
+          };
+        };
+
+        # Traefik integration
+        traefik = {
+          cert_resolver = "letsencrypt";
+          prefer_wildcard_cert = false;
+          allow_raw_resources = true;
+        };
+
+        flags = {
+          require_email_verification = false;
+          disable_signup_without_invite = true;
+          disable_user_create_org = true;
+          allow_raw_resources = true;
+          enable_integration_api = false;
+          disable_local_sites = false;
+          disable_basic_wireguard_sites = true; # Using Tailscale instead
+          disable_product_help_banners = true;
         };
       };
 
-      server = {
-        # Session lengths (in hours)
-        dashboard_session_length_hours = 168; # 7 days
-        resource_session_length_hours = 168;
-        # Trust proxy headers (1 = trust first proxy)
-        trust_proxy = 1;
-        # CORS configuration
-        cors = {
-          origins = [ "https://pangolin.${cfg.baseDomain}" ];
-          methods = [ "GET" "POST" "PUT" "DELETE" "PATCH" ];
-          allowed_headers = [ "X-CSRF-Token" "Content-Type" ];
-          credentials = true;
-        };
-        # MaxMind databases for geo/ASN blocking (when enabled)
-        maxmind_db_path = mkIf cfg.geoBlocking.enable geoCountryPath;
-        maxmind_asn_path = mkIf cfg.geoBlocking.enable geoAsnPath;
-      };
+      # GeoLite2 database update service
+      systemd.services.pangolin-geolite2-update = mkIf cfg.geoBlocking.enable {
+        description = "Update GeoLite2 Country database for Pangolin geo-blocking";
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
 
-      rate_limits = {
-        global = {
-          window_minutes = 1;
-          max_requests = 500;
-        };
-        auth = {
-          window_minutes = 1;
-          max_requests = 20; # Stricter limit on auth attempts
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = updateScript;
+          # Retry on failure with backoff
+          Restart = "on-failure";
+          RestartSec = "30s";
         };
       };
 
-      # Traefik integration
-      traefik = {
-        cert_resolver = "letsencrypt";
-        prefer_wildcard_cert = false;
-        allow_raw_resources = true;
+      # Timer for periodic updates
+      systemd.timers.pangolin-geolite2-update = mkIf cfg.geoBlocking.enable {
+        description = "Periodic GeoLite2 database update for Pangolin";
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = cfg.geoBlocking.updateInterval;
+          Persistent = true; # Run immediately if missed while system was off
+          RandomizedDelaySec = "1h"; # Spread load on upstream server
+        };
       };
 
-      flags = {
-        require_email_verification = false;
-        disable_signup_without_invite = true;
-        disable_user_create_org = true;
-        allow_raw_resources = true;
-        enable_integration_api = false;
-        disable_local_sites = false;
-        disable_basic_wireguard_sites = true; # Using Tailscale instead
-        disable_product_help_banners = true;
+      # Ensure database exists before Pangolin starts
+      systemd.services.pangolin = mkIf cfg.geoBlocking.enable {
+        after = [ "pangolin-geolite2-update.service" ];
+        wants = [ "pangolin-geolite2-update.service" ];
       };
-    };
+    }
 
-    # GeoLite2 database update service
-    systemd.services.pangolin-geolite2-update = mkIf cfg.geoBlocking.enable {
-      description = "Update GeoLite2 Country database for Pangolin geo-blocking";
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = updateScript;
-        # Retry on failure with backoff
-        Restart = "on-failure";
-        RestartSec = "30s";
+    # CrowdSec integration: enable Traefik access logging for intrusion detection
+    (mkIf crowdsecCfg.enable {
+      # Enable Traefik access logging for CrowdSec to parse
+      services.traefik.staticConfigOptions.accessLog = {
+        filePath = crowdsecCfg.traefikLogPath;
+        format = "json";
+        bufferingSize = 100;
       };
-    };
 
-    # Timer for periodic updates
-    systemd.timers.pangolin-geolite2-update = mkIf cfg.geoBlocking.enable {
-      description = "Periodic GeoLite2 database update for Pangolin";
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnCalendar = cfg.geoBlocking.updateInterval;
-        Persistent = true; # Run immediately if missed while system was off
-        RandomizedDelaySec = "1h"; # Spread load on upstream server
+      # Ensure Traefik starts after the firewall bouncer is ready
+      systemd.services.traefik = {
+        after = [ "crowdsec-firewall-bouncer.service" ];
+        wants = [ "crowdsec-firewall-bouncer.service" ];
       };
-    };
-
-    # Ensure database exists before Pangolin starts
-    systemd.services.pangolin = mkIf cfg.geoBlocking.enable {
-      after = [ "pangolin-geolite2-update.service" ];
-      wants = [ "pangolin-geolite2-update.service" ];
-    };
-  };
+    })
+  ]);
 }

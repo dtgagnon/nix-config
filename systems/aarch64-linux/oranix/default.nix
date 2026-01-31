@@ -20,6 +20,7 @@ in
         enable = true;
         targetHost = "oranix";
       };
+      crowdsec = enabled;
     };
 
     services = {
