@@ -40,6 +40,7 @@ in
       environment = {
         IMMICH_LOG_LEVEL = "log";
         IMMICH_PORT = "${cfg.port}";
+        IMMICH_TRUSTED_PROXIES = "100.100.90.1";
       };
 
       database = {
@@ -254,7 +255,7 @@ in
           "enabled" = true;
         };
         "server" = {
-          "externalDomain" = "";
+          "externalDomain" = "https://immich.spirenet.link";
           "loginPageMessage" = "";
           "publicUsers" = true;
         };
