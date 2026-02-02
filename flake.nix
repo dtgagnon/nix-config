@@ -78,7 +78,7 @@
         ];
 
         systems.hosts.slim.modules = with inputs; [
-          spirenet-dashboard.nixosModules.default
+          microvm.nixosModules.host
         ];
 
         systems.hosts.oranix.modules = with inputs; [
@@ -194,6 +194,9 @@
     nix-topology.url = "github:oddlama/nix-topology";
 
     ## virtualisation
+    microvm.url = "github:astro/microvm.nix";
+    microvm.inputs.nixpkgs.follows = "nixpkgs";
+
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
 
     NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";

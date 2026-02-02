@@ -2399,6 +2399,27 @@
         "type": "github"
       }
     },
+    "microvm": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "spectrum": "spectrum"
+      },
+      "locked": {
+        "lastModified": 1769907691,
+        "narHash": "sha256-9OwKfEJMR8cxwDqKoJywdWa0LIcMGYZitMSsvAjAsMs=",
+        "owner": "astro",
+        "repo": "microvm.nix",
+        "rev": "f9bf64e6e53ef21603cc65fd2d285c68184d0917",
+        "type": "github"
+      },
+      "original": {
+        "owner": "astro",
+        "repo": "microvm.nix",
+        "type": "github"
+      }
+    },
     "mis-builder": {
       "flake": false,
       "locked": {
@@ -2572,11 +2593,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770002306,
-        "narHash": "sha256-hjFI3/zMIU1it5GhiORcZCijzdhdXTXw5lw7+ja8jjk=",
+        "lastModified": 1770054422,
+        "narHash": "sha256-EjSksx0/bVWpbPO8PVXBKBvQ1kf0x0i9dMb9s44tYlQ=",
         "ref": "refs/heads/main",
-        "rev": "ca808b6229e9eaa54376febe1906f71a12214e30",
-        "revCount": 135,
+        "rev": "75d890a980a4fec9db32d561d3d808d2f7b606d2",
+        "revCount": 137,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -3741,6 +3762,7 @@
         "impermanence": "impermanence",
         "masterpkgs": "masterpkgs",
         "mcp-servers-nix": "mcp-servers-nix",
+        "microvm": "microvm",
         "n8n-private": "n8n-private",
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
@@ -3812,11 +3834,11 @@
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1769534624,
-        "narHash": "sha256-v6uMGmFcxXxf9/9Am3zyJ12LIGxc4UqJhvhgSeAjMDU=",
+        "lastModified": 1770006856,
+        "narHash": "sha256-zuQ1IRrNuCgzo22QcOVa4lMVkTKfh54YT2mMv/ro1YU=",
         "owner": "dtgagnon",
         "repo": "rybbix",
-        "rev": "97367610fe7c4dfe0c1030134325379eb1a24443",
+        "rev": "917469610d010d2bac5f48f9ba467622e316952e",
         "type": "github"
       },
       "original": {
@@ -3953,6 +3975,22 @@
       "original": {
         "type": "file",
         "url": "https://huggingface.co/altunenes/parakeet-rs/resolve/main/diar_streaming_sortformer_4spk-v2.onnx"
+      }
+    },
+    "spectrum": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1759482047,
+        "narHash": "sha256-H1wiXRQHxxPyMMlP39ce3ROKCwI5/tUn36P8x6dFiiQ=",
+        "ref": "refs/heads/main",
+        "rev": "c5d5786d3dc938af0b279c542d1e43bce381b4b9",
+        "revCount": 996,
+        "type": "git",
+        "url": "https://spectrum-os.org/git/spectrum"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://spectrum-os.org/git/spectrum"
       }
     },
     "spirenet-dashboard": {
