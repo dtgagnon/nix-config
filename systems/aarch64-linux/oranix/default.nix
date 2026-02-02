@@ -20,18 +20,20 @@ in
         enable = true;
         targetHost = "oranix";
       };
+      crowdsec = enabled;
     };
 
     services = {
       openssh = enabled;
       tailscale = enabled;
 
-      # Pangolin - tunneled reverse proxy (public ingress)
-      # pangolin = {
-      #   enable = true;
-      #   baseDomain = "yourdomain.com";  # TODO: Set your domain
-      #   email = "you@example.com";       # TODO: Set your email
-      # };
+      pangolin = {
+        enable = true;
+        baseDomain = "spirenet.link";
+        geoBlocking.enable = true;
+        # Allow CORS from Tailnet for direct dashboard access
+        extraCorsOrigins = [ "http://100.100.90.1:3002" ];
+      };
     };
 
     system = {

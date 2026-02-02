@@ -20,7 +20,9 @@ let
     - Always run /codex /codex-build /gemini /gemini-build slash commands in background bashes
     - ALWAYS manage packages declaratively through flake.nix and home-manager modules. ALWAYS use `nix shell`/`nix run` for temporary needs. NEVER use `nix-env` or `nix-channel` commands - they bypass flake lock files, create untracked state, and break reproducibility.
     - Never use old nix command syntax (`nix-*`) unless absolutely necessary. Prefer new syntax intended to work with nix flakes (`nix *`).
+    - For verifying flake changes, use targeted `nix eval .#<output> --apply 'x: "ok"'` instead of `nix flake check`. The latter evaluates ALL outputs and is extremely slow for large flakes. Only eval what you're actually changing.
     - If a command is not available in the current directory's environment, use the `comma` CLI tool to run it directly from nixpkgs: `, <command>` (e.g., `, htop` or `, jq --help`). This automatically fetches and runs the package without installing it.
+    - ALWAYS use `python` for a python command, NEVER use the pattern `python3` or `python312` or similar.
 
     ## New Project Setup Requirements
 

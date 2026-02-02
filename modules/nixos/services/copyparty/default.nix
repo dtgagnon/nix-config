@@ -54,6 +54,8 @@ in
         no-reload = true;
         hist = "/var/cache/copyparty";
         ban-pw = 0; # Disable password-fail banning until client auth is stable
+        rproxy = 1;
+        xff-src = "100.100.90.1"; # Trust X-Forwarded-For only from oranix (Pangolin)
       };
       globalExtraConfig = "";
 

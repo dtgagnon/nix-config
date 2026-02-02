@@ -47,6 +47,7 @@
         ];
 
         systems.modules.nixos = with inputs; [
+          authentik.nixosModules.default
           copyparty.nixosModules.default
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
@@ -55,6 +56,7 @@
           nix-topology.nixosModules.default
           NixVirt.nixosModules.default
           preservation.nixosModules.preservation
+          rybbix.nixosModules.default
           sops-nix.nixosModules.sops
           stylix.nixosModules.stylix
         ];
@@ -77,7 +79,6 @@
 
         systems.hosts.slim.modules = with inputs; [
           spirenet-dashboard.nixosModules.default
-          rybbix.nixosModules.default
         ];
 
         systems.hosts.oranix.modules = with inputs; [
@@ -202,6 +203,7 @@
     nixos-vfio.inputs.nixpkgs.follows = "nixpkgs";
 
     ## applications+services
+    authentik.url = "github:nix-community/authentik-nix";
     copyparty.url = "github:9001/copyparty";
     copyparty.inputs.nixpkgs.follows = "nixpkgs";
 

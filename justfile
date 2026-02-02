@@ -14,6 +14,40 @@ check-trace:
 update:
   nix flake update
 
+# Update custom packages using nix-update
+update-pkgs:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    # Simple packages (just source + hash)
+    simple_packages=(hellwal super-productivity odoorpc mcp-libreoffice)
+
+    # Packages with vendor/dependency hashes
+    complex_packages=(carapace openclaw)
+
+    # Packages needing special flags
+    # opencode has Go vendorHash + node_modules FOD
+
+    echo -e "\x1B[32m[+] Updating simple packages...\x1B[0m"
+    for pkg in "${simple_packages[@]}"; do
+        echo -e "\x1B[34m[*] Updating $pkg\x1B[0m"
+        nix-update --flake "$pkg" || echo -e "\x1B[33m[!] Failed to update $pkg\x1B[0m"
+    done
+
+    echo -e "\x1B[32m[+] Updating packages with vendor hashes...\x1B[0m"
+    for pkg in "${complex_packages[@]}"; do
+        echo -e "\x1B[34m[*] Updating $pkg\x1B[0m"
+        nix-update --flake "$pkg" || echo -e "\x1B[33m[!] Failed to update $pkg\x1B[0m"
+    done
+
+    echo -e "\x1B[32m[+] Updating opencode (with subpackages)...\x1B[0m"
+    nix-update --flake opencode --subpackage tui --subpackage node_modules || echo -e "\x1B[33m[!] Failed to update opencode\x1B[0m"
+
+    echo -e "\x1B[32m[+] Done!\x1B[0m"
+
+# Update everything: flake inputs + custom packages
+update-all: update update-pkgs
+
 diff:
   git diff ':!flake.lock'
 

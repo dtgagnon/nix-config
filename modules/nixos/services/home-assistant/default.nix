@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf types;
@@ -33,7 +34,10 @@ in
     #   API key can be anything (llama-cpp doesn't require auth by default)
 
     # Creates automations.yaml file so that Hass doesn't fail to load when splitting into declarative and ui configured automations.
-    systemd.tmpfiles.rules = [ "f ${config.services.home-assistant.configDir}/automations.yaml 0755 hass hass" ];
+    systemd.tmpfiles.rules = [
+      "f ${config.services.home-assistant.configDir}/automations.yaml 0755 hass hass"
+    ];
+
     services.home-assistant = {
       enable = true;
       openFirewall = false;
@@ -50,9 +54,11 @@ in
           name = "Home";
           country = "US";
           currency = "USD";
-          latitude = "\${LATITUDE}";
-          longitude = "\${LONGITUDE}";
-          elevation = "\${ELEVATION}";
+          # Uses Home Assistant's native secrets.yaml support
+          # The NixOS module converts '!secret x' strings to proper YAML tags
+          latitude = "!secret latitude";
+          longitude = "!secret longitude";
+          elevation = "!secret elevation";
           unit_system = "us_customary";
           temperature_unit = "F";
           time_zone = "US/Eastern";
@@ -172,8 +178,9 @@ in
         "sonarr"
         "tailscale"
         "tplink"
-      ] ++ lib.optional config.services.ollama.enable "ollama"
-        ++ lib.optional config.${namespace}.services.llama-cpp.enable "openai";
+      ]
+      ++ lib.optional config.services.ollama.enable "ollama"
+      ++ lib.optional config.${namespace}.services.llama-cpp.enable "openai";
 
       customComponents = with pkgs.home-assistant-custom-components; [
         midea_ac_lan
@@ -182,133 +189,101 @@ in
         waste_collection_schedule
       ];
 
-      extraPackages = python3Packages: with python3Packages; [
-        psycopg2
-        python-otbr-api
-        getmac
-        aiohomekit
-        grpcio
-        ical #local_todo
-        pyatv #apple_tv
-        pysabnzbd #sabnzbd
-        qbittorrent-api #qbittorrent
-        gcal-sync #google
-        oauth2client #google
-        locationsharinglib #google_maps
-        typedmonarchmoney #monarch_money
-        python-kasa #kasa devices
-        kegtron-ble #ibeacon
-        samsungtvws #samsung TV (WebSocket)
+      extraPackages =
+        python3Packages: with python3Packages; [
+          psycopg2
+          python-otbr-api
+          getmac
+          aiohomekit
+          grpcio
+          ical # local_todo
+          pyatv # apple_tv
+          pysabnzbd # sabnzbd
+          qbittorrent-api # qbittorrent
+          gcal-sync # google
+          oauth2client # google
+          locationsharinglib # google_maps
+          typedmonarchmoney # monarch_money
+          python-kasa # kasa devices
+          kegtron-ble # ibeacon
+          samsungtvws # samsung TV (WebSocket)
 
-        # # HomeKit
-        # base36
-        # fnv-hash-fast
-        # ha-ffmpeg
-        # hap-python
-        # ifaddr
-        # pyqrcode
-        # pyturbojpeg
-        # zeroconf
-        #
-        # # HomeKit Controller
-        # aioesphomeapi
-        # aiohasupervisor
-        # aiohomekit
-        # aioruuvigateway
-        # aioshelly
-        # aiousbwatcher
-        # bleak
-        # bleak-esphome
-        # bleak-retry-connector
-        # bluetooth-adapters
-        # bluetooth-auto-recovery
-        # bluetooth-data-tools
-        # dbus-fast
-        # esphome-dashboard-api
-        # ha-ffmpeg
-        # habluetooth
-        # hassil
-        # home-assistant-intents
-        # ifaddr
-        # mutagen
-        # pymicro-vad
-        # pyroute2
-        # pyserial
-        # pyspeex-noise
-        # python-otbr-api
-        # zeroconf
-        #
-        # # ESPhome
-        # aioblescan
-        # aioesphomeapi
-        # aiohasupervisor
-        # aiousbwatcher
-        # bleak
-        # bleak-esphome
-        # bleak-retry-connector
-        # bluetooth-adapters
-        # bluetooth-auto-recovery
-        # bluetooth-data-tools
-        # dbus-fast
-        # esphome-dashboard-api
-        govee-ble
-        # ha-ffmpeg
-        # habluetooth
-        # hassil
-        # home-assistant-intents
-        # ibeacon-ble
-        # ifaddr
-        # kegtron-ble
-        # mutagen
-        # pymicro-vad
-        # pyserial
-        # pyspeex-noise
-        # zeroconf
-      ];
-    };
-
-    # Process the additional commands for handling secrets at runtime
-    systemd.services."home-assistant" = {
-      path = [ pkgs.coreutils pkgs.gettext ];
-      preStart = lib.mkAfter ''
-        # Export variables for envsubst, reading from sops secrets files
-        export LATITUDE=$(cat "${config.sops.secrets."hass/latitude".path}")
-        export LONGITUDE=$(cat "${config.sops.secrets."hass/longitude".path}")
-        export ELEVATION=$(cat "${config.sops.secrets."hass/elevation".path}")
-
-        # Define the correct configuration file path and a temp file
-        CONF_FILE="${cfg.configDir}/configuration.yaml"
-        TEMP_CONF_FILE="$CONF_FILE.tmp"
-
-        # Basic check if secrets were read
-        if [ -z "$LATITUDE" ] || [ -z "$LONGITUDE" ] || [ -z "$ELEVATION" ]; then
-        echo "Error: One or more secret values could not be read." >&2
-        exit 1
-        fi
-
-        echo "Attempting substitution into $CONF_FILE"
-        # Perform the substitution using envsubst
-        envsubst < "$CONF_FILE" > "$TEMP_CONF_FILE"
-
-        if [ $? -eq 0 ]; then
-        # Replace original file, set ownership/permissions
-        mv "$TEMP_CONF_FILE" "$CONF_FILE"
-        echo "Secrets successfully substituted into $CONF_FILE."
-        else
-        echo "Error during envsubst execution. Configuration not updated." >&2
-        rm -f "$TEMP_CONF_FILE"
-        exit 1 # Fail the service start
-        fi
-      '';
+          # # HomeKit
+          # base36
+          # fnv-hash-fast
+          # ha-ffmpeg
+          # hap-python
+          # ifaddr
+          # pyqrcode
+          # pyturbojpeg
+          # zeroconf
+          #
+          # # HomeKit Controller
+          # aioesphomeapi
+          # aiohasupervisor
+          # aiohomekit
+          # aioruuvigateway
+          # aioshelly
+          # aiousbwatcher
+          # bleak
+          # bleak-esphome
+          # bleak-retry-connector
+          # bluetooth-adapters
+          # bluetooth-auto-recovery
+          # bluetooth-data-tools
+          # dbus-fast
+          # esphome-dashboard-api
+          # ha-ffmpeg
+          # habluetooth
+          # hassil
+          # home-assistant-intents
+          # ifaddr
+          # mutagen
+          # pymicro-vad
+          # pyroute2
+          # pyserial
+          # pyspeex-noise
+          # python-otbr-api
+          # zeroconf
+          #
+          # # ESPhome
+          # aioblescan
+          # aioesphomeapi
+          # aiohasupervisor
+          # aiousbwatcher
+          # bleak
+          # bleak-esphome
+          # bleak-retry-connector
+          # bluetooth-adapters
+          # bluetooth-auto-recovery
+          # bluetooth-data-tools
+          # dbus-fast
+          # esphome-dashboard-api
+          govee-ble
+          # ha-ffmpeg
+          # habluetooth
+          # hassil
+          # home-assistant-intents
+          # ibeacon-ble
+          # ifaddr
+          # kegtron-ble
+          # mutagen
+          # pymicro-vad
+          # pyserial
+          # pyspeex-noise
+          # zeroconf
+        ];
     };
 
     services.postgresql = {
       enable = true;
       ensureDatabases = [ "hass" ];
-      ensureUsers = [{
-        name = "hass";
-        ensureDBOwnership = true;
-      }];
+      ensureUsers = [
+        {
+          name = "hass";
+          ensureDBOwnership = true;
+        }
+      ];
     };
 
     # go2rtc camera streaming service for IOT cameras (EC70, KC100, etc.)
@@ -328,11 +303,27 @@ in
       };
     };
 
+    # Generate secrets.yaml for Home Assistant's native !secret support
+    # This is much cleaner than placeholder injection - HA reads secrets directly
+    sops.templates."hass-secrets" = {
+      owner = "hass";
+      group = "hass";
+      mode = "0400";
+      path = "${cfg.configDir}/secrets.yaml";
+      content = ''
+        # Auto-generated by sops-nix - do not edit manually
+        latitude: "${config.sops.placeholder."hass-latitude"}"
+        longitude: "${config.sops.placeholder."hass-longitude"}"
+        elevation: "${config.sops.placeholder."hass-elevation"}"
+      '';
+    };
+
+    # Declare the sops secrets (keys match the sops yaml structure)
     sops.secrets = {
-      "hass/latitude".owner = "hass";
-      "hass/longitude".owner = "hass";
-      "hass/elevation".owner = "hass";
       kasaCamFeed = { };
+      hass-latitude.key = "hass/latitude";
+      hass-longitude.key = "hass/longitude";
+      hass-elevation.key = "hass/elevation";
     };
   };
 }
