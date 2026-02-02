@@ -18,11 +18,5 @@ in
     home.packages = with pkgs; [
       proton-pass
     ];
-
-    services.protonmail-bridge = {
-      enable = true;
-      package = pkgs.protonmail-bridge;
-      extraPackages = [ pkgs.gnome-keyring ];
-    };
   };
 }

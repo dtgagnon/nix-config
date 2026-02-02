@@ -101,21 +101,12 @@ in
       '';
     })
 
-    # protonmail-bridge
+    # protonmail-bridge (uses home-manager native service)
     (mkIf cfg.protonmail-bridge.enable {
-      home.packages = [ pkgs.protonmail-bridge ];
-
-      systemd.user.services.protonmail-bridge = {
-        Unit = {
-          Description = "Protonmail Bridge";
-          After = [ "graphical-session.target" ];
-        };
-        Service = {
-          ExecStart = "${pkgs.protonmail-bridge}/bin/protonmail-bridge --noninteractive";
-          Restart = "on-failure";
-          RestartSec = "5s";
-        };
-        Install.WantedBy = [ "default.target" ];
+      services.protonmail-bridge = {
+        enable = true;
+        package = pkgs.protonmail-bridge;
+        extraPackages = [ pkgs.gnome-keyring ];
       };
 
       ${namespace}.preservation.directories = [
