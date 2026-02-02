@@ -1,7 +1,6 @@
 { lib
 , config
 , inputs
-, system
 , namespace
 , pkgs
 , ...
@@ -9,6 +8,7 @@
 let
   inherit (lib) mkMerge mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.desktop.addons.sysbar.quickshell;
 in
 {

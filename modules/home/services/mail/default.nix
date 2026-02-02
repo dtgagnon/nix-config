@@ -11,7 +11,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkMerge filterAttrs;
+  inherit (lib) mkIf mkMerge mkDefault filterAttrs;
 
   cfg = config.${namespace}.services.mail;
   secretsPath = toString inputs.nix-secrets;
@@ -23,10 +23,8 @@ let
     then import accountsFile
     else { };
 
-  # Merge imported accounts with any defined in config
-  # Imported accounts bypass submodule defaults, so use `enable or true`
-  allAccounts = importedAccounts // cfg.accounts;
-  enabledAccounts = filterAttrs (_: acc: acc.enable or true) allAccounts;
+  # Filter enabled accounts (now properly processed through submodule)
+  enabledAccounts = filterAttrs (_: acc: acc.enable) cfg.accounts;
 
   # Import helper functions
   helpers = import ./helpers.nix { inherit lib config cfg; };
@@ -40,12 +38,17 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
+    # Import accounts from secrets as defaults (goes through submodule for proper typing)
+    {
+      ${namespace}.services.mail.accounts = lib.mapAttrs (_: mkDefault) importedAccounts;
+    }
+
     # Base packages
     {
       home.packages = with pkgs; [ isync notmuch mblaze ];
 
       # Ensure mail directory exists
-      home.activation.createMailDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      home.activation.createMailDir = config.lib.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p "${mailDir}"
       '';
     }
@@ -95,7 +98,7 @@ in
       home.file.".notmuch-config".text = helpers.mkNotmuchConfig enabledAccounts;
 
       # Initialize notmuch on activation if needed
-      home.activation.notmuchInit = lib.hm.dag.entryAfter [ "createMailDir" ] ''
+      home.activation.notmuchInit = config.lib.dag.entryAfter [ "createMailDir" ] ''
         if [ ! -d "${mailDir}/.notmuch" ]; then
           ${pkgs.notmuch}/bin/notmuch --config="$HOME/.notmuch-config" new || true
         fi

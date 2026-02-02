@@ -10,12 +10,51 @@ let
   inherit (lib) mapAttrsToList concatStringsSep attrValues findFirst head filter;
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${cfg.mailDir}";
+
+  # Common defaults for all accounts
+  commonDefaults = {
+    realName = "";
+    primary = false;
+    folders = [ "INBOX" "Sent" "Drafts" "Trash" "Archive" ];
+  };
+
+  # Provider-specific defaults (for accounts imported without submodule processing)
+  providerDefaults = {
+    gmail = {
+      imapHost = "imap.gmail.com";
+      imapPort = 993;
+      useTls = true;
+    };
+    protonmail = {
+      imapHost = "127.0.0.1";
+      imapPort = 1143;
+      useTls = false;
+    };
+    mxroute = {
+      imapHost = "ireland.mxrouting.net";
+      imapPort = 993;
+      useTls = true;
+    };
+    imap = {
+      imapHost = "";
+      imapPort = 993;
+      useTls = true;
+    };
+  };
+
+  # Apply provider defaults to an account
+  withDefaults = acc:
+    let
+      providerDefs = providerDefaults.${acc.provider or "imap"};
+    in
+    commonDefaults // providerDefs // acc;
 in
 rec {
   # Generate mbsync config for a single account
   mkMbsyncAccount =
-    name: acc:
+    name: accRaw:
     let
+      acc = withDefaults accRaw;
       sslType =
         if acc.provider == "protonmail" then
           "STARTTLS"
@@ -63,7 +102,7 @@ rec {
   mkNotmuchConfig =
     accounts:
     let
-      accountList = attrValues accounts;
+      accountList = map withDefaults (attrValues accounts);
       primaryAccount = findFirst (acc: acc.primary) (head accountList) accountList;
       allEmails = map (acc: acc.email) accountList;
       otherEmails = filter (e: e != primaryAccount.email) allEmails;

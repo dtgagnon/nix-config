@@ -2,13 +2,13 @@
 , pkgs
 , config
 , inputs
-, system
 , namespace
 , ...
 }:
 let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
+  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.cli.neovim;
 
   #NOTE: Extend nixvim with Stylix theme when Stylix is enabled. https://stylix.danth.me/targets/nixvim.html#standalone-mode

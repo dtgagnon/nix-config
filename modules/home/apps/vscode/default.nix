@@ -3,13 +3,13 @@
   pkgs,
   config,
   inputs,
-  system,
   namespace,
   ...
 }:
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
+  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.apps.vscode;
 in
 {

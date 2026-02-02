@@ -1,12 +1,13 @@
 { lib
+, pkgs
 , config
 , inputs
-, system
 , namespace
 , ...
 }:
 let
   inherit (lib) mkEnableOption mkIf getExe;
+  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.apps.yell;
   yellPackage = inputs.yell.packages.${system}.default;
 in

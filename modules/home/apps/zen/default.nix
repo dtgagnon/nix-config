@@ -161,15 +161,15 @@ in
               urls = [{ template = "https://github.com/search?q={searchTerms}&type=code"; }];
               definedAliases = [ "@gh" ];
             };
-            "YouTube" = {
+            youtube = {
               urls = [{ template = "https://www.youtube.com/results?search_query={searchTerms}"; }];
               definedAliases = [ "@yt" ];
             };
             # Disable sponsored/unwanted engines
-            "Bing".metaData.hidden = true;
-            "Amazon.com".metaData.hidden = true;
-            "eBay".metaData.hidden = true;
-            "Wikipedia (en)".metaData.alias = "@wiki";
+            bing.metaData.hidden = true;
+            amazondotcom-us.metaData.hidden = true;
+            ebay.metaData.hidden = true;
+            wikipedia.metaData.alias = "@wiki";
           };
         };
 
