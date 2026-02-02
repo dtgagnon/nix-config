@@ -33,7 +33,6 @@ in
       enablePop3 = false;
       enableLmtp = false;
 
-      mailUser = cfg.user;
       mailGroup = "users";
       mailLocation = "maildir:${mailLocation}:LAYOUT=fs";
 

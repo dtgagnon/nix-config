@@ -24,8 +24,9 @@ let
     else { };
 
   # Merge imported accounts with any defined in config
+  # Imported accounts bypass submodule defaults, so use `enable or true`
   allAccounts = importedAccounts // cfg.accounts;
-  enabledAccounts = filterAttrs (_: acc: acc.enable) allAccounts;
+  enabledAccounts = filterAttrs (_: acc: acc.enable or true) allAccounts;
 
   # Import helper functions
   helpers = import ./helpers.nix { inherit lib config cfg; };

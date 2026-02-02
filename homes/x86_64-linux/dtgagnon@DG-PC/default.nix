@@ -55,7 +55,10 @@ in
       thunderbird = enabled;
       todoist = enabled;
       yell = enabled;
-      zen = enabled;
+      zen = {
+        enable = true;
+        profilePath = "9pvgivjz.default"; # Existing profile directory
+      };
     };
 
     cli = {
@@ -140,6 +143,7 @@ in
       audio-record = enabled;
       copyparty-client = enabled;
       emma = enabled;
+      mail = enabled;
       syncthing = enabled;
     };
   };
