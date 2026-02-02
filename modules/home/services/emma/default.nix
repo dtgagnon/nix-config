@@ -23,7 +23,7 @@ in
 
     llm = {
       provider = mkOpt lib.types.str "ollama" "LLM provider (ollama or anthropic)";
-      model = mkOpt lib.types.str "qwen3:14b" "Model name for the LLM provider";
+      model = mkOpt lib.types.str "gpt-oss:20b" "Model name for the LLM provider";
       maxTokens = mkOpt lib.types.int 1024 "Maximum tokens for LLM responses";
       temperature = mkOpt lib.types.float 0.3 "Temperature for LLM responses";
       ollamaBaseUrl = mkOpt lib.types.str "http://localhost:11434" "Ollama API base URL";

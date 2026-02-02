@@ -2,13 +2,13 @@
 , pkgs
 , config
 , inputs
-, system
 , namespace
 , ...
 }:
 let
   inherit (lib) mkIf types;
   inherit (lib.${namespace}) enabled mkBoolOpt mkOpt;
+  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.desktop.hyprland;
 in
 {
