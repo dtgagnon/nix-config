@@ -12,42 +12,24 @@ let
   cfg = config.${namespace}.services.openssh;
 
   user = config.${namespace}.user.name;
-  user-id = toString user.uid;
-
   hasOptinPersistence = config.environment.persistence ? "/persist";
 
-  # Collects the information about the other hosts
-  other-hosts = lib.filterAttrs
-    (
-      key: hostCfg: key != host && (hostCfg.config.${namespace}.user.name or null) != null
-    )
-    ((inputs.self.nixosConfigurations or { }) // (inputs.self.darwinConfigurations or { }));
+  # Get hostnames without evaluating other hosts' configs
+  allHosts = builtins.attrNames (
+    (inputs.self.nixosConfigurations or { }) // (inputs.self.darwinConfigurations or { })
+  );
+  otherHosts = builtins.filter (name: name != host) allHosts;
 
-
-  # Generate SSH configurations for other hosts within the namespace, with an established user, excluding the current host
+  # Generate SSH configurations for other hosts
+  # Assumes same username across hosts (avoids cross-host config evaluation)
   other-hosts-config = lib.concatMapStringsSep "\n"
-    (
-      name:
-      let
-        remote = other-hosts.${name};
-        remote-user-name = remote.config.${namespace}.user.name;
-        remote-user-id = toString remote.config.users.users.${remote-user-name}.uid;
-
-        #NOTE: Don't need to use forward-gpg for age keys, but will need to refer to them statically somehow. I'm using age keys only so far.
-        forward-gpg = optionalString (config.programs.gnupg.agent.enable && remote.config.programs.gnupg.agent.enable) ''
-          RemoteForward /run/user/${remote-user-id}/gnupg/S.gpg-agent /run/user/${user-id}/gnupg/S.gpg-agent.extra
-          RemoteForward /run/user/${remote-user-id}/gnupg/S.gpg-agent.ssh /run/user/${user-id}/gnupg/S.gpg-agent.ssh
-        '';
-      in
-      ''
-        Host ${name}
-        User ${remote-user-name}
-        ForwardAgent yes
-        Port ${toString cfg.port}
-        ${forward-gpg}
-      ''
-    )
-    (builtins.attrNames other-hosts);
+    (name: ''
+      Host ${name}
+      User ${user}
+      ForwardAgent yes
+      Port ${toString cfg.port}
+    '')
+    otherHosts;
 in
 {
   options.${namespace}.services.openssh = {

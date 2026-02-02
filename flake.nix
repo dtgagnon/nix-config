@@ -47,6 +47,7 @@
         ];
 
         systems.modules.nixos = with inputs; [
+          authentik.nixosModules.default
           copyparty.nixosModules.default
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
@@ -55,6 +56,7 @@
           nix-topology.nixosModules.default
           NixVirt.nixosModules.default
           preservation.nixosModules.preservation
+          rybbix.nixosModules.default
           sops-nix.nixosModules.sops
           stylix.nixosModules.stylix
         ];
@@ -71,14 +73,12 @@
         ];
 
         systems.hosts.spirepoint.modules = with inputs; [
-          authentik.nixosModules.default
           proxmox-nixos.nixosModules.proxmox-ve
           nixarr.nixosModules.default
         ];
 
         systems.hosts.slim.modules = with inputs; [
           spirenet-dashboard.nixosModules.default
-          rybbix.nixosModules.default
         ];
 
         systems.hosts.oranix.modules = with inputs; [
