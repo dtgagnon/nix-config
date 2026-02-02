@@ -18,43 +18,33 @@
                 mountOptions = [ "umask=0077" ];
               };
             };
-            luks = {
-              size = "100%";
+            swap = {
+              size = "4G";
               content = {
-                type = "luks";
-                name = "root-crypt";
-                passwordFile = "/tmp/disko-password"; # populated by bootstrap-nixos.sh
-                # extraOpenArgs = [ ];
-                settings = {
-                  #		if you want to use the key for interactive login be sure there is no trailing newline; for example use `echo -n "password" > /tmp/secret.key`
-                  allowDiscards = true;
-                };
-                content = {
-                  type = "lvm_pv";
-                  vg = "root-pool";
+                type = "swap";
+                randomEncryption = true;
+              };
+            };
+            root = {
+              size = "95G";
+              content = {
+                type = "btrfs";
+                extraArgs = [ "-L" "nixos" "-f" ];
+                subvolumes = {
+                  "/root" = { mountpoint = "/"; };
+                  "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
+                  "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
+                  "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
                 };
               };
             };
-          };
-        };
-      };
-    };
-
-    # LVM definitions for volume groups
-    lvm_vg = {
-      root-pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "btrfs";
-              extraArgs = [ "-L" "nixos" "-f" ];
-              subvolumes = {
-                "/root" = { mountpoint = "/"; };
-                "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
-                "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
-                "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
+            vm = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/var/lib/microvms/openclaw";
+                mountOptions = [ "noatime" ];
               };
             };
           };

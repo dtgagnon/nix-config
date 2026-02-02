@@ -13,6 +13,9 @@ in
     ./hardware.nix
   ];
 
+  # OpenClaw runs in isolated VM - prompt injection risk accepted
+  nixpkgs.config.permittedInsecurePackages = [ "openclaw-2026.1.30" ];
+
   # ============================================================================
   # Boot Configuration
   # ============================================================================
@@ -32,14 +35,10 @@ in
 
     initrd = {
       systemd.enable = true;
-      systemd.emergencyAccess = true;
-      luks.forceLuksSupportInInitrd = true;
       availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
-      kernelModules = [ "dm-snapshot" ];
     };
 
     kernelModules = [ "kvm-intel" ];
-    extraModulePackages = [ ];
   };
 
   # ============================================================================
@@ -51,15 +50,15 @@ in
 
     firewall = {
       enable = true;
-      # SSH only - public access via Tailscale Funnel (no ports 80/443 needed!)
-      allowedTCPPorts = [ 22 22022 ];
-      # Tailscale interface is fully trusted
-      trustedInterfaces = [ "tailscale0" ];
-      # Hardening: Drop forwarding by default
-      extraCommands = ''
-        iptables -P FORWARD DROP
-        ip6tables -P FORWARD DROP
-      '';
+      allowedTCPPorts = [ 22 ];
+      trustedInterfaces = [ "tailscale0" "microvm" ];
+    };
+
+    # Bridge for microVM networking
+    nat = {
+      enable = true;
+      internalInterfaces = [ "microvm" ];
+      externalInterface = "wlp2s0";
     };
   };
 
@@ -68,35 +67,143 @@ in
   # ============================================================================
 
   spirenix = {
-    # Suites
     suites = {
       headless = enabled;
       networking = enabled;
     };
 
-    # Hardware (server mode - desktop removed)
     hardware = {
-      keyboard = enabled; # Console keyboard layout (needed for physical access/recovery)
-      laptop = enabled; # Battery, lid, power management
+      keyboard = enabled;
+      laptop = enabled;
     };
 
-    # Security
     security = {
       pam = enabled;
       sudo = enabled;
       sops-nix = enabled;
+      vpn.enable = false;
     };
 
-    # System
     system.enable = true;
-    system.preservation = enabled;
+    system.preservation = {
+      enable = true;
+      extraSysDirs = [
+        "/etc/NetworkManager/system-connections"
+        "/var/lib/microvms"
+      ];
+    };
 
-    # Tools
     tools = {
       comma = enabled;
       general = enabled;
       monitoring = enabled;
-      nix-ld = enabled;
+    };
+  };
+
+  # ============================================================================
+  # MicroVM Host Configuration
+  # ============================================================================
+
+  microvm = {
+    host.enable = true;
+    autostart = [ "openclaw" ];
+
+    vms.openclaw = {
+      pkgs = pkgs;
+      config = {
+        microvm = {
+          hypervisor = "cloud-hypervisor";
+          vcpu = 4;
+          mem = 3072; # 3GB for VM, leaves ~700MB for host
+
+          # Use dedicated partition as VM's root volume
+          volumes = [{
+            image = "/var/lib/microvms/openclaw/root.img";
+            mountPoint = "/";
+            size = 15360; # 15GB
+          }];
+
+          interfaces = [{
+            type = "tap";
+            id = "vm-openclaw";
+            mac = "02:00:00:00:00:01";
+          }];
+
+          # Share host's nix store read-only
+          shares = [{
+            source = "/nix/store";
+            mountPoint = "/nix/.ro-store";
+            tag = "ro-store";
+            proto = "virtiofs";
+          }];
+        };
+
+        # Nix store overlay: ro-store from host + local writable layer
+        fileSystems."/nix/store" = {
+          overlay = {
+            lowerdir = [ "/nix/.ro-store" ];
+            upperdir = "/nix/.rw-store/upper";
+            workdir = "/nix/.rw-store/work";
+          };
+        };
+
+        # VM's internal NixOS configuration
+        networking = {
+          hostName = "openclaw";
+          useNetworkd = true;
+          useDHCP = false;
+          interfaces.eth0 = {
+            useDHCP = false;
+            ipv4.addresses = [{
+              address = "10.0.0.2";
+              prefixLength = 24;
+            }];
+          };
+          defaultGateway = {
+            address = "10.0.0.1";
+            interface = "eth0";
+          };
+          nameservers = [ "1.1.1.1" "8.8.8.8" ];
+        };
+
+        # OpenClaw service
+        systemd.services.openclaw = {
+          description = "OpenClaw AI Assistant Gateway";
+          wantedBy = [ "multi-user.target" ];
+          after = [ "network.target" ];
+
+          environment = {
+            HOME = "/var/lib/openclaw";
+            NODE_ENV = "production";
+          };
+
+          serviceConfig = {
+            Type = "simple";
+            User = "openclaw";
+            Group = "openclaw";
+            WorkingDirectory = "/var/lib/openclaw";
+            ExecStart = "${lib.getExe pkgs.${namespace}.openclaw} gateway --bind 0.0.0.0 --port 18789";
+            Restart = "on-failure";
+            RestartSec = 5;
+          };
+        };
+
+        users.users.openclaw = {
+          isSystemUser = true;
+          group = "openclaw";
+          home = "/var/lib/openclaw";
+          createHome = true;
+        };
+
+        users.groups.openclaw = { };
+
+        services.openssh = {
+          enable = true;
+          settings.PermitRootLogin = "no";
+        };
+
+        system.stateVersion = "24.11";
+      };
     };
   };
 
@@ -104,7 +211,6 @@ in
   # Automated Maintenance
   # ============================================================================
 
-  # Auto-rebuild when GitHub repo updates (replaces autoUpgrade)
   systemd.services.flake-auto-rebuild = {
     description = "Auto-rebuild when GitHub repo updates";
     path = with pkgs; [ git nixos-rebuild nix openssh sudo ];
@@ -128,18 +234,16 @@ in
   systemd.timers.flake-auto-rebuild = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "*:0/15"; # Every 15 minutes
+      OnCalendar = "*:0/15";
       Persistent = true;
     };
   };
 
-  # Automatic garbage collection (critical for 128GB disk)
   nix.gc = {
     automatic = true;
     dates = "weekly";
   };
 
-  # Nix store optimization
   nix.optimise = {
     automatic = true;
     dates = [ "03:30" ];
