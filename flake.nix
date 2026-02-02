@@ -86,7 +86,7 @@
         ];
 
         homes.packages = with inputs; [
-          zen-browser.packages.twilight
+          # zen-browser package is now provided by the home-manager module
         ];
 
         homes.modules = with inputs; [
@@ -95,6 +95,7 @@
           noctalia.homeModules.default
           sops-nix.homeManagerModules.sops
           stylix.homeModules.stylix
+          zen-browser.homeModules.twilight
         ];
 
         deploy = lib.mkDeploy {

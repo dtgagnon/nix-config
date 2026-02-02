@@ -65,7 +65,6 @@ in
       claude-code = enabled;
       codex = enabled;
       direnv = enabled;
-      emma = enabled;
       eza = enabled;
       fastfetch = enabled;
       fzf = enabled;
@@ -140,6 +139,7 @@ in
       activity-watch = enabled;
       audio-record = enabled;
       copyparty-client = enabled;
+      emma = enabled;
       syncthing = enabled;
     };
   };

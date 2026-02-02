@@ -632,11 +632,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1769486113,
-        "narHash": "sha256-ha6Nq4cMtqS8OwXxiFq1fyCyvHcJdS6qZqZSTL9Ut7A=",
+        "lastModified": 1770057231,
+        "narHash": "sha256-k3fuHl5bgfj+Eyunb9lDqxytBsAKF2s0SJulkgwFYnU=",
         "owner": "dtgagnon",
         "repo": "emma",
-        "rev": "a6f5cef9e5b9acb40d8c5944df020c1fb97f67c5",
+        "rev": "9ef7ff6a303755677b6e22855698b2747b44b783",
         "type": "github"
       },
       "original": {
