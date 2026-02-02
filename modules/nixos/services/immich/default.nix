@@ -88,8 +88,8 @@ in
           };
         };
         "ffmpeg" = {
-          "accel" = "disabled";
-          "accelDecode" = false;
+          "accel" = "nvenc";
+          "accelDecode" = true;
           "acceptedAudioCodecs" = [
             "aac"
             "mp3"

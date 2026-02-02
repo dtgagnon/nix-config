@@ -68,6 +68,41 @@ in
       }
     ];
 
+    # Create static user/group for authentik (required for persistence compatibility)
+    # DynamicUser doesn't work with bind-mounted state directories
+    users = {
+      users.authentik = {
+        isSystemUser = true;
+        group = "authentik";
+        home = "/var/lib/authentik";
+      };
+      groups.authentik = { };
+    };
+
+    systemd = {
+      # Override services to use static user instead of DynamicUser
+      services =
+        let
+          staticUserOverride = {
+            serviceConfig = {
+              DynamicUser = lib.mkForce false;
+              User = "authentik";
+              Group = "authentik";
+            };
+          };
+        in
+        {
+          authentik = staticUserOverride;
+          authentik-worker = staticUserOverride;
+          authentik-migrate = staticUserOverride;
+        };
+
+      # Ensure state directory has correct ownership
+      tmpfiles.rules = [
+        "d /var/lib/authentik 0750 authentik authentik -"
+      ];
+    };
+
     # Sops secrets for Authentik
     sops.secrets = lib.mkMerge [
       # Required: generate with `openssl rand -base64 60`
@@ -98,8 +133,8 @@ in
           AUTHENTIK_EMAIL__FROM=${config.sops.placeholder."authentik/email-from"}
           AUTHENTIK_EMAIL__USE_TLS=${config.sops.placeholder."authentik/email-use-tls"}
         '';
-      owner = "root";
-      group = "root";
+      owner = "authentik";
+      group = "authentik";
       mode = "0400";
     };
 
