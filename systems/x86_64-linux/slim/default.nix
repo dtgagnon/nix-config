@@ -87,26 +87,9 @@ in
       sops-nix = enabled;
     };
 
-    # Services
-    services = {
-      rybbit = {
-        enable = true;
-        useBuiltinProxy = false;
-      };
-    };
-
     # System
     system.enable = true;
-    system.preservation = {
-      enable = true;
-      extraSysDirs = [
-        "/var/lib/coolify"
-        "/var/lib/caddy"
-        "/var/log/caddy"
-        "/var/lib/fail2ban"
-        "/var/log/audit"
-      ];
-    };
+    system.preservation = enabled;
 
     # Tools
     tools = {
@@ -115,38 +98,6 @@ in
       monitoring = enabled;
       nix-ld = enabled;
     };
-  };
-
-  # ============================================================================
-  # Security Hardening
-  # ============================================================================
-
-  # Fail2ban intrusion prevention
-  services.fail2ban = {
-    enable = true;
-    maxretry = 5;
-    bantime = "24h";
-    bantime-increment = {
-      enable = true;
-      multipliers = "1 2 4 8 16 32 64";
-      maxtime = "168h"; # 1 week max
-    };
-    ignoreIP = [
-      "100.64.0.0/10" # Tailscale CGNAT range
-      "192.168.0.0/16" # Local networks
-    ];
-  };
-
-  # Auditd for intrusion detection
-  security.auditd.enable = true;
-  security.audit = {
-    enable = true;
-    rules = [
-      "-a always,exit -F arch=b64 -S execve -k exec"
-      "-w /etc/passwd -p wa -k passwd_changes"
-      "-w /etc/shadow -p wa -k shadow_changes"
-      "-w /etc/ssh/sshd_config -p wa -k sshd_changes"
-    ];
   };
 
   # ============================================================================

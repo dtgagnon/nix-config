@@ -105,8 +105,12 @@ in
 
     # Sops secrets for Authentik
     sops.secrets = lib.mkMerge [
-      # Required: generate with `openssl rand -base64 60`
-      { "authentik/secret-key" = { }; }
+      # Required secrets
+      {
+        "authentik/secret-key" = { }; # generate with `openssl rand -base64 50`
+        "authentik/bootstrap-password" = { };
+        "authentik/bootstrap-email" = { };
+      }
 
       # Email secrets (only when email.enable = true)
       (mkIf cfg.email.enable {
@@ -124,6 +128,8 @@ in
       content =
         ''
           AUTHENTIK_SECRET_KEY=${config.sops.placeholder."authentik/secret-key"}
+          AUTHENTIK_BOOTSTRAP_PASSWORD=${config.sops.placeholder."authentik/bootstrap-password"}
+          AUTHENTIK_BOOTSTRAP_EMAIL=${config.sops.placeholder."authentik/bootstrap-email"}
         ''
         + lib.optionalString cfg.email.enable ''
           AUTHENTIK_EMAIL__HOST=${config.sops.placeholder."authentik/email-host"}

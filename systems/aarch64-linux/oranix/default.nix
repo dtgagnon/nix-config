@@ -34,6 +34,11 @@ in
         # Allow CORS from Tailnet for direct dashboard access
         extraCorsOrigins = [ "http://100.100.90.1:3002" ];
       };
+
+      rybbit = {
+        enable = true;
+        useBuiltinProxy = false;
+      };
     };
 
     system = {
