@@ -256,7 +256,10 @@
     n8n-private.url = "git+ssh://git@github.com/dtgagnon/n8n-nix-overlay";
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
     yell.url = "git+ssh://git@github.com/dtgagnon/yell";
-    emma.url = "github:dtgagnon/emma";
+    emma.url = "path:/home/dtgagnon/proj/AUTOMATE/email-agent";
+
+    ## websites
+    dtge.url = "git+ssh://git@github.com/dtgagnon/dtg-engineering?ref=feat/nix-deploy";
 
     ## ai tools
     nix-llm-agents.url = "github:numtide/llm-agents.nix";

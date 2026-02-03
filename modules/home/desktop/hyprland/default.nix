@@ -2,6 +2,7 @@
 , pkgs
 , config
 , inputs
+, system
 , osConfig ? { }
 , namespace
 , ...
@@ -15,7 +16,6 @@ let
     disabled
     mkDeepAttrsOpt
     ;
-  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.desktop.hyprland;
 in
 {

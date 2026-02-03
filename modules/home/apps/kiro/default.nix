@@ -2,12 +2,12 @@
 , pkgs
 , config
 , inputs
+, system
 , namespace
 , ...
 }:
 let
   inherit (lib) mkIf mkEnableOption;
-  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.apps.kiro;
 in
 {

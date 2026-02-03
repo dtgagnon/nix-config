@@ -2,13 +2,13 @@
 , pkgs
 , config
 , inputs
+, system
 , namespace
 , ...
 }:
 let
   inherit (lib) mkIf types getExe;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-  inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.${namespace}.desktop.addons.sysbar.ags;
 
   bar = pkgs.runCommandNoCC "spirenix-ags-bar" {

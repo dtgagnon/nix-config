@@ -1,4 +1,4 @@
-{ lib, namespace, ... }:
+{ lib, namespace, inputs, system, ... }:
 let
   inherit (lib.${namespace}) enabled;
 in
@@ -38,6 +38,17 @@ in
       rybbit = {
         enable = true;
         useBuiltinProxy = false;
+      };
+
+      # Static websites served via darkhttpd behind Pangolin
+      static-sites = {
+        enable = true;
+        sites = {
+          dtge = {
+            package = inputs.dtge.packages.${system}.default;
+            port = 10000;
+          };
+        };
       };
     };
 

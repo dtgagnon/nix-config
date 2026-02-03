@@ -11,10 +11,18 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkMerge mkDefault filterAttrs;
+  inherit (lib) mkIf mkMerge mkDefault filterAttrs mapAttrs' nameValuePair optionalAttrs;
 
   cfg = config.${namespace}.services.mail;
+  emmaCfg = config.${namespace}.services.emma;
   secretsPath = toString inputs.nix-secrets;
+
+  # Derive account name from email domain (matches emma's Python logic)
+  deriveAccountName = email:
+    let
+      domain = lib.last (lib.splitString "@" email);
+    in
+    builtins.head (lib.splitString "." domain);
 
   # Import accounts from private nix-secrets repo
   accountsFile = "${secretsPath}/mail-accounts.nix";
@@ -117,6 +125,23 @@ in
         ".config/protonmail"
         ".local/share/protonmail"
       ];
+    })
+
+    # Emma integration - pass mail accounts to emma
+    # Only include fields that differ from emma's defaults
+    (mkIf emmaCfg.enable {
+      programs.emma.settings.maildirAccounts = mapAttrs' (
+        name: acc:
+        let
+          derivedName = deriveAccountName acc.email;
+          # Only include accountName if it differs from what emma would derive
+          needsAccountName = name != derivedName;
+        in
+        nameValuePair acc.email (
+          optionalAttrs needsAccountName { accountName = name; }
+          // optionalAttrs acc.primary { default = true; }
+        )
+      ) enabledAccounts;
     })
   ]);
 }

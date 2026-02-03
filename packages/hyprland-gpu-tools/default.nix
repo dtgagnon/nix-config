@@ -6,9 +6,10 @@
   symlinkJoin,
   coreutils,
   inputs,
-  system,
 }:
 let
+  inherit (stdenv.hostPlatform) system;
+
   # GPU detection and environment variable utility
   gpuEnv = writeShellScriptBin "hyprland-gpu-env" ''
     #!${stdenv.shell}
