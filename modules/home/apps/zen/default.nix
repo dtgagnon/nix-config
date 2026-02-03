@@ -238,23 +238,23 @@ in
 
     # Set as default browser if enabled
     home.sessionVariables = mkIf cfg.defaultBrowser {
-      BROWSER = "zen-beta";
+      BROWSER = "zen";
     };
 
     # MIME type associations for default browser
     xdg.mimeApps.defaultApplications = mkIf cfg.defaultBrowser {
-      "application/x-extension-htm" = "zen-beta.desktop";
-      "application/x-extension-html" = "zen-beta.desktop";
-      "application/x-extension-shtml" = "zen-beta.desktop";
-      "application/x-extension-xht" = "zen-beta.desktop";
-      "application/x-extension-xhtml" = "zen-beta.desktop";
-      "application/xhtml+xml" = "zen-beta.desktop";
-      "text/html" = "zen-beta.desktop";
-      "x-scheme-handler/about" = "zen-beta.desktop";
-      "x-scheme-handler/ftp" = "zen-beta.desktop";
-      "x-scheme-handler/http" = "zen-beta.desktop";
-      "x-scheme-handler/https" = "zen-beta.desktop";
-      "x-scheme-handler/unknown" = "zen-beta.desktop";
+      "application/x-extension-htm" = "zen-twilight.desktop";
+      "application/x-extension-html" = "zen-twilight.desktop";
+      "application/x-extension-shtml" = "zen-twilight.desktop";
+      "application/x-extension-xht" = "zen-twilight.desktop";
+      "application/x-extension-xhtml" = "zen-twilight.desktop";
+      "application/xhtml+xml" = "zen-twilight.desktop";
+      "text/html" = "zen-twilight.desktop";
+      "x-scheme-handler/about" = "zen-twilight.desktop";
+      "x-scheme-handler/ftp" = "zen-twilight.desktop";
+      "x-scheme-handler/http" = "zen-twilight.desktop";
+      "x-scheme-handler/https" = "zen-twilight.desktop";
+      "x-scheme-handler/unknown" = "zen-twilight.desktop";
     };
 
     # Preserve Zen Browser data (imperative config, pins, workspaces, etc.)

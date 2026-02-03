@@ -102,8 +102,8 @@ in
 
         # Inhibit Idle for fullscreen videos/focused media
         {
-          name = "firefox-idle-inhibit";
-          "match:class" = "^(firefox)$";
+          name = "zen-idle-inhibit";
+          "match:class" = "^(zen-twilight)$";
           idle_inhibit = "fullscreen";
         }
 
@@ -121,8 +121,8 @@ in
           float = true;
         }
         {
-          name = "firefox-sharing";
-          "match:title" = "^(Firefox — Sharing Indicator)$";
+          name = "zen-sharing";
+          "match:title" = "^(Zen Twilight — Sharing Indicator)$";
           float = true;
           move = "0 0";
         }
