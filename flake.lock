@@ -652,14 +652,17 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1770086753,
-        "narHash": "sha256-R8PHrdcWA4/y+Ua5xdBGooJmpeNfwrjOuWrUcQNO7tE=",
-        "path": "/home/dtgagnon/proj/AUTOMATE/email-agent",
-        "type": "path"
+        "lastModified": 1770088136,
+        "narHash": "sha256-a8r+jtiiDCrUHim4OYv8XTq8dFKznLGjgsm+tpOYCH4=",
+        "ref": "refs/heads/main",
+        "rev": "621e54002d488aed1e68e0676d4cc5d8d6d47b80",
+        "revCount": 16,
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/emma"
       },
       "original": {
-        "path": "/home/dtgagnon/proj/AUTOMATE/email-agent",
-        "type": "path"
+        "type": "git",
+        "url": "ssh://git@github.com/dtgagnon/emma"
       }
     },
     "experimental-hyprland-rdp": {
@@ -2628,11 +2631,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770087038,
-        "narHash": "sha256-dbGWaxFYMNuKWcTO9yqUUqb8VrbGdBIdTr6NBw5eClw=",
+        "lastModified": 1770087566,
+        "narHash": "sha256-BpKfMzdfkXEYPI6VcpFtRMnBZcMAJ8VKnVXVgzDt6fk=",
         "ref": "refs/heads/main",
-        "rev": "f0d1d6663dcd3146f1a3135e8322927dd01bdb6c",
-        "revCount": 139,
+        "rev": "a41f1e24052bb7a8be52133c0c6e12cc60f20b05",
+        "revCount": 140,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
