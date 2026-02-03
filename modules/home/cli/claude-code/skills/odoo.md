@@ -112,3 +112,26 @@ result = Partner.execute('method_name', arg1, arg2, kwarg=value)
 ```python
 fields = odoo.env['res.partner'].fields_get()
 ```
+
+## Important Rules
+
+### Task Assignment
+**NEVER assign tasks to Claude Bot (user ID 7, login `claude@localhost`).** All tasks must be assigned to **Derek Gagnon (user ID 2, login `gagnon.derek@pm.me`)**.
+
+When creating or updating tasks in `project.task`, always use:
+```python
+derek_id = 2  # Derek Gagnon
+Task.create({'name': 'Task name', 'user_ids': [(6, 0, [derek_id])], ...})
+```
+
+### Disabling Mail Notifications for Bulk Operations
+When doing bulk updates that would trigger emails, use context to disable notifications:
+```python
+context = {
+    'mail_create_nosubscribe': True,
+    'mail_notrack': True,
+    'tracking_disable': True,
+    'mail_auto_subscribe_no_notify': True,
+}
+odoo.execute_kw('project.task', 'write', [[task_id], values], {'context': context})
+```
