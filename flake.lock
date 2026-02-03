@@ -652,8 +652,8 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1770074485,
-        "narHash": "sha256-SxkX1XHuSHNRT2Zz+ptcy5CQDxnzMWBZzWSc9D9F4sk=",
+        "lastModified": 1770086753,
+        "narHash": "sha256-R8PHrdcWA4/y+Ua5xdBGooJmpeNfwrjOuWrUcQNO7tE=",
         "path": "/home/dtgagnon/proj/AUTOMATE/email-agent",
         "type": "path"
       },
@@ -2628,11 +2628,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770068195,
-        "narHash": "sha256-OGSgP2soY4prfyF2cIgPqtC4f74LKRfgr3IKzdz97Lk=",
+        "lastModified": 1770087038,
+        "narHash": "sha256-dbGWaxFYMNuKWcTO9yqUUqb8VrbGdBIdTr6NBw5eClw=",
         "ref": "refs/heads/main",
-        "rev": "9b972c47b38350f68048ef0adedd928bd82d1e33",
-        "revCount": 138,
+        "rev": "f0d1d6663dcd3146f1a3135e8322927dd01bdb6c",
+        "revCount": 139,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },

@@ -166,6 +166,19 @@ in
           nameservers = [ "1.1.1.1" "8.8.8.8" ];
         };
 
+        # Enable flakes for per-task environments
+        nix.settings = {
+          experimental-features = [ "nix-command" "flakes" ];
+          trusted-users = [ "openclaw" ];
+        };
+
+        # Keep writable overlay from filling up
+        nix.gc = {
+          automatic = true;
+          dates = "weekly";
+          options = "--delete-older-than 7d";
+        };
+
         # OpenClaw service
         systemd.services.openclaw = {
           description = "OpenClaw AI Assistant Gateway";
@@ -208,36 +221,8 @@ in
   };
 
   # ============================================================================
-  # Automated Maintenance
+  # Nix Maintenance
   # ============================================================================
-
-  systemd.services.flake-auto-rebuild = {
-    description = "Auto-rebuild when GitHub repo updates";
-    path = with pkgs; [ git nixos-rebuild nix openssh sudo ];
-    script = ''
-      cd /persist/home/dtgagnon/nix-config
-      git fetch origin main
-      LOCAL=$(git rev-parse HEAD)
-      REMOTE=$(git rev-parse origin/main)
-      if [ "$LOCAL" != "$REMOTE" ]; then
-        echo "Updates found: $LOCAL -> $REMOTE"
-        git pull --ff-only origin main
-        sudo nixos-rebuild switch --flake .#slim
-      fi
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "dtgagnon";
-    };
-  };
-
-  systemd.timers.flake-auto-rebuild = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "*:0/15";
-      Persistent = true;
-    };
-  };
 
   nix.gc = {
     automatic = true;
