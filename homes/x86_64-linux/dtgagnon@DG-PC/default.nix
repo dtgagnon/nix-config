@@ -143,7 +143,10 @@ in
       audio-record = enabled;
       copyparty-client = enabled;
       emma = enabled;
-      mail = enabled;
+      mail = {
+        enable = true;
+        protonmail-bridge.enable = true;
+      };
       syncthing = enabled;
     };
   };

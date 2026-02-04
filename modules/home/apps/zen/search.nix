@@ -9,7 +9,7 @@
       urls = [{ template = "https://www.google.com/search?q={searchTerms}&udm=50"; }];
       definedAliases = [ ".g" ];
     };
-    "Google" = {
+    "google" = {
       urls = [{ template = "https://www.google.com/search?q={searchTerms}"; }];
       definedAliases = [ ".gg" ];
     };

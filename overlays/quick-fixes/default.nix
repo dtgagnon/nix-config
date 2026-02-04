@@ -1,7 +1,4 @@
-{ channels, ... }: _: prev:
+{ channels, ... }: _: _prev:
 {
   inherit (channels.masterpkgs) element-desktop;
-  # python313Packages = prev.python313Packages.overrideScope (_pyfinal: _pyprev: {
-  #   proton-core = channels.masterpkgs.python313Packages.proton-core;
-  # });
 }
