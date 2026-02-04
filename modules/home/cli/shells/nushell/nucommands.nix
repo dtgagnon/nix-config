@@ -61,4 +61,10 @@ in
       }
     }
   }
+
+  # Git commit with message (no quotes needed)
+  # Usage: gcm fix the bug
+  def gcm [...message: string] {
+    git commit -m ($message | str join " ")
+  }
 ''

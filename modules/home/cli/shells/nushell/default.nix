@@ -98,6 +98,16 @@ in
         # Application aliases
         vi = "vim";
         svi = "sudo nvim";
+
+        # Git aliases
+        ga = "git add .";
+        gph = "git push";
+        gpl = "git pull";
+        # gcm <msg> - git commit with message (nucommands.nix)
+
+        # Search aliases
+        # rgz <pattern> [query] - ripgrep in zoxide directory (nucommands.nix)
+        # rgi - interactive ripgrep with directory picker (nucommands.nix)
       };
     };
 

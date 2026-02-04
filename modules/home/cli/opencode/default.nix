@@ -5,9 +5,27 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf filterAttrs;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.opencode;
+
+  # Transform claude-code mcpServers format to opencode mcp format
+  transformMcpServer = _name: server:
+    if server.type == "stdio" then {
+      enabled = true;
+      type = "local";
+      command = [ server.command ] ++ (server.args or [ ]);
+    }
+    else if server.type == "http" then {
+      enabled = true;
+      type = "remote";
+      url = server.url;
+    } // (lib.optionalAttrs (server ? headers) { headers = server.headers; })
+    else null;
+
+  # Convert claude-code mcpServers to opencode format
+  mcpServers = filterAttrs (_: v: v != null)
+    (builtins.mapAttrs transformMcpServer config.programs.claude-code.mcpServers);
 in
 {
   options.${namespace}.cli.opencode = {
@@ -23,18 +41,7 @@ in
         "theme": "catppuccin",
         "model": "ollama/qwen3:14b-32k",
 
-        "mcp": {
-          "nixos": {
-            "enabled": true,
-            "type": "local",
-            "command": [ "nix", "run", "github:utensils/mcp-nixos", "--" ]
-          },
-          "playwrite": {
-            "enabled": true,
-            "type": "local",
-            "command": [ "npx", "-y", "@executeautomation/playwright-mcp-server" ]
-          },
-        },
+        "mcp": ${builtins.toJSON mcpServers},
 
         "provider": {
           "openrouter": {
@@ -42,20 +49,6 @@ in
             "options": {
               "baseURL": "https://openrouter.ai/api/v1",
               "apiKey": "{file:${config.sops.secrets.openrouter_api.path}}"
-            },
-            "models": {}
-          },
-          "anthropic": {
-            "options": {
-              "baseURL": "https://api.anthropic.com/v1",
-              "apiKey": "{file:${config.sops.secrets.anthropic_api.path}}"
-            },
-            "models": {}
-          },
-          "openai": {
-            "options": {
-              "baseURL": "https://api.openai.com/v1",
-              "apiKey": "{file:${config.sops.secrets.openai_api.path}}"
             },
             "models": {}
           },
