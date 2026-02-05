@@ -1,26 +1,17 @@
-{
-  lib,
-  host,
-  pkgs,
-  inputs,
-  config,
-  namespace,
-  ...
+{ lib
+, host
+, pkgs
+, inputs
+, config
+, namespace
+, ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkMerge
-    mkOption
-    types
-    attrNames
-    attrValues
-    unique
-    ;
+  inherit (lib) mkIf mkMerge mkOption types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
-
   cfg = config.${namespace}.security.sops-nix;
-  secretsPath = builtins.toString inputs.nix-secrets;
+
+  secretsPath = toString inputs.nix-secrets;
 
   # Import option types and helpers
   opts = import ./options.nix { inherit lib pkgs namespace; };
@@ -130,9 +121,9 @@ in
           ReadWritePaths =
             let
               # Collect all file paths from all injections
-              filePaths = attrNames (builtins.foldl' (acc: inj: acc // inj.files) { } (attrValues cfg.inject));
+              filePaths = builtins.attrNames (builtins.foldl' (acc: inj: acc // inj.files) { } (builtins.attrValues cfg.inject));
               # Get parent directories (needed for mktemp -p to create temp files)
-              parentDirs = map builtins.dirOf filePaths;
+              parentDirs = map dirOf filePaths;
             in
             [ "/run/secrets-env" ] ++ lib.unique parentDirs;
           PrivateTmp = true;
