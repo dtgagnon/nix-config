@@ -66,7 +66,11 @@ in
   # Spirenix Module Configuration
   # ============================================================================
 
+  programs.zsh.enable = true;
+
   spirenix = {
+    user.shell = pkgs.zsh;
+
     suites = {
       headless = enabled;
       networking = enabled;
@@ -81,7 +85,7 @@ in
       pam = enabled;
       sudo = enabled;
       sops-nix = enabled;
-      vpn.enable = false;
+      vpn.enable = lib.mkForce false;
     };
 
     system.enable = true;
