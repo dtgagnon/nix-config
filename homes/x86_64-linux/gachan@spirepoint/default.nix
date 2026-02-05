@@ -7,8 +7,7 @@
 , ...
 }:
 let
-  inherit (lib.${namespace}) enabled mkRGBA;
-  inherit (config.lib.stylix) colors;
+  inherit (lib.${namespace}) enabled;
 in
 {
   spirenix = {

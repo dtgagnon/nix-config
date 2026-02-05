@@ -4,10 +4,11 @@
 , ...
 }:
 let
-  inherit (lib) mkIf;
-  inherit (config.lib.stylix) colors;
+  inherit (lib) mkIf optionalAttrs;
   cfg = config.${namespace}.desktop.addons.sysbar.waybar;
 
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
   core = config.spirenix.desktop.styling.core;
 in
 {
@@ -128,6 +129,7 @@ in
             "weeks-pos" = "right";
             "on-scroll" = 1;
             "on-click-right" = "mode";
+          } // optionalAttrs stylixEnabled {
             format = {
               months = "<span color='#${colors.base05}'><b>{}</b></span>";
               days = "<span color='#${colors.base06}'>{}</span>";

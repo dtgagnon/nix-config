@@ -5,10 +5,12 @@
   namespace,
   ...
 }: let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf optionalString;
   inherit (lib.${namespace}) mkBoolOpt;
-  inherit (config.lib.stylix) colors;
   cfg = config.${namespace}.desktop.addons.fuzzel;
+
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
 in {
   options.${namespace}.desktop.addons.fuzzel = {
     enable = mkBoolOpt false "Enable fuzzel app launcher for wayland";
@@ -27,6 +29,7 @@ in {
       icon-theme=Papirus-Dark
       terminal=$TERM
 
+      ${optionalString stylixEnabled ''
       [colors]
       background=${colors.base00}dd
       text=${colors.base05}ff
@@ -34,7 +37,7 @@ in {
       selection=${colors.base02}dd
       selection-text=${colors.base05}ff
       border=${colors.base0D}ff
-
+      ''}
       [border]
       width=2
       radius=8

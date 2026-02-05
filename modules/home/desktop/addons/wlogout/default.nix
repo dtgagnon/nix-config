@@ -4,11 +4,80 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkEnableOption;
-  inherit (config.lib.stylix) colors;
+  inherit (lib) mkIf mkEnableOption optionalString;
   cfg = config.${namespace}.desktop.addons.wlogout;
 
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
+
   iconsDir = "/home/${config.${namespace}.user.name}/.config/wlogout/icons";
+
+  # Base style without colors (icons only)
+  baseStyle = ''
+    *{
+      background-image: none;
+      box-shadow: none;
+      text-shadow: none;
+      transition 20ms;
+    }
+
+    window {
+      font-family: JetbrainsMono Nerd Font;
+      font-style: italic;
+      font-size: 20px;
+    }
+
+    button {
+      font-size: 20px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 25%;
+      border-style: solid;
+      border-radius: 20px;
+      animation: gradient_f 20s ease-in infinite;
+      transition: all 0.3s ease-in-out;
+      margin: 10px;
+    }
+
+    #shutdown {
+      background-image: image(url("${iconsDir}/shutdown.png"));
+    }
+    #reboot {
+      background-image: image(url("./icons/reboot.png"));
+    }
+    #logout {
+      background-image: image(url("${iconsDir}/logout.png"));
+    }
+    #sleep {
+      background-image: image(url("./icons/hibernate.png"));
+    }
+  '';
+
+  # Stylix color additions
+  stylixStyle = ''
+    window {
+      color: #${colors.base05};
+      background-color: #${colors.base00}80;
+    }
+
+    button {
+      color: #${colors.base05};
+      background-color: #${colors.base01};
+      border: 2px solid #${colors.base03};
+    }
+
+    button:focus, button:active {
+      background-color: #${colors.base02};
+      border: 2px solid #${colors.base08};
+      color: #${colors.base04}
+    }
+
+    button:hover {
+      background-color: #${colors.base02};
+      border: 2px solid #${colors.base0D};
+      color: #${colors.base04};
+    }
+  '';
 in
 {
   options.${namespace}.desktop.addons.wlogout = {
@@ -44,64 +113,7 @@ in
           keybind = "e";
         }
       ];
-      style = ''
-        *{
-          background-image: none;
-          box-shadow: none;
-          text-shadow: none;
-          transition 20ms;
-
-        }
-
-        window {
-          font-family: JetbrainsMono Nerd Font;
-          font-style: italic;
-          font-size: 20px;
-          color: #${colors.base05};
-          background-color: #${colors.base00}80;
-        }
-
-        button {
-          color: #${colors.base05};
-          font-size: 20px;
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: 25%;
-          background-color: #${colors.base01};
-          border-style: solid;
-          border-radius: 20px;
-          border: 2px solid #${colors.base03};
-          animation: gradient_f 20s ease-in infinite;
-          transition: all 0.3s ease-in-out;
-          margin: 10px;
-        }
-
-        button:focus, button:active {
-          background-color: #${colors.base02};
-          border: 2px solid #${colors.base08};
-          color: #${colors.base04}
-        }
-
-        button:hover {
-          background-color: #${colors.base02};
-          border: 2px solid #${colors.base0D};
-          color: #${colors.base04};
-        }
-
-        #shutdown {
-          background-image: image(url("${iconsDir}/shutdown.png"));
-        }
-        #reboot {
-          background-image: image(url("./icons/reboot.png"));
-        }
-        #logout {
-          background-image: image(url("${iconsDir}/logout.png"));
-        }
-        #sleep {
-          background-image: image(url("./icons/hibernate.png"));
-        }
-      '';
-
+      style = baseStyle + optionalString stylixEnabled stylixStyle;
     };
 
     xdg.configFile."wlogout/icons" = {

@@ -4,12 +4,16 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (config.lib.stylix) colors;
   inherit (config.lib.formats.rasi) mkLiteral;
   cfg = config.spirenix.desktop.addons.rofi;
+
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
+  fonts = if stylixEnabled then config.stylix.fonts else {};
 in
 {
-  config = mkIf (cfg.style == "default") {
+  # Only apply custom theme when stylix is enabled (theme requires colors)
+  config = mkIf (cfg.style == "default" && stylixEnabled) {
     spirenix.desktop.addons.rofi = {
       extraConfig = {
         modi = "drun,window,filebrowser";
@@ -121,7 +125,7 @@ in
           text-color = mkLiteral "@base05";
 
           cursor = mkLiteral "text";
-          font = "${config.stylix.fonts.sansSerif.name} 12";
+          font = "${fonts.sansSerif.name} 12";
           placeholder = "Search...";
           placeholder-color = mkLiteral "@base03";
           horizontal-align = mkLiteral "0.5";
@@ -148,7 +152,7 @@ in
           border-color = mkLiteral "transparent";
           border-radius = mkLiteral "4px";
           background-color = mkLiteral "transparent";
-          font = "${config.stylix.fonts.monospace.name} 22";
+          font = "${fonts.monospace.name} 22";
           text-color = mkLiteral "@base05";
           vertical-align = mkLiteral "0.5";
           horizontal-align = mkLiteral "0.5";
@@ -226,7 +230,7 @@ in
         "element-text" = {
           background-color = mkLiteral "inherit";
           text-color = mkLiteral "@base05";
-          font = "${config.stylix.fonts.sansSerif.name} 10";
+          font = "${fonts.sansSerif.name} 10";
           vertical-align = mkLiteral "0";
           horizontal-align = mkLiteral "0.5";
           cursor = mkLiteral "inherit";

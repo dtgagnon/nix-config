@@ -4,12 +4,16 @@
 }:
 let
   inherit (lib) mkIf;
-  inherit (config.lib.stylix) colors;
   inherit (config.lib.formats.rasi) mkLiteral;
   cfg = config.spirenix.desktop.addons.rofi;
+
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
+  fonts = if stylixEnabled then config.stylix.fonts else {};
 in
 {
-  config = mkIf (cfg.style == "slim") {
+  # Only apply custom theme when stylix is enabled (theme requires colors)
+  config = mkIf (cfg.style == "slim" && stylixEnabled) {
     spirenix.desktop.addons.rofi = {
       extraConfig = {
         modi = "drun";
@@ -109,7 +113,7 @@ in
           text-color = mkLiteral "@base04";
 
           cursor = mkLiteral "text";
-          font = "${config.stylix.fonts.sansSerif.name} 8";
+          font = "${fonts.sansSerif.name} 8";
           placeholder = "";
           placeholder-color = mkLiteral "transparent";
           horizontal-align = mkLiteral "0.5";
@@ -194,7 +198,7 @@ in
         "element-text" = {
           background-color = mkLiteral "inherit";
           text-color = mkLiteral "@base05";
-          font = "${config.stylix.fonts.sansSerif.name} 10";
+          font = "${fonts.sansSerif.name} 10";
           vertical-align = mkLiteral "0";
           horizontal-align = mkLiteral "0.5";
           cursor = mkLiteral "inherit";

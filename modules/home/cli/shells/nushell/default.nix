@@ -6,11 +6,12 @@
 , ...
 }:
 let
-  inherit (lib) mkIf getExe;
+  inherit (lib) mkIf getExe optionalString;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.shells.nushell;
 
-  inherit (config.lib.stylix) colors;
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
 
   # Helper function to create conditional Nushell integrations
   mkNushellIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
@@ -40,12 +41,12 @@ in
         	edit_mode: "vi"
         	render_right_prompt_on_last_line: true
         	highlight_resolved_externals: true
-        	color_config: {
+        	${optionalString stylixEnabled ''color_config: {
         		shape_external: { fg: "${colors.base0D}" }
         		shape_external_resolved: { fg: "${colors.base0C}" }
         		shape_internal: { fg: "${colors.base08}" }
         		shape_unknown: { fg: "${colors.base0E}" }
-        	}
+        	}''}
         	keybindings: [
         		{
         			name: fzf_file_search

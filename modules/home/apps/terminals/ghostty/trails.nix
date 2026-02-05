@@ -5,9 +5,10 @@
 }:
 let
   inherit (lib.${namespace}) mkRGBA_valOnly;
-  inherit (config.lib.stylix) colors;
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
 in
-{
+if !stylixEnabled then {} else {
   glitter_comet = ''
     /*─────────────────────────────────────────────────────────────────────────
      *  glitter_comet.glsl — sparkly cursor trail whose density follows motion

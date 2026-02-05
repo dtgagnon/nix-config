@@ -7,8 +7,10 @@
 , ...
 }:
 let
+  inherit (lib) optionalString;
   inherit (lib.${namespace}) enabled mkRGBA;
-  inherit (config.lib.stylix) colors;
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
 in
 {
   spirenix = {
@@ -100,7 +102,7 @@ in
       hyprland = {
         enable = true;
         monitors = [ ];
-        extraConfig = ''
+        extraConfig = optionalString stylixEnabled ''
           general {
             col.active_border = ${
               mkRGBA {

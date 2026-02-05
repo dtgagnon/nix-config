@@ -5,11 +5,12 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce;
+  inherit (lib) mkIf mkForce optionalAttrs;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.hyprlock;
 
-  inherit (config.lib.stylix) colors;
+  stylixEnabled = config.stylix.enable or false;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
 in
 {
   options.${namespace}.desktop.addons.hyprlock = {
@@ -44,7 +45,7 @@ in
         };
 
         input-field = [
-          {
+          ({
             monitor = "";
             size = "250, 60";
             outline_thickness = 2;
@@ -52,57 +53,61 @@ in
             dots_spacing = 0.35;
             dots_center = true;
             outer_color = "rgba(0, 0, 0, 0)";
-            inner_color = "${colors.base01}";
             font_color = "rgba(0, 0, 0, 1.0)"; # White for dots
             fade_on_empty = false;
             rounding = -1;
-            check_color = "${colors.base0E}";
             placeholder_text = "Keep trying your best...";
             hide_input = false;
             position = "0, -400";
             halign = "center";
             valign = "center";
-          }
+          } // optionalAttrs stylixEnabled {
+            inner_color = "${colors.base01}";
+            check_color = "${colors.base0E}";
+          })
         ];
 
         label = [
           # Date
-          {
+          ({
             monitor = "";
             text = ''cmd[update:1000] echo "$(date +"%A, %B %d")"'';
-            color = "${colors.base01}";
             font_size = 22;
             font_family = "JetBrains Mono";
             position = "0, 300";
             halign = "center";
             valign = "center";
-          }
+          } // optionalAttrs stylixEnabled {
+            color = "${colors.base01}";
+          })
 
           # Time
-          {
+          ({
             monitor = "";
             text = ''cmd[update:1000] echo "$(date +"%-I:%M")"'';
-            color = "${colors.base01}";
             font_size = 95;
             font_family = "JetBrains Mono Extrabold";
             position = "0, 200";
             halign = "center";
             valign = "center";
-          }
+          } // optionalAttrs stylixEnabled {
+            color = "${colors.base01}";
+          })
         ];
 
         image = [
           # Profile picture
-          {
+          ({
             monitor = "";
             path = "${pkgs.spirenix.profile-pics.dtgagnon}";
             size = 170;
             border_size = 2;
-            border_color = "${colors.base01}";
             position = "0, -100";
             halign = "center";
             valign = "center";
-          }
+          } // optionalAttrs stylixEnabled {
+            border_color = "${colors.base01}";
+          })
         ];
       };
     };

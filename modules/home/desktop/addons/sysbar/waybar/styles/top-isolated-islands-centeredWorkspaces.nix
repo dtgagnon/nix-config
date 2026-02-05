@@ -7,12 +7,14 @@ let
   inherit (lib) mkIf;
   cfg = config.${namespace}.desktop.addons.sysbar.waybar;
 
+  stylixEnabled = config.stylix.enable or false;
   inherit (lib.${namespace}) mkRGBA;
-  inherit (config.lib.stylix) colors;
+  colors = if stylixEnabled then config.lib.stylix.colors else {};
   core = config.spirenix.desktop.styling.core;
 in
 {
-  config = mkIf (cfg.presetStyle == "top-isolated-islands-centeredWorkspaces") {
+  # Only apply custom style when stylix is enabled (style requires colors)
+  config = mkIf (cfg.presetStyle == "top-isolated-islands-centeredWorkspaces" && stylixEnabled) {
     programs.waybar.style = ''
       ${cfg.extraStyle}
 

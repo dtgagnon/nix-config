@@ -6,9 +6,11 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib) mkIf mkOption types optionalAttrs;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.ghostty;
+
+  stylixEnabled = config.stylix.enable or false;
   trailShaders = import ./trails.nix { inherit lib config namespace; };
   trailNames = builtins.attrNames trailShaders;
 in
@@ -22,9 +24,9 @@ in
       example = true;
     };
     trail = mkOption {
-      type = types.nullOr (types.enum trailNames);
+      type = types.nullOr (if trailNames == [] then types.str else types.enum trailNames);
       default = null;
-      description = ''Name of the predefined cursor trail shader to install from `trails.nix`'';
+      description = ''Name of the predefined cursor trail shader to install from `trails.nix`. Requires stylix to be enabled.'';
     };
   };
 
@@ -34,7 +36,6 @@ in
       enable = true;
       clearDefaultKeybinds = true;
       settings = {
-        font-size = config.stylix.fonts.sizes.terminal;
         keybind = [
           # Close Surface
           "ctrl+alt+w=close_surface"
@@ -120,7 +121,7 @@ in
       # themes = { }; # Custom created themes to add to $HOME/.config/ghostty/themes
     };
 
-    xdg.configFile = mkIf (cfg.trail != null) {
+    xdg.configFile = mkIf (cfg.trail != null && stylixEnabled) {
       "ghostty/shaders/trail.glsl".text = trailShaders.${cfg.trail};
     };
   };
