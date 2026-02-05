@@ -15,6 +15,15 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Disable desktop/GUI components not needed on headless servers
+    ${namespace} = {
+      hardware = {
+        gpu.enable = false;
+        mouse.enable = false;
+      };
+      services.audio.enable = false;
+    };
+
     # Better console experience for headless server
     console = {
       packages = [ pkgs.terminus_font ];

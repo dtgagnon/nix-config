@@ -12,7 +12,7 @@ let
 in
 {
   spirenix = {
-    desktop.styling.core.theme = "catppuccin-mocha";
+    apps.terminals.ghostty.enable = false;
 
     user = {
       fullName = "Derek Gagnon";
