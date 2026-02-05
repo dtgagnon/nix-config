@@ -160,8 +160,8 @@ add-creation-rules USER HOST:
 # to .sops.yaml before deployment so secrets decrypt on first boot.
 
 # Deploy NixOS to a remote host via nixos-anywhere (no LUKS)
-# Usage: just deploy oranix oranix-2.example.com ubuntu
-deploy HOST TARGET USER="ubuntu" PERSIST_DIR="":
+# Usage: just deploy oranix oranix-2.example.com ubuntu [port]
+deploy HOST TARGET USER="ubuntu" PERSIST_DIR="" PORT="22":
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -200,21 +200,22 @@ deploy HOST TARGET USER="ubuntu" PERSIST_DIR="":
     sed -i "/{{HOST}}/d; /{{TARGET}}/d" ~/.ssh/known_hosts 2>/dev/null || true
 
     # Deploy with nixos-anywhere
-    echo -e "\x1B[32m[+] Deploying {{HOST}} to {{TARGET}}...\x1B[0m"
+    echo -e "\x1B[32m[+] Deploying {{HOST}} to {{TARGET}} (port {{PORT}})...\x1B[0m"
     nix run github:nix-community/nixos-anywhere -- \
+        -p {{PORT}} \
         --extra-files "$temp" \
         --flake .#{{HOST}} \
         {{USER}}@{{TARGET}}
 
-    echo -e "\x1B[32m[+] Done! Verify with: ssh root@{{TARGET}} 'systemctl status sops-nix'\x1B[0m"
+    echo -e "\x1B[32m[+] Done! Verify with: ssh -p {{PORT}} root@{{TARGET}} 'systemctl status sops-nix'\x1B[0m"
 
 # Deploy NixOS to a VPS/cloud host (no LUKS, with impermanence)
-# Usage: just deploy-vps oranix oranix-2.example.com ubuntu
-deploy-vps HOST TARGET USER="ubuntu": (deploy HOST TARGET USER "/persist")
+# Usage: just deploy-vps oranix oranix-2.example.com ubuntu [port]
+deploy-vps HOST TARGET USER="ubuntu" PORT="22": (deploy HOST TARGET USER "/persist" PORT)
 
 # Deploy NixOS with LUKS encryption (bare metal)
-# Usage: just deploy-luks newhost 192.168.1.100 "my-luks-password" nixos
-deploy-luks HOST TARGET PASSWORD USER="nixos" PERSIST_DIR="/persist":
+# Usage: just deploy-luks newhost 192.168.1.100 "my-luks-password" nixos [port]
+deploy-luks HOST TARGET PASSWORD USER="nixos" PERSIST_DIR="/persist" PORT="22":
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -253,14 +254,15 @@ deploy-luks HOST TARGET PASSWORD USER="nixos" PERSIST_DIR="/persist":
     sed -i "/{{HOST}}/d; /{{TARGET}}/d" ~/.ssh/known_hosts 2>/dev/null || true
 
     # Deploy with nixos-anywhere and LUKS password
-    echo -e "\x1B[32m[+] Deploying {{HOST}} to {{TARGET}} with LUKS...\x1B[0m"
+    echo -e "\x1B[32m[+] Deploying {{HOST}} to {{TARGET}} (port {{PORT}}) with LUKS...\x1B[0m"
     nix run github:nix-community/nixos-anywhere -- \
+        -p {{PORT}} \
         --extra-files "$temp" \
         --disk-encryption-keys /tmp/disko-password <(echo "{{PASSWORD}}") \
         --flake .#{{HOST}} \
         {{USER}}@{{TARGET}}
 
-    echo -e "\x1B[32m[+] Done! Verify with: ssh root@{{TARGET}} 'systemctl status sops-nix'\x1B[0m"
+    echo -e "\x1B[32m[+] Done! Verify with: ssh -p {{PORT}} root@{{TARGET}} 'systemctl status sops-nix'\x1B[0m"
 
 # Derive and display age key from a remote host's SSH key (for existing hosts)
 # Usage: just derive-age-key hostname.example.com
