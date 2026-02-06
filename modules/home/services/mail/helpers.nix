@@ -76,7 +76,7 @@ rec {
       acc = withDefaults accRaw;
       # Include spam folder if defined
       allFolders = acc.folders ++ (lib.optional (acc.spamFolder or null != null) acc.spamFolder);
-      sslType =
+      tlsType =
         if acc.provider == "protonmail" then
           "STARTTLS"
         else if acc.useTls then
