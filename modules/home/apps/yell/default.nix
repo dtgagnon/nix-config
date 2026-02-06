@@ -22,6 +22,7 @@ in
       Unit = {
         Description = "Yell voice transcription daemon";
         After = [ "graphical-session.target" ];
+        BindsTo = [ "graphical-session.target" ];
       };
 
       Service = {
@@ -32,7 +33,7 @@ in
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = [ "graphical-session.target" ];
       };
     };
 
