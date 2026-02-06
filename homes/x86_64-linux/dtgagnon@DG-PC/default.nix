@@ -55,7 +55,6 @@ in
         enable = true;
         trail = null;
       };
-      thunderbird = enabled;
       todoist = enabled;
       yell = enabled;
       zen = {
