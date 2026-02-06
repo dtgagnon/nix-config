@@ -32,7 +32,13 @@ in
       settings = {
         general = {
           before_sleep_cmd = "loginctl lock-session";
-          after_sleep_cmd = "hyprctl dispatch dpms on";
+          #NOTE: hypr-monitor-init reads AQ_DRM_DEVICES to detect GPU mode. hypridle
+          # runs as a systemd user service, so this var must be in its environment.
+          # UWSM typically exports session vars to systemd user manager. If resume
+          # isn't applying the right config, verify with:
+          #   systemctl --user show-environment | grep AQ_DRM_DEVICES
+          # Delete-date: 2026-02-09
+          after_sleep_cmd = "hyprctl dispatch dpms on && sleep 2 && hypr-monitor-init";
           lock_cmd = "pidof hyprlock || hyprlock";
         };
 

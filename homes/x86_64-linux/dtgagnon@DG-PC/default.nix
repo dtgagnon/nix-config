@@ -21,6 +21,7 @@ in
 
     # Personal directories specific to dtgagnon
     preservation.directories = [
+      ".config/systemd/user"
       "Games"
       "myVMs"
       "nix-config"
@@ -142,7 +143,7 @@ in
 
     services = {
       activity-watch = enabled;
-      audio-record = enabled;
+      audio-record = { enable = true; format = "flac"; };
       copyparty-client = enabled;
       emma = enabled;
       mail = {

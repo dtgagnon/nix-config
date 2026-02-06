@@ -1,0 +1,221 @@
+---
+name: schedule
+description: Create, schedule, and manage autonomous AI-agent tasks with systemd timers
+user_invocable: true
+argument_hint: "[list|run <file>|cancel <name>|cleanup|attention]"
+---
+
+# /schedule — AI-Agent Scheduled Task System
+
+Schedule autonomous Claude Code tasks that execute on systemd timers with explicit, user-approved permissions.
+
+## Subcommands
+
+- `/schedule` — Interactive: create a new task, interview for permissions, schedule it
+- `/schedule list` — Show all pending/scheduled tasks with their approved permissions
+- `/schedule run <file>` — Execute a task immediately (uses its approved permissions)
+- `/schedule cancel <name>` — Disable and remove a scheduled timer
+- `/schedule cleanup` — Purge old completed tasks, surface needs-attention items
+- `/schedule attention` — List tasks that failed max retries and need human review
+
+## Directory Layout
+
+```
+~/proj/AUTOMATE/tasks/
+  pending/          # Task definitions waiting to be scheduled
+  completed/        # Finished tasks with execution logs appended
+  needs-attention/  # Tasks that exceeded max retries
+  templates/        # Reusable task file templates
+  task-runner       # Execution wrapper script
+```
+
+## Task File Format
+
+Markdown files with YAML frontmatter. Filenames: `YYYY-MM-DD_short-description.md`
+
+```markdown
+---
+summary: One-line description
+schedule: "YYYY-MM-DDTHH:MM"
+expires: "YYYY-MM-DD"
+tags: [category]
+allowedTools:
+  - "Bash(specific-command *)"
+  - "Read(path/to/files/*)"
+  - "Edit(path/to/specific/file.nix)"
+---
+
+# Task Title
+
+## Context
+Why this task exists.
+
+## Steps
+1. Concrete action
+2. Another action
+
+## Success Criteria
+- What "done" looks like
+```
+
+## Interactive Workflow (`/schedule` with no args)
+
+When the user runs `/schedule`, follow this exact workflow:
+
+### Step 1: Intake
+
+Ask the user to describe the task, or point to an existing task file in `pending/`. If they describe it, create the task file in `pending/` with the correct frontmatter format.
+
+### Step 2: Analysis
+
+Analyze the task steps and determine what tools and permissions are needed for autonomous execution. Be specific — never request blanket permissions. For each step, determine:
+
+- **Bash permissions**: Specific command patterns (e.g., `Bash(systemctl --user show-environment *)`, NOT just `Bash(*)`)
+- **Read permissions**: Specific file/directory patterns (e.g., `Read(modules/home/desktop/addons/hypridle/*)`)
+- **Edit permissions**: Specific files that will be modified (e.g., `Edit(modules/home/desktop/addons/hypridle/default.nix)`)
+- **Write permissions**: New files that will be created
+- **Other tools**: Grep, WebFetch, etc. if needed
+
+### Step 3: Permission Interview
+
+Present the permission list to the user in a clear format:
+
+```
+This task requires the following permissions for autonomous execution:
+
+Bash:
+  - systemctl --user show-environment *
+  - git add modules/home/desktop/addons/hypridle/*
+  - git commit *
+
+File Read:
+  - modules/home/desktop/addons/hypridle/*
+
+File Edit:
+  - modules/home/desktop/addons/hypridle/default.nix
+
+Schedule: 2026-02-09T10:00
+Expires: 2026-02-12
+```
+
+Use AskUserQuestion to get approval. The user can approve, modify the list, or reject.
+
+### Step 4: Write Task File
+
+Write the approved `allowedTools` list into the task file's YAML frontmatter.
+
+### Step 5: Create Systemd Units
+
+Generate and install the systemd timer + service units.
+
+**Resolve the claude binary path** before writing the service:
+
+```bash
+CLAUDE_BIN=$(which claude)
+```
+
+**Service unit** (`~/.config/systemd/user/automate-<name>.service`):
+
+```ini
+[Unit]
+Description=Scheduled AI Task: <summary>
+
+[Service]
+Type=oneshot
+ExecStart=/home/dtgagnon/proj/AUTOMATE/tasks/task-runner /home/dtgagnon/proj/AUTOMATE/tasks/pending/<filename> automate-<name>
+Environment=PATH=/run/current-system/sw/bin:/home/dtgagnon/.nix-profile/bin:%h/.local/bin
+```
+
+**Timer unit** (`~/.config/systemd/user/automate-<name>.timer`):
+
+```ini
+[Unit]
+Description=Timer for AI Task: <summary>
+
+[Timer]
+OnCalendar=<schedule in systemd calendar format>
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+Then enable and start the timer:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now automate-<name>.timer
+```
+
+### Step 6: Confirmation
+
+Report to the user:
+- Timer name
+- Scheduled time
+- How to cancel: `/schedule cancel <name>`
+- How to run immediately: `/schedule run <filename>`
+
+## Subcommand: `/schedule list`
+
+List all tasks across directories with status:
+
+```bash
+# Check pending tasks
+ls ~/proj/AUTOMATE/tasks/pending/
+
+# Check active timers
+systemctl --user list-timers 'automate-*'
+
+# Check needs-attention
+ls ~/proj/AUTOMATE/tasks/needs-attention/
+```
+
+Format output as a table showing: filename, summary, schedule, status (pending/scheduled/needs-attention/completed).
+
+For scheduled tasks, also show the approved `allowedTools` from the frontmatter.
+
+## Subcommand: `/schedule run <file>`
+
+Execute a task immediately without waiting for the timer:
+
+1. Read the task file from `pending/` (or accept a full path)
+2. Verify `allowedTools` are present in frontmatter — refuse to run without them
+3. Run the task-runner wrapper directly:
+   ```bash
+   ~/proj/AUTOMATE/tasks/task-runner ~/proj/AUTOMATE/tasks/pending/<file> manual-run
+   ```
+4. Report the result
+
+## Subcommand: `/schedule cancel <name>`
+
+1. Stop and disable the timer:
+   ```bash
+   systemctl --user disable --now automate-<name>.timer
+   ```
+2. Remove the unit files:
+   ```bash
+   rm ~/.config/systemd/user/automate-<name>.{timer,service}
+   systemctl --user daemon-reload
+   ```
+3. The task file remains in `pending/` — it's not deleted, just unscheduled
+
+## Subcommand: `/schedule cleanup`
+
+1. List completed tasks older than 30 days and offer to delete them
+2. Surface any tasks in `needs-attention/` with a summary of their failure logs
+3. Check for orphaned timer units (timers without matching task files)
+
+## Subcommand: `/schedule attention`
+
+1. List all tasks in `needs-attention/`
+2. For each, show the summary and the last execution log
+3. Ask the user what to do: retry, modify and reschedule, or archive
+
+## Important Notes
+
+- **Never run without allowedTools**: The task-runner refuses to execute if no allowedTools are defined in the frontmatter. This is a safety mechanism.
+- **Permissions are per-task**: Each task has its own explicit permission set approved by the user.
+- **Self-cleaning**: Successful tasks clean up their own timer units automatically.
+- **Retries**: Failed tasks retry up to 3 times with 1-hour delays before moving to needs-attention.
+- **Desktop notifications**: Tasks that exceed max retries send a desktop notification via notify-send.
+- **The task-runner script** is at `~/proj/AUTOMATE/tasks/task-runner` — it handles execution, verification, retry logic, and cleanup.

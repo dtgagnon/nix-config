@@ -2631,11 +2631,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770303177,
-        "narHash": "sha256-ujaxq1ygW4S4wWyzxeQxxHkS3eifrJMDzN4Sf/1PKdE=",
+        "lastModified": 1770405691,
+        "narHash": "sha256-Bcw2lQhO1m11mIrA4XASOd8CLLz1RPv7b3b0uKlOP6g=",
         "ref": "refs/heads/main",
-        "rev": "1ac86f1daa4d70feb338d08d4c37795b6c83ab2b",
-        "revCount": 154,
+        "rev": "2cb4611e013fbe129503fe129551dda4d51fec62",
+        "revCount": 155,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -4816,11 +4816,11 @@
         "sortformer-model": "sortformer-model"
       },
       "locked": {
-        "lastModified": 1770344508,
-        "narHash": "sha256-D/+twz7dcbV4A6v3iXspcC+P3DN0ew0FTPI4C5z1sPc=",
+        "lastModified": 1770399546,
+        "narHash": "sha256-oPmvZJ5CZclXSGlxOzZrzC1H8Nnjv63UvZUDZ5+fL2U=",
         "ref": "refs/heads/main",
-        "rev": "f2ddcb0148bb601ce8b4ba97b303b2c5502f5738",
-        "revCount": 136,
+        "rev": "f3d64068955ac64b44d1fad3f6fef72eb4a1a860",
+        "revCount": 138,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },
