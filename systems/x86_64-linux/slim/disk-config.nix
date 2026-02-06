@@ -18,33 +18,40 @@
                 mountOptions = [ "umask=0077" ];
               };
             };
-            swap = {
-              size = "4G";
+            luks = {
+              size = "100%";
               content = {
-                type = "swap";
-                randomEncryption = true;
-              };
-            };
-            root = {
-              size = "95G";
-              content = {
-                type = "btrfs";
-                extraArgs = [ "-L" "nixos" "-f" ];
-                subvolumes = {
-                  "/root" = { mountpoint = "/"; };
-                  "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
-                  "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
-                  "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
+                type = "luks";
+                name = "root-crypt";
+                passwordFile = "/tmp/disko-password";
+                settings = {
+                  allowDiscards = true;
+                };
+                content = {
+                  type = "lvm_pv";
+                  vg = "root-pool";
                 };
               };
             };
-            vm = {
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/var/lib/microvms/openclaw";
-                mountOptions = [ "noatime" ];
+          };
+        };
+      };
+    };
+
+    lvm_vg = {
+      root-pool = {
+        type = "lvm_vg";
+        lvs = {
+          root = {
+            size = "100%FREE";
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-L" "nixos" "-f" ];
+              subvolumes = {
+                "/root" = { mountpoint = "/"; };
+                "/home" = { mountpoint = "/home"; mountOptions = [ "subvol=home" "compress=zstd" "noatime" ]; };
+                "/persist" = { mountpoint = "/persist"; mountOptions = [ "subvol=persist" "compress=zstd" "noatime" ]; };
+                "/nix" = { mountpoint = "/nix"; mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ]; };
               };
             };
           };

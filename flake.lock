@@ -2590,11 +2590,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1770215677,
-        "narHash": "sha256-2re/gbzb2fZHpQp6u7mM5rBVhf55McYdwOeGdYgJNKo=",
+        "lastModified": 1770325891,
+        "narHash": "sha256-7ipAUiPb798BRdV56+3bxa71fdleMxlS/XvIGUYO1qI=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "a23961fc90c59a0cd7f4886c0bcc0efd796a8287",
+        "rev": "54aeaa16a2f836142fba98a455e0373e3f464ac5",
         "type": "github"
       },
       "original": {
@@ -2631,11 +2631,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770264118,
-        "narHash": "sha256-cvOZz04TTZ9//QbzzDUlLA1jUwQQzUWFT5CIMegxq78=",
+        "lastModified": 1770303177,
+        "narHash": "sha256-ujaxq1ygW4S4wWyzxeQxxHkS3eifrJMDzN4Sf/1PKdE=",
         "ref": "refs/heads/main",
-        "rev": "85948d5c721a8e47fa86bed005241c5ad2791fb8",
-        "revCount": 153,
+        "rev": "1ac86f1daa4d70feb338d08d4c37795b6c83ab2b",
+        "revCount": 154,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -3219,11 +3219,11 @@
     },
     "nixpkgs_7": {
       "locked": {
-        "lastModified": 1770141374,
-        "narHash": "sha256-yD4K/vRHPwXbJf5CK3JkptBA6nFWUKNX/jlFp2eKEQc=",
+        "lastModified": 1770169770,
+        "narHash": "sha256-awR8qIwJxJJiOmcEGgP2KUqYmHG4v/z8XpL9z8FnT1A=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "41965737c1797c1d83cfb0b644ed0840a6220bd1",
+        "rev": "aa290c9891fa4ebe88f8889e59633d20cc06a5f2",
         "type": "github"
       },
       "original": {
@@ -4513,11 +4513,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769691507,
-        "narHash": "sha256-8aAYwyVzSSwIhP2glDhw/G0i5+wOrren3v6WmxkVonM=",
+        "lastModified": 1770228511,
+        "narHash": "sha256-wQ6NJSuFqAEmIg2VMnLdCnUc0b7vslUohqqGGD+Fyxk=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "28b19c5844cc6e2257801d43f2772a4b4c050a1b",
+        "rev": "337a4fe074be1042a35086f15481d763b8ddc0e7",
         "type": "github"
       },
       "original": {
@@ -4816,11 +4816,11 @@
         "sortformer-model": "sortformer-model"
       },
       "locked": {
-        "lastModified": 1770227185,
-        "narHash": "sha256-noOrgSmMGQhhtb6RcQmFbhgIQL7DFnYxH4HsEynFqdw=",
+        "lastModified": 1770344295,
+        "narHash": "sha256-81Ec/HnXOUvDNlsmzCMc4+YkfTnQxFKmXEstxBcM8vc=",
         "ref": "refs/heads/main",
-        "rev": "a1402b1e784334c08dab15f1aeceb2f7d8e39187",
-        "revCount": 130,
+        "rev": "ca932d26bfe6f45c15641ce573b0eb2d8f603350",
+        "revCount": 136,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },

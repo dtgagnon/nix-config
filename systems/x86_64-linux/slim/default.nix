@@ -35,7 +35,8 @@ in
 
     initrd = {
       systemd.enable = true;
-      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
+      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" "dm_mod" "dm_crypt" ];
+      kernelModules = [ "dm-snapshot" ];
     };
 
     kernelModules = [ "kvm-intel" ];
@@ -66,10 +67,8 @@ in
   # Spirenix Module Configuration
   # ============================================================================
 
-  programs.zsh.enable = true;
-
   spirenix = {
-    user.shell = pkgs.zsh;
+    user.shell = pkgs.bash;
 
     suites = {
       headless = enabled;

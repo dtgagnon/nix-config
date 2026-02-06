@@ -80,6 +80,13 @@ let
           example = "mail/gmail-app-password";
         };
 
+        certificateSecret = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "sops secret path for certificate (protonmail-bridge only)";
+          example = "mail/protonmail-bridge-cert";
+        };
+
         folders = mkOption {
           type = types.listOf types.str;
           default = [
@@ -90,6 +97,19 @@ let
             "Archive"
           ];
           description = "Folders to sync";
+        };
+
+        spamFolder = mkOption {
+          type = types.nullOr types.str;
+          default =
+            {
+              gmail = "[Gmail]/Spam";
+              protonmail = "Spam";
+              mxroute = "Junk";
+              imap = "Junk";
+            }
+            .${config.provider};
+          description = "Spam/Junk folder name (provider-specific default)";
         };
 
         primary = mkBoolOpt false "Mark as primary account";
@@ -123,6 +143,21 @@ in
 
   notmuch = {
     enable = mkBoolOpt true "Enable notmuch for indexing";
+    synchronizeFlags = mkBoolOpt false ''
+      Sync notmuch tags to/from maildir flags.
+      WARNING: Enable only if you understand the implications.
+      When true, notmuch tag changes modify maildir filenames,
+      which can cause sync conflicts with mbsync.
+    '';
+    postNewHook = mkOption {
+      type = types.lines;
+      default = "";
+      description = "Script to run after notmuch indexes new mail (account tagging, etc.)";
+      example = ''
+        notmuch tag +gmail -- path:user@gmail.com/** and tag:unread
+        notmuch tag -unread -- tag:unread
+      '';
+    };
   };
 
   protonmail-bridge = {

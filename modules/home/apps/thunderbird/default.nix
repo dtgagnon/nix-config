@@ -122,46 +122,9 @@ in
       ];
     };
 
-    # Notmuch email indexing and search for LLM agent access
-    # Maildir storage: ~/Mail/ (converted from mbox 2026-01-05)
-    # All accounts use Maildir format with email addresses as directory names
-    programs.notmuch = {
-      enable = true;
-      new = {
-        tags = [ "new" "inbox" ];
-        ignore = [ ".msf" ".dat" "tmp/" ];
-      };
-      search = {
-        excludeTags = [ "deleted" "spam" "trash" ];
-      };
-      maildir = {
-        synchronizeFlags = true;
-      };
-      hooks = {
-        # Auto-tag emails by account on initial indexing
-        postNew = ''
-          # Tag by account based on path
-          notmuch tag +gmail -- path:gagnon.derek@gmail.com/** and tag:new
-          notmuch tag +proton -- path:gagnon.derek@protonmail.com/** and tag:new
-          notmuch tag +awrightpath -- path:dgagnon@awrightpath.net/** and tag:new
-          notmuch tag +stsdiesel -- path:dgagnon@stsdiesel.com/** and tag:new
-          notmuch tag +local -- path:local/** and tag:new
-
-          # Remove 'new' tag after processing
-          notmuch tag -new -- tag:new
-        '';
-      };
-      extraConfig = {
-        database = {
-          path = "${config.home.homeDirectory}/Mail";
-        };
-        user = {
-          name = "Derek Gagnon";
-          primary_email = "gagnon.derek@gmail.com";
-          other_email = "gagnon.derek@protonmail.com;dgagnon@awrightpath.net;dgagnon@stsdiesel.com";
-        };
-      };
-    };
+    # NOTE: Notmuch is configured by spirenix.services.mail module
+    # Only including the notmuch package here for CLI access
+    # To add account-tagging hooks, use: spirenix.services.mail.notmuch.postNewHook
 
     spirenix.desktop.hyprland.extraExec = [ "${thunderbird-wait}" ];
     # spirenix.desktop.addons.sysbar.sysTrayApps = [ "birdtray" ];

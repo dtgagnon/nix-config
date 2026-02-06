@@ -2,6 +2,15 @@
 #
 # User-scoped mail infrastructure:
 #   External providers ←─ mbsync ─→ ~/Mail/ ←─ notmuch ─→ emma
+#
+# ARCHITECTURE:
+# - mbsync: IMAP sync (owns maildir filenames/flags)
+# - notmuch: Indexing and tagging (uses programs.notmuch, tags only)
+# - emma: Email automation (notmuch tags only)
+# - Thunderbird: Email client (reads maildir)
+#
+# WARNING: Do NOT enable notmuch.synchronizeFlags - it causes sync
+# conflicts with mbsync ("conflicting changes" warnings).
 {
   lib,
   pkgs,
@@ -63,13 +72,20 @@ in
 
     # mbsync
     (mkIf cfg.mbsync.enable {
-      # Declare sops secrets for each account
-      sops.secrets = lib.mapAttrs' (
-        name: acc:
-        lib.nameValuePair "mail-${name}-password" {
-          key = acc.passwordSecret;
-        }
-      ) enabledAccounts;
+      # Declare sops secrets for each account (passwords)
+      sops.secrets =
+        lib.mapAttrs' (
+          name: acc:
+          lib.nameValuePair "mail-${name}-password" {
+            key = acc.passwordSecret;
+          }
+        ) enabledAccounts
+        // lib.mapAttrs' (
+          name: acc:
+          lib.nameValuePair "mail-${name}-certificate" {
+            key = acc.certificateSecret;
+          }
+        ) (filterAttrs (_: acc: acc.certificateSecret != null) enabledAccounts);
 
       # mbsync config file
       home.file.".mbsyncrc".text = helpers.mkMbsyncConfig enabledAccounts;
@@ -101,14 +117,54 @@ in
       };
     })
 
-    # notmuch
+    # notmuch (using programs.notmuch for declarative config)
     (mkIf cfg.notmuch.enable {
-      home.file.".notmuch-config".text = helpers.mkNotmuchConfig enabledAccounts;
+      programs.notmuch = {
+        enable = true;
+
+        new = {
+          tags = [
+            "unread"
+            "inbox"
+          ];
+          ignore = [
+            ".mbsyncstate"
+            ".strstrec"
+            ".isstrstrec"
+          ];
+        };
+
+        search = {
+          excludeTags = [
+            "deleted"
+            "spam"
+          ];
+        };
+
+        maildir = {
+          synchronizeFlags = cfg.notmuch.synchronizeFlags; # defaults to false
+        };
+
+        hooks = mkIf (cfg.notmuch.postNewHook != "") {
+          postNew = cfg.notmuch.postNewHook;
+        };
+
+        extraConfig = {
+          database = {
+            path = mailDir;
+          };
+          user = {
+            name = helpers.getPrimaryAccount enabledAccounts "realName";
+            primary_email = helpers.getPrimaryAccount enabledAccounts "email";
+            other_email = helpers.getOtherEmails enabledAccounts;
+          };
+        };
+      };
 
       # Initialize notmuch on activation if needed
       home.activation.notmuchInit = config.lib.dag.entryAfter [ "createMailDir" ] ''
         if [ ! -d "${mailDir}/.notmuch" ]; then
-          ${pkgs.notmuch}/bin/notmuch --config="$HOME/.notmuch-config" new || true
+          ${pkgs.notmuch}/bin/notmuch new || true
         fi
       '';
     })

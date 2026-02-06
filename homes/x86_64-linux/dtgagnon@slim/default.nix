@@ -11,6 +11,8 @@ let
   # inherit (config.lib.stylix) colors;
 in
 {
+  stylix.enable = false;
+
   spirenix = {
     apps.terminals.ghostty.enable = false;
 
@@ -31,7 +33,7 @@ in
       git = enabled;
       neovim = enabled;
       network-tools = enabled;
-      shells.nushell = enabled;
+      shells.nushell.enable = false;
       ssh = enabled;
       yazi = enabled;
       zoxide = enabled;

@@ -50,11 +50,32 @@ let
     commonDefaults // providerDefs // acc;
 in
 rec {
+  # Get primary account field value
+  getPrimaryAccount =
+    accounts: field:
+    let
+      accountList = map withDefaults (attrValues accounts);
+      primaryAccount = findFirst (acc: acc.primary) (head accountList) accountList;
+    in
+    primaryAccount.${field} or "";
+
+  # Get semicolon-separated list of non-primary emails
+  getOtherEmails =
+    accounts:
+    let
+      accountList = map withDefaults (attrValues accounts);
+      primaryEmail = getPrimaryAccount accounts "email";
+      otherEmails = filter (e: e != primaryEmail) (map (acc: acc.email) accountList);
+    in
+    concatStringsSep ";" otherEmails;
+
   # Generate mbsync config for a single account
   mkMbsyncAccount =
     name: accRaw:
     let
       acc = withDefaults accRaw;
+      # Include spam folder if defined
+      allFolders = acc.folders ++ (lib.optional (acc.spamFolder or null != null) acc.spamFolder);
       sslType =
         if acc.provider == "protonmail" then
           "STARTTLS"
@@ -63,8 +84,8 @@ rec {
         else
           "None";
       certLine =
-        if acc.provider == "protonmail" then
-          "CertificateFile ${config.sops.secrets."mail-${name}-password".path or "/run/secrets-d/protonmail-bridge-cert"}"
+        if acc.provider == "protonmail" && acc.certificateSecret or null != null then
+          "CertificateFile ${config.sops.secrets."mail-${name}-certificate".path}"
         else
           "";
       passPath = config.sops.secrets."mail-${name}-password".path or "/run/secrets-d/mail-${name}-password";
@@ -89,7 +110,7 @@ rec {
       Channel ${name}
       Far :${name}-remote:
       Near :${name}-local:
-      Patterns ${concatStringsSep " " (map (f: ''"${f}"'') acc.folders)}
+      Patterns ${concatStringsSep " " (map (f: ''"${f}"'') allFolders)}
       Create Both
       Expunge Both
       SyncState *
@@ -97,33 +118,4 @@ rec {
 
   # Generate full mbsync config
   mkMbsyncConfig = accounts: concatStringsSep "\n\n" (mapAttrsToList mkMbsyncAccount accounts);
-
-  # Generate notmuch config
-  mkNotmuchConfig =
-    accounts:
-    let
-      accountList = map withDefaults (attrValues accounts);
-      primaryAccount = findFirst (acc: acc.primary) (head accountList) accountList;
-      allEmails = map (acc: acc.email) accountList;
-      otherEmails = filter (e: e != primaryAccount.email) allEmails;
-    in
-    ''
-      [database]
-      path=${mailDir}
-
-      [user]
-      name=${primaryAccount.realName}
-      primary_email=${primaryAccount.email}
-      other_email=${concatStringsSep ";" otherEmails}
-
-      [new]
-      tags=unread;inbox
-      ignore=.mbsyncstate;.strstrec;.isstrstrec
-
-      [search]
-      exclude_tags=deleted;spam
-
-      [maildir]
-      synchronize_flags=true
-    '';
 }

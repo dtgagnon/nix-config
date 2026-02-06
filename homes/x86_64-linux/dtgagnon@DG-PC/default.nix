@@ -29,6 +29,7 @@ in
     ];
 
     apps = {
+      aerc = enabled;
       antigravity = enabled;
       discord = enabled;
       element = enabled;
