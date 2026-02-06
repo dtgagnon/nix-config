@@ -387,7 +387,7 @@ in
       };
 
       home = {
-        sessionVariables.MAIL_CLIENT = "aerc";
+        sessionVariables.MAIL_CLIENT = lib.mkDefault "aerc";
         packages = with pkgs; [
           w3m # HTML rendering
           dante # SOCKS proxy support
