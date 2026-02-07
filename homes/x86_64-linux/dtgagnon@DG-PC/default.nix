@@ -21,7 +21,6 @@ in
 
     # Personal directories specific to dtgagnon
     preservation.directories = [
-      ".config/systemd/user"
       "Games"
       "myVMs"
       "nix-config"
@@ -68,7 +67,10 @@ in
       bat = enabled;
       broot = enabled;
       carapace = enabled;
-      claude-code = enabled;
+      claude-code = {
+        enable = true;
+        scheduling.enable = true;
+      };
       codex = enabled;
       direnv = enabled;
       eza = enabled;

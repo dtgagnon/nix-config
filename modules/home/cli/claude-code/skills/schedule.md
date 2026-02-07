@@ -133,7 +133,9 @@ Environment=PATH=/run/current-system/sw/bin:/home/dtgagnon/.nix-profile/bin:%h/.
 Description=Timer for AI Task: <summary>
 
 [Timer]
-OnCalendar=<schedule in systemd calendar format>
+OnCalendar=<schedule converted to systemd calendar format>
+# IMPORTANT: systemd uses "YYYY-MM-DD HH:MM:SS" (space separator), NOT ISO 8601 "T".
+# Convert task frontmatter "2026-02-09T10:00" → "2026-02-09 10:00:00"
 Persistent=true
 
 [Install]

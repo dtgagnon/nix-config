@@ -96,7 +96,7 @@ rec {
       Port ${toString acc.imapPort}
       User ${acc.email}
       PassCmd "cat ${passPath}"
-      SSLType ${sslType}
+      TLSType ${tlsType}
       ${certLine}
 
       IMAPStore ${name}-remote
