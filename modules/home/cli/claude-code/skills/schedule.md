@@ -219,5 +219,5 @@ Execute a task immediately without waiting for the timer:
 - **Permissions are per-task**: Each task has its own explicit permission set approved by the user.
 - **Self-cleaning**: Successful tasks clean up their own timer units automatically.
 - **Retries**: Failed tasks retry up to 3 times with 1-hour delays before moving to needs-attention.
-- **Desktop notifications**: Tasks that exceed max retries send a desktop notification via notify-send.
+- **Desktop notifications**: A notification is sent when a task starts, when it completes successfully, and when it exceeds max retries (critical urgency).
 - **The task-runner script** is at `~/proj/AUTOMATE/scheduled/task-runner` — it handles execution, verification, retry logic, and cleanup.

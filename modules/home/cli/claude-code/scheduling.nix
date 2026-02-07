@@ -12,6 +12,23 @@ let
 
   tasksDir = cfg.scheduling.tasksDir;
 
+  notify-completion = pkgs.writeShellScript "notify-completion" ''
+    # notify-completion <task-name> <completed-file-path>
+    # Sends a desktop notification with an action to view the completed task log.
+    # Self-terminates after 30s if the notification is never acted on.
+    TASK_NAME="$1"
+    COMPLETED_FILE="$2"
+
+    ACTION=$(${pkgs.coreutils}/bin/timeout 30 \
+      ${pkgs.libnotify}/bin/notify-send -u normal \
+      --action="view=View Log" "Agent Action" \
+      "Task completed: $TASK_NAME" 2>/dev/null) || true
+
+    if [ "$ACTION" = "view" ]; then
+      ${pkgs.ghostty}/bin/ghostty -e ${pkgs.glow}/bin/glow "$COMPLETED_FILE"
+    fi
+  '';
+
   task-runner = pkgs.writeShellScript "task-runner" ''
     # task-runner <task-file> <unit-name>
     # Called by systemd service ExecStart
@@ -60,6 +77,11 @@ let
     fi
 
     TASK_CONTENT=$(${pkgs.coreutils}/bin/cat "$TASK_FILE")
+    TASK_NAME=$(basename "$TASK_FILE")
+
+    # Notify task start
+    ${pkgs.libnotify}/bin/notify-send -u normal "Agent Action" \
+      "Starting task: $TASK_NAME" 2>/dev/null || true
 
     # Count previous attempts (grep -c prints 0 on no match but exits 1; capture output, ignore exit)
     ATTEMPT_COUNT=$(${pkgs.gnugrep}/bin/grep -c '^## .*Execution' "$TASK_FILE" 2>/dev/null || true)
@@ -111,6 +133,8 @@ let
           "$ATTEMPT_COUNT" "$NOW" "$OUTPUT" >> "$TASK_FILE"
         mv "$TASK_FILE" "$TASKS_DIR/completed/"
         cleanup_units
+        ${pkgs.systemd}/bin/systemd-run --user --no-block -- \
+          ${notify-completion} "$TASK_NAME" "$TASKS_DIR/completed/$TASK_NAME" 2>/dev/null || true
         echo "Task verified PASS — cleaned up"
         ;;
       fail|inconclusive)
@@ -122,7 +146,7 @@ let
           echo "Max attempts ($MAX_ATTEMPTS) reached — moving to needs-attention"
           mv "$TASK_FILE" "$TASKS_DIR/needs-attention/"
           cleanup_units
-          ${pkgs.libnotify}/bin/notify-send -u critical "Task Runner" \
+          ${pkgs.libnotify}/bin/notify-send -u critical "Agent Action" \
             "Task $(basename "$TASK_FILE") needs attention after $MAX_ATTEMPTS attempts" 2>/dev/null || true
         else
           echo "Attempt $ATTEMPT_COUNT/$MAX_ATTEMPTS $RESULT — scheduling retry in $RETRY_DELAY"

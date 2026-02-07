@@ -2590,11 +2590,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1770407839,
-        "narHash": "sha256-ugBlGVRVaGRiCwb6rdtsvjZiAlEaPYYsZZH/lYBaFwE=",
+        "lastModified": 1770473916,
+        "narHash": "sha256-jfOVTGxI5ZlrQfWL54Q3rNJay7o3ildR6V0xWbbdtCs=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "bba082e334ad951cfb1ded12ae86429a5927994b",
+        "rev": "8d9477a64eec0c99f9c41c03342bb8b7f764412b",
         "type": "github"
       },
       "original": {
@@ -2631,11 +2631,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770416983,
-        "narHash": "sha256-lDOP+23c+3hJ0x9y7DtzhzzFfSNZ/8MOz2dCrD5bjRk=",
+        "lastModified": 1770435240,
+        "narHash": "sha256-AvnxUPv01+BL1cEmObvwMXhawa+2QusZYSA2B/FMvXI=",
         "ref": "refs/heads/main",
-        "rev": "85415371679b83c230abae18bc94f0223c93400a",
-        "revCount": 157,
+        "rev": "13db5804eaa8fd2ccbe9bdc7ca4063561748c6f2",
+        "revCount": 159,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -3219,11 +3219,11 @@
     },
     "nixpkgs_7": {
       "locked": {
-        "lastModified": 1770169770,
-        "narHash": "sha256-awR8qIwJxJJiOmcEGgP2KUqYmHG4v/z8XpL9z8FnT1A=",
+        "lastModified": 1770380644,
+        "narHash": "sha256-P7dWMHRUWG5m4G+06jDyThXO7kwSk46C1kgjEWcybkE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "aa290c9891fa4ebe88f8889e59633d20cc06a5f2",
+        "rev": "ae67888ff7ef9dff69b3cf0cc0fbfbcd3a722abe",
         "type": "github"
       },
       "original": {

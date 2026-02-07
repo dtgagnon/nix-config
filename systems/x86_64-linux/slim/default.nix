@@ -35,8 +35,7 @@ in
 
     initrd = {
       systemd.enable = true;
-      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" "dm_mod" "dm_crypt" ];
-      kernelModules = [ "dm-snapshot" ];
+      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
     };
 
     kernelModules = [ "kvm-intel" ];

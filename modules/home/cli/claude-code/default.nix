@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -70,6 +69,7 @@ in
           "DISABLE_AUTOUPDATER" = 1;
           "ENABLE_EXPERIMENTAL_MCP_CLI" = true;
           "ENABLE_LSP_TOOL" = true;
+          "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" = true;
         };
         models = {
           opus = { };
@@ -78,72 +78,74 @@ in
         };
         statusLine = {
           type = "command";
-          command = let
-            inherit (lib.${namespace}) mkAnsiFromStylix;
-            c = mkAnsiFromStylix config;
-          in ''
-            input=$(cat)
-            MODEL=$(echo "$input" | jq -r '.model.display_name')
-            DIR=$(echo "$input" | jq -r '.workspace.current_dir')
-            DIRNAME=$(basename "$DIR")
-            TIME=$(date +"%I:%M %p")
+          command =
+            let
+              inherit (lib.${namespace}) mkAnsiFromStylix;
+              c = mkAnsiFromStylix config;
+            in
+            ''
+              input=$(cat)
+              MODEL=$(echo "$input" | jq -r '.model.display_name')
+              DIR=$(echo "$input" | jq -r '.workspace.current_dir')
+              DIRNAME=$(basename "$DIR")
+              TIME=$(date +"%I:%M %p")
 
-            # Context consumption
-            CTX_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
-            CTX_INT=''${CTX_PCT%.*}
+              # Context consumption
+              CTX_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
+              CTX_INT=''${CTX_PCT%.*}
 
-            # Colors (stylix RGB or ANSI 256 fallback, injected at build time)
-            C_DIR=$'${c "base0D"}'
-            C_GIT=$'${c "base0E"}'
-            C_MODEL=$'${c "base0A"}'
-            C_TIME=$'${c "base05"}'
-            C_SEP=$'${c "base03"}'
-            C_DIM=$'${c "base02"}'
-            C_CTX_ACCEPT=$'${c "base0A"}'
-            C_CTX_WARN=$'${c "base09"}'
-            C_CTX_CRIT=$'${c "base08"}'
-            C_RESET=$'\033[0m'
+              # Colors (stylix RGB or ANSI 256 fallback, injected at build time)
+              C_DIR=$'${c "base0D"}'
+              C_GIT=$'${c "base0E"}'
+              C_MODEL=$'${c "base0A"}'
+              C_TIME=$'${c "base05"}'
+              C_SEP=$'${c "base03"}'
+              C_DIM=$'${c "base02"}'
+              C_CTX_ACCEPT=$'${c "base0A"}'
+              C_CTX_WARN=$'${c "base09"}'
+              C_CTX_CRIT=$'${c "base08"}'
+              C_RESET=$'\033[0m'
 
-            # Build context progress bar (10 segments)
-            # Optimal: 0-30% | Acceptable: 30-55% | Caution: 55-80% | Unreliable: 80-100%
-            FILLED=$((CTX_INT / 10))
-            EMPTY=$((10 - FILLED))
+              # Build context progress bar (10 segments)
+              # Optimal: 0-30% | Acceptable: 30-55% | Caution: 55-80% | Unreliable: 80-100%
+              FILLED=$((CTX_INT / 10))
+              EMPTY=$((10 - FILLED))
 
-            # Determine color for entire filled portion based on total percentage
-            if [ "$CTX_INT" -ge 81 ]; then
-              C_BAR="$C_CTX_CRIT"
-            elif [ "$CTX_INT" -ge 56 ]; then
-              C_BAR="$C_CTX_WARN"
-            elif [ "$CTX_INT" -ge 31 ]; then
-              C_BAR="$C_CTX_ACCEPT"
-            else
-              C_BAR=""
-            fi
-
-            BAR=""
-            for i in $(seq 1 $FILLED); do
-              BAR="$BAR''${C_BAR}━"
-            done
-            for i in $(seq 1 $EMPTY); do
-              BAR="$BAR''${C_DIM}─"
-            done
-            BAR="$BAR''${C_RESET}"
-
-            # Git info - symbol only shown when in a git repo
-            GIT_INFO=""
-            if git -C "$DIR" rev-parse --git-dir > /dev/null 2>&1; then
-              BRANCH=$(git -C "$DIR" branch --show-current 2>/dev/null)
-              STATUS=""
-              if [ -n "$(git -C "$DIR" status --porcelain 2>/dev/null)" ]; then
-                STATUS="*"
+              # Determine color for entire filled portion based on total percentage
+              if [ "$CTX_INT" -ge 81 ]; then
+                C_BAR="$C_CTX_CRIT"
+              elif [ "$CTX_INT" -ge 56 ]; then
+                C_BAR="$C_CTX_WARN"
+              elif [ "$CTX_INT" -ge 31 ]; then
+                C_BAR="$C_CTX_ACCEPT"
+              else
+                C_BAR=""
               fi
-              if [ -n "$BRANCH" ]; then
-                GIT_INFO=" ''${C_GIT}  $BRANCH$STATUS''${C_RESET}"
-              fi
-            fi
 
-            echo "''${C_DIR}$DIRNAME''${C_RESET}$GIT_INFO ''${C_SEP}│''${C_RESET} ''${C_MODEL}$MODEL''${C_RESET} ''${C_SEP}│''${C_RESET} $BAR ''${C_SEP}│''${C_RESET} ''${C_TIME}$TIME''${C_RESET}"
-          '';
+              BAR=""
+              for i in $(seq 1 $FILLED); do
+                BAR="$BAR''${C_BAR}━"
+              done
+              for i in $(seq 1 $EMPTY); do
+                BAR="$BAR''${C_DIM}─"
+              done
+              BAR="$BAR''${C_RESET}"
+
+              # Git info - symbol only shown when in a git repo
+              GIT_INFO=""
+              if git -C "$DIR" rev-parse --git-dir > /dev/null 2>&1; then
+                BRANCH=$(git -C "$DIR" branch --show-current 2>/dev/null)
+                STATUS=""
+                if [ -n "$(git -C "$DIR" status --porcelain 2>/dev/null)" ]; then
+                  STATUS="*"
+                fi
+                if [ -n "$BRANCH" ]; then
+                  GIT_INFO=" ''${C_GIT}  $BRANCH$STATUS''${C_RESET}"
+                fi
+              fi
+
+              echo "''${C_DIR}$DIRNAME''${C_RESET}$GIT_INFO ''${C_SEP}│''${C_RESET} ''${C_MODEL}$MODEL''${C_RESET} ''${C_SEP}│''${C_RESET} $BAR ''${C_SEP}│''${C_RESET} ''${C_TIME}$TIME''${C_RESET}"
+            '';
         };
       };
     };

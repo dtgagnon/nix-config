@@ -125,7 +125,7 @@ in
             empty-dirlist = "(no folders)";
             mouse-enabled = true;
             new-message-bell = true;
-            pinned-tab-marker = "\`";
+            pinned-tab-marker = "\"\`\"";
             dirlist-left = "{{.Folder}}";
             dirlist-right = "{{if .Unread}}{{.Unread}}/{{end}}{{.Exists}}";
             sort = "-r date";
