@@ -4816,11 +4816,11 @@
         "sortformer-model": "sortformer-model"
       },
       "locked": {
-        "lastModified": 1770415876,
-        "narHash": "sha256-ZXTV0Z7keVC6k9TuMZyjS9f3wJB31sAgiseg7vszH2c=",
+        "lastModified": 1770424182,
+        "narHash": "sha256-+YWoPfH5rJuah/IOrYb1HJZpb2TBqGG6L2YkQ6dzK5s=",
         "ref": "refs/heads/main",
-        "rev": "5dda98e67d2a9239b5bace049868b69994b222d1",
-        "revCount": 141,
+        "rev": "b2472ce914d84a4366b94554fa94fc88cf9d1dd9",
+        "revCount": 142,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },

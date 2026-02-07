@@ -21,7 +21,7 @@ Schedule autonomous Claude Code tasks that execute on systemd timers with explic
 ## Directory Layout
 
 ```
-~/proj/AUTOMATE/tasks/
+~/proj/AUTOMATE/scheduled/
   pending/          # Task definitions waiting to be scheduled
   completed/        # Finished tasks with execution logs appended
   needs-attention/  # Tasks that exceeded max retries
@@ -122,7 +122,7 @@ Description=Scheduled AI Task: <summary>
 
 [Service]
 Type=oneshot
-ExecStart=/home/dtgagnon/proj/AUTOMATE/tasks/task-runner /home/dtgagnon/proj/AUTOMATE/tasks/pending/<filename> automate-<name>
+ExecStart=/home/dtgagnon/proj/AUTOMATE/scheduled/task-runner /home/dtgagnon/proj/AUTOMATE/scheduled/pending/<filename> automate-<name>
 Environment=PATH=/run/current-system/sw/bin:/home/dtgagnon/.nix-profile/bin:%h/.local/bin
 ```
 
@@ -163,13 +163,13 @@ List all tasks across directories with status:
 
 ```bash
 # Check pending tasks
-ls ~/proj/AUTOMATE/tasks/pending/
+ls ~/proj/AUTOMATE/scheduled/pending/
 
 # Check active timers
 systemctl --user list-timers 'automate-*'
 
 # Check needs-attention
-ls ~/proj/AUTOMATE/tasks/needs-attention/
+ls ~/proj/AUTOMATE/scheduled/needs-attention/
 ```
 
 Format output as a table showing: filename, summary, schedule, status (pending/scheduled/needs-attention/completed).
@@ -184,7 +184,7 @@ Execute a task immediately without waiting for the timer:
 2. Verify `allowedTools` are present in frontmatter — refuse to run without them
 3. Run the task-runner wrapper directly:
    ```bash
-   ~/proj/AUTOMATE/tasks/task-runner ~/proj/AUTOMATE/tasks/pending/<file> manual-run
+   ~/proj/AUTOMATE/scheduled/task-runner ~/proj/AUTOMATE/scheduled/pending/<file> manual-run
    ```
 4. Report the result
 
@@ -220,4 +220,4 @@ Execute a task immediately without waiting for the timer:
 - **Self-cleaning**: Successful tasks clean up their own timer units automatically.
 - **Retries**: Failed tasks retry up to 3 times with 1-hour delays before moving to needs-attention.
 - **Desktop notifications**: Tasks that exceed max retries send a desktop notification via notify-send.
-- **The task-runner script** is at `~/proj/AUTOMATE/tasks/task-runner` — it handles execution, verification, retry logic, and cleanup.
+- **The task-runner script** is at `~/proj/AUTOMATE/scheduled/task-runner` — it handles execution, verification, retry logic, and cleanup.

@@ -61,8 +61,9 @@ let
 
     TASK_CONTENT=$(${pkgs.coreutils}/bin/cat "$TASK_FILE")
 
-    # Count previous attempts
-    ATTEMPT_COUNT=$(${pkgs.gnugrep}/bin/grep -c '^## .*Execution' "$TASK_FILE" 2>/dev/null || echo 0)
+    # Count previous attempts (grep -c prints 0 on no match but exits 1; capture output, ignore exit)
+    ATTEMPT_COUNT=$(${pkgs.gnugrep}/bin/grep -c '^## .*Execution' "$TASK_FILE" 2>/dev/null || true)
+    ATTEMPT_COUNT=''${ATTEMPT_COUNT:-0}
     ATTEMPT_COUNT=$((ATTEMPT_COUNT + 1))
 
     # Execute task via claude with approved permissions
@@ -137,7 +138,7 @@ in
     enable = mkBoolOpt false "Enable the /schedule skill and task-runner infrastructure for autonomous AI-agent tasks";
     tasksDir = mkOption {
       type = types.str;
-      default = "$HOME/proj/AUTOMATE/tasks";
+      default = "$HOME/proj/AUTOMATE/scheduled";
       description = "Directory for task files (pending, completed, needs-attention, templates)";
     };
   };
