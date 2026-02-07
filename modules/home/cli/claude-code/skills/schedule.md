@@ -40,7 +40,7 @@ schedule: "YYYY-MM-DDTHH:MM"
 expires: "YYYY-MM-DD"
 tags: [category]
 allowedTools:
-  - "Bash(specific-command *)"
+  - "Bash(specific-command:*)"
   - "Read(path/to/files/*)"
   - "Edit(path/to/specific/file.nix)"
 ---
@@ -70,7 +70,7 @@ Ask the user to describe the task, or point to an existing task file in `pending
 
 Analyze the task steps and determine what tools and permissions are needed for autonomous execution. Be specific — never request blanket permissions. For each step, determine:
 
-- **Bash permissions**: Specific command patterns (e.g., `Bash(systemctl --user show-environment *)`, NOT just `Bash(*)`)
+- **Bash permissions**: Specific command patterns using `Bash(command:args_glob)` syntax — note the **colon** separates the command from the args glob (e.g., `Bash(systemctl --user show-environment:*)`, NOT `Bash(systemctl --user show-environment *)` and NOT `Bash(*)`)
 - **Read permissions**: Specific file/directory patterns (e.g., `Read(modules/home/desktop/addons/hypridle/*)`)
 - **Edit permissions**: Specific files that will be modified (e.g., `Edit(modules/home/desktop/addons/hypridle/default.nix)`)
 - **Write permissions**: New files that will be created
@@ -84,18 +84,18 @@ Present the permission list to the user in a clear format:
 This task requires the following permissions for autonomous execution:
 
 Bash:
-  - systemctl --user show-environment *
-  - git add modules/home/desktop/addons/hypridle/*
-  - git commit *
+  - systemctl --user show-environment:*
+  - git add:<relevant paths>
+  - git commit:*
 
 File Read:
-  - modules/home/desktop/addons/hypridle/*
+  - path/to/relevant/files/*
 
 File Edit:
-  - modules/home/desktop/addons/hypridle/default.nix
+  - path/to/specific/file.nix
 
-Schedule: 2026-02-09T10:00
-Expires: 2026-02-12
+Schedule: YYYY-MM-DDTHH:MM
+Expires: YYYY-MM-DD
 ```
 
 Use AskUserQuestion to get approval. The user can approve, modify the list, or reject.
@@ -114,7 +114,7 @@ Generate and install the systemd timer + service units.
 CLAUDE_BIN=$(which claude)
 ```
 
-**Service unit** (`~/.config/systemd/user/automate-<name>.service`):
+**Service unit** (`~/.config/systemd/user/agent-action-<name>.service`):
 
 ```ini
 [Unit]
@@ -122,11 +122,11 @@ Description=Scheduled AI Task: <summary>
 
 [Service]
 Type=oneshot
-ExecStart=/home/dtgagnon/proj/AUTOMATE/scheduled/task-runner /home/dtgagnon/proj/AUTOMATE/scheduled/pending/<filename> automate-<name>
+ExecStart=/home/dtgagnon/proj/AUTOMATE/scheduled/task-runner /home/dtgagnon/proj/AUTOMATE/scheduled/pending/<filename> agent-action-<name>
 Environment=PATH=/run/current-system/sw/bin:/home/dtgagnon/.nix-profile/bin:%h/.local/bin
 ```
 
-**Timer unit** (`~/.config/systemd/user/automate-<name>.timer`):
+**Timer unit** (`~/.config/systemd/user/agent-action-<name>.timer`):
 
 ```ini
 [Unit]
@@ -146,7 +146,7 @@ Then enable and start the timer:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable --now automate-<name>.timer
+systemctl --user enable --now agent-action-<name>.timer
 ```
 
 ### Step 6: Confirmation
@@ -166,7 +166,7 @@ List all tasks across directories with status:
 ls ~/proj/AUTOMATE/scheduled/pending/
 
 # Check active timers
-systemctl --user list-timers 'automate-*'
+systemctl --user list-timers 'agent-action-*'
 
 # Check needs-attention
 ls ~/proj/AUTOMATE/scheduled/needs-attention/
@@ -192,11 +192,11 @@ Execute a task immediately without waiting for the timer:
 
 1. Stop and disable the timer:
    ```bash
-   systemctl --user disable --now automate-<name>.timer
+   systemctl --user disable --now agent-action-<name>.timer
    ```
 2. Remove the unit files:
    ```bash
-   rm ~/.config/systemd/user/automate-<name>.{timer,service}
+   rm ~/.config/systemd/user/agent-action-<name>.{timer,service}
    systemctl --user daemon-reload
    ```
 3. The task file remains in `pending/` — it's not deleted, just unscheduled
