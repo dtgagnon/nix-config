@@ -24,6 +24,12 @@ let
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${mailCfg.mailDir}";
 
+  # Import mail helpers for provider-aware folder name translation
+  mailHelpers = import ../../services/mail/helpers.nix {
+    inherit lib config;
+    cfg = mailCfg;
+  };
+
   # Filter enabled mail accounts
   enabledAccounts = filterAttrs (_: acc: acc.enable) mailCfg.accounts;
 
@@ -84,14 +90,20 @@ let
     '';
 
   # Generate notmuch query map for account filtering
-  mkQueryMap = _name: acc: ''
-    INBOX=folder:${acc.email}/INBOX
-    Sent=folder:${acc.email}/Sent
-    Drafts=folder:${acc.email}/Drafts
-    Trash=folder:${acc.email}/Trash
-    Archive=folder:${acc.email}/Archive
-    ${lib.optionalString (acc.spamFolder or null != null) "Spam=folder:${acc.email}/${acc.spamFolder}"}
-  '';
+  # Uses provider-aware folder translation (e.g., Gmail's "Sent" → "[Gmail]/Sent Mail")
+  mkQueryMap =
+    _name: acc:
+    let
+      tr = mailHelpers.translateFolder acc.provider;
+    in
+    ''
+      INBOX=folder:${acc.email}/INBOX
+      Sent=folder:${acc.email}/${tr "Sent"}
+      Drafts=folder:${acc.email}/${tr "Drafts"}
+      Trash=folder:${acc.email}/${tr "Trash"}
+      Archive=folder:${acc.email}/${tr "Archive"}
+      ${lib.optionalString (acc.spamFolder or null != null) "Spam=folder:${acc.email}/${acc.spamFolder}"}
+    '';
 in
 {
   options.${namespace}.apps.aerc = {

@@ -7,7 +7,14 @@
   cfg,
 }:
 let
-  inherit (lib) mapAttrsToList concatStringsSep attrValues findFirst head filter;
+  inherit (lib)
+    mapAttrsToList
+    concatStringsSep
+    attrValues
+    findFirst
+    head
+    filter
+    ;
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${cfg.mailDir}";
 
@@ -15,7 +22,13 @@ let
   commonDefaults = {
     realName = "";
     primary = false;
-    folders = [ "INBOX" "Sent" "Drafts" "Trash" "Archive" ];
+    folders = [
+      "INBOX"
+      "Sent"
+      "Drafts"
+      "Trash"
+      "Archive"
+    ];
   };
 
   # Provider-specific defaults (for accounts imported without submodule processing)
@@ -42,14 +55,30 @@ let
     };
   };
 
+  # Map logical folder names to Gmail's actual IMAP folder names.
+  # Gmail uses [Gmail]/... prefixed special folders instead of standard names.
+  gmailFolderMap = {
+    "Sent" = "[Gmail]/Sent Mail";
+    "Drafts" = "[Gmail]/Drafts";
+    "Trash" = "[Gmail]/Trash";
+    "Archive" = "[Gmail]/All Mail";
+  };
+
+  # Translate a logical folder name to the provider's actual IMAP folder name
+  translateFolder =
+    provider: folder: if provider == "gmail" then gmailFolderMap.${folder} or folder else folder;
+
   # Apply provider defaults to an account
-  withDefaults = acc:
+  withDefaults =
+    acc:
     let
       providerDefs = providerDefaults.${acc.provider or "imap"};
     in
     commonDefaults // providerDefs // acc;
 in
 rec {
+  inherit translateFolder;
+
   # Get primary account field value
   getPrimaryAccount =
     accounts: field:
@@ -74,8 +103,9 @@ rec {
     name: accRaw:
     let
       acc = withDefaults accRaw;
-      # Include spam folder if defined
-      allFolders = acc.folders ++ (lib.optional (acc.spamFolder or null != null) acc.spamFolder);
+      # Include spam folder if defined, then translate to provider-specific IMAP names
+      rawFolders = acc.folders ++ (lib.optional (acc.spamFolder or null != null) acc.spamFolder);
+      allFolders = map (translateFolder acc.provider) rawFolders;
       tlsType =
         if acc.provider == "protonmail" then
           "STARTTLS"
@@ -88,7 +118,8 @@ rec {
           "CertificateFile ${config.sops.secrets."mail-${name}-certificate".path}"
         else
           "";
-      passPath = config.sops.secrets."mail-${name}-password".path or "/run/secrets-d/mail-${name}-password";
+      passPath =
+        config.sops.secrets."mail-${name}-password".path or "/run/secrets-d/mail-${name}-password";
     in
     ''
       IMAPAccount ${name}
