@@ -1,0 +1,315 @@
+From 14428830b360ce2f6ff08e5273cada85932ea93e Mon Sep 17 00:00:00 2001
+From: dtgagnon <gagnon.derek@gmail.com>
+Date: Mon, 9 Feb 2026 12:11:38 -0500
+Subject: [PATCH] feat: add which-key popup for incomplete keybindings
+
+---
+ app/aerc.go     |  41 ++++++++++
+ app/whichkey.go | 202 ++++++++++++++++++++++++++++++++++++++++++++++++
+ config/ui.go    |   1 +
+ 3 files changed, 244 insertions(+)
+ create mode 100644 app/whichkey.go
+
+diff --git a/app/aerc.go b/app/aerc.go
+index 7388caa..6e492fd 100644
+--- a/app/aerc.go
++++ b/app/aerc.go
+@@ -42,6 +42,7 @@ type Aerc struct {
+ 	tabs        *ui.Tabs
+ 	beep        func()
+ 	dialog      ui.DrawableInteractive
++	whichKey    *WhichKeyPopup
+ 
+ 	Crypto crypto.Provider
+ }
+@@ -202,6 +203,23 @@ func (aerc *Aerc) Draw(ctx *ui.Context) {
+ 			aerc.dialog.Draw(ctx.Subcontext(4, h/2-2, w-8, 4))
+ 		}
+ 	}
++	if aerc.whichKey != nil {
++		w, h := ctx.Width(), ctx.Height()
++		popW := aerc.whichKey.Width()
++		popH := aerc.whichKey.Height()
++		if popW > w-2 {
++			popW = w - 2
++		}
++		if popH > h-2 {
++			popH = h - 2
++		}
++		x := (w - popW) / 2
++		y := h - popH - 1 // position above the status bar
++		if y < 0 {
++			y = 0
++		}
++		aerc.whichKey.Draw(ctx.Subcontext(x, y, popW, popH))
++	}
+ }
+ 
+ func (aerc *Aerc) HumanReadableBindings() []string {
+@@ -290,6 +308,7 @@ func (aerc *Aerc) getBindings() *config.KeyBindings {
+ 
+ func (aerc *Aerc) simulate(strokes []config.KeyStroke) {
+ 	aerc.pendingKeys = []config.KeyStroke{}
++	aerc.whichKey = nil
+ 	bindings := aerc.getBindings()
+ 	complete := aerc.SelectedAccountUiConfig().CompletionMinChars != config.MANUAL_COMPLETE
+ 	aerc.simulating += 1
+@@ -336,6 +355,15 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
+ 		}
+ 	}
+ 
++	// Dismiss which-key popup on any key press, but do NOT consume the
++	// event so that normal binding resolution still processes it.
++	if aerc.whichKey != nil {
++		if _, ok := event.(vaxis.Key); ok {
++			aerc.whichKey = nil
++			ui.Invalidate()
++		}
++	}
++
+ 	if aerc.dialog != nil {
+ 		return aerc.dialog.Event(event)
+ 	}
+@@ -408,6 +436,19 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
+ 			}
+ 			return false
+ 		}
++		if aerc.simulating == 0 &&
++			aerc.SelectedAccountUiConfig().WhichKey {
++			var globals *config.KeyBindings
++			if bindings.Globals && config.Binds.Global != nil {
++				globals = config.Binds.Global
++			}
++			wk := NewWhichKeyPopup(
++				aerc.pendingKeys, bindings, globals,
++			)
++			if !wk.EmptyEntries() {
++				aerc.whichKey = wk
++			}
++		}
+ 	case vaxis.Mouse:
+ 		aerc.grid.MouseEvent(event.Col, event.Row, event)
+ 		return true
+diff --git a/app/whichkey.go b/app/whichkey.go
+new file mode 100644
+index 0000000..4d0a2ea
+--- /dev/null
++++ b/app/whichkey.go
+@@ -0,0 +1,202 @@
++package app
++
++import (
++	"fmt"
++	"sort"
++
++	"git.sr.ht/~rjarry/aerc/config"
++	"git.sr.ht/~rjarry/aerc/lib/ui"
++	"git.sr.ht/~rockorager/vaxis"
++)
++
++type WhichKeyPopup struct {
++	entries []whichKeyEntry
++	title   string
++	width   int
++	height  int
++}
++
++type whichKeyEntry struct {
++	suffix     string
++	annotation string
++}
++
++// NewWhichKeyPopup creates a popup showing available keybindings that match
++// the given prefix. It searches both the context-specific bindings and global
++// bindings (if enabled).
++func NewWhichKeyPopup(
++	prefix []config.KeyStroke,
++	bindings *config.KeyBindings,
++	globals *config.KeyBindings,
++) *WhichKeyPopup {
++	var entries []whichKeyEntry
++	seen := make(map[string]bool)
++
++	collect := func(bs []*config.Binding, tag string) {
++		for _, b := range bs {
++			if len(b.Input) <= len(prefix) {
++				continue
++			}
++			match := true
++			for i, ks := range prefix {
++				if ks != b.Input[i] {
++					match = false
++					break
++				}
++			}
++			if !match {
++				continue
++			}
++			suffix := config.FormatKeyStrokes(b.Input[len(prefix):])
++			if seen[suffix] {
++				continue
++			}
++			seen[suffix] = true
++
++			ann := b.Annotation
++			if ann == "" {
++				ann = config.FormatKeyStrokes(b.Output)
++			}
++			if tag != "" {
++				ann += " " + tag
++			}
++			entries = append(entries, whichKeyEntry{
++				suffix:     suffix,
++				annotation: ann,
++			})
++		}
++	}
++
++	collect(bindings.Bindings, "")
++	if globals != nil {
++		collect(globals.Bindings, "(global)")
++	}
++
++	sort.Slice(entries, func(i, j int) bool {
++		return entries[i].suffix < entries[j].suffix
++	})
++
++	// Calculate dimensions
++	maxKeyWidth := 0
++	maxAnnWidth := 0
++	for _, e := range entries {
++		if len(e.suffix) > maxKeyWidth {
++			maxKeyWidth = len(e.suffix)
++		}
++		if len(e.annotation) > maxAnnWidth {
++			maxAnnWidth = len(e.annotation)
++		}
++	}
++
++	titleStr := fmt.Sprintf(" Which Key? (%s...) ",
++		config.FormatKeyStrokes(prefix))
++
++	// width = border(1) + padding(1) + key + separator(" -> ") + annotation + padding(1) + border(1)
++	contentWidth := maxKeyWidth + 4 + maxAnnWidth
++	width := contentWidth + 4 // 2 for borders, 2 for padding
++	if len(titleStr) > width-2 {
++		width = len(titleStr) + 2
++	}
++	if width < 20 {
++		width = 20
++	}
++
++	// height = border(1) + entries + border(1)
++	height := len(entries) + 2
++
++	return &WhichKeyPopup{
++		entries: entries,
++		title:   titleStr,
++		width:   width,
++		height:  height,
++	}
++}
++
++func (wk *WhichKeyPopup) Width() int {
++	return wk.width
++}
++
++func (wk *WhichKeyPopup) Height() int {
++	return wk.height
++}
++
++func (wk *WhichKeyPopup) Draw(ctx *ui.Context) {
++	w, h := ctx.Width(), ctx.Height()
++	if w <= 2 || h <= 2 {
++		return
++	}
++
++	uiCfg := SelectedAccountUiConfig()
++	defaultStyle := uiCfg.GetStyle(config.STYLE_DEFAULT)
++	borderStyle := uiCfg.GetStyle(config.STYLE_BORDER)
++	titleStyle := uiCfg.GetStyle(config.STYLE_TITLE)
++	boldStyle := vaxis.Style{
++		Attribute: vaxis.AttrBold,
++	}
++
++	borderV := uiCfg.BorderCharVertical
++	borderH := uiCfg.BorderCharHorizontal
++
++	// Fill background
++	ctx.Fill(0, 0, w, h, ' ', defaultStyle)
++
++	// Draw top border
++	for x := 0; x < w; x++ {
++		ctx.SetCell(x, 0, borderH, borderStyle)
++	}
++	// Draw bottom border
++	for x := 0; x < w; x++ {
++		ctx.SetCell(x, h-1, borderH, borderStyle)
++	}
++	// Draw left/right borders
++	for y := 0; y < h; y++ {
++		ctx.SetCell(0, y, borderV, borderStyle)
++		ctx.SetCell(w-1, y, borderV, borderStyle)
++	}
++	// Corners
++	ctx.SetCell(0, 0, '┌', borderStyle)
++	ctx.SetCell(w-1, 0, '┐', borderStyle)
++	ctx.SetCell(0, h-1, '└', borderStyle)
++	ctx.SetCell(w-1, h-1, '┘', borderStyle)
++
++	// Draw title centered on top border
++	titleX := (w - len(wk.title)) / 2
++	if titleX < 1 {
++		titleX = 1
++	}
++	ctx.Printf(titleX, 0, titleStyle, "%s", wk.title)
++
++	// Draw entries
++	maxKeyWidth := 0
++	for _, e := range wk.entries {
++		if len(e.suffix) > maxKeyWidth {
++			maxKeyWidth = len(e.suffix)
++		}
++	}
++
++	for i, e := range wk.entries {
++		y := i + 1 // offset for top border
++		if y >= h-1 {
++			break
++		}
++		// Key column (bold)
++		keyStr := fmt.Sprintf("%-*s", maxKeyWidth, e.suffix)
++		ctx.Printf(2, y, boldStyle, "%s", keyStr)
++		// Separator and annotation
++		annStr := fmt.Sprintf(" -> %s", e.annotation)
++		remaining := w - 2 - maxKeyWidth
++		if remaining > 0 && len(annStr) > remaining {
++			annStr = annStr[:remaining]
++		}
++		ctx.Printf(2+maxKeyWidth, y, defaultStyle, "%s", annStr)
++	}
++}
++
++func (wk *WhichKeyPopup) Invalidate() {
++	ui.Invalidate()
++}
++
++// EmptyEntries returns true if there are no matching bindings to show
++func (wk *WhichKeyPopup) EmptyEntries() bool {
++	return len(wk.entries) == 0
++}
+diff --git a/config/ui.go b/config/ui.go
+index cf13191..b423116 100644
+--- a/config/ui.go
++++ b/config/ui.go
+@@ -48,6 +48,7 @@ type UIConfig struct {
+ 	ClientThreadsDelay            time.Duration `ini:"client-threads-delay" default:"50ms"`
+ 	ThreadContext                 bool          `ini:"show-thread-context"`
+ 	FuzzyComplete                 bool          `ini:"fuzzy-complete"`
++	WhichKey                      bool          `ini:"which-key"`
+ 	NewMessageBell                bool          `ini:"new-message-bell" default:"true"`
+ 	Spinner                       string        `ini:"spinner" default:"[..]    , [..]   ,  [..]  ,   [..] ,    [..],   [..] ,  [..]  , [..]   "`
+ 	SpinnerDelimiter              string        `ini:"spinner-delimiter" default:","`
+-- 
+2.52.0
+

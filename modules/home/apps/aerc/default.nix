@@ -2,14 +2,21 @@
 #
 # Terminal-based email client that integrates with the mail service module.
 # Uses notmuch as the backend when available, or maildir directly.
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
-  inherit (lib) mkIf types mkMerge filterAttrs mapAttrsToList;
+  inherit (lib)
+    mkIf
+    types
+    mkMerge
+    filterAttrs
+    mapAttrsToList
+    ;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.apps.aerc;
 
@@ -58,7 +65,8 @@ let
             outgoing = "";
             outgoingCredCmd = "";
           };
-        }.${acc.provider};
+        }
+        .${acc.provider};
     in
     ''
       [${name}]
@@ -124,6 +132,7 @@ in
             empty-message = "(no messages)";
             empty-dirlist = "(no folders)";
             mouse-enabled = true;
+            which-key = true;
             new-message-bell = true;
             pinned-tab-marker = "\"\`\"";
             dirlist-left = "{{.Folder}}";
@@ -414,14 +423,12 @@ in
 
     # Notmuch query maps for account filtering
     (mkIf (cfg.useNotmuch && mailCfg.notmuch.enable) {
-      home.file = lib.mapAttrs'
-        (
-          name: acc:
-            lib.nameValuePair "${mailCfg.mailDir}/.notmuch/querymap-${name}" {
-              text = mkQueryMap name acc;
-            }
-        )
-        enabledAccounts;
+      home.file = lib.mapAttrs' (
+        name: acc:
+        lib.nameValuePair "${mailCfg.mailDir}/.notmuch/querymap-${name}" {
+          text = mkQueryMap name acc;
+        }
+      ) enabledAccounts;
     })
   ]);
 }
