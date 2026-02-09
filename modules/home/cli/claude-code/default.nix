@@ -61,6 +61,7 @@ in
     programs.claude-code = {
       enable = true;
       package = claude-wrapped;
+      skillsDir = ./skills;
       settings = {
         includeCoAuthoredBy = false;
         spinnerTipsEnabled = false;

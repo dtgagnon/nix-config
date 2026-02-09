@@ -19,7 +19,7 @@ in
   config = mkIf cfg.enable {
     services.readarr = {
       enable = true;
-      package = pkgs.readarr;
+      package = pkgs.bookshelf;
       user = "readarr";
       group = "media";
       inherit (cfg) openFirewall dataDir;

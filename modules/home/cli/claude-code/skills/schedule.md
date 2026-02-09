@@ -38,6 +38,9 @@ Markdown files with YAML frontmatter. Filenames: `YYYY-MM-DD_short-description.m
 summary: One-line description
 schedule: "YYYY-MM-DDTHH:MM"
 expires: "YYYY-MM-DD"
+recurring: true
+max_iterations: 10
+until: "YYYY-MM-DD"
 tags: [category]
 allowedTools:
   - "Bash(specific-command:*)"
@@ -97,6 +100,10 @@ File Edit:
 Schedule: YYYY-MM-DDTHH:MM
 Expires: YYYY-MM-DD
 ```
+
+For recurring tasks, also ask about lifecycle limits:
+- **Max iterations**: How many successful runs before stopping? (0 = unlimited)
+- **Until date**: Run until what date? (empty = no end date)
 
 Use AskUserQuestion to get approval. The user can approve, modify the list, or reject.
 
@@ -217,7 +224,11 @@ Execute a task immediately without waiting for the timer:
 
 - **Never run without allowedTools**: The task-runner refuses to execute if no allowedTools are defined in the frontmatter. This is a safety mechanism.
 - **Permissions are per-task**: Each task has its own explicit permission set approved by the user.
-- **Self-cleaning**: Successful tasks clean up their own timer units automatically.
-- **Retries**: Failed tasks retry up to 3 times with 1-hour delays before moving to needs-attention.
+- **Self-cleaning**: Successful one-shot tasks clean up their own timer units automatically.
+- **Recurring tasks**: Set `recurring: true` in frontmatter. The timer stays active across runs. On success, the log is appended but the task stays in `pending/`. On failure, a symlink is created in `needs-attention/` for visibility (cleaned up on the next successful run). Use `OnCalendar` patterns like `Sun *-*-* 04:00:00` for weekly schedules. Optional lifecycle limits:
+  - `max_iterations: N` — stop after N successful executions (0 = unlimited, default)
+  - `until: "YYYY-MM-DD"` — stop after this date (empty = no limit, default)
+  - When either limit is reached, the task is moved to `completed/` and its timer is cleaned up.
+- **Retries**: One-shot tasks retry up to 3 times with 1-hour delays before moving to needs-attention.
 - **Desktop notifications**: A notification is sent when a task starts, when it completes successfully, and when it exceeds max retries (critical urgency).
 - **The task-runner script** is at `~/proj/AUTOMATE/scheduled/task-runner` — it handles execution, verification, retry logic, and cleanup.

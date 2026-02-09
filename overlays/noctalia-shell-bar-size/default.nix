@@ -1,3 +1,5 @@
+# @tracking: preference
+# @reason: Increase noctalia-shell bar dimensions to personal sizing preference
 { ... }: _final: prev:
 {
   noctalia-shell = prev.noctalia-shell.overrideAttrs (oldAttrs: {

@@ -44,6 +44,7 @@
           odooAdds.overlays.default
           mcp-servers-nix.overlays.default
           n8n-private.overlays.default
+          nix-bookshelf.overlays.default
         ];
 
         systems.modules.nixos = with inputs; [
@@ -250,6 +251,9 @@
     ags.url = "github:Aylur/ags";
     ags.inputs.nixpkgs.follows = "nixpkgs";
     nixd.url = "github:nix-community/nixd";
+
+    nix-bookshelf.url = "github:dtgagnon/nix-bookshelf";
+    nix-bookshelf.inputs.nixpkgs.follows = "nixpkgs";
 
     ## custom repos
     spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";

@@ -2542,6 +2542,26 @@
         "type": "github"
       }
     },
+    "nix-bookshelf": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770604303,
+        "narHash": "sha256-m1axZJEJfweuQcFZCLTC05N6dNpI3wkV6wKBORMgYm0=",
+        "owner": "dtgagnon",
+        "repo": "nix-bookshelf",
+        "rev": "c98b37556671f265ff9f1a2ebe9ec69dc9476e7b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dtgagnon",
+        "repo": "nix-bookshelf",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -3803,6 +3823,7 @@
         "mcp-servers-nix": "mcp-servers-nix",
         "microvm": "microvm",
         "n8n-private": "n8n-private",
+        "nix-bookshelf": "nix-bookshelf",
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nix-llm-agents": "nix-llm-agents",

@@ -1,3 +1,7 @@
+# @tracking: workaround
+# @reason: open-webui depends on rapidocr-onnxruntime (not packaged in nixpkgs);
+#          extract-msg has beautifulsoup4 version constraint mismatch
+# @check: evaluate open-webui and extract-msg from base nixpkgs without this overlay
 { ... }:
 final: prev:
 let
