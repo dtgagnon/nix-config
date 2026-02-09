@@ -2,7 +2,7 @@ modules/home/*/ssh
 .direnv
 .pre-commit-config.yaml
 tmp
-result
+result*
 
 #ai tooling
 AGENTS.md
