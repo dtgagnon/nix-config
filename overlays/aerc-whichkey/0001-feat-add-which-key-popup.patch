@@ -5,10 +5,10 @@ Subject: [PATCH] feat: add which-key popup for incomplete keybindings
 
 ---
  app/aerc.go     |  56 +++++++++++
- app/whichkey.go | 249 ++++++++++++++++++++++++++++++++++++++++++++++++
+ app/whichkey.go | 262 ++++++++++++++++++++++++++++++++++++++++++++++++
  config/binds.go |  13 +++
  config/ui.go    |   1 +
- 4 files changed, 319 insertions(+)
+ 4 files changed, 332 insertions(+)
  create mode 100644 app/whichkey.go
 
 diff --git a/app/aerc.go b/app/aerc.go
@@ -117,12 +117,13 @@ new file mode 100644
 index 0000000..002a586
 --- /dev/null
 +++ b/app/whichkey.go
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,262 @@
 +package app
 +
 +import (
 +	"fmt"
 +	"sort"
++	"strings"
 +
 +	"git.sr.ht/~rjarry/aerc/config"
 +	"git.sr.ht/~rjarry/aerc/lib/ui"
@@ -179,7 +180,7 @@ index 0000000..002a586
 +
 +			ann := b.Annotation
 +			if ann == "" {
-+				ann = config.FormatKeyStrokes(b.Output)
++				ann = cleanAnnotation(config.FormatKeyStrokes(b.Output))
 +			}
 +			if tag != "" {
 +				ann += " " + tag
@@ -256,6 +257,18 @@ index 0000000..002a586
 +		colW:    colW,
 +		rows:    rows,
 +	}
++}
++
++// cleanAnnotation strips visual noise from auto-generated command annotations
++func cleanAnnotation(s string) string {
++	for _, suffix := range []string{"<enter>", "<Enter>", "<Return>", "<return>"} {
++		s = strings.TrimSuffix(s, suffix)
++	}
++	for _, suffix := range []string{"<space>", "<Space>"} {
++		s = strings.TrimSuffix(s, suffix)
++	}
++	s = strings.TrimPrefix(s, ":")
++	return s
 +}
 +
 +func (wk *WhichKeyPopup) Width() int {
@@ -355,7 +368,7 @@ index 0000000..002a586
 +				ann = "…"
 +			}
 +		}
-+		ctx.Printf(annX, y, defaultStyle, "%s", ann)
++		ctx.Printf(annX, y, sepStyle, "%s", ann)
 +	}
 +}
 +
