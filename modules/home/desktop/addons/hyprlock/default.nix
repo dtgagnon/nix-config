@@ -9,7 +9,7 @@ let
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.hyprlock;
 
-  stylixEnabled = config.stylix.enable or false;
+  stylixEnabled = config.stylix.enable;
   colors = if stylixEnabled then config.lib.stylix.colors else {};
 in
 {
@@ -37,11 +37,8 @@ in
         ];
 
         general = {
-          no_fade_in = true;
-          no_fade_out = true;
           hide_cursor = false;
-          grace = 0;
-          disable_loading_bar = true;
+          ignore_empty_input = true;
         };
 
         input-field = [
@@ -62,8 +59,8 @@ in
             halign = "center";
             valign = "center";
           } // optionalAttrs stylixEnabled {
-            inner_color = "${colors.base01}";
-            check_color = "${colors.base0E}";
+            inner_color = "rgb(${colors.base01})";
+            check_color = "rgb(${colors.base0E})";
           })
         ];
 
@@ -78,7 +75,7 @@ in
             halign = "center";
             valign = "center";
           } // optionalAttrs stylixEnabled {
-            color = "${colors.base01}";
+            color = "rgb(${colors.base01})";
           })
 
           # Time
@@ -91,7 +88,7 @@ in
             halign = "center";
             valign = "center";
           } // optionalAttrs stylixEnabled {
-            color = "${colors.base01}";
+            color = "rgb(${colors.base01})";
           })
         ];
 
@@ -106,7 +103,7 @@ in
             halign = "center";
             valign = "center";
           } // optionalAttrs stylixEnabled {
-            border_color = "${colors.base01}";
+            border_color = "rgb(${colors.base01})";
           })
         ];
       };
