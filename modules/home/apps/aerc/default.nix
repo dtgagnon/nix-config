@@ -360,20 +360,22 @@ in
 
         templates = {
           quoted_reply = ''
-            X-Mailer: aerc
+            X-Mailer: aerc {{version}}
 
-            On {{dateFormat (.OriginalDate | toLocal) "Mon, 02 Jan 2006 15:04:05 -0700"}}, {{(index .OriginalFrom 0).Name}} wrote:
-            {{wrapText .OriginalText 72 | quote}}
+            On {{dateFormat (.OriginalDate | toLocal) "Mon Jan 2, 2006 at 3:04 PM MST"}}, {{.OriginalFrom | names | join ", "}} wrote:
+            {{- if eq .OriginalMIMEType "text/html"}}
+            {{exec `html` .OriginalText | trimSignature | quote}}
+            {{- else}}
+            {{trimSignature .OriginalText | quote}}
+            {{- end}}
           '';
 
           forward_as_body = ''
-            X-Mailer: aerc
+            X-Mailer: aerc {{version}}
 
             ---------- Forwarded message ----------
-            From: {{(index .OriginalFrom 0)}}
-            Date: {{dateFormat (.OriginalDate | toLocal) "Mon, 02 Jan 2006 15:04:05 -0700"}}
-            Subject: {{.OriginalSubject}}
-            To: {{.OriginalTo | persons}}
+            From: {{.OriginalFrom | names | join ", "}}
+            Date: {{dateFormat (.OriginalDate | toLocal) "Mon Jan 2, 2006 at 3:04 PM MST"}}
 
             {{.OriginalText}}
           '';
