@@ -38,6 +38,7 @@ Markdown files with YAML frontmatter. Filenames: `YYYY-MM-DD_short-description.m
 summary: One-line description
 schedule: "YYYY-MM-DDTHH:MM"
 expires: "YYYY-MM-DD"
+model: sonnet
 recurring: true
 max_iterations: 10
 until: "YYYY-MM-DD"
@@ -99,7 +100,15 @@ File Edit:
 
 Schedule: YYYY-MM-DDTHH:MM
 Expires: YYYY-MM-DD
+Model: sonnet
 ```
+
+Also ask which model should execute the task:
+- **sonnet** (Recommended): Good balance of speed and capability. Best for most scheduled tasks — evaluations, checks, routine maintenance.
+- **opus**: Maximum reasoning capability. Use for tasks requiring complex analysis, multi-step debugging, or nuanced judgment.
+- **haiku**: Fastest and cheapest. Use for simple, well-defined tasks with minimal decision-making.
+
+Default to **sonnet** if the user has no preference.
 
 For recurring tasks, also ask about lifecycle limits:
 - **Max iterations**: How many successful runs before stopping? (0 = unlimited)
