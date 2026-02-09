@@ -1,17 +1,18 @@
-From 14428830b360ce2f6ff08e5273cada85932ea93e Mon Sep 17 00:00:00 2001
+From 57b8500cc02e14fa9c7ea4d89b44e742b4518522 Mon Sep 17 00:00:00 2001
 From: dtgagnon <gagnon.derek@gmail.com>
 Date: Mon, 9 Feb 2026 12:11:38 -0500
 Subject: [PATCH] feat: add which-key popup for incomplete keybindings
 
 ---
- app/aerc.go     |  41 ++++++++++
- app/whichkey.go | 202 ++++++++++++++++++++++++++++++++++++++++++++++++
+ app/aerc.go     |  56 +++++++++++
+ app/whichkey.go | 249 ++++++++++++++++++++++++++++++++++++++++++++++++
+ config/binds.go |  13 +++
  config/ui.go    |   1 +
- 3 files changed, 244 insertions(+)
+ 4 files changed, 319 insertions(+)
  create mode 100644 app/whichkey.go
 
 diff --git a/app/aerc.go b/app/aerc.go
-index 7388caa..6e492fd 100644
+index 7388caa..9492a81 100644
 --- a/app/aerc.go
 +++ b/app/aerc.go
 @@ -42,6 +42,7 @@ type Aerc struct {
@@ -70,7 +71,28 @@ index 7388caa..6e492fd 100644
  	if aerc.dialog != nil {
  		return aerc.dialog.Event(event)
  	}
-@@ -408,6 +436,19 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
+@@ -402,12 +430,40 @@ func (aerc *Aerc) Event(event vaxis.Event) bool {
+ 				aerc.BeginExCommand("")
+ 				return true
+ 			}
++			if aerc.simulating == 0 &&
++				aerc.SelectedAccountUiConfig().WhichKey &&
++				event.Matches(bindings.WhichKeyKey.Key, bindings.WhichKeyKey.Modifiers) {
++				var globals *config.KeyBindings
++				if bindings.Globals && config.Binds.Global != nil {
++					globals = config.Binds.Global
++				}
++				wk := NewWhichKeyPopup(
++					nil, bindings, globals,
++				)
++				if !wk.EmptyEntries() {
++					aerc.whichKey = wk
++				}
++				return true
++			}
+ 			interactive, ok := aerc.SelectedTabContent().(ui.Interactive)
+ 			if ok {
+ 				return interactive.Event(event)
  			}
  			return false
  		}
@@ -92,10 +114,10 @@ index 7388caa..6e492fd 100644
  		return true
 diff --git a/app/whichkey.go b/app/whichkey.go
 new file mode 100644
-index 0000000..4d0a2ea
+index 0000000..002a586
 --- /dev/null
 +++ b/app/whichkey.go
-@@ -0,0 +1,202 @@
+@@ -0,0 +1,249 @@
 +package app
 +
 +import (
@@ -104,7 +126,6 @@ index 0000000..4d0a2ea
 +
 +	"git.sr.ht/~rjarry/aerc/config"
 +	"git.sr.ht/~rjarry/aerc/lib/ui"
-+	"git.sr.ht/~rockorager/vaxis"
 +)
 +
 +type WhichKeyPopup struct {
@@ -112,6 +133,9 @@ index 0000000..4d0a2ea
 +	title   string
 +	width   int
 +	height  int
++	columns int
++	colW    int
++	rows    int
 +}
 +
 +type whichKeyEntry struct {
@@ -132,18 +156,20 @@ index 0000000..4d0a2ea
 +
 +	collect := func(bs []*config.Binding, tag string) {
 +		for _, b := range bs {
-+			if len(b.Input) <= len(prefix) {
-+				continue
-+			}
-+			match := true
-+			for i, ks := range prefix {
-+				if ks != b.Input[i] {
-+					match = false
-+					break
++			if len(prefix) > 0 {
++				if len(b.Input) <= len(prefix) {
++					continue
 +				}
-+			}
-+			if !match {
-+				continue
++				match := true
++				for i, ks := range prefix {
++					if ks != b.Input[i] {
++						match = false
++						break
++					}
++				}
++				if !match {
++					continue
++				}
 +			}
 +			suffix := config.FormatKeyStrokes(b.Input[len(prefix):])
 +			if seen[suffix] {
@@ -174,7 +200,8 @@ index 0000000..4d0a2ea
 +		return entries[i].suffix < entries[j].suffix
 +	})
 +
-+	// Calculate dimensions
++	// Calculate the width of a single entry column:
++	// key + " " + dimSep + " " + annotation
 +	maxKeyWidth := 0
 +	maxAnnWidth := 0
 +	for _, e := range entries {
@@ -186,27 +213,48 @@ index 0000000..4d0a2ea
 +		}
 +	}
 +
-+	titleStr := fmt.Sprintf(" Which Key? (%s...) ",
-+		config.FormatKeyStrokes(prefix))
++	var titleStr string
++	if len(prefix) > 0 {
++		titleStr = fmt.Sprintf(" %s... ", config.FormatKeyStrokes(prefix))
++	} else {
++		titleStr = " Keybindings "
++	}
 +
-+	// width = border(1) + padding(1) + key + separator(" -> ") + annotation + padding(1) + border(1)
-+	contentWidth := maxKeyWidth + 4 + maxAnnWidth
-+	width := contentWidth + 4 // 2 for borders, 2 for padding
-+	if len(titleStr) > width-2 {
++	// Single column entry width: padding(1) + key + gap(1) + sep(1) + gap(1) + ann + padding(1)
++	colW := 1 + maxKeyWidth + 1 + 1 + 1 + maxAnnWidth + 1
++
++	// Determine column count based on entry count
++	maxRows := 16
++	columns := 1
++	rows := len(entries)
++	if rows > maxRows {
++		columns = (rows + maxRows - 1) / maxRows
++		if columns > 3 {
++			columns = 3
++		}
++		rows = (len(entries) + columns - 1) / columns
++	}
++
++	// Total width: columns * colW + (columns-1) separator + 2 borders
++	width := columns*colW + (columns-1) + 2
++	if len(titleStr)+2 > width {
 +		width = len(titleStr) + 2
 +	}
 +	if width < 20 {
 +		width = 20
 +	}
 +
-+	// height = border(1) + entries + border(1)
-+	height := len(entries) + 2
++	// Height: title(1) + rows + bottom border(1)
++	height := 1 + rows + 1
 +
 +	return &WhichKeyPopup{
 +		entries: entries,
 +		title:   titleStr,
 +		width:   width,
 +		height:  height,
++		columns: columns,
++		colW:    colW,
++		rows:    rows,
 +	}
 +}
 +
@@ -226,11 +274,10 @@ index 0000000..4d0a2ea
 +
 +	uiCfg := SelectedAccountUiConfig()
 +	defaultStyle := uiCfg.GetStyle(config.STYLE_DEFAULT)
-+	borderStyle := uiCfg.GetStyle(config.STYLE_BORDER)
 +	titleStyle := uiCfg.GetStyle(config.STYLE_TITLE)
-+	boldStyle := vaxis.Style{
-+		Attribute: vaxis.AttrBold,
-+	}
++	borderStyle := uiCfg.GetStyle(config.STYLE_BORDER)
++	keyStyle := uiCfg.GetStyle(config.STYLE_SELECTOR_FOCUSED)
++	sepStyle := uiCfg.GetStyle(config.STYLE_COMPLETION_GUTTER)
 +
 +	borderV := uiCfg.BorderCharVertical
 +	borderH := uiCfg.BorderCharHorizontal
@@ -238,33 +285,30 @@ index 0000000..4d0a2ea
 +	// Fill background
 +	ctx.Fill(0, 0, w, h, ' ', defaultStyle)
 +
-+	// Draw top border
-+	for x := 0; x < w; x++ {
-+		ctx.SetCell(x, 0, borderH, borderStyle)
-+	}
-+	// Draw bottom border
-+	for x := 0; x < w; x++ {
-+		ctx.SetCell(x, h-1, borderH, borderStyle)
-+	}
-+	// Draw left/right borders
-+	for y := 0; y < h; y++ {
-+		ctx.SetCell(0, y, borderV, borderStyle)
-+		ctx.SetCell(w-1, y, borderV, borderStyle)
-+	}
-+	// Corners
-+	ctx.SetCell(0, 0, '┌', borderStyle)
-+	ctx.SetCell(w-1, 0, '┐', borderStyle)
-+	ctx.SetCell(0, h-1, '└', borderStyle)
-+	ctx.SetCell(w-1, h-1, '┘', borderStyle)
-+
-+	// Draw title centered on top border
++	// -- Title bar (full-width filled row) --
++	ctx.Fill(0, 0, w, 1, ' ', titleStyle)
 +	titleX := (w - len(wk.title)) / 2
-+	if titleX < 1 {
-+		titleX = 1
++	if titleX < 0 {
++		titleX = 0
 +	}
 +	ctx.Printf(titleX, 0, titleStyle, "%s", wk.title)
 +
-+	// Draw entries
++	// -- Bottom border --
++	for x := 0; x < w; x++ {
++		ctx.SetCell(x, h-1, borderH, borderStyle)
++	}
++
++	// -- Left/right borders on content rows --
++	for y := 1; y < h-1; y++ {
++		ctx.SetCell(0, y, borderV, borderStyle)
++		ctx.SetCell(w-1, y, borderV, borderStyle)
++	}
++
++	// -- Bottom corners --
++	ctx.SetCell(0, h-1, '╰', borderStyle)
++	ctx.SetCell(w-1, h-1, '╯', borderStyle)
++
++	// Calculate max key width from entries for alignment
 +	maxKeyWidth := 0
 +	for _, e := range wk.entries {
 +		if len(e.suffix) > maxKeyWidth {
@@ -272,21 +316,46 @@ index 0000000..4d0a2ea
 +		}
 +	}
 +
++	// -- Draw entries in columns --
 +	for i, e := range wk.entries {
-+		y := i + 1 // offset for top border
++		col := i / wk.rows
++		row := i % wk.rows
++		y := row + 1 // +1 for title bar
 +		if y >= h-1 {
 +			break
 +		}
-+		// Key column (bold)
-+		keyStr := fmt.Sprintf("%-*s", maxKeyWidth, e.suffix)
-+		ctx.Printf(2, y, boldStyle, "%s", keyStr)
-+		// Separator and annotation
-+		annStr := fmt.Sprintf(" -> %s", e.annotation)
-+		remaining := w - 2 - maxKeyWidth
-+		if remaining > 0 && len(annStr) > remaining {
-+			annStr = annStr[:remaining]
++
++		// x offset: border(1) + col * (colW + separator(1))
++		xBase := 1 + col*(wk.colW+1)
++
++		// Draw column separator line if not first column
++		if col > 0 {
++			sepX := xBase - 1
++			if sepX > 0 && sepX < w-1 {
++				ctx.SetCell(sepX, y, '│', sepStyle)
++			}
 +		}
-+		ctx.Printf(2+maxKeyWidth, y, defaultStyle, "%s", annStr)
++
++		// Key (highlighted with accent style)
++		keyStr := fmt.Sprintf(" %-*s", maxKeyWidth, e.suffix)
++		ctx.Printf(xBase, y, keyStyle, "%s", keyStr)
++
++		// Separator (dimmed)
++		sepStr := " · "
++		ctx.Printf(xBase+1+maxKeyWidth, y, sepStyle, "%s", sepStr)
++
++		// Annotation
++		annX := xBase + 1 + maxKeyWidth + 3
++		remaining := w - 1 - annX // leave room for right border
++		ann := e.annotation
++		if remaining > 0 && len(ann) > remaining {
++			if remaining > 1 {
++				ann = ann[:remaining-1] + "…"
++			} else {
++				ann = "…"
++			}
++		}
++		ctx.Printf(annX, y, defaultStyle, "%s", ann)
 +	}
 +}
 +
@@ -298,6 +367,51 @@ index 0000000..4d0a2ea
 +func (wk *WhichKeyPopup) EmptyEntries() bool {
 +	return len(wk.entries) == 0
 +}
+diff --git a/config/binds.go b/config/binds.go
+index 3b9510c..60d6247 100644
+--- a/config/binds.go
++++ b/config/binds.go
+@@ -62,6 +62,8 @@ type KeyBindings struct {
+ 	ExKey KeyStroke
+ 	// Which key triggers completion (default is <tab>)
+ 	CompleteKey KeyStroke
++	// Which key opens the which-key popup (default is ?)
++	WhichKeyKey KeyStroke
+ 
+ 	// private
+ 	contextualBinds  []*BindingConfigContext
+@@ -204,6 +206,15 @@ func LoadBindingSection(sec *ini.Section) (*KeyBindings, error) {
+ 				return nil, errors.New("Invalid binding")
+ 			}
+ 			bindings.CompleteKey = strokes[0]
++		case "$whichkey":
++			strokes, err := ParseKeyStrokes(value)
++			if err != nil {
++				return nil, err
++			}
++			if len(strokes) != 1 {
++				return nil, errors.New("Invalid binding")
++			}
++			bindings.WhichKeyKey = strokes[0]
+ 		default:
+ 			annotation = strings.TrimSpace(annotation)
+ 			binding, err := ParseBinding(key, value, annotation)
+@@ -299,6 +310,7 @@ func NewKeyBindings() *KeyBindings {
+ 	return &KeyBindings{
+ 		ExKey:            KeyStroke{0, ':'},
+ 		CompleteKey:      KeyStroke{0, vaxis.KeyTab},
++		WhichKeyKey:      KeyStroke{0, '?'},
+ 		Globals:          true,
+ 		contextualCache:  make(map[bindsContextKey]*KeyBindings),
+ 		contextualCounts: make(map[bindsContextType]int),
+@@ -363,6 +375,7 @@ func MergeBindings(bindings ...*KeyBindings) *KeyBindings {
+ 	merged.Bindings = filterAndCleanBindings(merged.Bindings)
+ 	merged.ExKey = bindings[0].ExKey
+ 	merged.CompleteKey = bindings[0].CompleteKey
++	merged.WhichKeyKey = bindings[0].WhichKeyKey
+ 	merged.Globals = bindings[0].Globals
+ 	for _, b := range bindings {
+ 		merged.contextualBinds = append(merged.contextualBinds, b.contextualBinds...)
 diff --git a/config/ui.go b/config/ui.go
 index cf13191..b423116 100644
 --- a/config/ui.go

@@ -19,6 +19,17 @@ in
       enable = true;
       plugins = { };
       settings = {
+        keymap = {
+          manager = {
+            prepend_keymap = [
+              {
+                on = [ "<A-d>" ];
+                run = ''shell -- ripdrag --no-click --and-exit --icon-size 64 --target --all "$@" | while read filepath; do cp -fR "$filepath" .; done'';
+                desc = "Drag-n-drop files to and from Yazi";
+              }
+            ];
+          };
+        };
         yazi = {
           #TOML
           preview = {
@@ -59,6 +70,7 @@ in
       fontpreview
       unar
       poppler
+      ripdrag
     ];
   };
 }
