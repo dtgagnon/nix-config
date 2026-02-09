@@ -40,6 +40,6 @@ in
 {
   # Placeholder for future declarative CLAUDE.md management
   # config = mkIf cfg.enable {
-  #   home.file.".claude/CLAUDE.md".text = userGuidanceContent;
+  #   programs.claude-code.memory.text = userGuidanceContent;
   # };
 }
