@@ -397,6 +397,20 @@ in
         '';
       };
 
+      xdg.desktopEntries.aerc = {
+        name = "Aerc";
+        genericName = "Email Client";
+        comment = "Terminal-based email client";
+        exec = "aerc";
+        icon = "mail-client";
+        terminal = true;
+        type = "Application";
+        categories = [
+          "Network"
+          "Email"
+        ];
+      };
+
       home = {
         sessionVariables.MAIL_CLIENT = lib.mkDefault "aerc";
         packages = with pkgs; [

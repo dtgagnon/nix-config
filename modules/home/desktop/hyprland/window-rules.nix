@@ -23,6 +23,17 @@ in
           size = "1600 900";
         }
 
+        # Aerc - email client floating window
+        {
+          name = "aerc";
+          "match:title" = "^(aerc)$";
+          float = true;
+          center = true;
+          size = "1600 1000";
+          border_size = 0;
+          opacity = "0.92 override 0.8 override";
+        }
+
         # Ghostty - terminal with custom styling
         {
           name = "ghostty";
