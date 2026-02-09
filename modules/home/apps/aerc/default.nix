@@ -417,7 +417,7 @@ in
       home.file = lib.mapAttrs'
         (
           name: acc:
-            lib.nameValuePair ".notmuch/querymap-${name}" {
+            lib.nameValuePair "${mailCfg.mailDir}/.notmuch/querymap-${name}" {
               text = mkQueryMap name acc;
             }
         )
