@@ -17,7 +17,6 @@ in
     spirenix = {
       apps = {
         bottles = enabled;
-        lutris = enabled;
         steam = enabled;
         proton = enabled;
         wine = enabled;
