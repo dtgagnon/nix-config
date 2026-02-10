@@ -37,7 +37,7 @@ in
         OLLAMA_ORIGINS = lib.concatStringsSep "," (
           [ "http://127.0.0.1" ]
           ++ cfg.allowedOrigins
-          ++ lib.optionals hmUser.spirenix.apps.zen.enable [ "moz-extensions://*" ]
+          ++ lib.optionals hmUser.spirenix.apps.zen.enable [ "moz-extension://*" ]
         );
       };
     };
