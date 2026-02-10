@@ -24,7 +24,7 @@ in
     sops.templates."codex-config.toml" = {
       path = "${config.xdg.configHome}/codex/config.toml";
       content = ''
-        model = "gpt-5.2-codex"
+        model = "gpt-5.3-codex"
         model_reasoning_effort = "medium"
 
         [tools]
