@@ -97,12 +97,12 @@ let
       tr = mailHelpers.translateFolder acc.provider;
     in
     ''
-      INBOX=folder:${acc.email}/INBOX
-      Sent=folder:${acc.email}/${tr "Sent"}
-      Drafts=folder:${acc.email}/${tr "Drafts"}
-      Trash=folder:${acc.email}/${tr "Trash"}
-      Archive=folder:${acc.email}/${tr "Archive"}
-      ${lib.optionalString (acc.spamFolder or null != null) "Spam=folder:${acc.email}/${acc.spamFolder}"}
+      INBOX=folder:"${acc.email}/INBOX"
+      Sent=folder:"${acc.email}/${tr "Sent"}"
+      Drafts=folder:"${acc.email}/${tr "Drafts"}"
+      Trash=folder:"${acc.email}/${tr "Trash"}"
+      Archive=folder:"${acc.email}/${tr "Archive"}"
+      ${lib.optionalString (acc.spamFolder or null != null) ''Spam=folder:"${acc.email}/${acc.spamFolder}"''}
     '';
 in
 {
