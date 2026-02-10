@@ -1,20 +1,13 @@
 # modules/home/services/mail/helpers.nix
 #
 # Config generation helpers for mail module.
-{
-  lib,
-  config,
-  cfg,
+{ lib
+, config
+, cfg
+,
 }:
 let
-  inherit (lib)
-    mapAttrsToList
-    concatStringsSep
-    attrValues
-    findFirst
-    head
-    filter
-    ;
+  inherit (lib) mapAttrsToList findFirst;
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${cfg.mailDir}";
 
@@ -44,7 +37,7 @@ let
       useTls = false;
     };
     mxroute = {
-      imapHost = "ireland.mxrouting.net";
+      imapHost = "fusion.mxrouting.net";
       imapPort = 993;
       useTls = true;
     };
@@ -83,20 +76,20 @@ rec {
   getPrimaryAccount =
     accounts: field:
     let
-      accountList = map withDefaults (attrValues accounts);
-      primaryAccount = findFirst (acc: acc.primary) (head accountList) accountList;
+      accountList = map withDefaults (builtins.attrValues accounts);
+      primaryAccount = findFirst (acc: acc.primary) (builtins.head accountList) accountList;
     in
-    primaryAccount.${field} or "";
+      primaryAccount.${field} or "";
 
   # Get semicolon-separated list of non-primary emails
   getOtherEmails =
     accounts:
     let
-      accountList = map withDefaults (attrValues accounts);
+      accountList = map withDefaults (builtins.attrValues accounts);
       primaryEmail = getPrimaryAccount accounts "email";
-      otherEmails = filter (e: e != primaryEmail) (map (acc: acc.email) accountList);
+      otherEmails = builtins.filter (e: e != primaryEmail) (map (acc: acc.email) accountList);
     in
-    concatStringsSep ";" otherEmails;
+    builtins.concatStringsSep ";" otherEmails;
 
   # Generate mbsync config for a single account
   mkMbsyncAccount =
@@ -141,12 +134,12 @@ rec {
       Channel ${name}
       Far :${name}-remote:
       Near :${name}-local:
-      Patterns ${concatStringsSep " " (map (f: ''"${f}"'') allFolders)}
+      Patterns ${builtins.concatStringsSep " " (map (f: ''"${f}"'') allFolders)}
       Create Both
       Expunge Both
       SyncState *
     '';
 
   # Generate full mbsync config
-  mkMbsyncConfig = accounts: concatStringsSep "\n\n" (mapAttrsToList mkMbsyncAccount accounts);
+  mkMbsyncConfig = accounts: builtins.concatStringsSep "\n\n" (mapAttrsToList mkMbsyncAccount accounts);
 }

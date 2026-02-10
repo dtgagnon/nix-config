@@ -36,6 +36,7 @@ in
       network-tools = enabled;
       shells.nushell = enabled;
       ssh = enabled;
+      web-browser = { enable = true; browser = "browsh"; };
       yazi = enabled;
       zoxide = enabled;
     };

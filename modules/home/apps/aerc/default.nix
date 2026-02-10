@@ -64,7 +64,7 @@ let
             outgoingCredCmd = "cat ${passPath}";
           };
           mxroute = {
-            outgoing = "smtps://ireland.mxrouting.net:465";
+            outgoing = "smtps://fusion.mxrouting.net:465";
             outgoingCredCmd = "cat ${passPath}";
           };
           imap = {

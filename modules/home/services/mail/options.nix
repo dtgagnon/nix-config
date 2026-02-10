@@ -48,7 +48,7 @@ let
             {
               gmail = "imap.gmail.com";
               protonmail = "127.0.0.1";
-              mxroute = "ireland.mxrouting.net";
+              mxroute = "fusion.mxrouting.net";
               imap = "";
             }
             .${config.provider};
