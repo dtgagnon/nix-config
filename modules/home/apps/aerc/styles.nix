@@ -71,21 +71,4 @@ in
 
   part_mimetype.fg = ${c.base03}
   part_filename.fg = ${c.base0A}
-
-  quote_1.fg = ${c.base0C}
-  quote_2.fg = ${c.base0E}
-  quote_3.fg = ${c.base0D}
-  quote_4.fg = ${c.base09}
-  quote_x.fg = ${c.base03}
-
-  diff_meta.fg = ${c.base0A}
-  diff_meta.bold = true
-  diff_chunk.fg = ${c.base0E}
-  diff_add.fg = ${c.base0B}
-  diff_del.fg = ${c.base08}
-
-  url.fg = ${c.base0D}
-  url.underline = true
-  signature.fg = ${c.base03}
-  signature.italic = true
 ''
