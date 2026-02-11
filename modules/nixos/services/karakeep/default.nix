@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf mkForce types;
@@ -14,7 +15,9 @@ in
     enable = mkBoolOpt false "Enable karakeep, a bookmarks manager";
     port = mkOpt types.port 3000 "Default web service port";
     listenAddress = mkOpt types.str "100.100.1.2" "Listen address for the service";
-    dataDir = mkOpt types.str "/srv/karakeep" "Directory to store service data (bookmarks, screenshots, archives, videos)";
+    dataDir =
+      mkOpt types.str "/srv/karakeep"
+        "Directory to store service data (bookmarks, screenshots, archives, videos)";
   };
 
   config = mkIf cfg.enable {
@@ -52,6 +55,32 @@ in
 
     systemd.services.karakeep-web.environment.DATA_DIR = mkForce cfg.dataDir;
     systemd.services.karakeep-workers.environment.DATA_DIR = mkForce cfg.dataDir;
+
+    # Override karakeep-init to migrate the custom data directory.
+    # The upstream NixOS module's init script hardcodes DATA_DIR=$STATE_DIRECTORY,
+    # which runs migrations against /var/lib/karakeep instead of cfg.dataDir.
+    systemd.services.karakeep-init.serviceConfig.ExecStart =
+      let
+        karakeep = config.services.karakeep.package;
+      in
+      mkForce (
+        toString (
+          pkgs.writeShellScript "karakeep-init-start" ''
+                    set -e
+                    umask 0077
+
+                    if [ ! -f "$STATE_DIRECTORY/settings.env" ]; then
+                      cat <<EOF >"$STATE_DIRECTORY/settings.env"
+            MEILI_MASTER_KEY=$(${pkgs.openssl}/bin/openssl rand -base64 36)
+            NEXTAUTH_SECRET=$(${pkgs.openssl}/bin/openssl rand -base64 36)
+            EOF
+                    fi
+
+                    export DATA_DIR="${cfg.dataDir}"
+                    exec "${karakeep}/lib/karakeep/migrate"
+          ''
+        )
+      );
 
     # Configure sops secrets for karakeep
     sops = {
