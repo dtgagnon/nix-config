@@ -86,6 +86,10 @@ in
       group = "rss-filter";
     };
 
+    users.users.rss-filter = {
+      isSystemUser = true;
+      group = "rss-filter";
+    };
     users.groups.rss-filter = { };
 
     systemd.services.rss-filter = {
@@ -95,16 +99,13 @@ in
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pythonEnv}/bin/python ${scriptPath} ${configFile}";
-        DynamicUser = true;
+        User = "rss-filter";
+        Group = "rss-filter";
         StateDirectory = "rss-filter";
         NoNewPrivileges = true;
         ProtectSystem = "strict";
         ProtectHome = true;
         PrivateTmp = true;
-        SupplementaryGroups = lib.optionals (cfg.karakeep.enable) [ "rss-filter" ];
-      }
-      // lib.optionalAttrs (cfg.karakeep.enable && cfg.karakeep.apiKeyFile != "") {
-        ReadOnlyPaths = [ cfg.karakeep.apiKeyFile ];
       };
     };
 
