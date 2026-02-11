@@ -20,6 +20,9 @@ let
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.apps.aerc;
 
+  stylixEnabled = config.stylix.enable or false;
+  stylixStyleset = import ./styles.nix { inherit config; };
+
   mailCfg = config.${namespace}.services.mail;
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${mailCfg.mailDir}";
@@ -102,7 +105,9 @@ let
       Drafts=folder:"${acc.email}/${tr "Drafts"}"
       Trash=folder:"${acc.email}/${tr "Trash"}"
       Archive=folder:"${acc.email}/${tr "Archive"}"
-      ${lib.optionalString (acc.spamFolder or null != null) ''Spam=folder:"${acc.email}/${acc.spamFolder}"''}
+      ${lib.optionalString (
+        acc.spamFolder or null != null
+      ) ''Spam=folder:"${acc.email}/${acc.spamFolder}"''}
     '';
 in
 {
@@ -348,34 +353,38 @@ in
         '';
 
         stylesets = {
-          default = ''
-            *.default = true
-            *.normal = true
+          default =
+            if stylixEnabled then
+              stylixStyleset
+            else
+              ''
+                *.default = true
+                *.normal = true
 
-            title.reverse = true
-            title.bold = true
+                title.reverse = true
+                title.bold = true
 
-            header.bold = true
+                header.bold = true
 
-            *error.fg = red
-            *warning.fg = yellow
-            *success.fg = green
+                *error.fg = red
+                *warning.fg = yellow
+                *success.fg = green
 
-            statusline*.default = true
-            statusline*.reverse = true
+                statusline*.default = true
+                statusline*.reverse = true
 
-            msglist_unread.bold = true
-            msglist_deleted.fg = gray
+                msglist_unread.bold = true
+                msglist_deleted.fg = gray
 
-            selector_focused.reverse = true
-            selector_chooser.bold = true
+                selector_focused.reverse = true
+                selector_chooser.bold = true
 
-            tab.reverse = true
-            border.reverse = true
+                tab.reverse = true
+                border.reverse = true
 
-            part_mimetype.fg = gray
-            part_filename.fg = yellow
-          '';
+                part_mimetype.fg = gray
+                part_filename.fg = yellow
+              '';
         }
         // cfg.stylesets;
 
