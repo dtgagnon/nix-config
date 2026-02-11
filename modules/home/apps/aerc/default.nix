@@ -249,6 +249,10 @@ in
 
           v = :mark -t<Enter>
           V = :mark -v<Enter>
+          <space> = :mark -t<Enter>
+
+          mr = :read<Enter>
+          mu = :unread<Enter>
 
           T = :toggle-threads<Enter>
 
@@ -277,6 +281,9 @@ in
 
           s = :split<Enter>
           S = :vsplit<Enter>
+
+          <A-h> = :prev-tab<Enter>
+          <A-l> = :next-tab<Enter>
 
           [messages:folder=Drafts]
           <Enter> = :recall<Enter>
@@ -308,6 +315,9 @@ in
           o = :open<Enter>
           O = :open -a<Enter>
 
+          <A-h> = :prev-tab<Enter>
+          <A-l> = :next-tab<Enter>
+
           [view::passthrough]
           $noinherit = true
           $ex = <C-x>
@@ -324,6 +334,8 @@ in
           <backtab> = :prev-field<Enter>
           <C-p> = :prev-tab<Enter>
           <C-n> = :next-tab<Enter>
+          <A-h> = :prev-tab<Enter>
+          <A-l> = :next-tab<Enter>
 
           [compose::editor]
           $noinherit = true
@@ -332,6 +344,8 @@ in
           <C-j> = :next-field<Enter>
           <C-p> = :prev-tab<Enter>
           <C-n> = :next-tab<Enter>
+          <A-h> = :prev-tab<Enter>
+          <A-l> = :next-tab<Enter>
 
           [compose::review]
           y = :send<Enter>
@@ -343,11 +357,16 @@ in
           a = :attach<space>
           d = :detach<space>
 
+          <A-h> = :prev-tab<Enter>
+          <A-l> = :next-tab<Enter>
+
           [terminal]
           $noinherit = true
           $ex = <C-x>
           <C-p> = :prev-tab<Enter>
           <C-n> = :next-tab<Enter>
+          <A-h> = :prev-tab<Enter>
+          <A-l> = :next-tab<Enter>
 
           ${cfg.extraBinds}
         '';
