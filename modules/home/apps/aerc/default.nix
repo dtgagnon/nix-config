@@ -253,6 +253,7 @@ in
 
           mr = :read<Enter>
           mu = :unread<Enter>
+          mi = :flag -t<Enter>
 
           T = :toggle-threads<Enter>
 
