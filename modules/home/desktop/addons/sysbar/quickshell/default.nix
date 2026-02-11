@@ -7,7 +7,7 @@
 , ...
 }:
 let
-  inherit (lib) mkMerge mkIf types;
+  inherit (lib) mkMerge mkIf mkOverride types;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.desktop.addons.sysbar.quickshell;
 in
@@ -520,6 +520,14 @@ in
           };
         };
       };
+
+
+      # Override lock-related settings to use noctalia-shell lockscreen
+      ${namespace} = {
+        desktop.addons.hyprlock.enable = mkOverride 90 false;
+        desktop.hyprland.extraKeybinds."$lock" = mkOverride 90 "noctalia-shell ipc call lockScreen lock";
+      };
+      services.hypridle.settings.general.lock_cmd = mkOverride 90 "noctalia-shell ipc call lockScreen lock";
     })
   ];
 }
