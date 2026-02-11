@@ -55,6 +55,7 @@ let
     "Drafts" = "[Gmail]/Drafts";
     "Trash" = "[Gmail]/Trash";
     "Archive" = "[Gmail]/All Mail";
+    "Starred" = "[Gmail]/Starred";
   };
 
   # Translate a logical folder name to the provider's actual IMAP folder name
