@@ -5,10 +5,10 @@ Subject: [PATCH] feat: add which-key popup for incomplete keybindings
 
 ---
  app/aerc.go     |  56 +++++++++++
- app/whichkey.go | 262 ++++++++++++++++++++++++++++++++++++++++++++++++
+ app/whichkey.go | 260 ++++++++++++++++++++++++++++++++++++++++++++++++
  config/binds.go |  13 +++
  config/ui.go    |   1 +
- 4 files changed, 332 insertions(+)
+ 4 files changed, 330 insertions(+)
  create mode 100644 app/whichkey.go
 
 diff --git a/app/aerc.go b/app/aerc.go
@@ -117,7 +117,7 @@ new file mode 100644
 index 0000000..002a586
 --- /dev/null
 +++ b/app/whichkey.go
-@@ -0,0 +1,262 @@
+@@ -0,0 +1,260 @@
 +package app
 +
 +import (
@@ -221,8 +221,8 @@ index 0000000..002a586
 +		titleStr = " Keybindings "
 +	}
 +
-+	// Single column entry width: padding(1) + key + gap(1) + sep(1) + gap(1) + ann + padding(1)
-+	colW := 1 + maxKeyWidth + 1 + 1 + 1 + maxAnnWidth + 1
++	// Single column entry width: padding(1) + key + sep(4) + ann + padding(1)
++	colW := 1 + maxKeyWidth + 4 + maxAnnWidth + 1
 +
 +	// Determine column count based on entry count
 +	maxRows := 16
@@ -289,8 +289,6 @@ index 0000000..002a586
 +	defaultStyle := uiCfg.GetStyle(config.STYLE_DEFAULT)
 +	titleStyle := uiCfg.GetStyle(config.STYLE_TITLE)
 +	borderStyle := uiCfg.GetStyle(config.STYLE_BORDER)
-+	keyStyle := uiCfg.GetStyle(config.STYLE_SELECTOR_FOCUSED)
-+	sepStyle := uiCfg.GetStyle(config.STYLE_COMPLETION_GUTTER)
 +
 +	borderV := uiCfg.BorderCharVertical
 +	borderH := uiCfg.BorderCharHorizontal
@@ -345,20 +343,20 @@ index 0000000..002a586
 +		if col > 0 {
 +			sepX := xBase - 1
 +			if sepX > 0 && sepX < w-1 {
-+				ctx.SetCell(sepX, y, '│', sepStyle)
++				ctx.SetCell(sepX, y, '│', defaultStyle)
 +			}
 +		}
 +
-+		// Key (highlighted with accent style)
++		// Key
 +		keyStr := fmt.Sprintf(" %-*s", maxKeyWidth, e.suffix)
-+		ctx.Printf(xBase, y, keyStyle, "%s", keyStr)
++		ctx.Printf(xBase, y, defaultStyle, "%s", keyStr)
 +
-+		// Separator (dimmed)
-+		sepStr := " · "
-+		ctx.Printf(xBase+1+maxKeyWidth, y, sepStyle, "%s", sepStr)
++		// Separator
++		sepStr := " -> "
++		ctx.Printf(xBase+1+maxKeyWidth, y, defaultStyle, "%s", sepStr)
 +
 +		// Annotation
-+		annX := xBase + 1 + maxKeyWidth + 3
++		annX := xBase + 1 + maxKeyWidth + 4
 +		remaining := w - 1 - annX // leave room for right border
 +		ann := e.annotation
 +		if remaining > 0 && len(ann) > remaining {
@@ -368,7 +366,7 @@ index 0000000..002a586
 +				ann = "…"
 +			}
 +		}
-+		ctx.Printf(annX, y, sepStyle, "%s", ann)
++		ctx.Printf(annX, y, defaultStyle, "%s", ann)
 +	}
 +}
 +
