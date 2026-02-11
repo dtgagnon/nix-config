@@ -81,7 +81,12 @@ in
     };
 
     # Wire up sops secret for Karakeep API key
-    sops.secrets."karakeep/api-key" = mkIf cfg.karakeep.enable { };
+    sops.secrets."karakeep/api-key" = mkIf cfg.karakeep.enable {
+      mode = "0440";
+      group = "rss-filter";
+    };
+
+    users.groups.rss-filter = { };
 
     systemd.services.rss-filter = {
       description = "RSS feed filter pipeline";
@@ -96,6 +101,7 @@ in
         ProtectSystem = "strict";
         ProtectHome = true;
         PrivateTmp = true;
+        SupplementaryGroups = lib.optionals (cfg.karakeep.enable) [ "rss-filter" ];
       }
       // lib.optionalAttrs (cfg.karakeep.enable && cfg.karakeep.apiKeyFile != "") {
         ReadOnlyPaths = [ cfg.karakeep.apiKeyFile ];
