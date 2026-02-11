@@ -1,7 +1,8 @@
-{ lib
-, config
-, namespace
-, ...
+{
+  lib,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -20,6 +21,7 @@ in
       home-assistant = enabled;
       immich = enabled;
       ntfy = enabled;
+      rss = enabled;
       # plane = enabled;
     };
   };
