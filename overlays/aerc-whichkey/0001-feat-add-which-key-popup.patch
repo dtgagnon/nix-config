@@ -221,8 +221,8 @@ index 0000000..002a586
 +		titleStr = " Keybindings "
 +	}
 +
-+	// Single column entry width: padding(1) + key + sep(4) + ann + padding(1)
-+	colW := 1 + maxKeyWidth + 4 + maxAnnWidth + 1
++	// Single column entry width: padding(1) + key + sep(6) + ann + padding(1)
++	colW := 1 + maxKeyWidth + 6 + maxAnnWidth + 1
 +
 +	// Determine column count based on entry count
 +	maxRows := 16
@@ -352,11 +352,11 @@ index 0000000..002a586
 +		ctx.Printf(xBase, y, defaultStyle, "%s", keyStr)
 +
 +		// Separator
-+		sepStr := " -> "
++		sepStr := "  ->  "
 +		ctx.Printf(xBase+1+maxKeyWidth, y, defaultStyle, "%s", sepStr)
 +
 +		// Annotation
-+		annX := xBase + 1 + maxKeyWidth + 4
++		annX := xBase + 1 + maxKeyWidth + 6
 +		remaining := w - 1 - annX // leave room for right border
 +		ann := e.annotation
 +		if remaining > 0 && len(ann) > remaining {
