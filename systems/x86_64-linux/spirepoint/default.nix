@@ -29,7 +29,7 @@ in
       gnome = enabled;
       stylix = {
         enable = true;
-        wallpaper = "hazy-purple-orange-sunset-palmtrees";
+        wallpaper = "greens.leafwall-womansback";
       };
     };
 
