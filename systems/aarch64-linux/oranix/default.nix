@@ -49,6 +49,10 @@ in
             package = inputs.dtge.packages.${system}.default;
             port = 10000;
           };
+          eterna-design = {
+            package = inputs.eterna-design.packages.${system}.default;
+            port = 10001;
+          };
         };
       };
     };

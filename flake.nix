@@ -264,6 +264,7 @@
 
     ## websites
     dtge.url = "git+ssh://git@github.com/dtgagnon/dtg-engineering?ref=feat/nix-deploy";
+    eterna-design.url = "git+ssh://git@github.com/dtgagnon/eterna-design";
     spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";
 
     ## ai tools
