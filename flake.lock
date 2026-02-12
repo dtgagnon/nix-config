@@ -3894,11 +3894,11 @@
         "nixpkgs": "nixpkgs_15"
       },
       "locked": {
-        "lastModified": 1770006856,
-        "narHash": "sha256-zuQ1IRrNuCgzo22QcOVa4lMVkTKfh54YT2mMv/ro1YU=",
+        "lastModified": 1770865341,
+        "narHash": "sha256-BK3bahgkbZHRfmDfKt44TDbfmigxfrFv+uuAbF6StsY=",
         "owner": "dtgagnon",
         "repo": "rybbix",
-        "rev": "917469610d010d2bac5f48f9ba467622e316952e",
+        "rev": "4d1cade3a0e6fc810a5c9ea99d0a127dab979cc0",
         "type": "github"
       },
       "original": {
