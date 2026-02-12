@@ -37,6 +37,7 @@ in
 
       rybbit = {
         enable = true;
+        domain = "analytics.spirenet.link";
         useBuiltinProxy = false;
       };
 
@@ -66,13 +67,6 @@ in
 
     # No virtualization needed for VPS guest
     virtualisation.kvm.enable = false;
-  };
-
-  # Additional domain for dtg.engineering (merges with spirenix.services.pangolin settings)
-  services.pangolin.settings.domains.domain2 = {
-    base_domain = "dtg.engineering";
-    cert_resolver = "letsencrypt";
-    prefer_wildcard_cert = false;
   };
 
   boot.loader = {

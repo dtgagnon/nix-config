@@ -12,6 +12,13 @@ in
   options.${namespace}.services.rybbit = {
     enable = mkEnableOption "Rybbit privacy-focused analytics platform";
 
+    domain = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "analytics.example.com";
+      description = "Public domain name for the Rybbit instance (sets baseUrl to https://<domain>)";
+    };
+
     useBuiltinProxy = mkOption {
       type = types.bool;
       default = true;
@@ -50,6 +57,9 @@ in
       client.port = 3052;
       client.host = if cfg.useBuiltinProxy then "0.0.0.0" else "127.0.0.1";
 
+      # Public domain (sets BASE_URL and BETTER_AUTH_URL for origin validation)
+      domain = cfg.domain;
+
       # Enable local databases by default
       clickhouse.enable = true;
       postgres.enable = true;
@@ -58,7 +68,7 @@ in
       nginx.enable = cfg.useBuiltinProxy;
 
       # Privacy defaults
-      settings.disableSignup = true;
+      settings.disableSignup = false;
       settings.disableTelemetry = true;
     };
   };

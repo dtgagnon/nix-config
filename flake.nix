@@ -256,7 +256,6 @@
     nix-bookshelf.inputs.nixpkgs.follows = "nixpkgs";
 
     ## custom repos
-    spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";
     n8n-private.url = "git+ssh://git@github.com/dtgagnon/n8n-nix-overlay";
     odooAdds.url = "git+ssh://git@github.com/dtgagnon/odooAdds";
     yell.url = "git+ssh://git@github.com/dtgagnon/yell";
@@ -265,6 +264,7 @@
 
     ## websites
     dtge.url = "git+ssh://git@github.com/dtgagnon/dtg-engineering?ref=feat/nix-deploy";
+    spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";
 
     ## ai tools
     nix-llm-agents.url = "github:numtide/llm-agents.nix";
