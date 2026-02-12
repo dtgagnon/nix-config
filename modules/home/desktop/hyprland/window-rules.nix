@@ -29,7 +29,7 @@ in
           "match:title" = "^(aerc)$";
           float = true;
           center = true;
-          size = "1824 1026";
+          size = "5120 1440";
           border_size = 0;
           opacity = "0.92 override 0.8 override";
         }
