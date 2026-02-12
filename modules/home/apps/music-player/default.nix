@@ -7,11 +7,13 @@ let
   inherit (lib) mkEnableOption types mkIf;
   inherit (lib.${namespace}) mkOpt;
   cfg = config.${namespace}.apps.music-player;
+  inherit (cfg) mpdAddress;
 in
 {
   options.${namespace}.apps.music-player = {
     enable = mkEnableOption "Enable the default music player application";
     player = mkOpt (types.enum [ null "rmpc" ]) null "The music player application to use";
+    mpdAddress = mkOpt types.str "127.0.0.1:6600" "Address of the MPD server (host:port)";
   };
 
   config = mkIf cfg.enable {
@@ -20,7 +22,7 @@ in
       enable = true;
       config = ''
         (
-          address: "100.100.1.2:6600",
+          address: "${mpdAddress}",
           password: None,
           theme: None,
           cache_dir: None,

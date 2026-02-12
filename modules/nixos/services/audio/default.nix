@@ -8,6 +8,7 @@ let
   inherit (lib) types mkMerge mkIf;
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.services.audio;
+  userCfg = config.${namespace}.user;
 in
 {
   options.${namespace}.services.audio = {
@@ -16,6 +17,14 @@ in
       mkOpt (types.listOf types.package) [ ]
         "A list of additional audio related packages";
     useMpd = mkBoolOpt false "Use mpd as the default music player daemon";
+
+    mpd = {
+      musicDir = mkOpt types.str "/srv/media/music" "Path to the music directory";
+      playlistDir = mkOpt types.str "" "Path to the playlist directory (defaults to musicDir/playlists)";
+      bindAddress = mkOpt types.str "127.0.0.1" "Address for MPD to bind to";
+      openFirewall = mkBoolOpt false "Open firewall for MPD port";
+      extraOutputs = mkOpt (types.listOf types.attrs) [ ] "Additional audio outputs for MPD";
+    };
   };
 
   config = mkMerge [
@@ -40,29 +49,39 @@ in
         ++ cfg.extraPackages;
     })
 
-    (mkIf cfg.useMpd {
-      services.mpd = {
-        enable = true;
-        openFirewall = true;
-        settings = {
-          music_directory = "/srv/media/music";
-          playlist_directory = "/srv/media/music/playlists";
-          bind_to_address = "0.0.0.0";
-          port = 6600;
-          audio_output = [
-            {
-              type = "httpd";
-              name = "HTTP Stream";
-              encoder = "lame";
-              port = 8001;
-              bitrate = 320;
-              format = "44100:16:2";
-              always_on = "yes";
-              tags = "yes";
-            }
-          ];
+    (mkIf cfg.useMpd (
+      let
+        playlistDir =
+          if cfg.mpd.playlistDir != ""
+          then cfg.mpd.playlistDir
+          else "${cfg.mpd.musicDir}/playlists";
+      in
+      {
+        services.mpd = {
+          enable = true;
+          user = userCfg.name;
+          group = "users";
+          openFirewall = cfg.mpd.openFirewall;
+          settings = {
+            music_directory = cfg.mpd.musicDir;
+            playlist_directory = playlistDir;
+            bind_to_address = cfg.mpd.bindAddress;
+            port = 6600;
+            audio_output = [
+              {
+                type = "pipewire";
+                name = "PipeWire";
+                mixer_type = "software";
+              }
+            ] ++ cfg.mpd.extraOutputs;
+          };
         };
-      };
-    })
+
+        # MPD needs access to the PipeWire socket when running as user
+        systemd.services.mpd.environment = {
+          XDG_RUNTIME_DIR = "/run/user/${toString config.users.users.${userCfg.name}.uid}";
+        };
+      }
+    ))
   ];
 }

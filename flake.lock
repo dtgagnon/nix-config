@@ -652,11 +652,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1770135755,
-        "narHash": "sha256-UNfSCNahzpJ6HPJJQInOMy6Xi9yB2rfJfu6Eu7AJP90=",
+        "lastModified": 1770868484,
+        "narHash": "sha256-2R1WTQm+xbggVi8w+tQB/+fiknRKIVjV53ekDgdWqhI=",
         "ref": "refs/heads/main",
-        "rev": "6715990e79940b0dc14269bbd08b5dc2e9853192",
-        "revCount": 18,
+        "rev": "04b8747869998f7c403ff3b4b1e361127c4c0fdf",
+        "revCount": 19,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/emma"
       },
@@ -3894,11 +3894,11 @@
         "nixpkgs": "nixpkgs_15"
       },
       "locked": {
-        "lastModified": 1770868723,
-        "narHash": "sha256-v+52zXSzoz+H89sf85XLtoYiJ8O58eKSxP3C2nEdkM0=",
+        "lastModified": 1770869235,
+        "narHash": "sha256-/VVe2fzH32W88xVWn4eIDGCpaHwAQymuXW0azCHPaZ4=",
         "owner": "dtgagnon",
         "repo": "rybbix",
-        "rev": "4744d4d48b9d9da8becec675f141dd47f607c0bf",
+        "rev": "1cb25480c6d8c7f01a342c2f4755085982042749",
         "type": "github"
       },
       "original": {

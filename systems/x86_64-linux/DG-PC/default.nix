@@ -37,7 +37,19 @@ in
     };
 
     services = {
-      audio = enabled;
+      audio = {
+        enable = true;
+        useMpd = true;
+        mpd.musicDir = "/home/dtgagnon/Music";
+      };
+      nfs = {
+        enable = true;
+        mounts.spirepoint-music = {
+          server = "100.100.1.2";
+          remotePath = "/srv/media/music";
+          mountPoint = "/home/dtgagnon/Music";
+        };
+      };
       # apollo = enabled;
       keyd = enabled;
       n8n = enabled;

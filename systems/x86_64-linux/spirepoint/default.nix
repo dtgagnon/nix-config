@@ -48,7 +48,14 @@ in
     };
 
     services = {
-      audio = { enable = true; useMpd = true; };
+      audio = enabled;
+      nfs = {
+        enable = true;
+        exports = [
+          "/srv/media/music 100.100.1.0/24(ro,sync,no_subtree_check,no_root_squash)"
+        ];
+        openFirewall = true;
+      };
       authentik = {
         enable = true;
         domain = "auth.spirenet.link";
