@@ -46,7 +46,7 @@ in
         enable = true;
         node = {
           portfolio = {
-            package = inputs.my-portfolio.packages.${system}.default;
+            package = inputs.portfolio.packages.${system}.default;
             port = 10002;
             environmentFile = config.sops.secrets."portfolio/env".path;
           };
@@ -70,24 +70,18 @@ in
     };
 
     tools = {
-      # comma = enabled;
       general = enabled;
       monitoring = enabled;
       nix-ld = enabled;
     };
-
-    # No virtualization needed for VPS guest
-    virtualisation.kvm.enable = false;
   };
-
-  sops.secrets."portfolio/env" = { };
 
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
 
-  # Enable serial console for Oracle Cloud Shell Access
+  # Enable serial console for OCI Shell Access
   boot.kernelParams = [
     "console=ttyAMA0,115200"
     "console=tty1"
@@ -95,23 +89,25 @@ in
 
   security.sudo.wheelNeedsPassword = lib.mkForce true;
 
-  # Firewall configuration
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 22 ];
     trustedInterfaces = [ "tailscale0" ];
   };
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = lib.mkForce "--delete-older-than 7d";
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = lib.mkForce "--delete-older-than 7d";
+    };
+    optimise = {
+      automatic = true;
+      dates = [ "03:30" ];
+    };
   };
 
-  nix.optimise = {
-    automatic = true;
-    dates = [ "03:30" ];
-  };
+  sops.secrets."portfolio/env" = { };
 
   system.stateVersion = "25.11";
 }

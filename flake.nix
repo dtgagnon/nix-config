@@ -263,8 +263,9 @@
     emma.url = "git+ssh://git@github.com/dtgagnon/emma";
 
     ## websites
-    dtge.url = "git+ssh://git@github.com/dtgagnon/dtg-engineering?ref=feat/nix-deploy";
+    dtge.url = "git+ssh://git@github.com/dtgagnon/dtg-engineering";
     eterna-design.url = "git+ssh://git@github.com/dtgagnon/eterna-design";
+    portfolio.url = "git+ssh://git@github.com/dtgagnon/web-portfolio";
     spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";
 
     ## ai tools

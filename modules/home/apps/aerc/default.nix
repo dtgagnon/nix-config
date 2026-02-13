@@ -1,5 +1,3 @@
-# modules/home/apps/aerc/default.nix
-#
 # Terminal-based email client that integrates with the mail service module.
 # Uses notmuch as the backend when available, or maildir directly.
 {
@@ -20,95 +18,17 @@ let
   inherit (lib.${namespace}) mkBoolOpt mkOpt;
   cfg = config.${namespace}.apps.aerc;
 
-  stylixEnabled = config.stylix.enable or false;
-  stylixStyleset = import ./styles.nix { inherit config; };
-
   mailCfg = config.${namespace}.services.mail;
-  homeDir = config.home.homeDirectory;
-  mailDir = "${homeDir}/${mailCfg.mailDir}";
-
-  # Import mail helpers for provider-aware folder name translation
-  mailHelpers = import ../../services/mail/helpers.nix {
-    inherit lib config;
-    cfg = mailCfg;
-  };
 
   # Filter enabled mail accounts
   enabledAccounts = filterAttrs (_: acc: acc.enable) mailCfg.accounts;
 
-  # Generate aerc account config for a single account
-  mkAercAccount =
-    name: acc:
-    let
-      # Use notmuch backend if enabled, otherwise maildir
-      source =
-        if mailCfg.notmuch.enable then "notmuch://${mailDir}" else "maildir://${mailDir}/${acc.email}";
+  # Import modular components
+  accountGenerators = import ./accounts.nix { inherit lib config namespace; };
+  inherit (accountGenerators) mkAercAccount mkQueryMap;
 
-      # For notmuch, filter to this account's mail
-      queryMap =
-        if mailCfg.notmuch.enable then
-          ''
-            query-map = ${mailDir}/.notmuch/querymap-${name}
-          ''
-        else
-          "";
-
-      passPath = config.sops.secrets."mail-${name}-password".path or "/run/secrets/mail-${name}-password";
-
-      # SMTP configuration based on provider
-      smtpConfig =
-        {
-          gmail = {
-            outgoing = "smtp+plain://smtp.gmail.com:587";
-            outgoingCredCmd = "cat ${passPath}";
-          };
-          protonmail = {
-            outgoing = "smtp+plain://127.0.0.1:1025";
-            outgoingCredCmd = "cat ${passPath}";
-          };
-          mxroute = {
-            outgoing = "smtps://fusion.mxrouting.net:465";
-            outgoingCredCmd = "cat ${passPath}";
-          };
-          imap = {
-            outgoing = "";
-            outgoingCredCmd = "";
-          };
-        }
-        .${acc.provider};
-    in
-    ''
-      [${name}]
-      source = ${source}
-      from = ${acc.realName} <${acc.email}>
-      ${if smtpConfig.outgoing != "" then "outgoing = ${smtpConfig.outgoing}" else ""}
-      ${
-        if smtpConfig.outgoingCredCmd != "" then "outgoing-cred-cmd = ${smtpConfig.outgoingCredCmd}" else ""
-      }
-      default = ${if acc.primary then "INBOX" else ""}
-      copy-to = Sent
-      archive = Archive
-      postpone = Drafts
-      ${queryMap}
-    '';
-
-  # Generate notmuch query map for account filtering
-  # Uses provider-aware folder translation (e.g., Gmail's "Sent" → "[Gmail]/Sent Mail")
-  mkQueryMap =
-    _name: acc:
-    let
-      tr = mailHelpers.translateFolder acc.provider;
-    in
-    ''
-      INBOX=folder:"${acc.email}/INBOX"
-      Sent=folder:"${acc.email}/${tr "Sent"}"
-      Drafts=folder:"${acc.email}/${tr "Drafts"}"
-      Trash=folder:"${acc.email}/${tr "Trash"}"
-      Archive=folder:"${acc.email}/${tr "Archive"}"
-      ${lib.optionalString (
-        acc.spamFolder or null != null
-      ) ''Spam=folder:"${acc.email}/${acc.spamFolder}"''}
-    '';
+  keybinds = import ./keybinds.nix { inherit cfg; };
+  stylesets = import ./styles.nix { inherit config cfg; };
 in
 {
   options.${namespace}.apps.aerc = {
@@ -222,191 +142,9 @@ in
           };
         };
 
-        extraBinds = ''
-          # Global keybindings
-          [messages]
-          q = :quit<Enter>
+        extraBinds = keybinds;
 
-          j = :next<Enter>
-          <Down> = :next<Enter>
-          <C-d> = :next 50%<Enter>
-          <C-f> = :next 100%<Enter>
-          <PgDn> = :next 100%<Enter>
-
-          k = :prev<Enter>
-          <Up> = :prev<Enter>
-          <C-u> = :prev 50%<Enter>
-          <C-b> = :prev 100%<Enter>
-          <PgUp> = :prev 100%<Enter>
-
-          g = :select 0<Enter>
-          G = :select -1<Enter>
-
-          J = :next-folder<Enter>
-          K = :prev-folder<Enter>
-          H = :collapse-folder<Enter>
-          L = :expand-folder<Enter>
-
-          v = :mark -t<Enter>
-          V = :mark -v<Enter>
-          <space> = :mark -t<Enter>
-
-          mr = :read<Enter>
-          mu = :unread<Enter>
-          mi = :flag -t<Enter>
-
-          T = :toggle-threads<Enter>
-
-          <Enter> = :view<Enter>
-          l = :view<Enter>
-          d = :prompt 'Really delete this message?' 'delete-message'<Enter>
-          D = :delete<Enter>
-          A = :archive flat<Enter>
-
-          C = :compose<Enter>
-          rr = :reply -a<Enter>
-          rq = :reply -aq<Enter>
-          Rr = :reply<Enter>
-          Rq = :reply -q<Enter>
-
-          c = :cf<space>
-          $ = :term<Enter>
-          ! = :term<Enter>
-          | = :pipe<space>
-
-          / = :search<space>
-          \ = :filter<space>
-          n = :next-result<Enter>
-          N = :prev-result<Enter>
-          <Esc> = :clear<Enter>
-
-          s = :split<Enter>
-          S = :vsplit<Enter>
-
-          <A-h> = :prev-tab<Enter>
-          <A-l> = :next-tab<Enter>
-
-          [messages:folder=Drafts]
-          <Enter> = :recall<Enter>
-
-          [view]
-          / = :toggle-key-passthrough<Enter>/
-          q = :close<Enter>
-          h = :close<Enter>
-          | = :pipe<space>
-
-          f = :forward<Enter>
-          rr = :reply -a<Enter>
-          rq = :reply -aq<Enter>
-          Rr = :reply<Enter>
-          Rq = :reply -q<Enter>
-
-          H = :toggle-headers<Enter>
-          <C-k> = :prev-part<Enter>
-          <C-j> = :next-part<Enter>
-          J = :next<Enter>
-          K = :prev<Enter>
-          S = :save<space>
-          | = :pipe<space>
-          D = :delete<Enter>
-          A = :archive flat<Enter>
-
-          <C-l> = :open-link<space>
-
-          o = :open<Enter>
-          O = :open -a<Enter>
-
-          <A-h> = :prev-tab<Enter>
-          <A-l> = :next-tab<Enter>
-
-          [view::passthrough]
-          $noinherit = true
-          $ex = <C-x>
-          <Esc> = :toggle-key-passthrough<Enter>
-
-          [compose]
-          $noinherit = true
-          $ex = <C-x>
-          <C-k> = :prev-field<Enter>
-          <C-j> = :next-field<Enter>
-          <A-p> = :switch-account -p<Enter>
-          <A-n> = :switch-account -n<Enter>
-          <tab> = :next-field<Enter>
-          <backtab> = :prev-field<Enter>
-          <C-p> = :prev-tab<Enter>
-          <C-n> = :next-tab<Enter>
-          <A-h> = :prev-tab<Enter>
-          <A-l> = :next-tab<Enter>
-
-          [compose::editor]
-          $noinherit = true
-          $ex = <C-x>
-          <C-k> = :prev-field<Enter>
-          <C-j> = :next-field<Enter>
-          <C-p> = :prev-tab<Enter>
-          <C-n> = :next-tab<Enter>
-          <A-h> = :prev-tab<Enter>
-          <A-l> = :next-tab<Enter>
-
-          [compose::review]
-          y = :send<Enter>
-          n = :abort<Enter>
-          v = :preview<Enter>
-          p = :postpone<Enter>
-          q = :choose -o d discard -o p postpone<Enter>
-          e = :edit<Enter>
-          a = :attach<space>
-          d = :detach<space>
-
-          <A-h> = :prev-tab<Enter>
-          <A-l> = :next-tab<Enter>
-
-          [terminal]
-          $noinherit = true
-          $ex = <C-x>
-          <C-p> = :prev-tab<Enter>
-          <C-n> = :next-tab<Enter>
-          <A-h> = :prev-tab<Enter>
-          <A-l> = :next-tab<Enter>
-
-          ${cfg.extraBinds}
-        '';
-
-        stylesets = {
-          default =
-            if stylixEnabled then
-              stylixStyleset
-            else
-              ''
-                *.default = true
-                *.normal = true
-
-                title.reverse = true
-                title.bold = true
-
-                header.bold = true
-
-                *error.fg = red
-                *warning.fg = yellow
-                *success.fg = green
-
-                statusline*.default = true
-                statusline*.reverse = true
-
-                msglist_unread.bold = true
-                msglist_deleted.fg = gray
-
-                selector_focused.reverse = true
-                selector_chooser.bold = true
-
-                tab.reverse = true
-                border.reverse = true
-
-                part_mimetype.fg = gray
-                part_filename.fg = yellow
-              '';
-        }
-        // cfg.stylesets;
+        stylesets = stylesets;
 
         templates = {
           quoted_reply = ''
