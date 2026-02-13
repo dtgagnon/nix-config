@@ -58,6 +58,9 @@
   N = :prev-result<Enter>
   <Esc> = :clear<Enter>
 
+  t = :exec ~/.config/aerc/scripts/tag-picker.sh<Enter>
+  F = :exec ~/.config/aerc/scripts/folder-picker.sh<Enter>
+
   s = :split<Enter>
   S = :vsplit<Enter>
 

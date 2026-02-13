@@ -25,10 +25,11 @@ let
 
   # Import modular components
   accountGenerators = import ./accounts.nix { inherit lib config namespace; };
-  inherit (accountGenerators) mkAercAccount mkQueryMap mkQueryMapScript;
+  inherit (accountGenerators) mkAercAccount mkQueryMap;
 
   keybinds = import ./keybinds.nix { inherit cfg; };
   stylesets = import ./styles.nix { inherit config cfg; };
+  scripts = import ./scripts.nix { inherit pkgs config namespace; };
 in
 {
   options.${namespace}.apps.aerc = {
@@ -196,6 +197,7 @@ in
           w3m # HTML rendering
           dante # SOCKS proxy support
         ];
+        file = scripts;
       };
 
       # Ensure cache directory exists
@@ -214,12 +216,15 @@ in
       programs.aerc.extraConfig = cfg.extraConfig;
     })
 
-    # Notmuch query maps for account filtering - dynamically generated from maildir structure
+    # Notmuch query maps for account filtering - simple core folders only
+    # Use tag picker (bound to 't') to search for other tags/labels
     (mkIf (cfg.useNotmuch && mailCfg.notmuch.enable) {
-      home.activation.generateAercQueryMaps = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-        # Generate query maps for all accounts by scanning maildir structure
-        ${builtins.concatStringsSep "\n" (mapAttrsToList mkQueryMapScript enabledAccounts)}
-      '';
+      home.file = lib.mapAttrs' (
+        name: acc:
+        lib.nameValuePair "${mailCfg.mailDir}/.notmuch/querymap-${name}" {
+          text = mkQueryMap name acc;
+        }
+      ) enabledAccounts;
     })
   ]);
 }
