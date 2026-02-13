@@ -1,4 +1,4 @@
-{ lib, namespace, inputs, system, ... }:
+{ config, lib, namespace, inputs, system, ... }:
 let
   inherit (lib.${namespace}) enabled;
 in
@@ -79,6 +79,8 @@ in
     # No virtualization needed for VPS guest
     virtualisation.kvm.enable = false;
   };
+
+  sops.secrets."portfolio/env" = { };
 
   boot.loader = {
     systemd-boot.enable = true;
