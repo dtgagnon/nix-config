@@ -25,7 +25,7 @@ let
 
   # Import modular components
   accountGenerators = import ./accounts.nix { inherit lib config namespace; };
-  inherit (accountGenerators) mkAercAccount mkQueryMap;
+  inherit (accountGenerators) mkAercAccount mkQueryMap mkQueryMapScript;
 
   keybinds = import ./keybinds.nix { inherit cfg; };
   stylesets = import ./styles.nix { inherit config cfg; };
@@ -214,14 +214,12 @@ in
       programs.aerc.extraConfig = cfg.extraConfig;
     })
 
-    # Notmuch query maps for account filtering
+    # Notmuch query maps for account filtering - dynamically generated from maildir structure
     (mkIf (cfg.useNotmuch && mailCfg.notmuch.enable) {
-      home.file = lib.mapAttrs' (
-        name: acc:
-        lib.nameValuePair "${mailCfg.mailDir}/.notmuch/querymap-${name}" {
-          text = mkQueryMap name acc;
-        }
-      ) enabledAccounts;
+      home.activation.generateAercQueryMaps = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+        # Generate query maps for all accounts by scanning maildir structure
+        ${builtins.concatStringsSep "\n" (mapAttrsToList mkQueryMapScript enabledAccounts)}
+      '';
     })
   ]);
 }

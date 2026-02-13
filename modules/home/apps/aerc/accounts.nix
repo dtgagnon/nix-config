@@ -71,7 +71,7 @@ in
       ${queryMap}
     '';
 
-  # Generate notmuch query map for account filtering
+  # Generate notmuch query map for account filtering (static - kept for reference)
   # Uses provider-aware folder translation (e.g., Gmail's "Sent" → "[Gmail]/Sent Mail")
   mkQueryMap =
     _name: acc:
@@ -85,5 +85,46 @@ in
       Trash=folder:"${acc.email}/${tr "Trash"}"
       Archive=folder:"${acc.email}/${tr "Archive"}"
       ${optionalString (acc.spamFolder or null != null) ''Spam=folder:"${acc.email}/${acc.spamFolder}"''}
+    '';
+
+  # Generate shell script to dynamically create query map from maildir structure
+  mkQueryMapScript =
+    name: acc: ''
+      QUERYMAP="${mailDir}/.notmuch/querymap-${name}"
+      ACCOUNT_DIR="${mailDir}/${acc.email}"
+
+      # Ensure .notmuch directory exists
+      mkdir -p "${mailDir}/.notmuch"
+
+      # Only generate if account directory exists
+      if [ -d "$ACCOUNT_DIR" ]; then
+        # Start fresh query map
+        echo "# Auto-generated query map for ${name}" > "$QUERYMAP"
+
+        # Find all directories in the account folder and generate query entries
+        # Exclude hidden directories and special maildir folders (cur, new, tmp)
+        find "$ACCOUNT_DIR" -type d -not -path '*/\.*' -not -name 'cur' -not -name 'new' -not -name 'tmp' | while read -r dir; do
+          # Get relative path from account directory
+          folder="''${dir#$ACCOUNT_DIR/}"
+
+          # Skip if it's the account directory itself
+          if [ "$folder" != "$ACCOUNT_DIR" ] && [ -n "$folder" ]; then
+            # Generate query map entry
+            echo "$folder=folder:\"${acc.email}/$folder\"" >> "$QUERYMAP"
+          fi
+        done
+
+        # Ensure INBOX is always present even if not yet created
+        if ! grep -q "^INBOX=" "$QUERYMAP"; then
+          echo "INBOX=folder:\"${acc.email}/INBOX\"" >> "$QUERYMAP"
+        fi
+
+        $VERBOSE_ECHO "Generated query map for ${name} with $(wc -l < "$QUERYMAP") folders"
+      else
+        $VERBOSE_ECHO "Warning: Account directory $ACCOUNT_DIR does not exist yet for ${name}"
+        # Create minimal query map with INBOX
+        mkdir -p "$(dirname "$QUERYMAP")"
+        echo "INBOX=folder:\"${acc.email}/INBOX\"" > "$QUERYMAP"
+      fi
     '';
 }
