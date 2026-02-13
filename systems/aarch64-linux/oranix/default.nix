@@ -41,10 +41,17 @@ in
         useBuiltinProxy = false;
       };
 
-      # Static websites served via darkhttpd behind Pangolin
-      static-sites = {
+      # Websites served behind Pangolin
+      websites = {
         enable = true;
-        sites = {
+        node = {
+          portfolio = {
+            package = inputs.my-portfolio.packages.${system}.default;
+            port = 10002;
+            environmentFile = config.sops.secrets."portfolio/env".path;
+          };
+        };
+        static = {
           dtge = {
             package = inputs.dtge.packages.${system}.default;
             port = 10000;
