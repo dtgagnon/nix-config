@@ -1,5 +1,4 @@
 { lib
-, pkgs
 , config
 , namespace
 , ...
@@ -15,19 +14,26 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      (pkgs.discord.override {
-        withOpenASAR = true;
-        withVencord = true;
-      })
-    ];
+    programs.vesktop = {
+      enable = true;
+      vencord.useSystem = true;
+      settings = {
+        discordBranch = "stable";
+        hardwareAcceleration = true;
+        tray = true;
+        minimizeToTray = true;
+        arRPC = true;
+        splashTheming = true;
+        splashBackground = "#2c2d32";
+      };
+    };
 
     xdg.mimeApps.defaultApplications = {
-      "x-scheme-handler/discord" = "discord.desktop";
+      "x-scheme-handler/discord" = "vesktop.desktop";
     };
 
     spirenix.preservation.directories = [
-      ".config/discord"
+      ".config/vesktop"
     ];
   };
 }
