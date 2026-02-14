@@ -27,7 +27,7 @@ let
   accountGenerators = import ./accounts.nix { inherit lib config namespace; };
   inherit (accountGenerators) mkAercAccount mkQueryMap;
 
-  keybinds = import ./keybinds.nix { inherit cfg; };
+  keybinds = import ./keybinds.nix { inherit cfg config; };
   stylesets = import ./styles.nix { inherit config cfg; };
   scripts = import ./scripts.nix { inherit pkgs config namespace; };
 in

@@ -1,5 +1,5 @@
 # Keybindings configuration for aerc
-{ cfg }:
+{ cfg, config }:
 ''
   # Global keybindings
   [messages]
@@ -58,8 +58,8 @@
   N = :prev-result<Enter>
   <Esc> = :clear<Enter>
 
-  t = :exec ~/.config/aerc/scripts/tag-picker.sh<Enter>
-  F = :exec ~/.config/aerc/scripts/folder-picker.sh<Enter>
+  t = :term sh -c '${config.xdg.configHome}/aerc/scripts/tag-picker.sh'<Enter>
+  F = :term sh -c '${config.xdg.configHome}/aerc/scripts/folder-picker.sh'<Enter>
 
   s = :split<Enter>
   S = :vsplit<Enter>

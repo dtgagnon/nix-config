@@ -26,18 +26,19 @@ in
              grep -v '^passed$' | \
              sort -u)
 
-      # Let user pick a tag with fzf
+      # Let user pick a tag with fzf (using /dev/tty for input)
       SELECTED=$(echo "$TAGS" | ${pkgs.fzf}/bin/fzf \
         --prompt="Search tag: " \
         --height=40% \
         --reverse \
         --border \
         --preview='${pkgs.notmuch}/bin/notmuch count tag:{}' \
-        --preview-label='Message count')
+        --preview-label='Message count' \
+        < /dev/tty > /dev/tty 2>&1)
 
       # If a tag was selected, output the aerc search command
       if [ -n "$SELECTED" ]; then
-        echo ":search tag:$SELECTED<Enter>"
+        echo ":search tag:$SELECTED"
       fi
     '';
   };
@@ -55,18 +56,19 @@ in
                 sed 's|^folder/||' | \
                 sort -u)
 
-      # Let user pick a folder with fzf
+      # Let user pick a folder with fzf (using /dev/tty for input)
       SELECTED=$(echo "$FOLDERS" | ${pkgs.fzf}/bin/fzf \
         --prompt="Go to folder: " \
         --height=40% \
         --reverse \
         --border \
         --preview='${pkgs.notmuch}/bin/notmuch count folder:{}' \
-        --preview-label='Message count')
+        --preview-label='Message count' \
+        < /dev/tty > /dev/tty 2>&1)
 
       # If a folder was selected, output the aerc change folder command
       if [ -n "$SELECTED" ]; then
-        echo ":cf $SELECTED<Enter>"
+        echo ":cf $SELECTED"
       fi
     '';
   };
