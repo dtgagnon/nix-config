@@ -226,7 +226,12 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake/beta";
 
     ## desktop
+    aquamarine = {
+      url = "github:dtgagnon/aquamarine/fix/readbuffer-preserve-alive-attachments";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.inputs.aquamarine.follows = "aquamarine";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
 
