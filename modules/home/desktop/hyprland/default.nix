@@ -139,8 +139,9 @@ in
         mkIf (osConfig.${namespace}.hardware.monitors.pip.enable or false)
           "source = ~/.config/hypr/gpu-monitors.conf";
 
-      # Override hyprland.desktop when using UWSM to use start-hyprland wrapper
-      # UWSM will source ~/.config/uwsm/env-hyprland (created by launcher scripts) before starting
+      # Override hyprland.desktop when using UWSM to use start-hyprland wrapper.
+      # DesktopNames tells UWSM to set XDG_CURRENT_DESKTOP=Hyprland (without it,
+      # UWSM derives the name from the Exec binary, producing "start-hyprland:Hyprland").
       xdg.dataFile."wayland-sessions/hyprland.desktop" =
         mkIf (osConfig.programs.hyprland.withUWSM or false)
           {
@@ -150,6 +151,7 @@ in
               Name=Hyprland
               Comment=Hyprland compositor managed by UWSM
               Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/start-hyprland
+              DesktopNames=Hyprland
               X-GDM-SessionRegisters=true
             '';
           };
