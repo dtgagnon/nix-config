@@ -1,11 +1,12 @@
-{ lib
-, pkgs
-, config
-, inputs
-, system
-, osConfig ? { }
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  system,
+  osConfig ? { },
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkMerge mkIf types;
@@ -104,9 +105,8 @@ in
           wl-clipboard
           playerctl
         ]
-        ++
-        lib.optional (osConfig.${namespace}.virtualisation.kvm.vfio.enable or false)
-          pkgs.spirenix.hyprland-gpu-tools;
+        ++ lib.optional (osConfig.${namespace}.virtualisation.kvm.vfio.enable or false
+        ) pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
         "image/*" = "nsxiv.desktop";
@@ -132,18 +132,27 @@ in
     # See: https://github.com/hyprwm/Hyprland/issues/8679
     # (upstream bug - AQ_DRM_DEVICES doesn't fully restrict EGL layer, hence __EGL_VENDOR_LIBRARY_FILENAMES)
     (mkIf (cfg.enable && (osConfig.${namespace}.virtualisation.kvm.vfio.enable or false)) {
+      # Source runtime monitor disable rules written by launcher scripts.
+      # This ensures the secondary GPU's monitor is disabled before initServer
+      # attempts to modeset it (avoids cross-GPU blit crash with lazy renderer init).
+      wayland.windowManager.hyprland.extraConfig =
+        mkIf (osConfig.${namespace}.hardware.monitors.pip.enable or false)
+          "source = ~/.config/hypr/gpu-monitors.conf";
+
       # Override hyprland.desktop when using UWSM to use start-hyprland wrapper
       # UWSM will source ~/.config/uwsm/env-hyprland (created by launcher scripts) before starting
-      xdg.dataFile."wayland-sessions/hyprland.desktop" = mkIf (osConfig.programs.hyprland.withUWSM or false) {
-        text = ''
-          [Desktop Entry]
-          Type=Application
-          Name=Hyprland
-          Comment=Hyprland compositor managed by UWSM
-          Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/start-hyprland
-          X-GDM-SessionRegisters=true
-        '';
-      };
+      xdg.dataFile."wayland-sessions/hyprland.desktop" =
+        mkIf (osConfig.programs.hyprland.withUWSM or false)
+          {
+            text = ''
+              [Desktop Entry]
+              Type=Application
+              Name=Hyprland
+              Comment=Hyprland compositor managed by UWSM
+              Exec=${inputs.hyprland.packages.${system}.hyprland}/bin/start-hyprland
+              X-GDM-SessionRegisters=true
+            '';
+          };
 
       home.sessionVariables = mkIf (!(osConfig.programs.hyprland.withUWSM or false)) {
         # Fallback for non-UWSM sessions (legacy - prefer UWSM)

@@ -86,62 +86,69 @@ let
     esac
   '';
 
-  # Hyprland GPU env setup - auto mode
-  # Just writes the env file, used by desktop entries that call uwsm directly
-  setupEnvAuto = writeShellScriptBin "hyprland-setup-env-auto" ''
+  # Unified GPU env setup - replaces writeMonitorConf + setupEnv{Auto,Dgpu,Igpu}
+  # Usage: hyprland-setup-env [auto|dgpu|igpu] (default: auto)
+  # Writes uwsm env file and gpu-monitors.conf for the resolved GPU mode
+  setupEnv = writeShellScriptBin "hyprland-setup-env" ''
     #!${stdenv.shell}
+    MODE="''${1:-auto}"
+    JQ="${pkgs.jq}/bin/jq"
+    CONFIG_FILE="/etc/hyprland-pip-monitors.json"
+
+    # Write uwsm env file
     mkdir -p "$HOME/.config/uwsm"
-    ${lib.getExe gpuEnv} auto | grep "^export" > "$HOME/.config/uwsm/env-hyprland"
+    ${lib.getExe gpuEnv} "$MODE" | grep "^export" > "$HOME/.config/uwsm/env-hyprland"
+
+    # Resolve effective GPU mode for monitor config
+    if [ "$MODE" = "auto" ]; then
+      if ${pkgs.gnugrep}/bin/grep -q "nvidia-dGPU" "$HOME/.config/uwsm/env-hyprland"; then
+        GPU_MODE=dgpu
+      else
+        GPU_MODE=igpu
+      fi
+    else
+      GPU_MODE="$MODE"
+    fi
+
+    # Write gpu-monitors.conf (inline writeMonitorConf logic)
+    CONF="$HOME/.config/hypr/gpu-monitors.conf"
+    mkdir -p "$HOME/.config/hypr"
+
+    if [ ! -f "$CONFIG_FILE" ]; then
+      : > "$CONF"
+      exit 0
+    fi
+
+    DGPU_MONITOR=$($JQ -r '.dgpuMonitor.name' "$CONFIG_FILE")
+    IGPU_MONITOR=$($JQ -r '.igpuMonitor.name' "$CONFIG_FILE")
+
+    if [ "$GPU_MODE" = "dgpu" ]; then
+      echo "monitor=$IGPU_MONITOR,disable" > "$CONF"
+    else
+      echo "monitor=$DGPU_MONITOR,disable" > "$CONF"
+    fi
   '';
 
-  # Hyprland GPU env setup - dGPU mode
-  setupEnvDgpu = writeShellScriptBin "hyprland-setup-env-dgpu" ''
+  # Hyprland session launcher
+  # Usage: hyprland-uwsm [auto|dgpu|igpu] (default: auto)
+  launcher = writeShellScriptBin "hyprland-uwsm" ''
     #!${stdenv.shell}
-    mkdir -p "$HOME/.config/uwsm"
-    ${lib.getExe gpuEnv} dgpu | grep "^export" > "$HOME/.config/uwsm/env-hyprland"
-  '';
-
-  # Hyprland GPU env setup - iGPU mode
-  setupEnvIgpu = writeShellScriptBin "hyprland-setup-env-igpu" ''
-    #!${stdenv.shell}
-    mkdir -p "$HOME/.config/uwsm"
-    ${lib.getExe gpuEnv} igpu | grep "^export" > "$HOME/.config/uwsm/env-hyprland"
-  '';
-
-  # Hyprland session launcher - auto mode
-  launcherAuto = writeShellScriptBin "hyprland-uwsm" ''
-    #!${stdenv.shell}
-    MODE=auto
+    MODE="''${1:-auto}"
     LOG_DIR="$HOME/.local/state/uwsm"
     mkdir -p "$LOG_DIR"
     exec >"$LOG_DIR/hyprland-uwsm-''${MODE}.log" 2>&1
     set -x
-    ${lib.getExe setupEnvAuto}
+    ${lib.getExe setupEnv} "$MODE"
     exec ${pkgs.uwsm}/bin/uwsm start hyprland.desktop
   '';
 
-  # Hyprland session launcher - dGPU mode
+  # Thin wrappers to preserve greetd binary names
   launcherDgpu = writeShellScriptBin "hyprland-uwsm-dgpu" ''
-    #!${stdenv.shell}
-    MODE=dgpu
-    LOG_DIR="$HOME/.local/state/uwsm"
-    mkdir -p "$LOG_DIR"
-    exec >"$LOG_DIR/hyprland-uwsm-''${MODE}.log" 2>&1
-    set -x
-    ${lib.getExe setupEnvDgpu}
-    exec ${pkgs.uwsm}/bin/uwsm start hyprland.desktop
+    exec ${lib.getExe launcher} dgpu
   '';
 
-  # Hyprland session launcher - iGPU mode
   launcherIgpu = writeShellScriptBin "hyprland-uwsm-igpu" ''
-    #!${stdenv.shell}
-    MODE=igpu
-    LOG_DIR="$HOME/.local/state/uwsm"
-    mkdir -p "$LOG_DIR"
-    exec >"$LOG_DIR/hyprland-uwsm-''${MODE}.log" 2>&1
-    set -x
-    ${lib.getExe setupEnvIgpu}
-    exec ${pkgs.uwsm}/bin/uwsm start hyprland.desktop
+    exec ${lib.getExe launcher} igpu
   '';
 
   # Hyprland runner that captures verbose logs for debugging
@@ -258,10 +265,8 @@ symlinkJoin {
   name = "hyprland-gpu-tools";
   paths = [
     gpuEnv
-    setupEnvAuto
-    setupEnvDgpu
-    setupEnvIgpu
-    launcherAuto
+    setupEnv
+    launcher
     launcherDgpu
     launcherIgpu
     hyprlandRunner

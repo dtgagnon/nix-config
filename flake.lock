@@ -649,11 +649,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771016048,
-        "narHash": "sha256-5ijrbp2PFLJBAFaK3qMoliiUs8SqZtLLGi1JTNdMmY4=",
+        "lastModified": 1771041289,
+        "narHash": "sha256-v8rweZgzMAA3siTE59dVX3PyBwkHHVkA8cT0/iHXaHM=",
         "ref": "refs/heads/main",
-        "rev": "0b02b1ff8f32fa28f859d632df6b188acee29e6f",
-        "revCount": 58,
+        "rev": "5a954e5cbcfd300225a0cb4ba2c9025119d8e8a8",
+        "revCount": 60,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/dtg-engineering"
       },
