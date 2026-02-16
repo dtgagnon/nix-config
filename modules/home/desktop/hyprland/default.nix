@@ -135,9 +135,10 @@ in
       # Source runtime monitor disable rules written by launcher scripts.
       # This ensures the secondary GPU's monitor is disabled before initServer
       # attempts to modeset it (avoids cross-GPU blit crash with lazy renderer init).
-      wayland.windowManager.hyprland.extraConfig =
-        mkIf (osConfig.${namespace}.hardware.monitors.pip.enable or false)
-          "source = ~/.config/hypr/gpu-monitors.conf";
+      # TEMPORARILY DISABLED to isolate-test the aquamarine readBuffer fix.
+      # wayland.windowManager.hyprland.extraConfig =
+      #   mkIf (osConfig.${namespace}.hardware.monitors.pip.enable or false)
+      #     "source = ~/.config/hypr/gpu-monitors.conf";
 
       # Override hyprland.desktop when using UWSM to use start-hyprland wrapper.
       # DesktopNames tells UWSM to set XDG_CURRENT_DESKTOP=Hyprland (without it,

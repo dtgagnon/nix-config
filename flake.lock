@@ -178,11 +178,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1771190675,
-        "narHash": "sha256-iFsgKAzlHbzoouX+VeqUXQXiQkf5emryv+eVaXz4j+4=",
+        "lastModified": 1771207670,
+        "narHash": "sha256-DxXqItxPxtgNktHXWFzaix0msd76Q10Y01cr5Ks/rqA=",
         "owner": "dtgagnon",
         "repo": "aquamarine",
-        "rev": "5a007745fae38f3bb32f133110630569fbd1a215",
+        "rev": "1dab8d4ec9749b71b096c831c9e4aa22d96ba7be",
         "type": "github"
       },
       "original": {
