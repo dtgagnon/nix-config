@@ -386,7 +386,7 @@ index 3b9510c..60d6247 100644
  	ExKey KeyStroke
  	// Which key triggers completion (default is <tab>)
  	CompleteKey KeyStroke
-+	// Which key opens the which-key popup (default is ?)
++	// Which key opens the which-key popup (default is <C-A-/>)
 +	WhichKeyKey KeyStroke
  
  	// private
@@ -411,7 +411,7 @@ index 3b9510c..60d6247 100644
  	return &KeyBindings{
  		ExKey:            KeyStroke{0, ':'},
  		CompleteKey:      KeyStroke{0, vaxis.KeyTab},
-+		WhichKeyKey:      KeyStroke{0, '?'},
++		WhichKeyKey:      KeyStroke{vaxis.ModCtrl | vaxis.ModAlt, '/'},
  		Globals:          true,
  		contextualCache:  make(map[bindsContextKey]*KeyBindings),
  		contextualCounts: make(map[bindsContextType]int),
