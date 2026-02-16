@@ -4062,11 +4062,11 @@
         "nixpkgs": "nixpkgs_17"
       },
       "locked": {
-        "lastModified": 1770933272,
-        "narHash": "sha256-4I4oKMZxGH+loLFbPFWwKro9zG7tijLGM/J3fMxtGFE=",
+        "lastModified": 1771213735,
+        "narHash": "sha256-F6noNuP9Gacsxn/kRY2GvWkYuDD0KCPKihLPuDY6EYU=",
         "owner": "dtgagnon",
         "repo": "rybbix",
-        "rev": "570be30d7f69fcc7762f3d5b73badb93f6892ade",
+        "rev": "48a5cda58e3ba31739ae316f22f9bbe3975f7a70",
         "type": "github"
       },
       "original": {
