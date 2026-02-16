@@ -230,7 +230,7 @@
 
     ## desktop
     aquamarine = {
-      url = "github:dtgagnon/aquamarine/fix/readbuffer-preserve-alive-attachments";
+      url = "github:PlasmaPower/aquamarine/split-input-output-atts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland.url = "github:hyprwm/Hyprland";

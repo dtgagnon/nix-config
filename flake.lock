@@ -178,16 +178,16 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1771252295,
-        "narHash": "sha256-H/HIeHJlTflCiLe52M+PM9/AzIQrj4j+XOaKRkZT8cU=",
-        "owner": "dtgagnon",
+        "lastModified": 1771258452,
+        "narHash": "sha256-GxwNK8uaPJCb7v+FH2Ao9yjakhYLMB/CKsFgLef7wIk=",
+        "owner": "PlasmaPower",
         "repo": "aquamarine",
-        "rev": "af9933bfec2df68cd65b59e52c8053f5d2fee709",
+        "rev": "0dd35e52e970038a280742f453db199b4ccaabde",
         "type": "github"
       },
       "original": {
-        "owner": "dtgagnon",
-        "ref": "fix/readbuffer-preserve-alive-attachments",
+        "owner": "PlasmaPower",
+        "ref": "split-input-output-atts",
         "repo": "aquamarine",
         "type": "github"
       }

@@ -45,17 +45,19 @@ in
       websites = {
         enable = true;
         node = {
+          dtge = {
+            package = inputs.dtge.packages.${system}.default;
+            entrypoint = "lib/dtge/dist/server/entry.mjs";
+            port = 10000;
+            environmentFile = config.sops.secrets."dtge/env".path;
+          };
           portfolio = {
             package = inputs.portfolio.packages.${system}.default;
             port = 10002;
-            environmentFile = config.sops.secrets."portfolio/env".path;
+            environmentFile = config.sops.secrets.portfolio-env.path;
           };
         };
         static = {
-          dtge = {
-            package = inputs.dtge.packages.${system}.default;
-            port = 10000;
-          };
           eterna-design = {
             package = inputs.eterna-design.packages.${system}.default;
             port = 10001;
@@ -107,7 +109,8 @@ in
     };
   };
 
-  sops.secrets."portfolio/env" = { };
+  sops.secrets."dtge/env" = { };
+  sops.secrets.portfolio-env = { };
 
   system.stateVersion = "25.11";
 }

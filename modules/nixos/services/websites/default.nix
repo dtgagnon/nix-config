@@ -36,7 +36,14 @@ let
     options = {
       package = mkOption {
         type = types.package;
-        description = "Package containing the Node.js app (should have a server.js entrypoint)";
+        description = "Package containing the Node.js app";
+      };
+
+      entrypoint = mkOption {
+        type = types.str;
+        default = "server.js";
+        description = "Path to the entrypoint script, relative to the package root";
+        example = "lib/dtge/dist/server/entry.mjs";
       };
 
       port = mkOption {
@@ -103,7 +110,7 @@ let
     serviceConfig = {
       Type = "simple";
       DynamicUser = true;
-      ExecStart = "${pkgs.nodejs_24}/bin/node ${siteCfg.package}/server.js";
+      ExecStart = "${pkgs.nodejs_24}/bin/node ${siteCfg.package}/${siteCfg.entrypoint}";
       Restart = "on-failure";
       RestartSec = "5s";
       WorkingDirectory = siteCfg.package;
