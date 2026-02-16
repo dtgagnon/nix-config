@@ -64,6 +64,7 @@ in
       skillsDir = ./skills;
       settings = {
         includeCoAuthoredBy = false;
+        skipDangerousModePermissionPrompt = true;
         spinnerTipsEnabled = false;
         theme = "dark";
         env = {
