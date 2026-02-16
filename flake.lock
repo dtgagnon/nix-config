@@ -178,11 +178,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1771207670,
-        "narHash": "sha256-DxXqItxPxtgNktHXWFzaix0msd76Q10Y01cr5Ks/rqA=",
+        "lastModified": 1771252295,
+        "narHash": "sha256-H/HIeHJlTflCiLe52M+PM9/AzIQrj4j+XOaKRkZT8cU=",
         "owner": "dtgagnon",
         "repo": "aquamarine",
-        "rev": "1dab8d4ec9749b71b096c831c9e4aa22d96ba7be",
+        "rev": "af9933bfec2df68cd65b59e52c8053f5d2fee709",
         "type": "github"
       },
       "original": {
@@ -640,11 +640,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771041289,
-        "narHash": "sha256-v8rweZgzMAA3siTE59dVX3PyBwkHHVkA8cT0/iHXaHM=",
+        "lastModified": 1771216931,
+        "narHash": "sha256-J8W1CM+g/T4rTWxxQQ949UwHqKnK5MePPqMqd28sM50=",
         "ref": "refs/heads/main",
-        "rev": "5a954e5cbcfd300225a0cb4ba2c9025119d8e8a8",
-        "revCount": 60,
+        "rev": "0163d541c8b3796ddd0ef9bd6582a0462b5442a6",
+        "revCount": 61,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/dtg-engineering"
       },
@@ -2765,11 +2765,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1771216069,
-        "narHash": "sha256-nwNIupoUy3EGiCVjCfG8DuwvkQ8LDKmrbQ/Tf4geT50=",
+        "lastModified": 1771217289,
+        "narHash": "sha256-gYk13yP74FDiBBxt678OgFS3kxHJQstpyoNP2lK5wok=",
         "ref": "refs/heads/main",
-        "rev": "4d0934a7c5d1446287501986ac3f93785d545084",
-        "revCount": 165,
+        "rev": "e3fcc0fd4c21c1b5136223379efc61e66b502349",
+        "revCount": 166,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
