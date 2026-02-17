@@ -130,7 +130,7 @@ in
             name = "Bibata-Modern-Ice";
             size = 24;
           };
-          # theme = "nord";
+          theme = "rose-pine-moon";
           wallpaper = pkgs.spirenix.wallpapers.wallpapers.electric-fractal-filament-wide-rust-white-blue;
         };
         stylix = {
