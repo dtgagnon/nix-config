@@ -18,6 +18,7 @@ in
       github_read_token = { };
       mxroute-env = { };
       porkbun-env = { };
+      pangolin-env = { };
     };
 
     programs.claude-code.mcpServers = mkMerge [
@@ -40,12 +41,22 @@ in
             "--"
           ];
         };
+        pangolin = {
+          type = "stdio";
+          command = "nix";
+          args = [
+            "run"
+            "github:dtgagnon/nix-config#mcp-pangolin"
+            "--"
+          ];
+        };
         porkbun = {
           type = "stdio";
-          command = "bash";
+          command = "nix";
           args = [
-            "-c"
-            "set -a; source ${config.sops.secrets.porkbun-env.path}; set +a; exec nix run github:dtgagnon/nix-config#mcp-porkbun --"
+            "run"
+            "github:dtgagnon/nix-config#mcp-porkbun"
+            "--"
           ];
         };
         ref = {
