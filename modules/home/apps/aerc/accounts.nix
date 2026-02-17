@@ -6,11 +6,14 @@
   namespace,
 }:
 let
-  inherit (lib) optionalString;
+  inherit (lib) optionalString replaceStrings;
 
   mailCfg = config.${namespace}.services.mail;
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${mailCfg.mailDir}";
+
+  # URL-encode email address for use in SMTP URLs (@ -> %40)
+  urlEncodeEmail = email: replaceStrings [ "@" ] [ "%40" ] email;
 
   # Import mail helpers for provider-aware folder name translation
   mailHelpers = import ../../services/mail/helpers.nix {
@@ -34,18 +37,26 @@ in
       passPath = config.sops.secrets."mail-${name}-password".path;
 
       # SMTP configuration based on provider
+      # Username is URL-encoded in the SMTP URL for explicit authentication
+      encodedEmail = urlEncodeEmail acc.email;
+
+      # Translate logical folder names to actual maildir paths
+      # With notmuch, write operations need the full path relative to the DB root
+      tr = mailHelpers.translateFolder acc.provider;
+      folderPath = folder: if mailCfg.notmuch.enable then "${acc.email}/${tr folder}" else tr folder;
+
       smtpConfig =
         {
           gmail = {
-            outgoing = "smtp+plain://smtp.gmail.com:587";
+            outgoing = "smtp+plain://${encodedEmail}@smtp.gmail.com:587";
             outgoingCredCmd = "cat ${passPath}";
           };
           protonmail = {
-            outgoing = "smtp+plain://127.0.0.1:1025";
+            outgoing = "smtp+plain://${encodedEmail}@127.0.0.1:1025";
             outgoingCredCmd = "cat ${passPath}";
           };
           mxroute = {
-            outgoing = "smtps://fusion.mxrouting.net:465";
+            outgoing = "smtps://${encodedEmail}@fusion.mxrouting.net:465";
             outgoingCredCmd = "cat ${passPath}";
           };
           imap = {
@@ -58,15 +69,15 @@ in
     ''
       [${name}]
       source = ${source}
-      from = ${acc.realName} <${acc.email}>
+      from = ${if acc.realName != "" then "${acc.realName} <${acc.email}>" else acc.email}
       ${if smtpConfig.outgoing != "" then "outgoing = ${smtpConfig.outgoing}" else ""}
       ${
         if smtpConfig.outgoingCredCmd != "" then "outgoing-cred-cmd = ${smtpConfig.outgoingCredCmd}" else ""
       }
       default = ${if acc.primary then "INBOX" else ""}
-      copy-to = Sent
-      archive = Archive
-      postpone = Drafts
+      copy-to = ${folderPath "Sent"}
+      archive = ${folderPath "Archive"}
+      postpone = ${folderPath "Drafts"}
       folders-sort = INBOX,Drafts,Sent,Archive,Spam,Trash
       ${queryMap}
     '';
