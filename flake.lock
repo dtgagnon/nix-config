@@ -4226,11 +4226,11 @@
         "nixpkgs": "nixpkgs_18"
       },
       "locked": {
-        "lastModified": 1769220857,
-        "narHash": "sha256-OA2BstoJUZJFJvfLw2u7kgwOwi8BplSMEPPteS78j4M=",
+        "lastModified": 1771302093,
+        "narHash": "sha256-1QbZWJOQMp25HAkvHO2Q/HpPYxBIdyy6tUA8ou0VYGw=",
         "ref": "refs/heads/main",
-        "rev": "7d2f8ab53146b2f99df8a0a45cec7d6182937c57",
-        "revCount": 9,
+        "rev": "9977bb61e41293b062a8dd228ee1d0be3ec10bfd",
+        "revCount": 10,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/spirenet-dashboard"
       },

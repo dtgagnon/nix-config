@@ -62,6 +62,10 @@ in
             package = inputs.eterna-design.packages.${system}.default;
             port = 10001;
           };
+          spirenet-dashboard = {
+            package = inputs.spirenet-dashboard.packages.${system}.default;
+            port = 10003;
+          };
         };
       };
     };
