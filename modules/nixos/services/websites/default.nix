@@ -51,6 +51,12 @@ let
         description = "Port to serve the app on (localhost only)";
       };
 
+      host = mkOption {
+        type = types.str;
+        default = "127.0.0.1";
+        description = "Bind address for the server. Sets both HOST (Astro/Vite) and HOSTNAME (Next.js) env vars.";
+      };
+
       environmentFile = mkOption {
         type = types.nullOr types.path;
         default = null;
@@ -102,7 +108,8 @@ let
     wantedBy = [ "multi-user.target" ];
 
     environment = {
-      HOSTNAME = "127.0.0.1";
+      HOST = siteCfg.host;
+      HOSTNAME = siteCfg.host;
       PORT = toString siteCfg.port;
       NODE_ENV = "production";
     };
