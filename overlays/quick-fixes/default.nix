@@ -5,7 +5,6 @@
 {
   inherit (channels.masterpkgs)
     davfs2
-    discord
     element-desktop
     immich
     nushell
