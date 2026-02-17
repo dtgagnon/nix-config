@@ -640,11 +640,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771216931,
-        "narHash": "sha256-J8W1CM+g/T4rTWxxQQ949UwHqKnK5MePPqMqd28sM50=",
+        "lastModified": 1771266231,
+        "narHash": "sha256-GiCijW+fh/RDi3pPPmXUQL6KfgBUbQwcMgodxZTV1IU=",
         "ref": "refs/heads/main",
-        "rev": "0163d541c8b3796ddd0ef9bd6582a0462b5442a6",
-        "revCount": 61,
+        "rev": "962971bea6fbc6fc7a0e8f1bf4c04087c6034048",
+        "revCount": 63,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/dtg-engineering"
       },
@@ -2765,11 +2765,11 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1771217289,
-        "narHash": "sha256-gYk13yP74FDiBBxt678OgFS3kxHJQstpyoNP2lK5wok=",
+        "lastModified": 1771266309,
+        "narHash": "sha256-uC+Pf1sIS0/hkakTCz8QcQCwfZWnpk0ZCvpfQIcuzzM=",
         "ref": "refs/heads/main",
-        "rev": "e3fcc0fd4c21c1b5136223379efc61e66b502349",
-        "revCount": 166,
+        "rev": "96bde53ac89cc4b7cd3db49554b39eecbcc3a078",
+        "revCount": 167,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/nix-secrets.git"
       },
@@ -3241,11 +3241,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1753151930,
-        "narHash": "sha256-XSQy6wRKHhRe//iVY5lS/ZpI/Jn6crWI8fQzl647wCg=",
+        "lastModified": 1771177547,
+        "narHash": "sha256-trTtk3WTOHz7hSw89xIIvahkgoFJYQ0G43IlqprFoMA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "83e677f31c84212343f4cc553bab85c2efcad60a",
+        "rev": "ac055f38c798b0d87695240c7b761b82fc7e5bc2",
         "type": "github"
       },
       "original": {

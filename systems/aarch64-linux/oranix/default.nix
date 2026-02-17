@@ -49,7 +49,7 @@ in
             package = inputs.dtge.packages.${system}.default;
             entrypoint = "lib/dtge/dist/server/entry.mjs";
             port = 10000;
-            environmentFile = config.sops.secrets."dtge/env".path;
+            environmentFile = config.sops.secrets.dtge-env.path;
           };
           portfolio = {
             package = inputs.portfolio.packages.${system}.default;
@@ -109,7 +109,7 @@ in
     };
   };
 
-  sops.secrets."dtge/env" = { };
+  sops.secrets.dtge-env = { };
   sops.secrets.portfolio-env = { };
 
   system.stateVersion = "25.11";
