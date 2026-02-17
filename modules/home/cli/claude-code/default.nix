@@ -74,7 +74,7 @@ in
           "DISABLE_AUTOUPDATER" = 1;
           "ENABLE_EXPERIMENTAL_MCP_CLI" = true;
           "ENABLE_LSP_TOOL" = true;
-          "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" = 0;
+          "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" = 1;
         };
         models = {
           opus = { };
