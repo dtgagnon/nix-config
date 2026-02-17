@@ -14,10 +14,10 @@ in
           tile = true;
         }
 
-        # Discord - floating centered window
+        # Vesktop/Discord - floating centered window
         {
-          name = "discord";
-          "match:class" = "^(discord)$";
+          name = "vesktop";
+          "match:class" = "^(vesktop)$";
           float = true;
           move = "50%-w/2 84";
           size = "1600 900";
