@@ -40,10 +40,11 @@ in
       # Username is URL-encoded in the SMTP URL for explicit authentication
       encodedEmail = urlEncodeEmail acc.email;
 
-      # Translate logical folder names to actual maildir paths
-      # With notmuch, write operations need the full path relative to the DB root
+      # Translate logical folder names to provider-specific names (e.g., Gmail's [Gmail]/Drafts)
       tr = mailHelpers.translateFolder acc.provider;
-      folderPath = folder: if mailCfg.notmuch.enable then "${acc.email}/${tr folder}" else tr folder;
+      # With notmuch, use the query map key (logical name) so the worker can resolve it;
+      # with plain maildir, use the provider-translated folder name directly
+      folderPath = folder: if mailCfg.notmuch.enable then folder else tr folder;
 
       smtpConfig =
         {
