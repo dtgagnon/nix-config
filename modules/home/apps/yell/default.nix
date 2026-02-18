@@ -1,14 +1,11 @@
 { lib
 , config
-, inputs
-, system
 , namespace
 , ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf getExe;
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.${namespace}.apps.yell;
-  yellPackage = inputs.yell.packages.${system}.default;
 in
 {
   options.${namespace}.apps.yell = {
@@ -18,6 +15,7 @@ in
   config = mkIf cfg.enable {
     services.yell = {
       enable = true;
+      cli.enable = true;
       settings = {
         audio = {
           input_mode = "ptt";
@@ -51,25 +49,6 @@ in
         };
       };
     };
-
-    # systemd.user.services.yell = {
-    #   Unit = {
-    #     Description = "Yell voice transcription daemon";
-    #     After = [ "graphical-session.target" ];
-    #     BindsTo = [ "graphical-session.target" ];
-    #   };
-    #
-    #   Service = {
-    #     Type = "simple";
-    #     ExecStart = "${getExe yellPackage}";
-    #     Restart = "on-failure";
-    #     RestartSec = "5s";
-    #   };
-    #
-    #   Install = {
-    #     WantedBy = [ "graphical-session.target" ];
-    #   };
-    # };
 
     # xdg.configFile."yell/config.toml".text = ''
     #   [audio]
