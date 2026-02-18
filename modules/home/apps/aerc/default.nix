@@ -29,7 +29,6 @@ let
 
   keybinds = import ./keybinds.nix { inherit cfg config pkgs namespace; };
   stylesets = import ./styles.nix { inherit config cfg; };
-  scripts = import ./scripts.nix { inherit pkgs config namespace; };
 in
 {
   options.${namespace}.apps.aerc = {
@@ -197,7 +196,6 @@ in
           w3m # HTML rendering
           dante # SOCKS proxy support
         ];
-        file = scripts;
       };
 
       # Ensure cache directory exists

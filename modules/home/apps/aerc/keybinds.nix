@@ -1,10 +1,7 @@
 # Keybindings configuration for aerc
-{ cfg, config, pkgs, namespace }:
+{ cfg, pkgs, ... }:
 let
   notmuch = "${pkgs.notmuch}/bin/notmuch";
-  fzf = "${pkgs.fzf}/bin/fzf";
-  mailCfg = config.${namespace}.services.mail;
-  mailDir = "${config.home.homeDirectory}/${mailCfg.mailDir}";
 in
 ''
   # Global keybindings
@@ -64,8 +61,8 @@ in
   N = :prev-result<Enter>
   <Esc> = :clear<Enter>
 
-  t = :menu -c '${notmuch} search --output=tags "*" | grep -Ev "^(attachment|encrypted|signed|replied|passed)$" | sort -u' -e '${fzf} --reverse --border --preview="${notmuch} count tag:{}" --preview-label="Message count" --prompt="Tag: "' search tag:<Enter>
-  F = :menu -c 'grep -shv "^#" ${mailDir}/.notmuch/querymap-* | cut -d= -f1 | sort -u' -e '${fzf} --reverse --border --prompt="Folder: "' 'cf '<Enter>
+  t = :menu -c '${notmuch} search --output=tags "*" | grep -Ev "^(attachment|encrypted|signed|replied|passed)$" | sort -u' search tag:<Enter>
+  F = :menu -d cf <Enter>
 
   s = :split<Enter>
   S = :vsplit<Enter>
