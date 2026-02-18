@@ -1,5 +1,5 @@
 ---
-name: create-dhf
+name: dtge-create-dhf
 description: Generate DHF documents from templates with regulatory traceability
 ---
 
@@ -19,9 +19,9 @@ The document creation service:
 ## Usage
 
 ```
-/create-dhf <doc-type> <project-path>              # Create new document
-/create-dhf <doc-type> <project-path> --from-gap GAP-01  # Create to remediate gap
-/create-dhf <doc-type> <project-path> --revision   # Create new revision
+/dtge-create-dhf <doc-type> <project-path>              # Create new document
+/dtge-create-dhf <doc-type> <project-path> --from-gap GAP-01  # Create to remediate gap
+/dtge-create-dhf <doc-type> <project-path> --revision   # Create new revision
 ```
 
 ## Document Types
@@ -68,7 +68,7 @@ The document creation service:
    - DCA requirements being addressed
 
 2. **Fetch regulatory text:**
-   - Use `/ecfr` for FDA regulations
+   - Use `/dtge-query-ecfr` for FDA regulations
    - Reference Master Standards Database
 
 3. **Generate content addressing:**
@@ -194,12 +194,12 @@ Use `--from-gap` to create documents that directly address identified gaps.
 Documents link to DCA items and feed into `build_traceability_matrix.py`.
 
 ### To Project Management
-New documents may trigger review scheduling via `/ecr-manager`.
+New documents may trigger review scheduling via `/dtge-ecr-manager`.
 
 ## Example
 
 ```
-User: /create-dhf usability-protocol Work/Clients/Qualira/Higi/special_510k --from-gap GAP-01
+User: /dtge-create-dhf usability-protocol Work/Clients/Qualira/Higi/special_510k --from-gap GAP-01
 
 Claude: Creating Summative Evaluation Protocol to address GAP-01 (Missing summative usability evaluation)...
 

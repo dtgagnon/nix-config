@@ -1,5 +1,5 @@
 ---
-name: ecr-manager
+name: dtge-ecr-manager
 description: Create and manage Engineering Change Requests (ECRs) for medical device projects
 ---
 
@@ -19,11 +19,11 @@ The ECR Manager service:
 ## Usage
 
 ```
-/ecr-manager create <project-path>               # Create new ECR
-/ecr-manager status <project-path>               # Show ECR status summary
-/ecr-manager status <project-path> ECR149        # Show specific ECR details
-/ecr-manager review <project-path> ECR149        # Schedule/coordinate review
-/ecr-manager close <project-path> ECR149         # Close completed ECR
+/dtge-ecr-manager create <project-path>               # Create new ECR
+/dtge-ecr-manager status <project-path>               # Show ECR status summary
+/dtge-ecr-manager status <project-path> ECR149        # Show specific ECR details
+/dtge-ecr-manager review <project-path> ECR149        # Schedule/coordinate review
+/dtge-ecr-manager close <project-path> ECR149         # Close completed ECR
 ```
 
 ## ECR Workflow
@@ -224,7 +224,7 @@ Review Status:
 ### Schedule Review
 
 ```
-/ecr-manager review Work/Clients/Qualira/Higi/special_510k ECR149
+/dtge-ecr-manager review Work/Clients/Qualira/Higi/special_510k ECR149
 
 Review Coordination for ECR149:
 
@@ -304,7 +304,7 @@ ECR creation can trigger gap re-assessment:
 - Change to software → Software domain
 
 ### With Document Creation
-ECR provides context for `/create-dhf`:
+ECR provides context for `/dtge-create-dhf`:
 - ECR number for document naming
 - Change scope for content generation
 - Affected requirements for traceability

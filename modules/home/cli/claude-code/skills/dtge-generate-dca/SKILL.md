@@ -1,5 +1,5 @@
 ---
-name: dca
+name: dtge-generate-dca
 description: Create and manage Design Compliance Analysis (DCA) for medical device regulatory projects
 ---
 
@@ -19,9 +19,9 @@ The DCA is a per-project deliverable that:
 ## Usage
 
 ```
-/dca <project-path>              # Create new DCA for project
-/dca <project-path> --update     # Update existing DCA
-/dca <project-path> --status     # Show DCA coverage status
+/dtge-generate-dca <project-path>              # Create new DCA for project
+/dtge-generate-dca <project-path> --update     # Update existing DCA
+/dtge-generate-dca <project-path> --status     # Show DCA coverage status
 ```
 
 ## Workflow
@@ -76,8 +76,8 @@ Using `v-model-mapping/stage-mapping.json`, assign each DCA item to:
 
 ### Step 5: Generate Outputs
 
-**DCA JSON file:** `<project>/dca.json`
-Schema: `~/Documents/DTGE/Work/workflow/schemas/dca.schema.json`
+**DCA JSON file:** `<project>/dtge-generate-dca.json`
+Schema: `~/Documents/DTGE/Work/workflow/schemas/dtge-generate-dca.schema.json`
 
 **DCA Markdown document:** `<project>/DCA_Design_Compliance_Analysis.md`
 
@@ -113,21 +113,21 @@ Schema: `~/Documents/DTGE/Work/workflow/schemas/dca.schema.json`
 ## Integration with Other Services
 
 ### Document Audit
-After DCA is created, run `/doc-audit` to:
+After DCA is created, run `/dtge-doc-audit` to:
 - Compare DCA requirements against existing documents
 - Identify missing or incomplete coverage
 - Generate gap report
 
 ### Document Creation
-Use `/create-dhf` to generate documents that satisfy DCA requirements.
+Use `/dtge-create-dhf` to generate documents that satisfy DCA requirements.
 
 ### Project Management
-Use `/ecr-manager` to track changes that affect DCA compliance.
+Use `/dtge-ecr-manager` to track changes that affect DCA compliance.
 
 ## Example: Blood Pressure Device
 
 ```
-User: /dca Work/Clients/Qualira/Higi/special_510k
+User: /dtge-generate-dca Work/Clients/Qualira/Higi/special_510k
 
 Claude: I'll create a DCA for the Higi project. Let me gather device information...
 

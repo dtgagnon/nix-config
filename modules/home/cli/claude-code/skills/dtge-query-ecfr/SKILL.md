@@ -1,5 +1,5 @@
 ---
-name: ecfr
+name: dtge-query-ecfr
 description: Query US Code of Federal Regulations via eCFR API (agencies, search, structure, XML)
 ---
 

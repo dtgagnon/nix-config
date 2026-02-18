@@ -1,5 +1,5 @@
 ---
-name: doc-audit
+name: dtge-doc-audit
 description: Audit DHF document inventory and coverage against DCA requirements
 ---
 
@@ -19,10 +19,10 @@ The document audit service:
 ## Usage
 
 ```
-/doc-audit <project-path>                    # Full document audit
-/doc-audit <project-path> --domain usability # Audit specific domain
-/doc-audit <project-path> --quick            # Quick summary only
-/doc-audit <project-path> --report           # Generate formal report
+/dtge-doc-audit <project-path>                    # Full document audit
+/dtge-doc-audit <project-path> --domain usability # Audit specific domain
+/dtge-doc-audit <project-path> --quick            # Quick summary only
+/dtge-doc-audit <project-path> --report           # Generate formal report
 ```
 
 ## Workflow
@@ -54,7 +54,7 @@ Schema: `~/Documents/DTGE/Work/workflow/schemas/registry.schema.json`
 
 Check if DCA exists for project:
 - If yes: Load `<project>/dca.json`
-- If no: Prompt to run `/dca` first or generate basic DCA
+- If no: Prompt to run `/dtge-generate-dca` first or generate basic DCA
 
 ### Phase 3: Document Analysis (Hybrid)
 
@@ -175,10 +175,10 @@ Phased remediation approach.
 Document audit uses DCA as the "should have" baseline.
 
 ### To Documentation Service
-Gaps feed into `/create-dhf` for remediation document generation.
+Gaps feed into `/dtge-create-dhf` for remediation document generation.
 
 ### To Project Management
-Gaps can trigger ECR creation via `/ecr-manager`.
+Gaps can trigger ECR creation via `/dtge-ecr-manager`.
 
 ## Example Output
 
@@ -207,7 +207,7 @@ Gaps by Domain:
   Hardware:       1
   Labeling:       1
 
-Run `/doc-audit --report` for full report.
+Run `/dtge-doc-audit --report` for full report.
 ```
 
 ## Reference Documents
