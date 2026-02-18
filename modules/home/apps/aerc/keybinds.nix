@@ -2,6 +2,7 @@
 { cfg, pkgs, ... }:
 let
   notmuch = "${pkgs.notmuch}/bin/notmuch";
+  fzf = "${pkgs.fzf}/bin/fzf";
 in
 ''
   # Global keybindings
@@ -61,8 +62,8 @@ in
   N = :prev-result<Enter>
   <Esc> = :clear<Enter>
 
-  t = :menu -c '${notmuch} search --output=tags "*" | grep -Ev "^(attachment|encrypted|signed|replied|passed)$" | sort -u' search tag:<Enter>
-  F = :menu -d cf <Enter>
+  t = :menu -c '${notmuch} search --output=tags "*" | grep -Ev "^(attachment|encrypted|signed|replied|passed)$" | sort -u | ${fzf} --reverse --border --prompt="Tag: "' search tag:<Enter>
+  F = :menu -c 'find "$(${notmuch} config get database.path)" -name cur -type d -printf "%P\n" | sed "s|/cur\$||" | sort -u | ${fzf} --reverse --border --prompt="Folder: "' cf <Enter>
 
   s = :split<Enter>
   S = :vsplit<Enter>
