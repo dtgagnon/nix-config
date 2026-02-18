@@ -112,8 +112,8 @@ Schema: `~/Documents/DTGE/Work/workflow/schemas/dca.schema.json`
 
 ## Integration with Other Services
 
-### Gap Analysis
-After DCA is created, run `/gap-analysis` to:
+### Document Audit
+After DCA is created, run `/doc-audit` to:
 - Compare DCA requirements against existing documents
 - Identify missing or incomplete coverage
 - Generate gap report

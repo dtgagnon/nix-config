@@ -16,7 +16,18 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ yellPackage ];
+    services.yell = {
+      enable = true;
+      settings = {
+        audio = {
+          input_mode = "ptt";
+          vad_in_ptt = true;
+          auto_inject = true;
+          auto_inject_silence_ms = 3000;
+          min_snr = -10.0;
+        };
+      };
+    };
 
     systemd.user.services.yell = {
       Unit = {
@@ -38,97 +49,80 @@ in
     };
 
     xdg.configFile."yell/config.toml".text = ''
-      # Yell Daemon Configuration File
-      # Copy this to ~/.config/yell/config.toml to customize settings
-
       [audio]
-      # Audio input device name (or "default" for system default)
+      # input_device (string) - audio input device name
+      # input_mode (string enum: ptt, vad) - input capture mode
+      # vad_in_ptt (bool) - filter silence in PTT mode
+      # auto_inject (bool) - inject after silence in PTT; requires vad_in_ptt
+      # auto_inject_silence_ms (int) - silence threshold before auto-inject
+      # sample_rate (int) - processing sample rate in Hz
+      # clear_buffer_on_start (bool) - clear buffer on PTT tap
+      # dump_audio (bool) - write debug WAV files to disk
       input_device = "default"
-      # "ptt" or "vad"
       input_mode = "ptt"
-      # Target sample rate for processing (16kHz recommended)
-      sample_rate = 16000
-      # Clears buffer upon PTT tap when true
-      clear_buffer_on_start = false
-      # Dump audio to disk for debugging (debug_input.wav, debug_output.wav)
-      # WARNING: Creates large files!
-      dump_audio = false
-      # Use VAD Gate in PTT mode (true = silence is filtered out even when button held)
       vad_in_ptt = true
+      auto_inject = true
+      auto_inject_silence_ms = 3000
+      sample_rate = 16000
+      clear_buffer_on_start = false
+      dump_audio = false
 
       [vad]
-      # Speech probability threshold (0.0-1.0)
-      # Higher = less sensitive, fewer false positives
-      # Lower = more sensitive, may trigger on background noise
+      # threshold (float 0.0-1.0) - speech detection sensitivity
+      # min_silence_duration_ms (int) - silence before speech ends
+      # min_speech_duration_ms (int) - minimum valid speech length
       threshold = 0.45
-
-      # Minimum silence duration in milliseconds before speech ends
-      # Lower = faster response, may cut off slow speech
-      # Higher = more tolerance for pauses
       min_silence_duration_ms = 700
-
-      # Minimum speech duration in milliseconds to be valid
-      # Filters out very short audio artifacts
       min_speech_duration_ms = 500
 
       [transcription]
-      # Model type (currently only "parakeet" supported)
+      # model (string) - transcription engine
+      # language (string) - language code
+      # timeout_sec (int) - max transcription time
       model = "parakeet"
-      # Language code (currently only "en" supported)
       language = "en"
-      # Transcription timeout in seconds
       timeout_sec = 30
 
       [formatter]
-      # Auto-capitalize first letter after punctuation (.!?\n)
+      # auto_capitalize (bool) - capitalize after sentence punctuation
+      # trailing_space (bool) - append space after injected text
       auto_capitalize = true
-      # Add trailing space after injected text
       trailing_space = true
 
       [ipc]
-      # Unix socket path
-      # "auto" = use $XDG_RUNTIME_DIR/yell.sock (recommended)
-      # Or specify absolute path like "/tmp/yell.sock"
+      # socket_path (string) - "auto" or absolute path to unix socket
       socket_path = "auto"
 
       [llm]
-      # --- Global LLM Settings ---
-      # Custom Instructions (Define your preferences). These are appended to the system prompt.
+      # instructions (string) - appended to system prompt
       instructions = "Always use American English spelling. Be concise. Use markdown compliant formatting."
 
-      # --- Multi-Model Architecture ---
-      # The system relies on two stages:
-      # 1. Router: Fast, zero-shot classification (Dictate vs Command vs Flush)
-      # 2. Processor: Smart rewriting and formatting for commands
-
       [llm.router]
-      # Provider: openai, anthropic, ollama, open-router, llama-cpp, google
+      # Fast classifier: Dictate vs Command vs Flush
+      # provider (string enum: openai, anthropic, ollama, open-router, llama-cpp, google) - LLM provider
+      # model (string) - small/fast model name
+      # api_base (string) - provider API endpoint
+      # api_key (string) - provider API key
       provider = "ollama"
-      # Model: Should be small and fast (e.g., functiongemma, llama3.2:1b)
       model = "yell-functiongemma"
       api_base = "http://localhost:11434/v1"
       api_key = "ollama"
 
       [llm.processor]
-      # Provider: Can be different from router (e.g., Anthropic for intelligence)
+      # Rewriter for command output formatting
+      # provider (string enum: openai, anthropic, ollama, open-router, llama-cpp, google) - LLM provider
+      # model (string) - capable model for complex instructions
+      # api_base (string) - provider API endpoint
+      # api_key (string) - provider API key
       provider = "ollama"
-      # Model: Should be capable of following complex rewriting instructions
       model = "gemma3n:e4b"
       api_base = "http://localhost:11434/v1"
       api_key = "ollama"
 
       [logging]
-      # Log level: trace, debug, info, warn, error
-      # - trace: Very verbose, all details
-      # - debug: Detailed information for debugging
-      # - info: General informational messages (recommended)
-      # - warn: Warning messages
-      # - error: Error messages only
+      # level (string enum: trace, debug, info, warn, error) - log verbosity
+      # format (string enum: text, json) - log output format
       level = "debug"
-
-      # Log format: text or json
-      # - text: Human-readable format (recommended for terminal)
-      # - json: Machine-readable format (recommended for log aggregation)
       format = "text"
     '';
   };

@@ -1,15 +1,15 @@
 ---
-name: gap-analysis
-description: Identify regulatory compliance gaps in medical device DHF documentation
+name: doc-audit
+description: Audit DHF document inventory and coverage against DCA requirements
 ---
 
-# Gap Analysis Service
+# Document Audit Service
 
-Perform comprehensive gap analysis on medical device Design History Files (DHF) against applicable regulatory standards.
+Audit medical device Design History File (DHF) document inventory and coverage against DCA (Design Compliance Analysis) requirements.
 
 ## Overview
 
-The gap analysis service:
+The document audit service:
 1. Discovers existing documents in the project
 2. Compares against DCA requirements (or generates DCA if none exists)
 3. Identifies missing, incomplete, or outdated documentation
@@ -19,10 +19,10 @@ The gap analysis service:
 ## Usage
 
 ```
-/gap-analysis <project-path>                    # Full gap analysis
-/gap-analysis <project-path> --domain usability # Analyze specific domain
-/gap-analysis <project-path> --quick            # Quick summary only
-/gap-analysis <project-path> --report           # Generate formal report
+/doc-audit <project-path>                    # Full document audit
+/doc-audit <project-path> --domain usability # Audit specific domain
+/doc-audit <project-path> --quick            # Quick summary only
+/doc-audit <project-path> --report           # Generate formal report
 ```
 
 ## Workflow
@@ -172,7 +172,7 @@ Phased remediation approach.
 ## Integration
 
 ### From DCA
-Gap analysis uses DCA as the "should have" baseline.
+Document audit uses DCA as the "should have" baseline.
 
 ### To Documentation Service
 Gaps feed into `/create-dhf` for remediation document generation.
@@ -183,7 +183,7 @@ Gaps can trigger ECR creation via `/ecr-manager`.
 ## Example Output
 
 ```
-Gap Analysis Summary - Higi Green Special 510(k)
+Document Audit Summary - Higi Green Special 510(k)
 
 Documents Scanned: 47
 DCA Requirements: 87
@@ -207,7 +207,7 @@ Gaps by Domain:
   Hardware:       1
   Labeling:       1
 
-Run `/gap-analysis --report` for full gap report.
+Run `/doc-audit --report` for full report.
 ```
 
 ## Reference Documents
