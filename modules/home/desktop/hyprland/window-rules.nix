@@ -41,7 +41,6 @@ in
           float = true;
           center = true;
           size = "1200 800";
-          border_size = 0;
           opacity = "0.92 override 0.8 override";
         }
 
