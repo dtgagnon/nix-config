@@ -20,9 +20,7 @@ in
       indicator = true;
     };
 
-    # spirenix.desktop.hyprland.extraExec = mkIf config.spirenix.desktop.hyprland.enable [
-    #   "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect"
-    #   "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator"
-    # ];
+    # qdbus6 is required by noctalia-shell's KDE Connect plugin to query the D-Bus daemon
+    home.packages = [ pkgs.kdePackages.qttools ];
   };
 }
