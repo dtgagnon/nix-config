@@ -5050,11 +5050,11 @@
         "sortformer-model": "sortformer-model"
       },
       "locked": {
-        "lastModified": 1770424182,
-        "narHash": "sha256-+YWoPfH5rJuah/IOrYb1HJZpb2TBqGG6L2YkQ6dzK5s=",
+        "lastModified": 1771387121,
+        "narHash": "sha256-BW/RZQ6KxE3Ng0CmdYUznrtwLRUIC3RMrTxx/X3XxvI=",
         "ref": "refs/heads/main",
-        "rev": "b2472ce914d84a4366b94554fa94fc88cf9d1dd9",
-        "revCount": 142,
+        "rev": "cdd02c11e642bf0c6990580793c2f5d013e6d49d",
+        "revCount": 144,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },

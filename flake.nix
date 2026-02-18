@@ -97,7 +97,7 @@
           noctalia.homeModules.default
           sops-nix.homeManagerModules.sops
           stylix.homeModules.stylix
-          yell.homeModules.default
+          yell.homeManagerModules.default
           zen-browser.homeModules.twilight
         ];
 
