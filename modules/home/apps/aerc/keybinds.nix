@@ -140,7 +140,7 @@ in
   n = :abort<Enter>
   v = :preview<Enter>
   p = :postpone<Enter>
-  q = :choose -o d discard -o p postpone<Enter>
+  q = :choose -o d discard :abort -o p postpone :postpone<Enter>
   e = :edit<Enter>
   a = :attach<space>
   d = :detach<space>
