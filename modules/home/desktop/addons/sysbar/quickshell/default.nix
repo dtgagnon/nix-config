@@ -53,11 +53,21 @@ in
       programs.noctalia-shell = {
         enable = true;
         systemd.enable = true;
+        package = inputs.noctalia.packages.${system}.default.overrideAttrs (oldAttrs: {
+          postPatch =
+            (oldAttrs.postPatch or "")
+            + ''
+              # Pass button name to settings panel toggle so it opens near the ControlCenter button
+              substituteInPlace Modules/Bar/Widgets/ControlCenter.qml \
+                --replace-fail 'panel.toggle();' \
+                               'panel.toggle(null, "ControlCenter");'
+            '';
+        });
         settings = {
           bar = {
             position = "left";
             monitors = [ ];
-            density = "default";
+            density = "spacious";
             transparent = false;
             showOutline = false;
             showCapsule = true;
