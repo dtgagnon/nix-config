@@ -18,6 +18,7 @@ in
     programs.yazi = {
       enable = true;
       plugins = { };
+      shellWrapperName = "y";
       settings = {
         keymap = {
           manager = {

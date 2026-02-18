@@ -126,13 +126,9 @@ in
         environmentFile = config.sops.secrets."pangolin/env".path;
       };
 
-      # Set the dynamic config directory required by the new traefik module
-      # (dynamic.files requires dynamic.dir to be set for the file provider)
-      services.traefik.dynamic.dir = "/var/lib/traefik/dynamic";
-
       # Use sops template for static config with ACME email secret
       sops.templates."traefik-config.json" = {
-        content = builtins.toJSON config.services.traefik.static.settings;
+        content = builtins.toJSON config.services.traefik.staticConfigOptions;
         owner = "root";
         group = "root";
         mode = "0644";
@@ -265,7 +261,7 @@ in
     # CrowdSec integration: enable Traefik access logging for intrusion detection
     (mkIf crowdsecCfg.enable {
       # Enable Traefik access logging for CrowdSec to parse
-      services.traefik.static.settings.accessLog = {
+      services.traefik.staticConfigOptions.accessLog = {
         filePath = crowdsecCfg.traefikLogPath;
         format = "json";
         bufferingSize = 100;
