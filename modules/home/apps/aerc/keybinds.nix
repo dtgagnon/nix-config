@@ -65,7 +65,7 @@ in
   <Esc> = :clear<Enter>
 
   t = :menu -c '${notmuch} search --output=tags "*" | grep -Ev "^(attachment|encrypted|signed|replied|passed)$" | sort -u' -e '${fzf} --reverse --border --preview="${notmuch} count tag:{}" --preview-label="Message count" --prompt="Tag: "' search tag:<Enter>
-  F = :menu -c 'grep -hv "^#" ${mailDir}/.notmuch/querymap-* 2>/dev/null | cut -d= -f1 | sort -u' -e '${fzf} --reverse --border --prompt="Folder: "' 'cf '<Enter>
+  F = :menu -c 'grep -shv "^#" ${mailDir}/.notmuch/querymap-* | cut -d= -f1 | sort -u' -e '${fzf} --reverse --border --prompt="Folder: "' 'cf '<Enter>
 
   s = :split<Enter>
   S = :vsplit<Enter>
