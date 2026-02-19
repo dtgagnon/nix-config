@@ -26,11 +26,11 @@ in
       content = ''
         model = "gpt-5.3-codex"
         model_reasoning_effort = "medium"
+        web_search = "live"
 
         [tools]
 
         [features]
-        web_search_request = true
         apply_patch_freeform = true
         unified_exec = true
         shell_snapshot = true
