@@ -9,7 +9,7 @@ Perform a comprehensive, structured gap analysis of client documentation against
 
 ## Overview
 
-This skill evaluates the **substantive content** of specific medical device documents against regulatory clause-level requirements. Unlike the project-level `/gap-analysis` (which checks whether documents exist), this skill analyzes whether documents **adequately satisfy** regulatory obligations in their content.
+This skill evaluates the **substantive content** of specific medical device documents against regulatory clause-level requirements. This skill analyzes whether documents **adequately satisfy** regulatory obligations in their content.
 
 The analysis:
 1. Inventories and scopes all provided documents
