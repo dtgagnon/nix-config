@@ -67,20 +67,19 @@
     # "zen.view.compact.hide-toolbar" = true;
     # "zen.theme.accent-color" = "#aac7ff";
     # "zen.theme.color-prefs.colorful" = true;
-    # "zen.urlbar.behavior" = "float";
-    #
+    "zen.urlbar.behavior" = "float";
+
     # # ─ Zen Tab Management ─
     # "zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url" = true;
     # "zen.pinned-tab-manager.close-shortcut-behavior" = "reset-switch";
     # "zen.tab-unloader.timeout-minutes" = 15;
-    #
+
     # # ─ Zen Workspaces ─
-    # "zen.workspaces.separate-essentials" = false;
-    # "zen.workspaces.show-icon-strip" = false;
-    #
+    "zen.workspaces.separate-essentials" = true;
+    "zen.workspaces.show-icon-strip" = false;
+
     # # ─ Tab Groups ─
-    # "browser.tabs.groups.enabled" = true;
-    # "browser.tabs.groups.smart.optin" = true;
-    #
+    "browser.tabs.groups.enabled" = true;
+    "browser.tabs.groups.smart.optin" = true;
   };
 }
