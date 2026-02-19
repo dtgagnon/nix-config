@@ -168,12 +168,15 @@ def main():
 
     # Map parsed markdown content onto template elements...
 
-    # Save output
+    # Save output — mimetype must be first entry and uncompressed per ODF spec
     new_content_xml = etree.tostring(root, xml_declaration=True, encoding='UTF-8')
     with zipfile.ZipFile(OUTPUT, 'w', zipfile.ZIP_DEFLATED) as zout:
+        if 'mimetype' in file_data:
+            zout.writestr('mimetype', file_data['mimetype'], compress_type=zipfile.ZIP_STORED)
         zout.writestr('content.xml', new_content_xml)
         for name, data in file_data.items():
-            zout.writestr(name, data)
+            if name != 'mimetype':
+                zout.writestr(name, data)
 
 if __name__ == '__main__':
     main()
@@ -319,11 +322,15 @@ body = root.find('.//office:body/office:text', NS)
 # ... modify body elements ...
 
 # Write — repack ALL files in the output, replacing only content.xml
+# ODT spec (ODF 1.2, §3.3) requires mimetype as the first entry, stored uncompressed
 new_content_xml = etree.tostring(root, xml_declaration=True, encoding='UTF-8')
 with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zout:
+    if 'mimetype' in file_data:
+        zout.writestr('mimetype', file_data['mimetype'], compress_type=zipfile.ZIP_STORED)
     zout.writestr('content.xml', new_content_xml)
     for name, data in file_data.items():
-        zout.writestr(name, data)
+        if name != 'mimetype':
+            zout.writestr(name, data)
 ```
 
 ## ODT XML Structure Reference

@@ -122,5 +122,41 @@ in
     # Activation scripts for user-overrides.js management
     home.activation.createZenOverridesTemplate = mkIf cfg.useLocalOverrides zenActivation.createZenOverridesTemplate;
     home.activation.applyZenOverrides = mkIf cfg.useLocalOverrides zenActivation.applyZenOverrides;
-  };
+
+    # Migrate browser data from legacy ~/.zen/ to XDG location (~/.config/zen/)
+    # The browser falls back to ~/.zen/ when it can't write to the HM-managed profiles.ini,
+    # which causes all declarative config (user.js, containers, Stylix CSS) to be ignored.
+    home.activation.migrateZenToXdg = config.lib.dag.entryAfter [ "linkGeneration" ] ''
+      LEGACY_DIR="$HOME/.zen"
+      XDG_DIR="${config.xdg.configHome}/zen"
+      PROFILE_DIR="${profileDir}"
+
+      if [ -d "$LEGACY_DIR" ] && [ -f "$LEGACY_DIR/profiles.ini" ] && [ ! -L "$LEGACY_DIR/profiles.ini" ]; then
+        $VERBOSE_ECHO "Migrating Zen Browser data from $LEGACY_DIR to $XDG_DIR"
+        $DRY_RUN_CMD mkdir -p "$XDG_DIR/$PROFILE_DIR"
+
+        # Sync profile data (newer files only, don't overwrite HM symlinks)
+        if [ -d "$LEGACY_DIR/$PROFILE_DIR" ]; then
+          for f in "$LEGACY_DIR/$PROFILE_DIR"/*; do
+            basename="$(basename "$f")"
+            target="$XDG_DIR/$PROFILE_DIR/$basename"
+            # Skip if target is a symlink (HM-managed file)
+            if [ -L "$target" ]; then
+              continue
+            fi
+            $DRY_RUN_CMD cp -a --update "$f" "$target"
+          done
+        fi
+
+        # Sync Profile Groups
+        if [ -d "$LEGACY_DIR/Profile Groups" ]; then
+          $DRY_RUN_CMD cp -a --update "$LEGACY_DIR/Profile Groups" "$XDG_DIR/"
+        fi
+
+        # Remove legacy directory entirely
+        $DRY_RUN_CMD rm -rf "$LEGACY_DIR"
+        $VERBOSE_ECHO "Zen Browser XDG migration complete. Removed $LEGACY_DIR"
+      fi
+    '';
+};
 }
