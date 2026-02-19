@@ -309,12 +309,6 @@ libreoffice/convert_document  -- Convert .md to .odt if needed
 ### With /dtge-doc-audit
 The project-level `/dtge-doc-audit` identifies which documents exist and which are missing. `/dtge-gap-analysis` then evaluates the substance of those documents that do exist.
 
-### With /dtge-create-dhf
-Gap findings from this analysis can feed directly into `/dtge-create-dhf --from-gap GAP-XXX` to generate remediation documents.
-
-### With /dtge-ecr-manager
-Critical and major gaps may trigger Engineering Change Requests via `/dtge-ecr-manager`.
-
 ### With /dtge-query-ecfr
 Use `/dtge-query-ecfr` to look up current FDA regulation text when evaluating against 21 CFR requirements.
 
