@@ -113,7 +113,7 @@ For **each identified gap**, generate a structured finding using the output form
 
 ## Output Format
 
-Structure the complete output as an ODT document using `libreoffice/create_document`. The report follows this structure:
+Structure the complete output as a markdown file (see Document Output for naming/location). The report follows this structure:
 
 ### Cover Page
 
@@ -276,11 +276,19 @@ Close with: `End of Report`
 
 ### Naming Convention
 
-```
-{Client_Name}_Gap_Analysis_{Document_ID(s)}.odt
-```
+Two output files are produced:
 
-Example: `Higi_Gap_Analysis_QP-07-07.odt`
+1. **Markdown content (analysis output):**
+   ```
+   {Client_Name}_Gap_Analysis_{Document_ID(s)}.md
+   ```
+   Example: `Higi_Gap_Analysis_QP-07-10.md`
+
+2. **Formatted deliverable (branded ODT):**
+   ```
+   [DTG] {Client_Name}_Gap_Analysis_{Document_ID(s)}.odt
+   ```
+   Example: `[DTG] Higi_Gap_Analysis_QP-07-10.odt`
 
 ### File Location
 
@@ -290,17 +298,37 @@ Save generated reports to the project's gap assessment directory:
 
 ### Document Creation
 
-Use LibreOffice MCP tools to create the ODT output:
-```
-libreoffice/create_document  -- Create the output file
-libreoffice/insert_text_at_position  -- Add formatted content
-libreoffice/format_text  -- Apply heading styles, bold, tables
-```
+#### Step 1: Generate markdown content
 
-If LibreOffice MCP creation is not feasible for the full report, generate as Markdown first and convert:
-```
-libreoffice/convert_document  -- Convert .md to .odt if needed
-```
+Write the complete gap analysis as a structured markdown file using the Output Format defined above. Use standard markdown conventions:
+- `#`/`##`/`###`/`####` headings to delimit sections
+- Markdown tables (`| col | col |`) for tabular data (gap summary, document inventory, applicability matrix, summary table)
+- `**bold**` for field labels (`**Severity:** Critical`, `**Citation:** ...`)
+- `---` horizontal rules between repeating blocks (gap findings)
+- Numbered/bulleted lists for recommendations and priority items
+
+This markdown file is the primary analysis artifact — it's human-readable, diffable, and serves as the content source for the formatted deliverable.
+
+#### Step 2: Create formatted deliverable
+
+Use `/dtge-populate-template` to populate a branded `[DTG]`-prefixed ODT template with content parsed from the markdown file. The template provides professional formatting including heading styles, table colors, cover page layout, and separator borders.
+
+The workflow for this step:
+1. Analyze the branded template structure (element indices, styles, tables) per `/dtge-populate-template` Phase 1
+2. Write a populate script that parses the markdown and maps sections onto template elements
+3. The script copies the template to the output path (template stays pristine) and populates the copy
+4. Run the script to produce `[DTG] {Client}_Gap_Analysis_{DocIDs}.odt`
+
+If no branded template exists for the client yet, create one in LibreOffice with the desired styling and placeholder text following the template design conventions in `/dtge-populate-template`.
+
+#### Step 3: Verify
+
+Confirm the formatted deliverable is correct:
+- All gap IDs present in the document
+- Severity counts match the executive summary table
+- No placeholder text remaining (search for `<` and `>` markers)
+- Tables have correct row counts
+- Visual spot-check via `libreoffice/open_document_in_libreoffice`
 
 ---
 
@@ -315,11 +343,19 @@ Use `/dtge-query-ecfr` to look up current FDA regulation text when evaluating ag
 ### With /dtge-generate-dca
 DCA provides the baseline requirements matrix. This skill evaluates whether documents substantively meet those requirements.
 
+### With /dtge-populate-template
+Provides the ODT template population technique used in Step 2 of Document Creation. The populate script reads the markdown output from Step 1, parses it, and maps the content onto a branded ODT template to produce the formatted deliverable.
+
 ---
 
 ## Reference Example
 
-A complete example report is available at:
-`Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/Higi_Gap_Analysis_QP-07-07.odt`
+Complete example files are available at:
 
-This report demonstrates the expected format, depth of analysis, citation specificity, and corrective action detail for a gap analysis of a design controls procedure (QP-07-07) and its associated deliverables form (QF-07-07.1).
+- **Markdown content:** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/Higi_Gap_Analysis_QP-07-10.md`
+- **Formatted deliverable:** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/[DTG] Higi_Gap_Analysis_QP-07-10.odt`
+- **Template:** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/[DTG] Higi_Gap_Analysis_Template.odt`
+- **Populate script:** `Work/Clients/Qualira/Higi/scripts/populate_gap_report.py`
+- **Earlier example (QP-07-07):** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/Higi_Gap_Analysis_QP-07-07.odt`
+
+These demonstrate the expected format, depth of analysis, citation specificity, corrective action detail, and the markdown-to-template workflow.
