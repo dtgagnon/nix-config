@@ -1,12 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  pkgs,
-  ...
+{ lib
+, config
+, namespace
+, pkgs
+, ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf mkOption types optionalString;
+  inherit (lib) mkEnableOption mkIf mkOption types;
   cfg = config.${namespace}.apps.zen;
 
   # Import sibling configuration files
@@ -14,10 +13,6 @@ let
   zenKeybinds = import ./keybinds.nix;
   zenContainers = import ./containers.nix;
   zenSearch = import ./search.nix { inherit pkgs; };
-
-  # Stylix integration (conditional)
-  stylixEnabled = config.stylix.enable or false;
-  colors = if stylixEnabled then config.lib.stylix.colors.withHashtag else { };
 
   # Path to user-editable overrides file
   localOverridesPath = "${config.xdg.configHome}/zen/user-overrides.js";
@@ -75,14 +70,6 @@ in
 
         settings = zenSettings.base;
         keyboardShortcuts = zenKeybinds;
-
-        # Custom CSS Overrides (adjustments to Stylix-generated theme)
-        userChrome = optionalString stylixEnabled ''
-          /* URL bar: slightly lighter than main background */
-          .urlbar-background {
-            background-color: color-mix(in srgb, ${colors.base00} 90%, white) !important;
-          }
-        '';
       } // lib.optionalAttrs (cfg.profilePath != null) {
         path = cfg.profilePath;
         containers = zenContainers;
@@ -108,7 +95,7 @@ in
 
     # Set as default browser if enabled
     home.sessionVariables = mkIf cfg.defaultBrowser {
-      BROWSER = "zen";
+      BROWSER = "zen-twilight";
     };
 
     # MIME type associations for default browser

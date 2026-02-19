@@ -282,19 +282,15 @@ Two output files are produced:
    ```
    {Client_Name}_Gap_Analysis_{Document_ID(s)}.md
    ```
-   Example: `Higi_Gap_Analysis_QP-07-10.md`
 
 2. **Formatted deliverable (branded ODT):**
    ```
    [DTG] {Client_Name}_Gap_Analysis_{Document_ID(s)}.odt
    ```
-   Example: `[DTG] Higi_Gap_Analysis_QP-07-10.odt`
 
 ### File Location
 
-Save generated reports to the project's gap assessment directory:
-- For Higi: `special_510k/11-Gap_Assessment/`
-- General: `<project-path>/11-Gap_Assessment/` or as specified by user
+Save generated reports to the project's gap assessment directory (`<project-path>/11-Gap_Assessment/`) or as specified by the user.
 
 ### Document Creation
 
@@ -311,15 +307,15 @@ This markdown file is the primary analysis artifact — it's human-readable, dif
 
 #### Step 2: Create formatted deliverable
 
-Use `/dtge-populate-template` to populate a branded `[DTG]`-prefixed ODT template with content parsed from the markdown file. The template provides professional formatting including heading styles, table colors, cover page layout, and separator borders.
+Use `/dtge-populate-template` to populate the Gap Analysis template with content parsed from the markdown file. The template provides professional formatting including heading styles, table colors, cover page layout, and separator borders.
+
+**Template:** `/home/dtgagnon/Documents/DTGE/Work/templates/Gap_Analysis_Template.ott`
 
 The workflow for this step:
-1. Analyze the branded template structure (element indices, styles, tables) per `/dtge-populate-template` Phase 1
+1. Analyze the template structure (element indices, styles, tables) per `/dtge-populate-template` Phase 1
 2. Write a populate script that parses the markdown and maps sections onto template elements
 3. The script copies the template to the output path (template stays pristine) and populates the copy
 4. Run the script to produce `[DTG] {Client}_Gap_Analysis_{DocIDs}.odt`
-
-If no branded template exists for the client yet, create one in LibreOffice with the desired styling and placeholder text following the template design conventions in `/dtge-populate-template`.
 
 #### Step 3: Verify
 
@@ -348,14 +344,6 @@ Provides the ODT template population technique used in Step 2 of Document Creati
 
 ---
 
-## Reference Example
+## Reference Files
 
-Complete example files are available at:
-
-- **Markdown content:** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/Higi_Gap_Analysis_QP-07-10.md`
-- **Formatted deliverable:** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/[DTG] Higi_Gap_Analysis_QP-07-10.odt`
-- **Template:** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/[DTG] Higi_Gap_Analysis_Template.odt`
-- **Populate script:** `Work/Clients/Qualira/Higi/scripts/populate_gap_report.py`
-- **Earlier example (QP-07-07):** `Work/Clients/Qualira/Higi/special_510k/11-Gap_Assessment/Higi_Gap_Analysis_QP-07-07.odt`
-
-These demonstrate the expected format, depth of analysis, citation specificity, corrective action detail, and the markdown-to-template workflow.
+- **Template:** `/home/dtgagnon/Documents/DTGE/Work/templates/Gap_Analysis_Template.ott`

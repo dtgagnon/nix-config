@@ -23,7 +23,7 @@ in
         "$mod_ALT, Return, exec, $terminal"
         "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
-        "$mod, B, exec, zen"
+        "$mod, B, exec, zen-twilight"
         "$mod_ALT, V, exec, [workspace 1] antigravity"
         "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 1000 --clipboard-only"
         "$mod_SHIFT_CTRL, Z, exec, hyprshot -z -m region -t 1000 -o ~/Pictures/screenshots -f screenshot-$(date +%Y%m%d-%H%M%S).png"
