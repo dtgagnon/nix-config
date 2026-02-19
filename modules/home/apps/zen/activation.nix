@@ -10,7 +10,7 @@
       $DRY_RUN_CMD mkdir -p "$OVERRIDES_DIR"
       $DRY_RUN_CMD tee "$OVERRIDES_FILE" > /dev/null <<'EOF'
 // Zen Browser Local Overrides
-// Location: ~/.zen/user-overrides.js
+// Location: ~/.config/zen/user-overrides.js
 //
 // This file is preserved across rebuilds and can be edited directly.
 // Preferences here will be appended to your profile's user.js on each rebuild.
@@ -58,7 +58,7 @@ EOF
 // Base configuration from Nix/Stylix (if any)
 $BASE_CONTENT
 
-// BEGIN LOCAL OVERRIDES (from ~/.zen/user-overrides.js)
+// BEGIN LOCAL OVERRIDES (from ~/.config/zen/user-overrides.js)
 // These settings take precedence over declarative config above
 $(cat "$OVERRIDES_FILE")
 // END LOCAL OVERRIDES

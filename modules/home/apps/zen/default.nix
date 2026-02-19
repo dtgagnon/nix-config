@@ -20,11 +20,11 @@ let
   colors = if stylixEnabled then config.lib.stylix.colors.withHashtag else { };
 
   # Path to user-editable overrides file
-  localOverridesPath = "${config.home.homeDirectory}/.zen/user-overrides.js";
+  localOverridesPath = "${config.xdg.configHome}/zen/user-overrides.js";
 
   # Profile path - if not specified, will be auto-detected or created as "default"
   profileDir = if cfg.profilePath != null then cfg.profilePath else "default";
-  profileFullPath = "${config.home.homeDirectory}/.zen/${profileDir}";
+  profileFullPath = "${config.xdg.configHome}/zen/${profileDir}";
 
   # Import activation scripts with required arguments
   zenActivation = import ./activation.nix { inherit lib localOverridesPath profileFullPath; };
@@ -37,10 +37,10 @@ in
       type = types.nullOr types.str;
       default = null;
       description = ''
-        The profile directory name (found in ~/.zen/).
+        The profile directory name (found in ~/.config/zen/).
         If null, uses "default" for new installs or auto-detects existing profile.
 
-        To find your existing profile path, check ~/.zen/profiles.ini
+        To find your existing profile path, check ~/.config/zen/profiles.ini
       '';
       example = "abc123xy.default";
     };
@@ -49,7 +49,7 @@ in
       type = types.bool;
       default = false;
       description = ''
-        Enable runtime-writable local overrides via ~/.zen/user-overrides.js
+        Enable runtime-writable local overrides via ~/.config/zen/user-overrides.js
 
         When enabled, preferences in this file will be appended to the profile's
         user.js file on each rebuild, allowing you to maintain custom settings
@@ -67,6 +67,7 @@ in
   config = mkIf cfg.enable {
     programs.zen-browser = {
       enable = true;
+      suppressXdgMigrationWarning = true;
 
       profiles.default = {
         id = 0;
@@ -129,7 +130,7 @@ in
 
     # Preserve Zen Browser data (imperative config, pins, workspaces, etc.)
     spirenix.preservation.directories = [
-      { directory = ".zen"; mode = "0700"; }
+      { directory = ".config/zen"; mode = "0700"; }
     ];
 
     # Activation scripts for user-overrides.js management
