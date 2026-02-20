@@ -53,6 +53,7 @@ in
       # super-productivity = enabled;
       terminals.ghostty = {
         enable = true;
+        tmux.enable = true;
         trail = null;
       };
       todoist = enabled;
@@ -70,6 +71,7 @@ in
       claude-code = {
         enable = true;
         scheduling.enable = true;
+        selfImprove.enable = true;
       };
       codex = enabled;
       direnv = enabled;
