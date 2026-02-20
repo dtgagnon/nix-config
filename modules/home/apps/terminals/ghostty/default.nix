@@ -23,6 +23,9 @@ in
       description = "Whether to enable systemd-related configuration for Ghostty";
       example = true;
     };
+    tmux = {
+      enable = mkBoolOpt false "Auto-start tmux on Ghostty launch, attaching to an existing session or creating a new one";
+    };
     trail = mkOption {
       type = types.nullOr (if trailNames == [] then types.str else types.enum trailNames);
       default = null;
@@ -115,6 +118,7 @@ in
         window-padding-x = 10;
         window-padding-y = 10;
         window-decoration = false;
+        command = mkIf cfg.tmux.enable "tmux new-session -A -s main";
         shell-integration = "detect";
         shell-integration-features = "title";
       };
