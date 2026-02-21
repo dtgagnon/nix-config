@@ -10,7 +10,7 @@ let
   inherit (lib) optionalString;
   inherit (lib.${namespace}) enabled mkRGBA;
   stylixEnabled = config.stylix.enable or false;
-  colors = if stylixEnabled then config.lib.stylix.colors else {};
+  colors = if stylixEnabled then config.lib.stylix.colors else { };
 in
 {
   spirenix = {
@@ -53,14 +53,13 @@ in
       # super-productivity = enabled;
       terminals.ghostty = {
         enable = true;
-        tmux.enable = true;
         trail = null;
       };
       todoist = enabled;
       yell = enabled;
       zen = {
         enable = true;
-        profilePath = "9pvgivjz.default"; # Existing profile directory
+        profilePath = "9pvgivjz.default";
       };
     };
 

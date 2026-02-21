@@ -1,12 +1,13 @@
 #NOTE: When Ghostty is configured via the programs.ghostty home-manager module and with Stylix enabled: theme, font-name, font-emoji, font-size, and opacity settings will already be added to the config file for ghostty from the stylix global configuration options
 
 { lib
+, pkgs
 , config
 , namespace
 , ...
 }:
 let
-  inherit (lib) mkIf mkOption types optionalAttrs;
+  inherit (lib) mkIf mkOption types;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.ghostty;
 
@@ -22,9 +23,6 @@ in
       default = true;
       description = "Whether to enable systemd-related configuration for Ghostty";
       example = true;
-    };
-    tmux = {
-      enable = mkBoolOpt false "Auto-start tmux on Ghostty launch, attaching to an existing session or creating a new one";
     };
     trail = mkOption {
       type = types.nullOr (if trailNames == [] then types.str else types.enum trailNames);
@@ -118,7 +116,6 @@ in
         window-padding-x = 10;
         window-padding-y = 10;
         window-decoration = false;
-        command = mkIf cfg.tmux.enable "tmux new-session -A -s main";
         shell-integration = "detect";
         shell-integration-features = "title";
       };

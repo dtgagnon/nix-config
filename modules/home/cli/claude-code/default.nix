@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -60,7 +59,9 @@ in
       files = [ ".claude.json" ];
     };
 
-    home.packages = mkIf cfg.router [ pkgs.claude-code-router ];
+    home.packages = [
+      pkgs.tmux
+    ] ++ lib.optional cfg.router pkgs.claude-code-router;
     programs.claude-code = {
       enable = true;
       package = claude-wrapped;
