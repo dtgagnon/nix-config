@@ -1,7 +1,7 @@
 ---
 name: gemini
 description: Query Gemini CLI for quick lookups, deep research, and approach comparison
-allowed-tools: Bash(gemini "*":*), Bash(gemini -y:*), Bash(gemini -m:*), Bash(gemini -o:*)
+allowed-tools: Bash(gemini:*), Bash(jq:*)
 argument-hint: "[query]|research [topic]|compare [options-to-compare]"
 ---
 

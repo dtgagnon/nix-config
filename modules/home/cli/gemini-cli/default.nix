@@ -25,7 +25,7 @@ in
       {
         "general": {
           "checkpointing": {
-            "enabled": true
+            "enabled": false
           },
           "preferredEditor": "nvim",
           "vimMode": false,
@@ -33,7 +33,6 @@ in
         },
         "context": {
           "fileName": [
-            "GEMINI.md",
             "CLAUDE.md",
             "AGENTS.md"
           ]

@@ -1,7 +1,7 @@
 ---
 name: codex
 description: Code generation, exploration, and image analysis via Codex CLI
-allowed-tools: Bash(codex exec:*)
+allowed-tools: Bash(codex exec:*), Bash(jq:*)
 argument-hint: "[query]|build [description]|analyze [image-path] [question]"
 ---
 
@@ -17,7 +17,7 @@ Read-only code exploration. Default mode when no subcommand is given.
 
 Run in read-only sandbox mode for safe code exploration:
 
-!`codex exec "$ARGUMENTS" -s read-only 2>&1 | sed -n '/^codex$/,/^tokens used$/p' | sed '1d;$d'`
+!`codex exec "$ARGUMENTS" -s read-only --json 2>/dev/null | jq -r 'select(.type == "item.completed" and .item.type == "agent_message") | .item.text'`
 
 **Use for:**
 - Testing unfamiliar syntax before using it
@@ -31,7 +31,7 @@ Review the response and integrate useful insights.
 
 Workspace-write mode — Codex can create and modify files.
 
-Run: !`codex exec "$ARGUMENTS" --full-auto 2>&1 | sed -n '/^codex$/,/^tokens used$/p' | sed '1d;$d'`
+Run: !`codex exec "$ARGUMENTS" --full-auto --json 2>/dev/null | jq -r 'select(.type == "item.completed" and .item.type == "agent_message") | .item.text'`
 
 **Use for:**
 - Generating boilerplate files
@@ -46,7 +46,7 @@ Analyze images and diagrams in read-only mode.
 
 Extract image path and question from: $ARGUMENTS
 
-Run: !`codex exec "[question about image]" -i [image-path] -s read-only 2>&1 | sed -n '/^codex$/,/^tokens used$/p' | sed '1d;$d'`
+Run: !`codex exec "[question about image]" -i [image-path] -s read-only --json 2>/dev/null | jq -r 'select(.type == "item.completed" and .item.type == "agent_message") | .item.text'`
 
 **Use for:**
 - Architecture diagrams
