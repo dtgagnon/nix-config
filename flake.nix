@@ -221,7 +221,7 @@
     ghostty.url = "github:ghostty-org/ghostty";
     ghostty.inputs.nixpkgs.follows = "nixpkgs";
 
-    spirenixvim.url = "github:dtgagnon/nixvim/refactor/to-blueprint";
+    spirenixvim.url = "github:dtgagnon/nixvim";
 
     nixarr.url = "github:rasmus-kirk/nixarr";
 

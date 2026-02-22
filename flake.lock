@@ -4204,16 +4204,15 @@
         "pre-commit-hooks": "pre-commit-hooks_3"
       },
       "locked": {
-        "lastModified": 1763675215,
-        "narHash": "sha256-pxNN+8egEH/RE7Tc1jBXVQsDGp0B5lPHFaNDM8q4R1I=",
+        "lastModified": 1771717139,
+        "narHash": "sha256-+HIsmP8k86dCq4z8wmlFQVq1EMferjMIBOl/Lsakky8=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "d9a6dbe2753e27e13ee1e18996d465bf996a687b",
+        "rev": "f003405e1ab939e8662279420f6337fc2beba6dd",
         "type": "github"
       },
       "original": {
         "owner": "dtgagnon",
-        "ref": "refactor/to-blueprint",
         "repo": "nixvim",
         "type": "github"
       }
