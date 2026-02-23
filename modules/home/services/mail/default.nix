@@ -11,24 +11,15 @@
 #
 # WARNING: Do NOT enable notmuch.synchronizeFlags - it causes sync
 # conflicts with mbsync ("conflicting changes" warnings).
-{
-  lib,
-  pkgs,
-  config,
-  inputs,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, inputs
+, namespace
+, ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkMerge
-    mkDefault
-    filterAttrs
-    mapAttrs'
-    nameValuePair
-    optionalAttrs
-    ;
+  inherit (lib) mkIf mkMerge mkDefault filterAttrs mapAttrs' nameValuePair optionalAttrs;
 
   cfg = config.${namespace}.services.mail;
   emmaCfg = config.${namespace}.services.emma;
@@ -51,12 +42,7 @@ let
 
   # Import helper functions
   helpers = import ./helpers.nix {
-    inherit
-      lib
-      config
-      cfg
-      pkgs
-      ;
+    inherit lib config cfg pkgs;
   };
 
   homeDir = config.home.homeDirectory;
@@ -91,18 +77,22 @@ in
     (mkIf cfg.mbsync.enable {
       # Declare sops secrets for each account (passwords)
       sops.secrets =
-        lib.mapAttrs' (
-          name: acc:
-          lib.nameValuePair "mail-${name}-password" {
-            key = acc.passwordSecret;
-          }
-        ) enabledAccounts
-        // lib.mapAttrs' (
-          name: acc:
-          lib.nameValuePair "mail-${name}-certificate" {
-            key = acc.certificateSecret;
-          }
-        ) (filterAttrs (_: acc: acc.certificateSecret != null) enabledAccounts);
+        lib.mapAttrs'
+          (
+            name: acc:
+              lib.nameValuePair "mail-${name}-password" {
+                key = acc.passwordSecret;
+              }
+          )
+          enabledAccounts
+        // lib.mapAttrs'
+          (
+            name: acc:
+              lib.nameValuePair "mail-${name}-certificate" {
+                key = acc.certificateSecret;
+              }
+          )
+          (filterAttrs (_: acc: acc.certificateSecret != null) enabledAccounts);
 
       # mbsync config file
       home.file.".mbsyncrc".text = helpers.mkMbsyncConfig enabledAccounts;
@@ -210,18 +200,20 @@ in
     # Emma integration - pass mail accounts to emma
     # Only include fields that differ from emma's defaults
     (mkIf emmaCfg.enable {
-      programs.emma.settings.maildirAccounts = mapAttrs' (
-        name: acc:
-        let
-          derivedName = deriveAccountName acc.email;
-          # Only include accountName if it differs from what emma would derive
-          needsAccountName = name != derivedName;
-        in
-        nameValuePair acc.email (
-          optionalAttrs needsAccountName { accountName = name; }
-          // optionalAttrs acc.primary { default = true; }
+      programs.emma.settings.maildirAccounts = mapAttrs'
+        (
+          name: acc:
+            let
+              derivedName = deriveAccountName acc.email;
+              # Only include accountName if it differs from what emma would derive
+              needsAccountName = name != derivedName;
+            in
+            nameValuePair acc.email (
+              optionalAttrs needsAccountName { accountName = name; }
+              // optionalAttrs acc.primary { default = true; }
+            )
         )
-      ) enabledAccounts;
+        enabledAccounts;
     })
   ]);
 }
