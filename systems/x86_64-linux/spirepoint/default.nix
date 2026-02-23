@@ -15,13 +15,14 @@ in
   spirenix = {
     suites = {
       arrs = enabled;
-      gaming = enabled;
       networking = enabled;
       self-host = enabled;
     };
 
     apps = {
-      proton = enabled;
+      bottles = enabled;
+      steam = enabled;
+      windows-apps = enabled;
     };
 
     desktop = {

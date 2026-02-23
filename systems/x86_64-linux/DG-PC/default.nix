@@ -17,12 +17,13 @@ in
 
   spirenix = {
     suites = {
-      gaming = enabled;
       networking = enabled;
     };
 
     apps = {
-      proton = enabled;
+      bottles = enabled;
+      steam = enabled;
+      windows-apps = enabled;
     };
 
     desktop = {

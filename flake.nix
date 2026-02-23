@@ -1,5 +1,5 @@
 {
-  description = "SPIRE FLAKE";
+  description = "SpireNix Mono-flake";
 
   outputs =
     inputs:
@@ -41,7 +41,6 @@
           # neovim.overlays.default
           nix-topology.overlays.default
           nur.overlays.default
-          # proxmox-nixos.overlays.x86_64-linux #NOTE Not in use - can remove
           odooAdds.overlays.default
           mcp-servers-nix.overlays.default
           n8n-private.overlays.default
@@ -94,6 +93,7 @@
         homes.modules = with inputs; [
           ags.homeManagerModules.default
           emma.homeManagerModules.default
+          mango.hmModules.mango
           noctalia.homeModules.default
           sops-nix.homeManagerModules.sops
           stylix.homeModules.stylix
@@ -241,6 +241,9 @@
     experimental-hyprland-rdp.inputs.nixpkgs.follows = "nixpkgs";
     experimental-xdph-rdp.url = "github:toneengo/xdg-desktop-portal-hyprland/feat/remote-desktop-impl";
     experimental-xdph-rdp.inputs.nixpkgs.follows = "nixpkgs";
+
+    mango.url = "github:DreamMaoMao/mangowc";
+    mango.inputs.nixpkgs.follows = "nixpkgs";
 
     quickshell.url = "github:quickshell-mirror/quickshell";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";

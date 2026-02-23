@@ -622,6 +622,7 @@ in
     # Override lock-related settings to use noctalia-shell lockscreen
     ${namespace} = {
       desktop.addons.hyprlock.enable = mkOverride 90 false;
+      desktop.addons.hyprpaper.enable = mkOverride 90 false;
       desktop.hyprland.extraKeybinds."$lock" = mkOverride 90 "noctalia-shell ipc call lockScreen lock";
     };
     services.hypridle.settings.general.lock_cmd =
