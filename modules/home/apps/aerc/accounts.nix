@@ -42,9 +42,10 @@ in
 
       # Translate logical folder names to provider-specific names (e.g., Gmail's [Gmail]/Drafts)
       tr = mailHelpers.translateFolder acc.provider;
-      # With notmuch, use the query map key (logical name) so the worker can resolve it;
-      # with plain maildir, use the provider-translated folder name directly
-      folderPath = folder: if mailCfg.notmuch.enable then folder else tr folder;
+      # With notmuch, use the actual maildir-relative path (e.g., user@example.com/Sent)
+      # so aerc can write to the correct directory for copy-to/archive/postpone operations.
+      # With plain maildir, use the provider-translated folder name directly.
+      folderPath = folder: if mailCfg.notmuch.enable then "${acc.email}/${tr folder}" else tr folder;
 
       smtpConfig =
         {
