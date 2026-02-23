@@ -1,9 +1,8 @@
-{ 
-  lib,
-  pkgs,
-  config,
-  namespace,
-  ...
+{ lib
+, pkgs
+, config
+, namespace
+, ...
 }:
 let
   inherit (lib) mkIf;
@@ -16,6 +15,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.bottles ];
+    environment.systemPackages = [
+      ( pkgs.bottles.override { removeWarningPopup = true; } )
+    ];
   };
 }

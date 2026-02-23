@@ -18,11 +18,12 @@ in
       cli.enable = true;
       settings = {
         audio = {
-          input_mode = "ptt";
-          vad_in_ptt = true;
           auto_inject = true;
           auto_inject_silence_ms = 3000;
+          input_mode = "ptt";
           min_snr = -10.0;
+          selection_max_age_ms = 5000;
+          vad_in_ptt = true;
         };
         vad = {
           threshold = 0.5;
