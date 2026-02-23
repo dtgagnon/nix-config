@@ -30,8 +30,8 @@ in
 
       [scratchpads.term]
       animation = "fromTop"
-      command = "foot --class kitty-dropterm -e yazi"
-      class = "kitty-dropterm"
+      command = "ghostty --class ghostty-dropterm -e yazi"
+      class = "ghostty-dropterm"
       size = "75% 60%"
     '' + cfg.extraConfig;
   };

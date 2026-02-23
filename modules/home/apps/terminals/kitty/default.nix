@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkAfter mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.kitty;
 in {
@@ -14,6 +14,14 @@ in {
   };
 
   config = mkIf cfg.enable {
+    xdg.terminal-exec = {
+      enable = true;
+      settings = {
+        default = mkAfter [ "kitty.desktop" ];
+        Hyprland = mkAfter [ "kitty.desktop" ];
+      };
+    };
+
     programs.kitty = {
       enable = true;
 

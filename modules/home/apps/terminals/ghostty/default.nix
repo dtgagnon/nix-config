@@ -7,7 +7,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib) mkBefore mkIf mkOption types;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.apps.terminals.ghostty;
 
@@ -32,6 +32,14 @@ in
   };
 
   config = mkIf cfg.enable {
+    xdg.terminal-exec = {
+      enable = true;
+      settings = {
+        default = mkBefore [ "com.mitchellh.ghostty.desktop" ];
+        Hyprland = mkBefore [ "com.mitchellh.ghostty.desktop" ];
+      };
+    };
+
     spirenix.desktop.hyprland.extraExec = mkIf cfg.systemd [ "systemctl --user start app-com.mitchellh.ghostty.service" ];
     programs.ghostty = {
       enable = true;
