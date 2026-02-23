@@ -4281,11 +4281,11 @@
         "pre-commit-hooks": "pre-commit-hooks_3"
       },
       "locked": {
-        "lastModified": 1771717139,
-        "narHash": "sha256-+HIsmP8k86dCq4z8wmlFQVq1EMferjMIBOl/Lsakky8=",
+        "lastModified": 1771872586,
+        "narHash": "sha256-kUuGLW7x+Fg0P6VrLwkyuI+hLunAYrASXCiSYwTN6gI=",
         "owner": "dtgagnon",
         "repo": "nixvim",
-        "rev": "f003405e1ab939e8662279420f6337fc2beba6dd",
+        "rev": "2d43969688e155a62b68d4cdeaaf180b89aea35a",
         "type": "github"
       },
       "original": {
