@@ -158,6 +158,9 @@ in
         notmuch tag -unread -- tag:unread
       '';
     };
+    notifications = {
+      enable = mkBoolOpt false "Enable desktop notifications for new mail";
+    };
   };
 
   protonmail-bridge = {

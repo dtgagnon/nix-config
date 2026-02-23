@@ -20,14 +20,23 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkMerge mkDefault filterAttrs mapAttrs' nameValuePair optionalAttrs;
+  inherit (lib)
+    mkIf
+    mkMerge
+    mkDefault
+    filterAttrs
+    mapAttrs'
+    nameValuePair
+    optionalAttrs
+    ;
 
   cfg = config.${namespace}.services.mail;
   emmaCfg = config.${namespace}.services.emma;
   secretsPath = toString inputs.nix-secrets;
 
   # Derive account name from email domain (matches emma's Python logic)
-  deriveAccountName = email:
+  deriveAccountName =
+    email:
     let
       domain = lib.last (lib.splitString "@" email);
     in
@@ -35,16 +44,20 @@ let
 
   # Import accounts from private nix-secrets repo
   accountsFile = "${secretsPath}/mail-accounts.nix";
-  importedAccounts =
-    if builtins.pathExists accountsFile
-    then import accountsFile
-    else { };
+  importedAccounts = if builtins.pathExists accountsFile then import accountsFile else { };
 
   # Filter enabled accounts (now properly processed through submodule)
   enabledAccounts = filterAttrs (_: acc: acc.enable) cfg.accounts;
 
   # Import helper functions
-  helpers = import ./helpers.nix { inherit lib config cfg; };
+  helpers = import ./helpers.nix {
+    inherit
+      lib
+      config
+      cfg
+      pkgs
+      ;
+  };
 
   homeDir = config.home.homeDirectory;
   mailDir = "${homeDir}/${cfg.mailDir}";
@@ -62,7 +75,11 @@ in
 
     # Base packages
     {
-      home.packages = with pkgs; [ isync notmuch mblaze ];
+      home.packages = with pkgs; [
+        isync
+        notmuch
+        mblaze
+      ];
 
       # Ensure mail directory exists
       home.activation.createMailDir = config.lib.dag.entryAfter [ "writeBoundary" ] ''
@@ -126,7 +143,8 @@ in
           tags = [
             "unread"
             "inbox"
-          ];
+          ]
+          ++ lib.optional cfg.notmuch.notifications.enable "notify-pending";
           ignore = [
             ".mbsyncstate"
             ".strstrec"
@@ -145,7 +163,7 @@ in
           synchronizeFlags = cfg.notmuch.synchronizeFlags; # defaults to false
         };
 
-        hooks = mkIf (cfg.notmuch.postNewHook != "") {
+        hooks = mkIf (cfg.notmuch.postNewHook != "" || cfg.notmuch.notifications.enable) {
           postNew = cfg.notmuch.postNewHook;
         };
 
@@ -167,6 +185,12 @@ in
           ${pkgs.notmuch}/bin/notmuch new || true
         fi
       '';
+    })
+
+    # Desktop notifications for new mail
+    (mkIf (cfg.notmuch.enable && cfg.notmuch.notifications.enable) {
+      programs.notmuch.hooks.postNew = lib.mkAfter (helpers.mkNotificationScript enabledAccounts);
+      home.packages = [ pkgs.jq ];
     })
 
     # protonmail-bridge (uses home-manager native service)

@@ -1,10 +1,11 @@
 # modules/home/services/mail/helpers.nix
 #
 # Config generation helpers for mail module.
-{ lib
-, config
-, cfg
-,
+{
+  lib,
+  config,
+  cfg,
+  pkgs,
 }:
 let
   inherit (lib) mapAttrsToList findFirst;
@@ -73,6 +74,40 @@ in
 rec {
   inherit translateFolder;
 
+  # Generate notification script for new mail
+  mkNotificationScript =
+    accounts:
+    let
+      notmuch = "${pkgs.notmuch}/bin/notmuch";
+      notifySend = "${pkgs.libnotify}/bin/notify-send";
+      jq = "${pkgs.jq}/bin/jq";
+
+      accountBlocks = mapAttrsToList (name: acc: ''
+                _count=$(${notmuch} count "tag:notify-pending AND path:${acc.email}/**" 2>/dev/null || echo 0)
+                if [ "$_count" -gt 0 ]; then
+                  _senders=$(${notmuch} address --format=json --output=sender --deduplicate=no \
+                    "tag:notify-pending AND path:${acc.email}/**" 2>/dev/null \
+                    | ${jq} -r '.[] | if .name != "" and .name != null then .name else .address end' \
+                    | sort | uniq -c | sort -rn \
+                    | sed 's/^ *\([0-9]*\) \(.*\)/\2: \1/')
+                  BODY="$BODY## ${name}
+        $_senders
+        ---
+        "
+                  HAS_NEW=1
+                fi
+      '') accounts;
+    in
+    ''
+      trap '${notmuch} tag -notify-pending -- tag:notify-pending 2>/dev/null || true' EXIT
+      BODY=""
+      HAS_NEW=0
+      ${builtins.concatStringsSep "\n" accountBlocks}
+      if [ "$HAS_NEW" = "1" ]; then
+        ${notifySend} -u normal "New Messages" "$BODY" 2>/dev/null || true
+      fi
+    '';
+
   # Get primary account field value
   getPrimaryAccount =
     accounts: field:
@@ -80,7 +115,7 @@ rec {
       accountList = map withDefaults (builtins.attrValues accounts);
       primaryAccount = findFirst (acc: acc.primary) (builtins.head accountList) accountList;
     in
-      primaryAccount.${field} or "";
+    primaryAccount.${field} or "";
 
   # Get semicolon-separated list of non-primary emails
   getOtherEmails =
@@ -142,5 +177,6 @@ rec {
     '';
 
   # Generate full mbsync config
-  mkMbsyncConfig = accounts: builtins.concatStringsSep "\n\n" (mapAttrsToList mkMbsyncAccount accounts);
+  mkMbsyncConfig =
+    accounts: builtins.concatStringsSep "\n\n" (mapAttrsToList mkMbsyncAccount accounts);
 }
