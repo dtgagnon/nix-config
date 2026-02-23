@@ -1,11 +1,11 @@
 # modules/home/services/mail/helpers.nix
 #
 # Config generation helpers for mail module.
-{
-  lib,
-  config,
-  cfg,
-  pkgs,
+{ lib
+, pkgs ? null
+, cfg
+, config
+, ...
 }:
 let
   inherit (lib) mapAttrsToList findFirst;
@@ -82,21 +82,23 @@ rec {
       notifySend = "${pkgs.libnotify}/bin/notify-send";
       jq = "${pkgs.jq}/bin/jq";
 
-      accountBlocks = mapAttrsToList (name: acc: ''
-                _count=$(${notmuch} count "tag:notify-pending AND path:${acc.email}/**" 2>/dev/null || echo 0)
-                if [ "$_count" -gt 0 ]; then
-                  _senders=$(${notmuch} address --format=json --output=sender --deduplicate=no \
-                    "tag:notify-pending AND path:${acc.email}/**" 2>/dev/null \
-                    | ${jq} -r '.[] | if .name != "" and .name != null then .name else .address end' \
-                    | sort | uniq -c | sort -rn \
-                    | sed 's/^ *\([0-9]*\) \(.*\)/\2: \1/')
-                  BODY="$BODY## ${name}
-        $_senders
-        ---
-        "
-                  HAS_NEW=1
-                fi
-      '') accounts;
+      accountBlocks = mapAttrsToList
+        (name: acc: ''
+                  _count=$(${notmuch} count "tag:notify-pending AND path:${acc.email}/**" 2>/dev/null || echo 0)
+                  if [ "$_count" -gt 0 ]; then
+                    _senders=$(${notmuch} address --format=json --output=sender --deduplicate=no \
+                      "tag:notify-pending AND path:${acc.email}/**" 2>/dev/null \
+                      | ${jq} -r '.[] | if .name != "" and .name != null then .name else .address end' \
+                      | sort | uniq -c | sort -rn \
+                      | sed 's/^ *\([0-9]*\) \(.*\)/\2: \1/')
+                    BODY="$BODY## ${name}
+          $_senders
+          ---
+          "
+                    HAS_NEW=1
+                  fi
+        '')
+        accounts;
     in
     ''
       trap '${notmuch} tag -notify-pending -- tag:notify-pending 2>/dev/null || true' EXIT
@@ -115,7 +117,7 @@ rec {
       accountList = map withDefaults (builtins.attrValues accounts);
       primaryAccount = findFirst (acc: acc.primary) (builtins.head accountList) accountList;
     in
-    primaryAccount.${field} or "";
+      primaryAccount.${field} or "";
 
   # Get semicolon-separated list of non-primary emails
   getOtherEmails =
