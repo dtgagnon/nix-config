@@ -16,7 +16,7 @@ in
           execCmds = (
             [
               "gnome-keyring-daemon --start --components=secrets"
-              "blueman-applet"
+              # "blueman-applet"
               "playerctld daemon"
               "solaar --window hide --battery-icons regular"
             ]
@@ -118,6 +118,16 @@ in
         preserve_split = "yes";
         special_scale_factor = 1;
       };
+
+      # scrolling = {
+      #   fullscreen_on_one_column = true; # default
+      #   column_width = 0.66;
+      #   focus_fit_method = 1;
+      #   follow_focus = true;
+      #   follow_min_visible = 0.4;
+      #   explicit_columns_width = "0.333, 0.5, 0.667, 1.0";
+      #   direction = "right";
+      # };
     };
   };
 }

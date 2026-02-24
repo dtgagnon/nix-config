@@ -21,12 +21,9 @@ in
     };
 
     services.n8n = {
+      enable = true;
+      openFirewall = false;
       environment = {
-        diagnostics = "false";
-        versionNotifications = "false";
-        templates = "true";
-        hiringBanner = "false";
-
         # PostgreSQL database configuration
         DB_TYPE = "postgresdb";
         DB_POSTGRESDB_HOST = "/run/postgresql";
@@ -36,8 +33,6 @@ in
         # Reduce graceful shutdown timeout for faster restarts
         N8N_GRACEFUL_SHUTDOWN_TIMEOUT = "10";
       };
-      enable = true;
-      openFirewall = false;
     };
 
     # Configure systemd service
@@ -53,6 +48,11 @@ in
 
         # Load encryption key from sops secret
         EnvironmentFile = config.sops.secrets.n8n_crypt_key.path;
+
+        # Upstream bug: N8N_RUNNERS_AUTH_TOKEN_FILE defaults to null and
+        # LoadCredential tries to interpolate it, causing "cannot coerce null
+        # to a string". Safe to clear since we use EnvironmentFile for secrets.
+        LoadCredential = lib.mkForce [ ];
 
         # Reduce systemd timeout to match n8n's internal timeout
         TimeoutStopSec = 15; # 10s n8n timeout + 5s buffer
