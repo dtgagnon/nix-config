@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  inherit (lib) mkIf mkForce optionalAttrs;
+  inherit (lib) mkDefault mkIf mkForce optionalAttrs;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.desktop.addons.hyprlock;
 
@@ -18,6 +18,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    ${namespace}.desktop.hyprland.extraKeybinds."$lock" = mkDefault "hyprlock";
+
     programs.hyprlock = {
       enable = true;
       sourceFirst = true;

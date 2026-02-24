@@ -619,7 +619,7 @@ in
       };
     };
 
-    # Override lock-related settings to use noctalia-shell lockscreen
+    # Override other features that noctalia-shell provides
     ${namespace} = {
       desktop.addons.hyprlock.enable = mkOverride 90 false;
       desktop.addons.hyprpaper.enable = mkOverride 90 false;

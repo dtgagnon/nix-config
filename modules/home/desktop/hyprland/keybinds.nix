@@ -14,8 +14,8 @@ in
       # Defaults
       "$mod" = "${cfg.hyprModifier}";
       "$terminal" = "ghostty";
-      "$menu" = "rofi -show drun"; # "noctalia-shell ipc call launcher toggle"
-      "$lock" = "hyprlock";
+      "$menu" = "rofi -show drun";
+      "$lock" = ""; # defined in the lock handler's module
 
       bind = [
         # Open
@@ -87,6 +87,7 @@ in
         # Submap entry points
         "$mod, D, submap, display"
         "$mod, M, submap, media"
+        "$mod, O, submap, obsidian"
 
         # Yell dictation
         # Shift + Space: PRESS (Toggle Start)
@@ -149,6 +150,15 @@ in
           ", XF86AudioNext, exec, playerctl next"
         ];
         bind = [
+          ", escape, submap, reset"
+        ];
+      };
+      obsidian.settings = {
+        bind = [
+          ", h, exec, xdg-open 'obsidian://open?vault=dereks-head'"
+          ", h, submap, reset"
+          ", e, exec, xdg-open 'obsidian://open?vault=dtg-engineering'"
+          ", e, submap, reset"
           ", escape, submap, reset"
         ];
       };
