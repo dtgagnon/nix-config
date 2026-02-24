@@ -106,6 +106,7 @@ in
       hyprland = {
         enable = true;
         monitors = [ ];
+        plugins.hyprscroll.enable = true;
         extraConfig = optionalString stylixEnabled ''
           general {
             col.active_border = ${
