@@ -17,129 +17,126 @@
       };
     in
 
-    lib.mkFlake
-      {
-        inherit inputs;
-        src = ./.;
+    lib.mkFlake {
+      inherit inputs;
+      src = ./.;
 
-        channels-config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [
-            # Below 4 for sonarr until they update to .NET 8
-            "aspnetcore-runtime-6.0.36"
-            "aspnetcore-runtime-wrapped-6.0.36"
-            "dotnet-sdk-6.0.428"
-            "dotnet-sdk-wrapped-6.0.428"
-          ];
+      channels-config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          # Below 4 for sonarr until they update to .NET 8
+          "aspnetcore-runtime-6.0.36"
+          "aspnetcore-runtime-wrapped-6.0.36"
+          "dotnet-sdk-6.0.428"
+          "dotnet-sdk-wrapped-6.0.428"
+        ];
+      };
+
+      alias = {
+        shells.default = "flake";
+      };
+
+      overlays = with inputs; [
+        # neovim.overlays.default
+        nix-topology.overlays.default
+        nur.overlays.default
+        odooAdds.overlays.default
+        mcp-servers-nix.overlays.default
+        n8n-private.overlays.default
+        nix-bookshelf.overlays.default
+      ];
+
+      systems.modules.nixos = with inputs; [
+        authentik.nixosModules.default
+        copyparty.nixosModules.default
+        disko.nixosModules.disko
+        home-manager.nixosModules.home-manager
+        impermanence.nixosModules.impermanence
+        nix-index-database.nixosModules.nix-index
+        nix-topology.nixosModules.default
+        NixVirt.nixosModules.default
+        preservation.nixosModules.preservation
+        rybbix.nixosModules.default
+        sops-nix.nixosModules.sops
+        stylix.nixosModules.stylix
+      ];
+
+      systems.modules.darwin = with inputs; [
+        home-manager.darwinModules.home-manager
+        nix-index-database.darwinModules.nix-index
+        sops-nix.darwinModules.sops
+        stylix.darwinModules.stylix
+      ];
+
+      systems.hosts."DG-PC".modules = with inputs; [
+        hyprland.nixosModules.default
+      ];
+
+      systems.hosts.spirepoint.modules = with inputs; [
+        proxmox-nixos.nixosModules.proxmox-ve
+        nixarr.nixosModules.default
+      ];
+
+      systems.hosts.slim.modules = with inputs; [
+        microvm.nixosModules.host
+      ];
+
+      systems.hosts.oranix.modules = with inputs; [
+        spirenet-dashboard.nixosModules.default
+      ];
+
+      homes.packages = with inputs; [ ];
+
+      homes.modules = with inputs; [
+        ags.homeManagerModules.default
+        emma.homeManagerModules.default
+        mango.hmModules.mango
+        noctalia.homeModules.default
+        sops-nix.homeManagerModules.sops
+        stylix.homeModules.stylix
+        yell.homeManagerModules.default
+        zen-browser.homeModules.twilight
+      ];
+
+      deploy = lib.mkDeploy {
+        inherit (inputs) self;
+        overrides = import ./deployments;
+      };
+
+      outputs-builder = channels: {
+        formatter = channels.nixpkgs.nixfmt;
+        packages = {
+          mcp-libreoffice = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-libreoffice { };
+          mcp-mxroute = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-mxroute { };
+          mcp-pangolin = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-pangolin { };
+          mcp-porkbun = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-porkbun { };
         };
+      };
 
-        alias = {
-          shells.default = "flake";
-        };
+      # topology = with inputs;
+      #   let
+      #     host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
+      #   in
+      #   import nix-topology {
+      #     inherit (host) pkgs;
+      #     modules = [
+      #       (import ./topology { inherit (host) config; })
+      #       { nixosConfigurations = builtins.mapAttrs (
+      #         name: value:
+      #           if builtins.hasAttr "kvm" (value.config or {})
+      #           then null
+      #           else value
+      #       ) self.nixosConfigurations; }
+      #     ];
+      #   };
 
-        overlays = with inputs; [
-          # neovim.overlays.default
-          nix-topology.overlays.default
-          nur.overlays.default
-          odooAdds.overlays.default
-          mcp-servers-nix.overlays.default
-          n8n-private.overlays.default
-          nix-bookshelf.overlays.default
-        ];
-
-        systems.modules.nixos = with inputs; [
-          authentik.nixosModules.default
-          copyparty.nixosModules.default
-          disko.nixosModules.disko
-          home-manager.nixosModules.home-manager
-          impermanence.nixosModules.impermanence
-          nix-index-database.nixosModules.nix-index
-          nix-topology.nixosModules.default
-          NixVirt.nixosModules.default
-          preservation.nixosModules.preservation
-          rybbix.nixosModules.default
-          sops-nix.nixosModules.sops
-          stylix.nixosModules.stylix
-        ];
-
-        systems.modules.darwin = with inputs; [
-          home-manager.darwinModules.home-manager
-          nix-index-database.darwinModules.nix-index
-          sops-nix.darwinModules.sops
-          stylix.darwinModules.stylix
-        ];
-
-        systems.hosts."DG-PC".modules = with inputs; [
-          hyprland.nixosModules.default
-        ];
-
-        systems.hosts.spirepoint.modules = with inputs; [
-          proxmox-nixos.nixosModules.proxmox-ve
-          nixarr.nixosModules.default
-        ];
-
-        systems.hosts.slim.modules = with inputs; [
-          microvm.nixosModules.host
-        ];
-
-        systems.hosts.oranix.modules = with inputs; [
-          spirenet-dashboard.nixosModules.default
-        ];
-
-        homes.packages = with inputs; [
-          # zen-browser package is now provided by the home-manager module
-        ];
-
-        homes.modules = with inputs; [
-          ags.homeManagerModules.default
-          emma.homeManagerModules.default
-          mango.hmModules.mango
-          noctalia.homeModules.default
-          sops-nix.homeManagerModules.sops
-          stylix.homeModules.stylix
-          yell.homeManagerModules.default
-          zen-browser.homeModules.twilight
-        ];
-
-        deploy = lib.mkDeploy {
-          inherit (inputs) self;
-          overrides = import ./deployments;
-        };
-
-        outputs-builder = channels: {
-          formatter = channels.nixpkgs.nixfmt;
-          packages = {
-            mcp-libreoffice = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-libreoffice { };
-            mcp-mxroute = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-mxroute { };
-            mcp-pangolin = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-pangolin { };
-            mcp-porkbun = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-porkbun { };
-          };
-        };
-
-        # topology = with inputs;
-        #   let
-        #     host = self.nixosConfigurations.${builtins.head (builtins.attrNames self.nixosConfigurations)};
-        #   in
-        #   import nix-topology {
-        #     inherit (host) pkgs;
-        #     modules = [
-        #       (import ./topology { inherit (host) config; })
-        #       { nixosConfigurations = builtins.mapAttrs (
-        #         name: value:
-        #           if builtins.hasAttr "kvm" (value.config or {})
-        #           then null
-        #           else value
-        #       ) self.nixosConfigurations; }
-        #     ];
-        #   };
-
-        templates = {
-          aiderProj.description = "Development environment flake template w/ aider";
-          devFlake.description = "General development environment flake template";
-          sysMod.description = "NixOS snowfall system module template";
-          homeMod.description = "NixOS snowfall home-manager module template";
-        };
-      }
+      templates = {
+        aiderProj.description = "Development environment flake template w/ aider";
+        devFlake.description = "General development environment flake template";
+        sysMod.description = "NixOS snowfall system module template";
+        homeMod.description = "NixOS snowfall home-manager module template";
+      };
+    }
     // {
       self = inputs.self;
     };
@@ -229,12 +226,10 @@
 
     opencode.url = "github:sst/opencode";
 
-    zen-browser.url = "github:0xc000022070/zen-browser-flake/beta";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     ## desktop
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
-    hyprland-plugins.inputs.hyprland.follows = "hyprland";
 
     # Experimental: Hyprland Remote Desktop PRs (for RustDesk/remote desktop support)
     experimental-hyprland-rdp.url = "github:3l0w/Hyprland/feat/input-capture-impl";

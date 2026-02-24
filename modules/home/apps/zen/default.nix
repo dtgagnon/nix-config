@@ -1,12 +1,29 @@
 { lib
 , config
 , namespace
+, inputs
 , pkgs
 , ...
 }:
 let
   inherit (lib) mkEnableOption mkIf mkOption types;
   cfg = config.${namespace}.apps.zen;
+  zenBrowserPkgs = inputs.zen-browser.packages.${pkgs.system};
+
+  # Upstream occasionally replaces twilight artifacts in-place; pin the observed
+  # hash locally so rebuilds stay unblocked.
+  zenTwilightPatched =
+    if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
+      pkgs.wrapFirefox
+        (zenBrowserPkgs.twilight-unwrapped.overrideAttrs (_: {
+          src = pkgs.fetchzip {
+            url = "https://github.com/zen-browser/desktop/releases/download/twilight-1/zen.linux-x86_64.tar.xz";
+            hash = "sha256-3ia9fNT8pfmD+/5Bw2kApIv0VqetrGDAj64FnOZZ0a8=";
+          };
+        }))
+        { }
+    else
+      zenBrowserPkgs.twilight;
 
   # Import sibling configuration files
   zenSettings = import ./settings.nix;
@@ -62,6 +79,7 @@ in
   config = mkIf cfg.enable {
     programs.zen-browser = {
       enable = true;
+      package = zenTwilightPatched;
       suppressXdgMigrationWarning = true;
 
       profiles.default = {

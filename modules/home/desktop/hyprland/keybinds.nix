@@ -1,7 +1,8 @@
-{ lib
-, config
-, pkgs
-, ...
+{
+  lib,
+  config,
+  pkgs,
+  ...
 }:
 let
   inherit (lib) mkIf getExe;
@@ -34,10 +35,6 @@ in
 
         "$mod_CTRL, k, movewindow, u"
         "$mod_CTRL, j, movewindow, d"
-
-        # Focus
-        "$mod, k, movefocus, u"
-        "$mod, j, movefocus, d"
 
         # Change Workspace
         "$mod, 1, workspace, 01"
@@ -86,27 +83,39 @@ in
 
         # Yell dictation
         # Shift + Space: PRESS (Toggle Start)
-        (lib.optional
-        config.spirenix.apps.yell.enable
-        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"ToggleRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
+        (lib.optional config.spirenix.apps.yell.enable "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"ToggleRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
         # Manual submission of dictation buffer
-        (lib.optional
-        config.spirenix.apps.yell.enable
-        "$mod_CTRL, Z, exec, yell submit")
+        (lib.optional config.spirenix.apps.yell.enable "$mod_CTRL, Z, exec, yell submit")
       ]
-      ++ (if cfg.plugins.hyprscroll.enable then [
-        # Horizontal navigation - hyprscrolling-aware (auto-scrolls viewport)
-        "$mod, h, layoutmsg, focus l"
-        "$mod, l, layoutmsg, focus r"
-        "$mod_CTRL, h, layoutmsg, movewindowto l"
-        "$mod_CTRL, l, layoutmsg, movewindowto r"
-      ] else [
-        # Horizontal navigation - standard
-        "$mod, h, movefocus, l"
-        "$mod, l, movefocus, r"
-        "$mod_CTRL, h, movewindow, l"
-        "$mod_CTRL, l, movewindow, r"
-      ]);
+      ++ (
+        if cfg.layout == "scrolling" then
+          [
+            # Focus - scrolling-aware (auto-scrolls viewport, wraps at edges)
+            "$mod, h, layoutmsg, focus l"
+            "$mod, l, layoutmsg, focus r"
+            "$mod, k, layoutmsg, focus u"
+            "$mod, j, layoutmsg, focus d"
+
+            # Move window into adjacent column (stacks vertically) or create new column at edge
+            "$mod_CTRL, h, movewindow, l"
+            "$mod_CTRL, l, movewindow, r"
+
+            # Expel focused window from column into its own column
+            "$mod_SHIFT, P, layoutmsg, promote"
+          ]
+        else
+          [
+            # Focus - standard
+            "$mod, h, movefocus, l"
+            "$mod, l, movefocus, r"
+            "$mod, k, movefocus, u"
+            "$mod, j, movefocus, d"
+
+            # Move window
+            "$mod_CTRL, h, movewindow, l"
+            "$mod_CTRL, l, movewindow, r"
+          ]
+      );
 
       # Repeating (hold-able) binds
       binde = [
@@ -127,9 +136,7 @@ in
       # Release binds
       # SUPER + Z: RELEASE (Stop if held > 250ms)
       bindr = [
-        (lib.optional
-        config.spirenix.apps.yell.enable
-        "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
+        (lib.optional config.spirenix.apps.yell.enable "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
       ];
 
       # Mouse

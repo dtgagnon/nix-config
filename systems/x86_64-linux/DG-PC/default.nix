@@ -53,7 +53,7 @@ in
       };
       # apollo = enabled;
       keyd = enabled;
-      n8n = enabled;
+      # n8n = enabled; #TODO: Fix build failures
       # llama-cpp = enabled; # Replaced Ollama with llama.cpp + llama-swap
       ollama = enabled; # Disabled in favor of llama-cpp
       openwebui = enabled;

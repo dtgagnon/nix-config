@@ -1,10 +1,11 @@
-{ lib
-, pkgs
-, config
-, # , osConfig ? { }
+{
+  lib,
+  pkgs,
+  config,
+  # , osConfig ? { }
   # , format ? "unknown"
-  namespace
-, ...
+  namespace,
+  ...
 }:
 let
   inherit (lib) optionalString;
@@ -107,7 +108,7 @@ in
       hyprland = {
         enable = true;
         monitors = [ ];
-        plugins.hyprscroll.enable = true;
+        layout = "scrolling";
         extraConfig = optionalString stylixEnabled ''
           general {
             col.active_border = ${
@@ -148,7 +149,10 @@ in
 
     services = {
       activity-watch = enabled;
-      audio-record = { enable = true; format = "flac"; };
+      audio-record = {
+        enable = true;
+        format = "flac";
+      };
       copyparty-client = enabled;
       emma = enabled;
       mail = {
