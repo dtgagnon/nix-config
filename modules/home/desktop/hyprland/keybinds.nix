@@ -23,8 +23,6 @@ in
         "$mod_ALT, Return, exec, $terminal"
         "$mod, E, exec, [float; center; size 1600 900] $terminal -e yazi /home/${config.spirenix.user.name}"
         "$mod, P, exec, $menu"
-        "$mod, B, exec, zen-twilight"
-        "$mod_ALT, V, exec, [workspace 1] antigravity"
         "$mod_SHIFT, Z, exec, hyprshot -z -m region -t 1000 --clipboard-only"
         "$mod_SHIFT_CTRL, Z, exec, hyprshot -z -m region -t 1000 -o ~/Pictures/screenshots -f screenshot-$(date +%Y%m%d-%H%M%S).png"
 
@@ -81,6 +79,7 @@ in
         "$mod_SHIFT_CTRL, L, exec, $lock"
 
         # Submap entry points
+        "$mod, A, submap, apps"
         "$mod, D, submap, display"
         "$mod, M, submap, media"
         "$mod, O, submap, obsidian"
@@ -140,6 +139,17 @@ in
       ];
     };
     wayland.windowManager.hyprland.submaps = {
+      apps.settings = {
+        bind = [
+          ", b, exec, zen-twilight"
+          ", b, submap, reset"
+          ", v, exec, antigravity"
+          ", v, submap, reset"
+          ", d, exec, vesktop"
+          ", d, submap, reset"
+          ", escape, submap, reset"
+        ];
+      };
       display.settings = {
         bind = [
           ", i, exec, hypr-pip"
