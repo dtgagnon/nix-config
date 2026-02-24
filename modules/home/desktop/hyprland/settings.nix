@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   osConfig ? { },
   ...
@@ -7,6 +8,30 @@
 let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
+
+  # Auto-fit scrolling layout columns when ≤ 4 tiled windows on a workspace.
+  # With column_width=0.25, exactly 4 columns fill the screen. Beyond that, columns overflow.
+  scrollAutofitScript = pkgs.writeShellScriptBin "hypr-scroll-autofit" ''
+    MAX_COLS=4
+
+    autofit() {
+      ws=$(hyprctl activeworkspace -j | ${lib.getExe pkgs.jq} '.id')
+      count=$(hyprctl clients -j | ${lib.getExe pkgs.jq} \
+        "[.[] | select(.workspace.id == $ws and .floating == false and .mapped == true)] | [.[].at[0]] | unique | length")
+      if [ "$count" -ge 1 ] && [ "$count" -le "$MAX_COLS" ]; then
+        hyprctl dispatch layoutmsg "fit all"
+      fi
+    }
+
+    ${lib.getExe pkgs.socat} -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while IFS= read -r line; do
+      case "$line" in
+        openwindow*|closewindow*|movewindow*|workspace\>*)
+          sleep 0.1
+          autofit
+          ;;
+      esac
+    done
+  '';
 in
 {
   config = mkIf cfg.enable {
@@ -20,6 +45,7 @@ in
               "playerctld daemon"
               "solaar --window hide --battery-icons regular"
             ]
+            ++ lib.optional (cfg.layout == "scrolling") (lib.getExe scrollAutofitScript)
             ++ cfg.extraExec
           );
           # Add monitor init when PiP is enabled
@@ -121,7 +147,7 @@ in
 
       scrolling = mkIf (cfg.layout == "scrolling") {
         fullscreen_on_one_column = 1;
-        column_width = 0.66;
+        column_width = 0.25;
         focus_fit_method = 1;
         follow_focus = 1;
         follow_min_visible = 0.4;

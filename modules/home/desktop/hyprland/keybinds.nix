@@ -100,6 +100,10 @@ in
             "$mod_CTRL, h, movewindow, l"
             "$mod_CTRL, l, movewindow, r"
 
+            # Cycle column width through explicit_column_widths presets
+            "$mod_SHIFT, h, layoutmsg, colresize -conf"
+            "$mod_SHIFT, l, layoutmsg, colresize +conf"
+
             # Expel focused window from column into its own column
             "$mod_SHIFT, P, layoutmsg, promote"
           ]
@@ -131,6 +135,11 @@ in
         "$mod_SHIFT, code:35, exec, border_size=$(hyprctl -j getoption general:border_size | jq '.int') ; hyprctl keyword general:border_size $(($border_size - 1))"
         "$mod_CTRL_SHIFT, code:34, exec, border_rounding=$(hyprctl -j getoption decoration:rounding | jq '.int') ; hyprctl keyword decoration:rounding $(($border_rounding + 1))"
         "$mod_CTRL_SHIFT, code:35, exec, border_rounding=$(hyprctl -j getoption decoration:rounding | jq '.int') ; hyprctl keyword decoration:rounding $(($border_rounding - 1))"
+      ]
+      ++ lib.optionals (cfg.layout == "scrolling") [
+        # Horizontal scroll wheel navigates columns in scrolling layout
+        "$mod, mouse_left, layoutmsg, focus l"
+        "$mod, mouse_right, layoutmsg, focus r"
       ];
 
       # Release binds
