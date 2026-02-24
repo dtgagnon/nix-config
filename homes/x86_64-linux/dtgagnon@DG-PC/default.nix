@@ -70,6 +70,7 @@ in
       claude-code = {
         enable = true;
         scheduling.enable = true;
+        scheduling.journal.enable = true;
         selfImprove.enable = true;
       };
       codex = enabled;
