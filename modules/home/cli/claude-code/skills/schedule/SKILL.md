@@ -26,8 +26,23 @@ Schedule autonomous Claude Code tasks that execute on systemd timers with explic
   completed/        # Finished tasks with execution logs appended
   needs-attention/  # Tasks that exceeded max retries
   templates/        # Reusable task file templates
+  scripts/          # Helper scripts associated with scheduled tasks
   task-runner       # Execution wrapper script
 ```
+
+### Script Naming Convention
+
+Scripts in `scripts/` MUST be named with the same base name as their associated task file (minus the date prefix). For example:
+
+- Task: `pending/2026-02-23_workday-checkin.md`
+- Script: `scripts/workday-checkin_wrapper.sh`
+
+If a task needs multiple scripts, use the task name as a prefix with a descriptive suffix:
+
+- `scripts/workday-checkin_wrapper.sh`
+- `scripts/workday-checkin_summarizer.sh`
+
+When creating a new task that requires helper scripts, place them in `scripts/` following this convention. Reference them by full path in the task's `allowedTools` frontmatter.
 
 ## Task File Format
 

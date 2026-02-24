@@ -2721,11 +2721,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1771858033,
-        "narHash": "sha256-/m1I+ZGvA+7C6flVzQZrktOKdb4RRbXX/gup0VrhP4Q=",
+        "lastModified": 1771944434,
+        "narHash": "sha256-xJOtVIQ52zM9EZeUHKKJ+aGhn1svUTkJI3S8s445NFc=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "c4c64459db15bb02c5c67b862581c1bfd28144f8",
+        "rev": "aba9382852d7757b45147deee70e464b58e3bd7c",
         "type": "github"
       },
       "original": {
@@ -5067,11 +5067,11 @@
         "sortformer-model": "sortformer-model"
       },
       "locked": {
-        "lastModified": 1771805611,
-        "narHash": "sha256-yXFGvcbzNgmy//WZPs5on5MNYbGBUY+qs8VgLhBwSdw=",
+        "lastModified": 1771947402,
+        "narHash": "sha256-IADzOiHh4tm2TNu/1kFZFujDBccqC9lJWdo0vSTh4tI=",
         "ref": "refs/heads/main",
-        "rev": "10e6db538292a97b3554a3224d09d4fb80a8c5a4",
-        "revCount": 155,
+        "rev": "526702a0031c78787c153eed6d51d2e9a307e13b",
+        "revCount": 156,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/yell"
       },

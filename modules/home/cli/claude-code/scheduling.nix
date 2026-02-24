@@ -275,6 +275,7 @@ in
       run mkdir -p "${tasksDir}/completed"
       run mkdir -p "${tasksDir}/needs-attention"
       run mkdir -p "${tasksDir}/templates"
+      run mkdir -p "${tasksDir}/scripts"
       run mkdir -p "${tasksDir}/logs"
       run ln -sf "${task-runner}" "${tasksDir}/task-runner"
     '';
