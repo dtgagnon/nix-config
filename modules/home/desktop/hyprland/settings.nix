@@ -74,7 +74,7 @@ in
           "border, 1, 10, default"
           "borderangle, 1, 8, default"
           "fade, 1, 5, myBezier"
-          "workspaces, 1, 6, default"
+          "workspaces, 1, 6, myBezier, slidevert"
           "specialWorkspace, 1, 6, default, fade"
         ];
       };
