@@ -34,14 +34,10 @@ in
         "$mod, Space, togglefloating,"
         "$mod, N, togglesplit,"
 
-        "$mod_CTRL, h, movewindow, l"
-        "$mod_CTRL, l, movewindow, r"
         "$mod_CTRL, k, movewindow, u"
         "$mod_CTRL, j, movewindow, d"
 
         # Focus
-        "$mod, h, movefocus, l"
-        "$mod, l, movefocus, r"
         "$mod, k, movefocus, u"
         "$mod, j, movefocus, d"
 
@@ -98,7 +94,20 @@ in
         (lib.optional
         config.spirenix.apps.yell.enable
         "$mod_CTRL, Z, exec, yell submit")
-      ];
+      ]
+      ++ (if cfg.plugins.hyprscroll.enable then [
+        # Horizontal navigation - hyprscrolling-aware (auto-scrolls viewport)
+        "$mod, h, layoutmsg, focus l"
+        "$mod, l, layoutmsg, focus r"
+        "$mod_CTRL, h, layoutmsg, movewindowto l"
+        "$mod_CTRL, l, layoutmsg, movewindowto r"
+      ] else [
+        # Horizontal navigation - standard
+        "$mod, h, movefocus, l"
+        "$mod, l, movefocus, r"
+        "$mod_CTRL, h, movewindow, l"
+        "$mod_CTRL, l, movewindow, r"
+      ]);
 
       # Repeating (hold-able) binds
       binde = [

@@ -44,7 +44,7 @@ in
         gaps_in = 3;
         gaps_out = 5;
         border_size = 3;
-        layout = "dwindle";
+        layout = if cfg.plugins.hyprscroll.enable then "scrolling" else "dwindle";
       };
 
       decoration = {

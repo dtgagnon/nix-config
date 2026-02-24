@@ -30,6 +30,12 @@ in
     };
     monitors = mkOpt (types.listOf types.str) [ ] "Configure any additional monitors";
 
+    plugins = {
+      hyprscroll = {
+        enable = mkBoolOpt false "Whether to enable the hyprscrolling layout plugin";
+      };
+    };
+
     extraConfig = mkOpt types.lines "" "Additional hyprland configuration in string format";
     hyprModifier = mkOpt types.str "SUPER" "The main hyprland modifier key.";
     extraKeybinds = mkDeepAttrsOpt { } "Additional keybinds to add to the Hyprland config";
@@ -49,6 +55,7 @@ in
         systemd.enable = if (osConfig.programs.hyprland.withUWSM or false) then false else true;
         xwayland.enable = false;
         inherit (cfg) extraConfig;
+        plugins = lib.optional cfg.plugins.hyprscroll.enable inputs.hyprland-plugins.packages.${system}.hyprscrolling;
         settings = cfg.extraSettings // cfg.extraKeybinds // cfg.extraWinRules;
       };
 
