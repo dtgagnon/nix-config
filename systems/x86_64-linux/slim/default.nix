@@ -14,7 +14,7 @@ in
   ];
 
   # OpenClaw runs in isolated VM - prompt injection risk accepted
-  nixpkgs.config.permittedInsecurePackages = [ "openclaw-2026.1.30" ];
+  nixpkgs.config.permittedInsecurePackages = [ "openclaw-2026.2.24" ];
 
   # ============================================================================
   # Boot Configuration
@@ -74,6 +74,8 @@ in
       networking = enabled;
     };
 
+    services.tailscale.authKeyFile = null; # Manual auth; no sops secret needed
+
     hardware = {
       keyboard = enabled;
       laptop = enabled;
@@ -92,6 +94,7 @@ in
       extraSysDirs = [
         "/etc/NetworkManager/system-connections"
         "/var/lib/microvms"
+        "/var/lib/tailscale"
       ];
     };
 

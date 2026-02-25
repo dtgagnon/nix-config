@@ -26,7 +26,7 @@ in
 {
   options.${namespace}.services.tailscale = {
     enable = mkBoolOpt false "Enable tailscale";
-    authKeyFile = mkOpt types.str "/run/secrets/tailscale-authKey" "Authentication key to authorize this node on the tailnet";
+    authKeyFile = mkOpt (types.nullOr types.str) "/run/secrets/tailscale-authKey" "Authentication key to authorize this node on the tailnet. Set to null for manual authentication.";
 
     serve = mkOpt
       (types.attrsOf (types.submodule {
@@ -56,7 +56,7 @@ in
 
   config = mkMerge [
     (mkIf cfg.enable {
-      sops.secrets = {
+      sops.secrets = mkIf (cfg.authKeyFile != null) {
         "tailscale-authKey" = {
           owner = config.${namespace}.user.name;
         };
@@ -66,7 +66,7 @@ in
         enable = true;
         package = pkgs.tailscale.overrideAttrs { doCheck = false; };
         extraSetFlags = [ "--ssh" ]; # only use "--accept-routes" when you want to access devices on a REMOTE physical LAN
-        inherit (cfg) authKeyFile;
+        authKeyFile = lib.mkIf (cfg.authKeyFile != null) cfg.authKeyFile;
       };
     })
 
