@@ -94,7 +94,7 @@ in
       type = types.listOf types.str;
       default = [ ];
       description = "Additional origins to allow for CORS (e.g., Tailnet IPs for direct access)";
-      example = [ "http://100.100.90.1:3002" ];
+      example = [ "http://123.456.789.123:1234" ];
     };
   };
 
@@ -116,31 +116,27 @@ in
 
       sops.secrets."pangolin/acme-email" = { };
 
+      # Wrap the ACME email secret as an env var for Traefik's envsubst
+      sops.templates."traefik-acme.env" = {
+        content = "ACME_EMAIL=${config.sops.placeholder."pangolin/acme-email"}";
+        owner = "traefik";
+        group = "traefik";
+      };
+
       services.pangolin = {
         enable = true;
         baseDomain = cfg.baseDomain;
         dashboardDomain = "pangolin.${cfg.baseDomain}";
-        # Use sops placeholder - will be substituted in the template
-        letsEncryptEmail = config.sops.placeholder."pangolin/acme-email";
+        letsEncryptEmail = "$ACME_EMAIL";
         openFirewall = true;
         environmentFile = config.sops.secrets."pangolin/env".path;
       };
 
-      # Use sops template for static config with ACME email secret
-      sops.templates."traefik-config.json" = {
-        content = builtins.toJSON config.services.traefik.staticConfigOptions;
-        owner = "root";
-        group = "root";
-        mode = "0644";
-      };
+      # Let the standard traefik module handle static + dynamic config generation.
+      # envsubst substitutes $ACME_EMAIL from the env file into the static config.
+      services.traefik.environmentFiles = [ config.sops.templates."traefik-acme.env".path ];
 
-      # Override Traefik to use the sops-rendered JSON config
-      systemd.services.traefik = {
-        after = [ "sops-nix.service" ];
-        serviceConfig.ExecStart = lib.mkForce "${pkgs.traefik}/bin/traefik --configfile=${
-          config.sops.templates."traefik-config.json".path
-        }";
-      };
+      systemd.services.traefik.after = [ "sops-nix.service" ];
 
       # Base security and feature configuration
       services.pangolin.settings = {
