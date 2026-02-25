@@ -11,6 +11,51 @@ let
   cfg = config.${namespace}.cli.claude-code;
   journal = cfg.scheduling.journal;
 
+  tasksDir = cfg.scheduling.tasksDir;
+
+  # Task file for /schedule list visibility and documentation
+  journal-checkin-task = pkgs.writeText "workday-checkin.md" ''
+    ---
+    summary: Workday check-in popup — asks what you're working on, summarizes to daily note
+    schedule: "${journal.schedule}"
+    recurring: true
+    model: ${journal.model}
+    ${lib.optionalString (journal.until != null) "until: \"${journal.until}\""}
+    tags: [productivity, check-in, journal]
+    allowedTools:
+      - "Bash(${lib.getExe journal.terminal} -e:${journal-checkin})"
+    ---
+
+    # Workday Check-In
+
+    ## Context
+    An interactive Claude Code session that pops up in a Ghostty terminal during the
+    workday to check in on progress, offer help, and keep momentum going. After the
+    conversation ends, the session is summarized and logged to the Obsidian daily note.
+
+    ## Flow
+
+    ### First check-in of the day (no daily note exists yet)
+    1. Claude prompts user for **On My Mind** and **Intentions**
+    2. User chats naturally about their morning headspace and plans
+    3. Session ends — Sonnet populates On My Mind + Intentions; Experiences/Grateful left as placeholders
+    4. Daily note is created with frontmatter + populated content
+
+    ### Midday follow-up check-ins (daily note exists)
+    1. Claude opens with the daily note content and asks about progress
+    2. User chats, then closes the session
+    3. Sonnet generates a 2-5 bullet summary appended under `## Check-in (HH:MM)`
+
+    ### Last check-in of the day (daily note exists, lastCheckInHour)
+    1. Claude prompts for progress AND **Experiences** and **Grateful for**
+    2. User reflects on the day, then closes the session
+    3. Check-in summary appended; Experiences/Grateful sections populated
+
+    ## Success Criteria
+    - Ghostty terminal opens with an interactive Claude session
+    - Daily note is created or updated appropriately for the check-in mode
+  '';
+
   journal-checkin = pkgs.writeShellScript "journal-checkin" ''
 set -euo pipefail
 
@@ -303,6 +348,13 @@ in
   };
 
   config = mkIf (cfg.enable && cfg.scheduling.enable && journal.enable) {
+    # Seed task file to pending/ (only if not already present, to preserve execution logs)
+    home.activation.setupJournalCheckin = lib.hm.dag.entryAfter [ "setupSchedulingDirs" ] ''
+      if [ ! -f "${tasksDir}/pending/workday-checkin.md" ]; then
+        run cp "${journal-checkin-task}" "${tasksDir}/pending/workday-checkin.md"
+      fi
+    '';
+
     systemd.user.services.journal-checkin = {
       Unit = {
         Description = "Smart Journal workday check-in session";
