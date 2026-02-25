@@ -310,6 +310,7 @@ in
       };
       Service = {
         Type = "oneshot";
+        WorkingDirectory = builtins.replaceStrings [ "$HOME" ] [ "%h" ] cfg.scheduling.tasksDir;
         ExecStart = "${lib.getExe journal.terminal} -e ${journal-checkin}";
         TimeoutStartSec = "2h";
         Environment = [
