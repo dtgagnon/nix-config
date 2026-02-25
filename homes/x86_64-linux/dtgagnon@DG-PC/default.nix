@@ -72,6 +72,7 @@ in
         enable = true;
         scheduling.enable = true;
         scheduling.journal.enable = true;
+        scheduling.scratchpad.enable = true;
         selfImprove.enable = true;
       };
       codex = enabled;
