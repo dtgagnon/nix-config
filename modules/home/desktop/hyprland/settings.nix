@@ -31,7 +31,7 @@ let
 
     ${lib.getExe pkgs.socat} -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while IFS= read -r line; do
       case "$line" in
-        openwindow*|closewindow*|movewindow*|workspace>>*)
+        openwindow*|closewindow*|movewindow*|workspace'>>'*)
           sleep 0.15
           autofit
           ;;
