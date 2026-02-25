@@ -44,7 +44,7 @@ let
 in
 {
   # Conditionally import sub-modules.
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = lib.snowfall.fs.get-non-default-nix-files ./. ++ [ ./scheduled ];
 
   options.${namespace}.cli.claude-code = {
     enable = mkBoolOpt false "Enable the claude ai assistant cli tool";
