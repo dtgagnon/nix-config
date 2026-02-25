@@ -9,24 +9,30 @@ let
   inherit (lib) mkIf;
   cfg = config.spirenix.desktop.hyprland;
 
-  # Auto-fit scrolling layout columns when ≤ 4 tiled windows on a workspace.
-  # With column_width=0.25, exactly 4 columns fill the screen. Beyond that, columns overflow.
+  # Auto-fit scrolling layout columns when ≤ 4 on a workspace.
+  # Explicitly sets all columns to 1/n width so they fill the screen evenly.
+  # Beyond 4 columns, the default column_width (0.25) causes natural overflow/scrolling.
   scrollAutofitScript = pkgs.writeShellScriptBin "hypr-scroll-autofit" ''
     MAX_COLS=4
+    JQ=${lib.getExe pkgs.jq}
 
     autofit() {
-      ws=$(hyprctl activeworkspace -j | ${lib.getExe pkgs.jq} '.id')
-      count=$(hyprctl clients -j | ${lib.getExe pkgs.jq} \
+      local ws count
+      ws=$(hyprctl activeworkspace -j | $JQ '.id')
+      count=$(hyprctl clients -j | $JQ \
         "[.[] | select(.workspace.id == $ws and .floating == false and .mapped == true)] | [.[].at[0]] | unique | length")
-      if [ "$count" -ge 1 ] && [ "$count" -le "$MAX_COLS" ]; then
-        hyprctl dispatch layoutmsg "fit all"
-      fi
+
+      case "$count" in
+        2) hyprctl dispatch layoutmsg "colresize all 0.5" ;;
+        3) hyprctl dispatch layoutmsg "colresize all 0.334" ;;
+        4) hyprctl dispatch layoutmsg "colresize all 0.25" ;;
+      esac
     }
 
     ${lib.getExe pkgs.socat} -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while IFS= read -r line; do
       case "$line" in
-        openwindow*|closewindow*|movewindow*|workspace\>*)
-          sleep 0.1
+        openwindow*|closewindow*|movewindow*|workspace>>*)
+          sleep 0.15
           autofit
           ;;
       esac
