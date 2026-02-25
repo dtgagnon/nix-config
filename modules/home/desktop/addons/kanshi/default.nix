@@ -23,8 +23,8 @@ in {
           profile.name = "main_workstation";
           profile.outputs = [
             {
-              criteria = "AOC CU34G2X";
-              mode = "3440x1440@144Hz";
+              criteria = "Samsung Electric Company Odyssey Neo G9";
+              mode = "7680x2160@240Hz";
               position = "0,0";
             }
           ];

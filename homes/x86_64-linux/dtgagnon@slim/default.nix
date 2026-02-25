@@ -43,5 +43,5 @@ in
     services.syncthing = enabled;
   };
 
-  home.stateVersion = "24.11";
+  home.stateVersion = "26.05";
 }
