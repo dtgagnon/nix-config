@@ -32,9 +32,9 @@ Schedule autonomous Claude Code tasks that execute on systemd timers with explic
 
 ### Script Naming Convention
 
-Scripts in `scripts/` MUST be named with the same base name as their associated task file (minus the date prefix). For example:
+Scripts in `scripts/` MUST be named with the same base name as their associated task file. For example:
 
-- Task: `pending/2026-02-23_workday-checkin.md`
+- Task: `pending/workday-checkin.md`
 - Script: `scripts/workday-checkin_wrapper.sh`
 
 If a task needs multiple scripts, use the task name as a prefix with a descriptive suffix:
@@ -46,11 +46,12 @@ When creating a new task that requires helper scripts, place them in `scripts/` 
 
 ## Task File Format
 
-Markdown files with YAML frontmatter. Filenames: `YYYY-MM-DD_short-description.md`
+Markdown files with YAML frontmatter. Filenames: `short-description.md` (descriptive slug, no date prefix — creation date goes in frontmatter).
 
 ```markdown
 ---
 summary: One-line description
+created: "YYYY-MM-DD"
 schedule: "YYYY-MM-DDTHH:MM"
 expires: "YYYY-MM-DD"
 model: sonnet
