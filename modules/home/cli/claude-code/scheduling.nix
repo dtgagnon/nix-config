@@ -157,6 +157,8 @@ let
     # NOTE: prompt must go via stdin because --allowedTools is variadic and
     # consumes all subsequent positional arguments.
     # Uses stream-json for per-turn log visibility (tail -f the log file).
+    # --permission-mode acceptEdits auto-grants tool use within the
+    # --allowedTools restriction set (scheduled tasks have no TTY to prompt on).
     PROMPT="You are executing a scheduled task autonomously. Follow the steps exactly.
 
 After completing ALL steps, verify each Success Criterion is met.
@@ -169,6 +171,7 @@ $TASK_CONTENT"
 
     echo "$PROMPT" | claude -p \
       --model "$MODEL" \
+      --permission-mode acceptEdits \
       --output-format stream-json \
       --verbose \
       --allowedTools "''${ALLOWED_TOOLS[@]}" \

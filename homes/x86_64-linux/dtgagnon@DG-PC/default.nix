@@ -72,9 +72,15 @@ in
         enable = true;
         scheduling.enable = true;
         scheduling.journal.enable = true;
-        scheduling.scratchpads.dtge = {
-          targetDir = "/home/dtgagnon/Documents/DTGE";
-          contextFiles = [ "./CLAUDE.md" ];
+        scheduling.scratchpads = {
+          dtge = {
+            targetDir = "/home/dtgagnon/Documents/DTGE";
+            contextFiles = [ "./CLAUDE.md" ];
+          };
+          nixos = {
+            targetDir = "/home/dtgagnon/nix-config/nixos";
+            contextFiles = [ "./CLAUDE.md" ];
+          };
         };
         selfImprove.enable = true;
       };

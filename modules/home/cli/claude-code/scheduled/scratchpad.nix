@@ -238,7 +238,7 @@ in
 
           contextFiles = mkOption {
             type = types.listOf types.str;
-            default = [ ];
+            default = [ "./CLAUDE.md" ];
             description = "Relative paths within targetDir to grant additional Read access to (e.g., [\"Work/CLAUDE.md\"])";
           };
 
@@ -306,8 +306,8 @@ in
                 run bash -c 'printf "[]" > "${i.todoJsonPath}"'
               fi
               run mkdir -p "${inst.targetDir}"
-              run ln -sf "${i.scratchpadPath}" "${inst.targetDir}/${name}-scratchpad.md"
-              run ln -sf "${i.todoJsonPath}" "${inst.targetDir}/${name}-todo.json"
+              run ln -sf "${i.scratchpadPath}" "${inst.targetDir}/scratchpad.md"
+              run ln -sf "${i.todoJsonPath}" "${inst.targetDir}/todo.json"
               if [ ! -f "${tasksDir}/pending/${i.agentTaskName}.md" ]; then
                 run cp "${i.agentTask}" "${tasksDir}/pending/${i.agentTaskName}.md"
                 run chmod u+w "${tasksDir}/pending/${i.agentTaskName}.md"

@@ -174,10 +174,13 @@ let
   monitorInit = writeShellScriptBin "hypr-monitor-init" ''
     #!${stdenv.shell}
     # hypr-monitor-init - Set default monitor configuration based on GPU mode
+    # Uses live driver detection so it works from any execution context (including systemd services)
 
     CONFIG_FILE="/etc/hyprland-pip-monitors.json"
     HYPRCTL="${inputs.hyprland.packages.${system}.hyprland}/bin/hyprctl"
     JQ="${pkgs.jq}/bin/jq"
+    DGPU_BUS_ID="0000:01:00.0"
+    STATE_FILE="/var/lib/systemd/vfio-dgpu-state"
 
     # Exit gracefully if config doesn't exist (PiP not configured for this host)
     [ -f "$CONFIG_FILE" ] || exit 0
@@ -188,13 +191,26 @@ let
     IGPU_MONITOR=$($JQ -r '.igpuMonitor.name' "$CONFIG_FILE")
     IGPU_SPEC=$($JQ -r '.igpuMonitor.spec' "$CONFIG_FILE")
 
-    # Detect GPU mode from AQ_DRM_DEVICES
-    if echo "$AQ_DRM_DEVICES" | ${pkgs.gnugrep}/bin/grep -q "nvidia-dGPU"; then
-      # dGPU mode: Enable HDMI (dGPU), disable DP (iGPU)
+    # Detect whether the dGPU is available for rendering.
+    # Both conditions must be true: the host owns the dGPU (not passed to a VM)
+    # and the nvidia driver is actively bound to it.
+    HOST_BOUND_DGPU=false
+    if [ -f "$STATE_FILE" ] && [ "$(${coreutils}/bin/cat "$STATE_FILE")" = "0" ]; then
+      HOST_BOUND_DGPU=true
+    fi
+
+    NVIDIA_BOUND_DGPU=false
+    if [ -L "/sys/bus/pci/devices/$DGPU_BUS_ID/driver" ]; then
+      ACTIVE_DRIVER=$(${coreutils}/bin/basename "$(${coreutils}/bin/readlink -f /sys/bus/pci/devices/$DGPU_BUS_ID/driver)")
+      [ "$ACTIVE_DRIVER" = "nvidia" ] && NVIDIA_BOUND_DGPU=true
+    fi
+
+    if [ "$HOST_BOUND_DGPU" = "true" ] && [ "$NVIDIA_BOUND_DGPU" = "true" ]; then
+      # dGPU rendering: use dGPU monitor, disable iGPU monitor
       $HYPRCTL keyword monitor "$DGPU_MONITOR,$DGPU_SPEC" || true
       $HYPRCTL keyword monitor "$IGPU_MONITOR,disable" || true
     else
-      # iGPU mode: Enable DP (iGPU), disable HDMI (dGPU)
+      # iGPU rendering: use iGPU monitor, disable dGPU monitor
       $HYPRCTL keyword monitor "$IGPU_MONITOR,$IGPU_SPEC" || true
       $HYPRCTL keyword monitor "$DGPU_MONITOR,disable" || true
     fi
