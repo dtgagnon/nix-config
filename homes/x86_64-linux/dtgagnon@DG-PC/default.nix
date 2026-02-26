@@ -72,7 +72,10 @@ in
         enable = true;
         scheduling.enable = true;
         scheduling.journal.enable = true;
-        scheduling.scratchpad.enable = true;
+        scheduling.scratchpads.dtge = {
+          targetDir = "/home/dtgagnon/Documents/DTGE";
+          contextFiles = [ "./CLAUDE.md" ];
+        };
         selfImprove.enable = true;
       };
       codex = enabled;

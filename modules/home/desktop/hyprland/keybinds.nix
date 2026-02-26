@@ -20,6 +20,12 @@ in
         "$menu" = "rofi -show drun";
         "$lock" = ""; # defined in the lock handler's module
 
+        # Mouse
+        bindm = [
+          "$mod, mouse:272, movewindow"
+          "$mod, mouse:273, resizewindow 2"
+        ];
+
         bind = [
           # Open
           "$mod, Return, exec, $terminal"
@@ -42,10 +48,10 @@ in
           (if isScrolling then "$mod, j, layoutmsg, focus d" else "$mod, j, movefocus, d")
 
           # Move window
-          (if isScrolling then "$mod_CTRL, h, layoutmsg, movewindowto l" else "$mod_CTRL, h, movewindow, l")
-          (if isScrolling then "$mod_CTRL, l, layoutmsg, movewindowto r" else "$mod_CTRL, l, movewindow, r")
-          (if isScrolling then "$mod_CTRL, k, layoutmsg, movewindowto u" else "$mod_CTRL, k, movewindow, u")
-          (if isScrolling then "$mod_CTRL, j, layoutmsg, movewindowto d" else "$mod_CTRL, j, movewindow, d")
+          "$mod_CTRL, h, movewindow, l"
+          "$mod_CTRL, l, movewindow, r"
+          "$mod_CTRL, k, movewindow, u"
+          "$mod_CTRL, j, movewindow, d"
 
           # Change Workspace
           "$mod, 1, workspace, 01"
@@ -103,6 +109,9 @@ in
           # Cycle column width through explicit_column_widths presets
           "$mod_SHIFT, h, layoutmsg, colresize -conf"
           "$mod_SHIFT, l, layoutmsg, colresize +conf"
+          # Horizontal scroll wheel pans the scrolling layout viewport
+          "$mod, mouse_left, layoutmsg, move -30"
+          "$mod, mouse_right, layoutmsg, move 30"
         ];
 
         # Repeating (hold-able) binds
@@ -112,11 +121,6 @@ in
           "$mod_ALT, l, resizeactive, 10 0"
           "$mod_ALT, k, resizeactive, 0 -10"
           "$mod_ALT, j, resizeactive, 0 10"
-        ]
-        ++ lib.optionals isScrolling [
-          # Horizontal scroll wheel navigates columns in scrolling layout
-          "$mod, mouse_left, layoutmsg, focus l"
-          "$mod, mouse_right, layoutmsg, focus r"
         ];
 
         # Release binds
@@ -124,15 +128,9 @@ in
         bindr = [
           (lib.optional config.spirenix.apps.yell.enable "$mod, Z, exec, sh -c 'echo \"{\\\"type\\\": \\\"StopRecording\\\"}\" | ${getExe pkgs.socat} - UNIX-CONNECT:$XDG_RUNTIME_DIR/yell.sock'")
         ];
-
-        # Mouse
-        bindm = [
-          "$mod, mouse:272, movewindow"
-          "$mod, mouse:273, resizewindow 2"
-        ];
       }
-
     ];
+
     wayland.windowManager.hyprland.submaps = {
       apps.settings = {
         bind = [

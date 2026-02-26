@@ -277,6 +277,8 @@ in
       run mkdir -p "${tasksDir}/templates"
       run mkdir -p "${tasksDir}/scripts"
       run mkdir -p "${tasksDir}/logs"
+      run mkdir -p "${tasksDir}/scratchpads"
+      run mkdir -p "${tasksDir}/todos"
       run ln -sf "${task-runner}" "${tasksDir}/task-runner"
     '';
   };
