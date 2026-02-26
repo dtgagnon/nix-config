@@ -15,6 +15,12 @@ let
   scrollAutofitScript = pkgs.writeShellScriptBin "hypr-scroll-autofit" ''
     MAX_COLS=4
     JQ=${lib.getExe pkgs.jq}
+    LOG=/tmp/hypr-scroll-autofit.log
+    LAST_COUNT=""
+
+    log() { echo "[$(date +%H:%M:%S.%3N)] $*" >> "$LOG"; }
+
+    log "=== autofit script started ==="
 
     autofit() {
       local ws count
@@ -22,16 +28,27 @@ let
       count=$(hyprctl clients -j | $JQ \
         "[.[] | select(.workspace.id == $ws and .floating == false and .mapped == true)] | [.[].at[0]] | unique | length")
 
+      # Skip if column count hasn't changed (debounce for activewindow spam)
+      if [ "$count" = "$LAST_COUNT" ]; then
+        log "ws=$ws cols=$count (unchanged, skipping)"
+        return
+      fi
+      LAST_COUNT="$count"
+
+      log "ws=$ws cols=$count"
+
       case "$count" in
-        2) hyprctl dispatch layoutmsg "colresize all 0.5" ;;
-        3) hyprctl dispatch layoutmsg "colresize all 0.334" ;;
-        4) hyprctl dispatch layoutmsg "colresize all 0.25" ;;
+        2) log "resizing all -> 0.5";  hyprctl dispatch layoutmsg "colresize all 0.5" ;;
+        3) log "resizing all -> 0.334"; hyprctl dispatch layoutmsg "colresize all 0.334" ;;
+        4) log "resizing all -> 0.25";  hyprctl dispatch layoutmsg "colresize all 0.25" ;;
+        *) log "no resize (count=$count)" ;;
       esac
     }
 
     ${lib.getExe pkgs.socat} -U - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | while IFS= read -r line; do
       case "$line" in
-        openwindow*|closewindow*|movewindow*|workspace'>>'*)
+        openwindow*|closewindow*|movewindow*|changefloatingmode*|activewindow'>>'*|workspace'>>'*)
+          log "event: $line"
           sleep 0.15
           autofit
           ;;
@@ -153,7 +170,7 @@ in
 
       scrolling = mkIf (cfg.layout == "scrolling") {
         fullscreen_on_one_column = 1;
-        column_width = 0.25;
+        column_width = 0.5;
         focus_fit_method = 1;
         follow_focus = 1;
         follow_min_visible = 0.4;
