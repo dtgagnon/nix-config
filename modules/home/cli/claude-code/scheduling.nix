@@ -12,6 +12,25 @@ let
 
   tasksDir = cfg.scheduling.tasksDir;
 
+  # Parses Claude stream-json JSONL into human-readable output.
+  # Reads from stdin; works streaming (tail -f | parse-log) or batch.
+  # Uses -R (raw input) + fromjson? so non-JSON lines are silently skipped.
+  parse-log = pkgs.writeShellScript "parse-log" ''
+    ${pkgs.jq}/bin/jq -R -r --unbuffered '
+      fromjson? // empty |
+      if .type == "assistant" then
+        [(.message.content // [])[] |
+          if .type == "text" then .text
+          elif .type == "tool_use" then
+            "\n--- Tool: \(.name) ---"
+          else empty end
+        ] | join("\n") | select(length > 0)
+      elif .type == "result" then
+        "\n=== RESULT ===\n" + (.result // "(empty)") + "\n"
+      else empty end
+    '
+  '';
+
   notify-monitor = pkgs.writeShellScript "notify-monitor" ''
     # notify-monitor <task-name> <log-file-path>
     # Sends a desktop notification with an action to tail the live log.
@@ -26,7 +45,7 @@ let
 
     if [ "$ACTION" = "monitor" ]; then
       $TERMINAL -e ${pkgs.bash}/bin/bash -c \
-        '${pkgs.coreutils}/bin/cat "$1" 2>/dev/null; exec ${pkgs.coreutils}/bin/tail -f "$1"' \
+        '{ ${pkgs.coreutils}/bin/cat "$1" 2>/dev/null; ${pkgs.coreutils}/bin/tail -f "$1"; } | ${parse-log}' \
         _ "$LOG_FILE"
     fi
   '';
@@ -233,7 +252,9 @@ $TASK_CONTENT"
             --action="log=View Log" "Agent Action" \
             "Recurring task failed: $TASK_NAME" 2>/dev/null) || true
           if [ "$FAIL_ACTION" = "log" ]; then
-            $TERMINAL -e ${pkgs.bat}/bin/bat --paging=always "$LOG_FILE" &
+            $TERMINAL -e ${pkgs.bash}/bin/bash -c \
+              '${parse-log} < "$1" | ${pkgs.bat}/bin/bat --paging=always --language=markdown' \
+              _ "$LOG_FILE" &
           fi
           echo "Recurring task $RESULT — symlinked to needs-attention, timer stays active"
         elif [ "$ATTEMPT_COUNT" -ge "$MAX_ATTEMPTS" ]; then
@@ -245,7 +266,9 @@ $TASK_CONTENT"
             --action="log=View Log" "Agent Action" \
             "Task $(basename "$TASK_FILE") needs attention after $MAX_ATTEMPTS attempts" 2>/dev/null) || true
           if [ "$ATTN_ACTION" = "log" ]; then
-            $TERMINAL -e ${pkgs.bat}/bin/bat --paging=always "$LOG_FILE" &
+            $TERMINAL -e ${pkgs.bash}/bin/bash -c \
+              '${parse-log} < "$1" | ${pkgs.bat}/bin/bat --paging=always --language=markdown' \
+              _ "$LOG_FILE" &
           fi
         else
           echo "Attempt $ATTEMPT_COUNT/$MAX_ATTEMPTS $RESULT — scheduling retry in $RETRY_DELAY"
