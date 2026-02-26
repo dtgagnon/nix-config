@@ -1,4 +1,4 @@
-{ config, lib, namespace, inputs, system, ... }:
+{ config, lib, pkgs, namespace, inputs, system, ... }:
 let
   inherit (lib.${namespace}) enabled;
 in
@@ -25,7 +25,10 @@ in
 
     services = {
       openssh = enabled;
-      tailscale = enabled;
+      tailscale = {
+        enable = true;
+        exitNode = true;
+      };
 
       pangolin = {
         enable = true;
@@ -70,6 +73,8 @@ in
       };
     };
 
+    user.shell = pkgs.zsh;
+
     system = {
       enable = true;
       preservation = enabled;
@@ -93,6 +98,7 @@ in
     "console=tty1"
   ];
 
+  programs.zsh.enable = true;
   security.sudo.wheelNeedsPassword = lib.mkForce true;
 
   networking.firewall = {

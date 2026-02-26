@@ -26,6 +26,7 @@ in
 {
   options.${namespace}.services.tailscale = {
     enable = mkBoolOpt false "Enable tailscale";
+    exitNode = mkBoolOpt false "Advertise this node as a Tailscale exit node";
     authKeyFile = mkOpt (types.nullOr types.str) "/run/secrets/tailscale-authKey" "Authentication key to authorize this node on the tailnet. Set to null for manual authentication.";
 
     serve = mkOpt
@@ -65,8 +66,15 @@ in
       services.tailscale = {
         enable = true;
         package = pkgs.tailscale.overrideAttrs { doCheck = false; };
-        extraSetFlags = [ "--ssh" ]; # only use "--accept-routes" when you want to access devices on a REMOTE physical LAN
+        extraSetFlags = [ "--ssh" ]
+          ++ lib.optional cfg.exitNode "--advertise-exit-node";
         authKeyFile = lib.mkIf (cfg.authKeyFile != null) cfg.authKeyFile;
+      };
+
+      # Exit nodes need IP forwarding enabled
+      boot.kernel.sysctl = mkIf cfg.exitNode {
+        "net.ipv4.ip_forward" = 1;
+        "net.ipv6.conf.all.forwarding" = 1;
       };
     })
 
