@@ -41,18 +41,18 @@ let
       tagsYaml = "[${concatStringsSep ", " allTags}]";
 
       allowedToolsList = [
-        ''"Read(${inst.targetDir}/*)"''
+        ''"Read(${inst.targetDir}/**)"''
       ]
       ++ map (f: ''"Read(${inst.targetDir}/${f})"'') inst.contextFiles
       ++ [
-        ''"Read(${tasksDir}/pending/*)"''
-        ''"Read(${tasksDir}/needs-attention/*)"''
+        ''"Read(${resolvedTasksDir}/pending/*)"''
+        ''"Read(${resolvedTasksDir}/needs-attention/**)"''
         ''"Edit(${scratchpadPath})"''
-        ''"Write(${tasksDir}/needs-attention/*)"''
-        ''"Bash(mkdir -p:${needsAttnDir}/*)"''
-        ''"Bash(cp:${inst.targetDir}/* ${needsAttnDir}/*)"''
+        ''"Write(${needsAttnDir}/**)"''
+        ''"Bash(mkdir -p:${needsAttnDir}/**)"''
+        ''"Bash(cp:${inst.targetDir}/* ${needsAttnDir}/**)"''
         ''"Bash(date:*)"''
-        ''"Bash(ls:${tasksDir}/pending/*)"''
+        ''"Bash(ls:${resolvedTasksDir}/pending/*)"''
         ''"Grep"''
       ];
       allowedToolsYaml = concatMapStringsSep "\n" (t: "      - ${t}") allowedToolsList;
