@@ -352,6 +352,7 @@ in
     home.activation.setupJournalCheckin = lib.hm.dag.entryAfter [ "setupSchedulingDirs" ] ''
       if [ ! -f "${tasksDir}/pending/workday-checkin.md" ]; then
         run cp "${journal-checkin-task}" "${tasksDir}/pending/workday-checkin.md"
+        run chmod u+w "${tasksDir}/pending/workday-checkin.md"
       fi
     '';
 

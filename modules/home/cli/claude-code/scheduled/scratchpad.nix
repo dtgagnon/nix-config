@@ -27,11 +27,14 @@ let
   ];
 
   mkScratchpadInstance =
-    tasksDir: name: inst:
+    { tasksDir, homeDir }:
+    name: inst:
     let
-      scratchpadPath = "${tasksDir}/scratchpads/${name}-scratchpad.md";
-      todoJsonPath = "${tasksDir}/todos/${name}-todos.json";
-      needsAttnDir = "${tasksDir}/needs-attention/scratchpad-${name}";
+      # Resolve $HOME for contexts where shell expansion doesn't happen (task file content, allowedTools)
+      resolvedTasksDir = builtins.replaceStrings [ "$HOME" ] [ homeDir ] tasksDir;
+      scratchpadPath = "${resolvedTasksDir}/scratchpads/${name}-scratchpad.md";
+      todoJsonPath = "${resolvedTasksDir}/todos/${name}-todo.json";
+      needsAttnDir = "${resolvedTasksDir}/needs-attention/scratchpad-${name}";
       agentTaskName = "scratchpad-agent-${name}";
       reviewTaskName = "scratchpad-review-${name}";
       allTags = lib.unique (inst.tags ++ [ name ]);
@@ -282,8 +285,9 @@ in
     let
       cfg = config.${namespace}.cli.claude-code;
       tasksDir = cfg.scheduling.tasksDir;
+      homeDir = config.home.homeDirectory;
       enabledScratchpads = filterAttrs (_: inst: inst.enable) cfg.scheduling.scratchpads;
-      instances = mapAttrs (mkScratchpadInstance tasksDir) enabledScratchpads;
+      instances = mapAttrs (mkScratchpadInstance { inherit tasksDir homeDir; }) enabledScratchpads;
     in
     mkIf (cfg.enable && cfg.scheduling.enable && enabledScratchpads != { }) {
       home.activation.setupScratchpadAgents = lib.hm.dag.entryAfter [ "setupSchedulingDirs" ] ''
@@ -303,12 +307,14 @@ in
               fi
               run mkdir -p "${inst.targetDir}"
               run ln -sf "${i.scratchpadPath}" "${inst.targetDir}/${name}-scratchpad.md"
-              run ln -sf "${i.todoJsonPath}" "${inst.targetDir}/${name}-todos.json"
+              run ln -sf "${i.todoJsonPath}" "${inst.targetDir}/${name}-todo.json"
               if [ ! -f "${tasksDir}/pending/${i.agentTaskName}.md" ]; then
                 run cp "${i.agentTask}" "${tasksDir}/pending/${i.agentTaskName}.md"
+                run chmod u+w "${tasksDir}/pending/${i.agentTaskName}.md"
               fi
               if [ ! -f "${tasksDir}/pending/${i.reviewTaskName}.md" ]; then
                 run cp "${i.reviewTask}" "${tasksDir}/pending/${i.reviewTaskName}.md"
+                run chmod u+w "${tasksDir}/pending/${i.reviewTaskName}.md"
               fi
             ''
           ) enabledScratchpads
