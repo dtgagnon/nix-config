@@ -107,11 +107,11 @@ in
         ]
         ++ lib.optionals isScrolling [
           # Cycle column width through explicit_column_widths presets
-          "$mod_SHIFT, h, layoutmsg, colresize -conf"
-          "$mod_SHIFT, l, layoutmsg, colresize +conf"
+          "$mod_SHIFT, j, layoutmsg, colresize -conf"
+          "$mod_SHIFT, k, layoutmsg, colresize +conf"
           # Horizontal scroll wheel pans the scrolling layout viewport
-          "$mod, mouse_left, layoutmsg, move -30"
-          "$mod, mouse_right, layoutmsg, move 30"
+          "$mod, mouse_left, layoutmsg, move -250"
+          "$mod, mouse_right, layoutmsg, move 250"
         ];
 
         # Repeating (hold-able) binds
