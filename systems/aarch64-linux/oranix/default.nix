@@ -40,7 +40,6 @@ in
 
       forgejo = {
         enable = true;
-        domain = "git.spirenet.link";
       };
 
       rybbit = {
@@ -108,7 +107,6 @@ in
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 ];
     trustedInterfaces = [ "tailscale0" ];
   };
 
