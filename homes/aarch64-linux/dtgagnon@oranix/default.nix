@@ -23,6 +23,7 @@ in
       fastfetch = enabled;
       fzf = enabled;
       git = enabled;
+      shells.zsh = enabled;
       ssh.enable = false;
       yazi = enabled;
       zoxide = enabled;
