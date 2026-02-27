@@ -1,9 +1,10 @@
-{ lib
-, host
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  host,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf getExe optionalString;
@@ -112,19 +113,8 @@ in
       };
     };
 
-    programs.starship = {
-      enable = true;
-      settings = {
-        character = {
-          success_symbol = "[➜](bold green)";
-          error_symbol = "[✗](bold red) ";
-          vicmd_symbol = "[](bold blue) ";
-        };
-      };
-      enableNushellIntegration = true;
-    };
-
     programs = {
+      starship.enableNushellIntegration = mkIf config.${namespace}.cli.shells.addons.starship.enable true;
       atuin.enableNushellIntegration = mkNushellIntegration "atuin";
       broot.enableNushellIntegration = mkNushellIntegration "broot";
       carapace.enableNushellIntegration = mkNushellIntegration "carapace";

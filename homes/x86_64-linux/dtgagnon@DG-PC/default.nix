@@ -95,6 +95,7 @@ in
       network-tools = enabled;
       opencode = enabled;
       shells = {
+        addons.starship = enabled;
         nushell = enabled;
         zsh = enabled;
       };

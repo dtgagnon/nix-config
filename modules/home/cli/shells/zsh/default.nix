@@ -1,9 +1,10 @@
-{ lib
-, host
-, pkgs
-, config
-, namespace
-, ...
+{
+  lib,
+  host,
+  pkgs,
+  config,
+  namespace,
+  ...
 }:
 let
   inherit (lib) mkIf;
@@ -111,19 +112,8 @@ in
       };
     };
 
-    programs.starship = {
-      enable = true;
-      settings = {
-        character = {
-          success_symbol = "[➜](bold green)";
-          error_symbol = "[✗](bold red) ";
-          vicmd_symbol = "[](bold blue) ";
-        };
-      };
-      enableZshIntegration = true;
-    };
-
     programs = {
+      starship.enableZshIntegration = mkIf config.${namespace}.cli.shells.addons.starship.enable true;
       atuin.enableZshIntegration = mkZshIntegration "atuin";
       broot.enableZshIntegration = mkZshIntegration "broot";
       carapace.enableZshIntegration = mkZshIntegration "carapace";

@@ -34,6 +34,7 @@ in
       git = enabled;
       neovim = enabled;
       network-tools = enabled;
+      shells.addons.starship = enabled;
       shells.nushell = enabled;
       ssh = enabled;
       web-browser = { enable = true; browser = "browsh"; };
