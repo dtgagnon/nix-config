@@ -38,6 +38,11 @@ in
         extraCorsOrigins = [ "http://100.100.90.1:3002" ];
       };
 
+      forgejo = {
+        enable = true;
+        domain = "git.spirenet.link";
+      };
+
       rybbit = {
         enable = true;
         domain = "analytics.spirenet.link";

@@ -110,6 +110,7 @@
           mcp-mxroute = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-mxroute { };
           mcp-pangolin = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-pangolin { };
           mcp-porkbun = channels.nixpkgs.callPackage ./packages/mcp-servers/mcp-porkbun { };
+          scratchpad-agent = channels.nixpkgs.callPackage ./packages/scratchpad-agent { };
         };
       };
 
