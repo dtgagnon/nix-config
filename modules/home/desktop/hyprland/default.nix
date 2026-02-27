@@ -69,7 +69,6 @@ in
           wlsunset = enabled; # color temperature manager
 
           # Basic functionality
-          # sysbar.ags = enabled;
           hypridle = enabled;
           hyprlock = enabled;
           sysbar = enabled;
