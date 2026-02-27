@@ -134,6 +134,6 @@ in
       zoxide.enableZshIntegration = mkZshIntegration "zoxide";
     };
 
-    home.sessionVariables.SHELL = "zsh";
+    home.sessionVariables.SHELL = lib.mkDefault "zsh";
   };
 }
