@@ -108,6 +108,7 @@ in
           brightnessctl
 
           # misc
+          libnotify
           wl-clipboard
           playerctl
         ]

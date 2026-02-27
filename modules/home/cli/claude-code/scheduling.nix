@@ -188,6 +188,8 @@ This is required for the automation system to process your result.
 
 $TASK_CONTENT"
 
+    export PATH="${pkgs.libnotify}/bin:$PATH"
+
     echo "$PROMPT" | claude -p \
       --model "$MODEL" \
       --permission-mode acceptEdits \

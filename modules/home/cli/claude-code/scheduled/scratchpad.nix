@@ -24,6 +24,7 @@ let
     pkgs.gnugrep
     pkgs.gnused
     pkgs.findutils
+    pkgs.libnotify
   ];
 
   mkScratchpadInstance =
