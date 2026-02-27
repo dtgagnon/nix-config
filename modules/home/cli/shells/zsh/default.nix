@@ -1,4 +1,5 @@
 { lib
+, host
 , pkgs
 , config
 , namespace
@@ -8,6 +9,9 @@ let
   inherit (lib) mkIf;
   inherit (lib.${namespace}) mkBoolOpt;
   cfg = config.${namespace}.cli.shells.zsh;
+
+  # Helper function to create conditional Zsh integrations
+  mkZshIntegration = name: mkIf config.${namespace}.cli.${name}.enable true;
 in
 {
   options.${namespace}.cli.shells.zsh = {
@@ -74,32 +78,37 @@ in
       };
 
       shellAliases = {
-        # Build System
-        rebuild = "nixos-rebuild switch --use-remote-sudo";
-        update = "nix flake update --use-remote-sudo";
+        # Nix Stuff
+        rebuild = "nixos-rebuild switch --sudo --flake .#${host}";
+        test = "nixos-rebuild test --sudo --flake .#${host}";
+        update = "nix flake update";
         nixdev = "nix develop --command zsh";
+        nr = "nix repl .#nixosConfigurations.DG-PC";
 
         # Navigate Shell
         "..." = "z ../../";
         "...." = "z ../../../";
         "....." = "z ../../../..";
-        l = "eza -lag";
         ls = "eza";
+        l = "eza -lag";
         la = "eza -a";
         ll = "eza -la";
-        tr = "eza -Ta -L 3";
-        trl = "eza -Ta -L";
-        svi = "sudo nvim";
+        ea = "eza -a --icons";
+        ela = "eza -la --icons --git";
+        tr = "eza -Ta --icons --git -L 3";
+        trl = "eza -Ta --icons --git -L";
         h = "history";
         c = "clear";
 
         # Application aliases
         vi = "vim";
+        svi = "sudo nvim";
+
+        # Git aliases
+        ga = "git add .";
+        gph = "git push";
+        gpl = "git pull";
       };
-      initContent = ''
-        eval "$(zoxide init zsh)"
-        eval "$(direnv hook zsh)"
-      '';
     };
 
     programs.starship = {
@@ -108,11 +117,23 @@ in
         character = {
           success_symbol = "[➜](bold green)";
           error_symbol = "[✗](bold red) ";
-          vicmd_symbol = "[](bold blue) ";
+          vicmd_symbol = "[](bold blue) ";
         };
       };
+      enableZshIntegration = true;
     };
-    programs.eza.enableZshIntegration = true;
-    home.sessionVariables.EDITOR = "nvim";
+
+    programs = {
+      atuin.enableZshIntegration = mkZshIntegration "atuin";
+      broot.enableZshIntegration = mkZshIntegration "broot";
+      carapace.enableZshIntegration = mkZshIntegration "carapace";
+      direnv.enableZshIntegration = mkZshIntegration "direnv";
+      eza.enableZshIntegration = true;
+      fzf.enableZshIntegration = mkZshIntegration "fzf";
+      yazi.enableZshIntegration = mkZshIntegration "yazi";
+      zoxide.enableZshIntegration = mkZshIntegration "zoxide";
+    };
+
+    home.sessionVariables.SHELL = "zsh";
   };
 }

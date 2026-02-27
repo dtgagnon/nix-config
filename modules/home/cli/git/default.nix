@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , config
 , namespace
 , ...
@@ -63,5 +64,6 @@ in
         };
       };
     };
+    home.packages = [ pkgs.gh ];
   };
 }

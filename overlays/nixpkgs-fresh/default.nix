@@ -4,5 +4,6 @@
 {
   inherit (channels.masterpkgs)
     antigravity
+    ollama-cuda
     ;
 }

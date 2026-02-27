@@ -649,11 +649,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771995667,
-        "narHash": "sha256-MY0fdT2DXU2WItMlEuna+Ry4LWRUahuSB0/C1qGZwNU=",
+        "lastModified": 1772139568,
+        "narHash": "sha256-vlglLxyFMboBCHZXVgIv/IoJbxChqvdo17x8H1cSnEs=",
         "ref": "refs/heads/main",
-        "rev": "fd21244ebe9e17959e63f7a10d790353564254aa",
-        "revCount": 67,
+        "rev": "fff0d3d903e309c86ef95b4ca2420639e34e7c7c",
+        "revCount": 69,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/dtg-engineering"
       },
@@ -2484,11 +2484,11 @@
     },
     "masterpkgs": {
       "locked": {
-        "lastModified": 1771996767,
-        "narHash": "sha256-KqSW/4qMYn5JtSyPpK6RhQZe41IgDgunK+JM91sNv+k=",
+        "lastModified": 1772145871,
+        "narHash": "sha256-JNnRbQsZpD8D1pwEZ4Ibeb6yrMf/WuajS2A2ZNWV0ZI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "06cc3a2061939f7e4264267f2f4701ba0cb5c0c8",
+        "rev": "52e3d319c552476ecac87dddb99e0899b8ed6d8f",
         "type": "github"
       },
       "original": {
@@ -3658,11 +3658,11 @@
         "nixpkgs": "nixpkgs_16"
       },
       "locked": {
-        "lastModified": 1771995668,
-        "narHash": "sha256-UUqhXzjzPF4BLfnJTpZBJGxWGy7JUA6MJjZAobUzoM8=",
+        "lastModified": 1772140815,
+        "narHash": "sha256-JzOUtQLmMzCZnOBUt7E0lZuImghwaCrFXcVZD6yma7w=",
         "ref": "refs/heads/main",
-        "rev": "20d26f48d2619b581473e3785b85fa93641d7e99",
-        "revCount": 205,
+        "rev": "7e9e89baa369770014563e4e52bfca564ff9a0a0",
+        "revCount": 210,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/web-portfolio"
       },
@@ -5055,11 +5055,11 @@
         "nixpkgs": "nixpkgs_23"
       },
       "locked": {
-        "lastModified": 1771982860,
-        "narHash": "sha256-DL7SZYGknFzHMDmvk/kSnV/Tk7R8+qRpsCykMowjfes=",
+        "lastModified": 1772085492,
+        "narHash": "sha256-1o9qkvOI/ThFDgEbW4Q4GVK7aV+traAIWSqP7gom7/0=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "932b57f0e990243e05008941a1933642370e4340",
+        "rev": "6577a70551b52ef35138e5d8b87a35d40b14eeeb",
         "type": "github"
       },
       "original": {

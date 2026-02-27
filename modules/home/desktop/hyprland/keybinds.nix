@@ -39,7 +39,7 @@ in
           "$mod, Q, killactive,"
           "$mod, F, fullscreen, 0"
           "$mod, Space, togglefloating,"
-          "$mod, N, togglesplit,"
+          "$mod, N, layoutmsg, togglesplit"
 
           # Focus
           (if isScrolling then "$mod, h, layoutmsg, focus l" else "$mod, h, movefocus, l")
