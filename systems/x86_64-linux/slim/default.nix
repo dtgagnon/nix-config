@@ -1,8 +1,9 @@
-{ lib
-, namespace
-, pkgs
-, inputs
-, ...
+{
+  lib,
+  namespace,
+  pkgs,
+  inputs,
+  ...
 }:
 let
   inherit (lib.${namespace}) enabled;
@@ -35,7 +36,13 @@ in
 
     initrd = {
       systemd.enable = true;
-      availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "sd_mod" "rtsx_usb_sdmmc" ];
+      availableKernelModules = [
+        "xhci_pci"
+        "ehci_pci"
+        "ahci"
+        "sd_mod"
+        "rtsx_usb_sdmmc"
+      ];
     };
 
     kernelModules = [ "kvm-intel" ];
@@ -51,16 +58,22 @@ in
     firewall = {
       enable = true;
       allowedTCPPorts = [ 22 ];
-      trustedInterfaces = [ "tailscale0" "microvm" ];
+      trustedInterfaces = [ "tailscale0" ];
     };
 
-    # Bridge for microVM networking
+    # NAT for microVM internet access
     nat = {
       enable = true;
-      internalInterfaces = [ "microvm" ];
+      internalInterfaces = [ "vm-openclaw" ];
       externalInterface = "wlp2s0";
     };
+
   };
+
+  # Assign gateway IP to host side of VM tap (re-applied each time tap is recreated)
+  # '+' prefix runs as root since the service user (microvm) lacks CAP_NET_ADMIN
+  systemd.services."microvm@openclaw".serviceConfig.ExecStartPost =
+    "+${pkgs.iproute2}/bin/ip addr replace 10.0.0.1/24 dev vm-openclaw";
 
   # ============================================================================
   # Spirenix Module Configuration
@@ -109,6 +122,8 @@ in
   # MicroVM Host Configuration
   # ============================================================================
 
+  systemd.services."microvm@openclaw".serviceConfig.TimeoutStopSec = 30;
+
   microvm = {
     host.enable = true;
     autostart = [ "openclaw" ];
@@ -119,37 +134,41 @@ in
         microvm = {
           hypervisor = "cloud-hypervisor";
           vcpu = 4;
-          mem = 3072; # 3GB for VM, leaves ~700MB for host
+          mem = 2560; # 2.5GB — host has 3.72GB total, leaves ~1.2GB headroom
 
-          # Use dedicated partition as VM's root volume
-          volumes = [{
-            image = "/var/lib/microvms/openclaw/root.img";
-            mountPoint = "/";
-            size = 15360; # 15GB
-          }];
+          # Ephemeral tmpfs root; only declared volumes persist across reboots
+          writableStoreOverlay = "/nix/.rw-store";
 
-          interfaces = [{
-            type = "tap";
-            id = "vm-openclaw";
-            mac = "02:00:00:00:00:01";
-          }];
+          volumes = [
+            {
+              image = "/var/lib/microvms/openclaw/openclaw-data.img";
+              mountPoint = "/var/lib/openclaw";
+              size = 20480; # 20GB — workspace, sessions, memory, downloads, caches
+            }
+            {
+              image = "/var/lib/microvms/openclaw/tailscale.img";
+              mountPoint = "/var/lib/tailscale";
+              size = 256; # 256MB — identity + auth state
+            }
+          ];
+
+          interfaces = [
+            {
+              type = "tap";
+              id = "vm-openclaw";
+              mac = "02:00:00:00:00:01";
+            }
+          ];
 
           # Share host's nix store read-only
-          shares = [{
-            source = "/nix/store";
-            mountPoint = "/nix/.ro-store";
-            tag = "ro-store";
-            proto = "virtiofs";
-          }];
-        };
-
-        # Nix store overlay: ro-store from host + local writable layer
-        fileSystems."/nix/store" = {
-          overlay = {
-            lowerdir = [ "/nix/.ro-store" ];
-            upperdir = "/nix/.rw-store/upper";
-            workdir = "/nix/.rw-store/work";
-          };
+          shares = [
+            {
+              source = "/nix/store";
+              mountPoint = "/nix/.ro-store";
+              tag = "ro-store";
+              proto = "virtiofs";
+            }
+          ];
         };
 
         # VM's internal NixOS configuration
@@ -157,23 +176,26 @@ in
           hostName = "openclaw";
           useNetworkd = true;
           useDHCP = false;
-          interfaces.eth0 = {
-            useDHCP = false;
-            ipv4.addresses = [{
-              address = "10.0.0.2";
-              prefixLength = 24;
-            }];
-          };
-          defaultGateway = {
-            address = "10.0.0.1";
-            interface = "eth0";
-          };
-          nameservers = [ "1.1.1.1" "8.8.8.8" ];
         };
+
+        systemd.network.networks."10-eth0" = {
+          matchConfig.Name = "e*";
+          addresses = [ { Address = "10.0.0.2/24"; } ];
+          routes = [ { Gateway = "10.0.0.1"; } ];
+          dns = [
+            "1.1.1.1"
+            "8.8.8.8"
+          ];
+        };
+
+        environment.systemPackages = [ pkgs.${namespace}.openclaw ];
 
         # Enable flakes for per-task environments
         nix.settings = {
-          experimental-features = [ "nix-command" "flakes" ];
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
           trusted-users = [ "openclaw" ];
         };
 
@@ -200,6 +222,7 @@ in
             User = "openclaw";
             Group = "openclaw";
             WorkingDirectory = "/var/lib/openclaw";
+            ExecStartPre = "!${pkgs.coreutils}/bin/chown -R openclaw:openclaw /var/lib/openclaw";
             ExecStart = "${lib.getExe pkgs.${namespace}.openclaw} gateway --bind 0.0.0.0 --port 18789";
             Restart = "on-failure";
             RestartSec = 5;
@@ -215,10 +238,19 @@ in
 
         users.groups.openclaw = { };
 
+        services.tailscale = {
+          enable = true;
+          extraSetFlags = [ "--exit-node=" "--ssh" ];
+        };
+
+        # TODO: remove after Tailscale SSH is confirmed working
         services.openssh = {
           enable = true;
-          settings.PermitRootLogin = "no";
+          settings.PermitRootLogin = "prohibit-password";
         };
+        users.users.root.openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAkkyCzK0fKyp0+gCR48AV3pq9XOggryd8dXS/7uobUi user=dtgagnon"
+        ];
 
         system.stateVersion = "24.11";
       };

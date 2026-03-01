@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
@@ -93,6 +94,8 @@ in
 
     # Environment configuration
     environment = mkIf cfg.environment.enable {
+      # Ensure remote SSH sessions from Ghostty are recognized
+      systemPackages = [ pkgs.ghostty.terminfo ];
       variables = {
         EDITOR = "nvim";
         SHELL = "nu";

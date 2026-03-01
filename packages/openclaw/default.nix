@@ -6,21 +6,22 @@
 , pnpm_10
 , nodejs_22
 , makeWrapper
+, rolldown
 ,
 }:
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "openclaw";
-  version = "2026.2.24";
+  version = "2026.2.26";
 
   src = fetchFromGitHub {
     owner = "openclaw";
     repo = "openclaw";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-L/AUBlpOGf1Hy+OyFE0xXqTTDyfppMckNzHBp7HvKN4=";
+    hash = "sha256-9kej1aK7j3/FU2X/bN983YqQClfnWfFPvByEkQKlQ4E=";
   };
 
-  pnpmDepsHash = "sha256-CqtcNIxYZM9LXNuvhhSSvBPQz6gkoLA11bTybmJMc/w=";
+  pnpmDepsHash = "sha256-Jcj0i/2Mh8Z5lp909Fkotw/isfLTIVMxtJgWwAtctEw=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
@@ -29,6 +30,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     hash = finalAttrs.pnpmDepsHash;
   };
 
+  buildInputs = [ rolldown ];
+
   nativeBuildInputs = [
     pnpmConfigHook
     pnpm_10
@@ -36,12 +39,20 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     makeWrapper
   ];
 
+  preBuild = ''
+    rm -rf node_modules/rolldown node_modules/@rolldown/pluginutils
+    mkdir -p node_modules/@rolldown
+    cp -r ${rolldown}/lib/node_modules/rolldown node_modules/rolldown
+    cp -r ${rolldown}/lib/node_modules/@rolldown/pluginutils node_modules/@rolldown/pluginutils
+    chmod -R u+w node_modules/rolldown node_modules/@rolldown/pluginutils
+  '';
+
   buildPhase = ''
     runHook preBuild
 
-    pnpm install
-    pnpm ui:build
+    pnpm install --frozen-lockfile
     pnpm build
+    pnpm ui:build
 
     runHook postBuild
   '';

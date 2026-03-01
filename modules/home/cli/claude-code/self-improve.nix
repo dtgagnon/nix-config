@@ -12,6 +12,7 @@ let
   si = cfg.selfImprove;
 
   insightsDir = si.insightsDir;
+  repoDir = si.repoDir;
 
   # JSON schemas for inter-stage contracts (embedded as nix strings, written to files)
   analysisSchema = pkgs.writeText "analysis-schema.json" (
@@ -124,6 +125,7 @@ let
               "change_description"
               "rollback_instruction"
               "risk"
+              "required_permissions"
             ];
             properties = {
               id = {
@@ -179,6 +181,12 @@ let
                   "medium"
                   "high"
                 ];
+              };
+              required_permissions = {
+                type = "array";
+                items = {
+                  type = "string";
+                };
               };
             };
           };
@@ -483,10 +491,12 @@ let
     Guidelines:
     - Never plan changes to secret files, .env files, or sops-encrypted content
     - Never plan nixos-rebuild or system activation commands
-    - Never plan git commits — the user will review and commit manually
+    - Never plan git commits — the pipeline handles branch management automatically
     - Prefer minimal, focused changes over sweeping refactors
     - For Nix module changes, describe the change precisely but keep it contained
     - Skip findings that are too vague, already partially implemented, or would require architectural changes
+    - Changes to Claude Code configuration (CLAUDE.md content, hooks, permissions, skills, MCP servers) MUST target the relevant Nix module files under ~/nix-config/nixos/modules/home/cli/claude-code/, NOT runtime files in ~/.claude/ directly. The Nix modules are the source of truth and generate runtime config on rebuild.
+    - For each plan item, list the exact required_permissions needed for execution as Claude Code tool permission strings (e.g., Edit(/path/to/file), Write(/path/to/file), Read(/dir/*)). Use absolute paths based on the repository root. These are shown to the user as part of the approval and used to grant permissions at execution time.
 
     Be conservative with risk assessment. Mark anything touching permissions or system config as medium or high risk."
 
@@ -524,6 +534,10 @@ let
           "# Self-Improve Plan\n\n" +
           "**Generated:** \(now | strftime("%Y-%m-%d %H:%M"))\n" +
           "**Items:** \(.items | length)\n\n" +
+          "## Required Permissions\n\n" +
+          "The following tool permissions will be granted upon approval:\n\n" +
+          ([.items[].required_permissions[]] | unique | map("- \(.)") | join("\n")) +
+          "\n\n" +
           "## Planned Changes\n\n" +
           (.items | to_entries | map(
             "### \(.value.id). \(.value.title)\n" +
@@ -531,7 +545,8 @@ let
             "- **File:** `\(.value.target_file)`\n" +
             "- **Change:** \(.value.change_type)\n" +
             "- **Description:** \(.value.change_description)\n" +
-            "- **Rollback:** \(.value.rollback_instruction)\n"
+            "- **Rollback:** \(.value.rollback_instruction)\n" +
+            "- **Permissions:** \(.value.required_permissions | join(", "))\n"
           ) | join("\n")) +
           (if (.skipped_findings | length) > 0 then
             "\n## Skipped Findings\n\n" +
@@ -560,19 +575,27 @@ let
         # ── Stage 4: Execution ──
         log "Stage 4: Execution starting"
 
-        # Build dynamic allowedTools from plan target files
-        DYNAMIC_TOOLS=()
-        while IFS= read -r target_file; do
-          DYNAMIC_TOOLS+=("Edit($target_file)")
-          DYNAMIC_TOOLS+=("Write($target_file)")
-          target_dir=$(dirname "$target_file")
-          DYNAMIC_TOOLS+=("Read($target_dir/*)")
-        done < <(${pkgs.jq}/bin/jq -r '.items[].target_file' "$RUN_DIR/plan.json" | sort -u)
-        # Add basic read/inspection tools
-        DYNAMIC_TOOLS+=("Bash(cat:*)" "Bash(ls:*)" "Grep")
+        # ── Create worktree for isolated changes ──
+        REPO_ROOT=$(${pkgs.git}/bin/git -C "${repoDir}" rev-parse --show-toplevel)
+        BRANCH_NAME="self-improve/$RUN_ID"
+        WORKTREE_PATH="$REPO_ROOT/.claude/worktrees/self-improve-$RUN_ID"
+        ${pkgs.git}/bin/git -C "$REPO_ROOT" worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME"
+        log "Created worktree: $WORKTREE_PATH (branch: $BRANCH_NAME)"
 
-        PLAN_CONTENT=$(${pkgs.coreutils}/bin/cat "$RUN_DIR/plan.json")
+        # Collect and rewrite permissions for worktree paths
+        ALLOWED_TOOLS=()
+        while IFS= read -r perm; do
+          ALLOWED_TOOLS+=("''${perm//$REPO_ROOT/$WORKTREE_PATH}")
+        done < <(${pkgs.jq}/bin/jq -r '.items[].required_permissions[]' "$RUN_DIR/plan.json" | sort -u)
+        # Add basic read/inspection tools
+        ALLOWED_TOOLS+=("Bash(cat:*)" "Bash(ls:*)" "Grep")
+
+        # Rewrite plan paths for worktree
+        PLAN_CONTENT=$(${pkgs.gnused}/bin/sed "s|$REPO_ROOT|$WORKTREE_PATH|g" "$RUN_DIR/plan.json")
         EXEC_PROMPT="You are executing approved configuration improvements for Claude Code.
+
+    You are working in an isolated git worktree at: $WORKTREE_PATH
+    All target file paths have been adjusted to this worktree.
 
     Here is the approved plan to execute:
 
@@ -585,25 +608,29 @@ let
     4. Record the result
 
     Important rules:
-    - Do NOT create git commits
+    - Do NOT create git commits — the pipeline handles version control automatically
     - Do NOT run nixos-rebuild or any system activation commands
     - Do NOT modify any files not listed in the plan
     - Do NOT modify secret files, .env files, or sops-encrypted content
     - If a change cannot be applied safely, skip it and record the reason
-    - Make minimal, precise edits — do not refactor surrounding code"
+    - Make minimal, precise edits — do not refactor surrounding code
+    - All target files are in the Nix configuration repository — changes to Claude Code configuration go through Nix modules, not runtime files"
 
         echo "$EXEC_PROMPT" | claude -p \
           --model "${si.executionModel}" \
           --output-format json \
           --json-schema "$(${pkgs.coreutils}/bin/cat ${executionSchema})" \
           --max-budget-usd "${si.budgetExecution}" \
-          --allowedTools "''${DYNAMIC_TOOLS[@]}" \
+          --allowedTools "''${ALLOWED_TOOLS[@]}" \
           > "$RUN_DIR/raw-stage4.json" 2>>"$LOG_FILE" || true
 
         SUBTYPE=$(${pkgs.jq}/bin/jq -r '.subtype' "$RUN_DIR/raw-stage4.json" 2>/dev/null || echo "unknown")
         if [ "$SUBTYPE" != "success" ]; then
           ERRORS=$(${pkgs.jq}/bin/jq -r '.errors // ["Unknown error"] | join(", ")' "$RUN_DIR/raw-stage4.json" 2>/dev/null || echo "Unknown error")
           log "Stage 4 failed: $ERRORS"
+          ${pkgs.git}/bin/git -C "$REPO_ROOT" worktree remove "$WORKTREE_PATH" --force 2>/dev/null || true
+          ${pkgs.git}/bin/git -C "$REPO_ROOT" branch -D "$BRANCH_NAME" 2>/dev/null || true
+          log "Cleaned up worktree and branch after failure"
           ${pkgs.libnotify}/bin/notify-send -u critical "Self-Improve Pipeline" \
             "Stage 4 (Execution) failed: $ERRORS" 2>/dev/null || true
           exit 1
@@ -613,9 +640,76 @@ let
         COST4=$(${pkgs.jq}/bin/jq -r '.total_cost_usd // 0' "$RUN_DIR/raw-stage4.json")
         log "Stage 4 complete, cost: \$$COST4"
 
+        # ── Commit changes and clean up worktree ──
+        EXEC_SUCCEEDED=$(${pkgs.jq}/bin/jq '.summary.succeeded' "$RUN_DIR/execution.json")
+        EXEC_TOTAL=$(${pkgs.jq}/bin/jq '.summary.total' "$RUN_DIR/execution.json")
+        if [ "$EXEC_SUCCEEDED" -gt 0 ]; then
+          ${pkgs.git}/bin/git -C "$WORKTREE_PATH" add -A
+          ${pkgs.git}/bin/git -C "$WORKTREE_PATH" commit -m "chore(self-improve): apply $EXEC_SUCCEEDED/$EXEC_TOTAL improvements from run $RUN_ID"
+          log "Committed $EXEC_SUCCEEDED changes on branch $BRANCH_NAME"
+        else
+          log "No successful changes to commit"
+        fi
+
+        ${pkgs.git}/bin/git -C "$REPO_ROOT" worktree remove "$WORKTREE_PATH" --force 2>/dev/null || true
+        log "Removed worktree: $WORKTREE_PATH"
+
+        if [ "$EXEC_SUCCEEDED" -eq 0 ]; then
+          ${pkgs.git}/bin/git -C "$REPO_ROOT" branch -D "$BRANCH_NAME" 2>/dev/null || true
+          log "Cleaned up empty branch $BRANCH_NAME"
+        fi
+
         # ── Completion ──
         TOTAL_COST=$(echo "$COST1 + $COST2 + $COST4" | ${pkgs.bc}/bin/bc 2>/dev/null || echo "unknown")
         log "Pipeline complete. Total cost: \$$TOTAL_COST"
+
+        # ── Push branch and create PR ──
+        if [ "$EXEC_SUCCEEDED" -gt 0 ]; then
+          ${pkgs.git}/bin/git -C "$REPO_ROOT" push -u origin "$BRANCH_NAME" 2>>"$LOG_FILE" || true
+          log "Pushed branch $BRANCH_NAME to remote"
+
+          EXEC_FAILED=$(${pkgs.jq}/bin/jq '.summary.failed' "$RUN_DIR/execution.json")
+          EXEC_SKIPPED=$(${pkgs.jq}/bin/jq '.summary.skipped' "$RUN_DIR/execution.json")
+          {
+            echo "## Self-Improve Pipeline Run"
+            echo ""
+            echo "**Run ID:** \`$RUN_ID\`"
+            echo "**Total cost:** \$$TOTAL_COST"
+            echo ""
+            echo "### Execution Summary"
+            echo ""
+            echo "| Metric | Count |"
+            echo "|--------|-------|"
+            echo "| Attempted | $EXEC_TOTAL |"
+            echo "| Succeeded | $EXEC_SUCCEEDED |"
+            echo "| Failed | $EXEC_FAILED |"
+            echo "| Skipped | $EXEC_SKIPPED |"
+            echo ""
+            echo "### Results"
+            echo ""
+            ${pkgs.jq}/bin/jq -r '.results[] | "- **\(.item_id)** [\(.status)]: \(.detail)"' "$RUN_DIR/execution.json"
+            echo ""
+            echo "<details>"
+            echo "<summary>Full Plan</summary>"
+            echo ""
+            ${pkgs.coreutils}/bin/cat "$RUN_DIR/plan-summary.md"
+            echo ""
+            echo "</details>"
+          } > "$RUN_DIR/pr-body.md"
+
+          PR_URL=$(cd "$REPO_ROOT" && ${pkgs.gh}/bin/gh pr create \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --title "chore(self-improve): $EXEC_SUCCEEDED improvements from $RUN_ID" \
+            --body-file "$RUN_DIR/pr-body.md" \
+            2>>"$LOG_FILE") || PR_URL=""
+
+          if [ -n "$PR_URL" ]; then
+            log "Pull request created: $PR_URL"
+          else
+            log "Failed to create pull request (check gh auth status)"
+          fi
+        fi
 
         ${pkgs.systemd}/bin/systemd-run --user --no-block -- \
           ${notify-results} "$RUN_DIR/execution.json" 2>/dev/null || true
@@ -629,6 +723,12 @@ in
       type = types.str;
       default = "$HOME/proj/AUTOMATE/insights";
       description = "Base directory for pipeline run artifacts";
+    };
+
+    repoDir = mkOption {
+      type = types.str;
+      default = "$HOME/nix-config/nixos";
+      description = "Git repository root where worktree branches are created for execution";
     };
 
     schedule = mkOption {
@@ -701,6 +801,8 @@ in
               pkgs.gnugrep
               pkgs.gnused
               pkgs.bc
+              pkgs.git
+              pkgs.gh
             ]
           }:/run/current-system/sw/bin:%h/.nix-profile/bin"
           "TERMINAL=${pkgs.ghostty}/bin/ghostty"
