@@ -18,9 +18,9 @@ Analyze Claude Code usage insights, plan configuration improvements, get human a
 Trigger the self-improvement pipeline. This runs the four-stage process:
 
 1. **Analysis** — Read the `/insights` report and facets, compare suggestions against current config, produce structured findings
-2. **Planning** — Reason about findings and produce actionable change items with target files, descriptions, and risk levels
-3. **Approval** — Desktop notification prompts the user to approve, review, or reject the plan
-4. **Execution** — Apply approved changes to configuration files (scoped to only the planned target files)
+2. **Planning** — Reason about findings and produce actionable change items with target files, descriptions, risk levels, and required permissions
+3. **Approval** — Desktop notification prompts the user to approve, review, or reject the plan (includes consolidated permissions list)
+4. **Execution** — Create an isolated git worktree, apply approved changes, commit, push branch, and open a PR to main
 
 To trigger:
 ```bash
@@ -76,25 +76,30 @@ Read and present:
 3. `~/proj/AUTOMATE/insights/runs/<run-id>/plan.json` — Planned changes and skipped findings
 4. `~/proj/AUTOMATE/insights/runs/<run-id>/approval.json` — Approval decision and method
 5. `~/proj/AUTOMATE/insights/runs/<run-id>/execution.json` — Per-item execution results (if approved)
-6. `~/proj/AUTOMATE/insights/runs/<run-id>/plan-summary.md` — Human-readable plan summary
+6. `~/proj/AUTOMATE/insights/runs/<run-id>/plan-summary.md` — Human-readable plan summary (includes required permissions)
+7. `~/proj/AUTOMATE/insights/runs/<run-id>/pr-body.md` — PR description body (if PR was created)
 
 ## Pipeline Architecture
 
 ```
-Stage 1: Analyze     Stage 2: Plan        Stage 3: Approve     Stage 4: Execute
-claude -p (read)  ->  claude -p (no tools) -> notify-send (human) -> claude -p (write)
-     |                    |                      |                     |
- analysis.json        plan.json            approval.json         execution.json
+Stage 1: Analyze     Stage 2: Plan        Stage 3: Approve     Stage 4: Execute          Stage 5: Publish
+claude -p (read)  ->  claude -p (no tools) -> notify-send (human) -> claude -p (worktree) -> git push + gh pr
+     |                    |                      |                     |                       |
+ analysis.json        plan.json            approval.json         execution.json           PR to main
+                    + permissions                                 + commit on branch
 ```
 
 All artifacts stored in: `~/proj/AUTOMATE/insights/runs/<timestamp>/`
+Changes are committed on an isolated `self-improve/<run-id>` branch and a PR is opened for asynchronous review.
 
 ## Safety Features
 
 - **Budget caps** per stage (default ~$11 total per run)
 - **Mandatory human approval** before any file modifications
-- **Dynamically scoped execution** — Stage 4 can only touch files named in the approved plan
-- **No git commits** — user reviews and commits manually
+- **Explicit permissions** — each plan item enumerates required tool permissions, displayed for review during approval
+- **Worktree isolation** — Stage 4 runs in a disposable git worktree; the main working tree is never touched
+- **Nix module routing** — Claude Code config changes (CLAUDE.md, hooks, permissions, skills) must target Nix module source files, not runtime files in `~/.claude/`
+- **PR-based review** — changes are committed on a side branch and a PR is opened; nothing lands on main without explicit merge
 - **No nixos-rebuild** — Nix changes are written but not activated
 - **Full audit trail** — every run preserved in its own timestamped directory
 - **Deny rules** from permissions.nix remain in effect (secrets, .env files protected)
@@ -107,6 +112,7 @@ The pipeline is configured via the `spirenix.cli.claude-code.selfImprove` NixOS 
 |--------|---------|---------|
 | `enable` | `false` | Enable the pipeline |
 | `insightsDir` | `$HOME/proj/AUTOMATE/insights` | Base directory |
+| `repoDir` | `$HOME/nix-config/nixos` | Git repo root for worktree branches |
 | `schedule` | `Sun *-*-* 09:00:00` | Systemd timer schedule |
 | `analysisModel` | `opus` | Model for analysis stage |
 | `planModel` | `opus` | Model for planning stage |
