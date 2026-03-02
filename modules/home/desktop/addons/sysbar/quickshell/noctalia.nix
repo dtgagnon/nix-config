@@ -206,6 +206,8 @@ in
               }
             ];
           };
+          contentPadding = 2;
+          mouseWheelAction = "none";
           screenOverrides = [ ];
         };
         general = {
@@ -261,10 +263,6 @@ in
           panelBackgroundOpacity = mkIf (!stylixEnabled) 0.8;
           panelsAttachedToBar = true;
           settingsPanelMode = "attached";
-          wifiDetailsViewMode = "grid";
-          bluetoothDetailsViewMode = "grid";
-          networkPanelView = "wifi";
-          bluetoothHideUnnamedDevices = false;
           boxBorderEnabled = false;
         };
         location = {
@@ -365,8 +363,16 @@ in
           overviewLayer = false;
           density = "default";
         };
+        idle = {
+          enabled = false;
+          screenOffTimeout = 600;
+          lockTimeout = 660;
+          suspendTimeout = 1800;
+          fadeDuration = 5;
+        };
         controlCenter = {
           position = "close_to_bar_button";
+          openAtMouseOnBarRightClick = true;
           diskPath = "/";
           shortcuts = {
             left = [
@@ -463,6 +469,7 @@ in
           wifiDetailsViewMode = "grid";
           bluetoothDetailsViewMode = "grid";
           bluetoothHideUnnamedDevices = false;
+          networkPanelView = "wifi";
           disableDiscoverability = false;
         };
         sessionMenu = {
