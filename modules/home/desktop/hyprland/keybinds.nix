@@ -42,16 +42,16 @@ in
           "$mod, N, layoutmsg, togglesplit"
 
           # Focus (dwindle/master) / Column swap + resize (scrolling)
-          (if isScrolling then "$mod, h, layoutmsg, swapcol l" else "$mod, h, movefocus, l")
-          (if isScrolling then "$mod, l, layoutmsg, swapcol r" else "$mod, l, movefocus, r")
-          (if isScrolling then "$mod, k, layoutmsg, colresize +conf" else "$mod, k, movefocus, u")
-          (if isScrolling then "$mod, j, layoutmsg, colresize -conf" else "$mod, j, movefocus, d")
+          "$mod, h, movefocus, l"
+          "$mod, l, movefocus, r"
+          "$mod, k, movefocus, u"
+          "$mod, j, movefocus, d"
 
           # Move window
-          "$mod_CTRL, h, movewindow, l"
-          "$mod_CTRL, l, movewindow, r"
-          "$mod_CTRL, k, movewindow, u"
-          "$mod_CTRL, j, movewindow, d"
+          (if isScrolling then "$mod_CTRL, h, layoutmsg, swapcol l" else "$mod_CTRL, h, movewindow, l")
+          (if isScrolling then "$mod_CTRL, l, layoutmsg, swapcol r" else "$mod_CTRL, l, movewindow, r")
+          (if isScrolling then "$mod_CTRL, k, layoutmsg, colresize +conf" else "$mod_CTRL, k, movewindow, u")
+          (if isScrolling then "$mod_CTRL, j, layoutmsg, colresize -conf" else "$mod_CTRL, j, movewindow, d")
 
           # Change Workspace
           "$mod, 1, workspace, 01"
