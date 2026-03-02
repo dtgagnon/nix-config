@@ -495,7 +495,7 @@ let
     - Prefer minimal, focused changes over sweeping refactors
     - For Nix module changes, describe the change precisely but keep it contained
     - Skip findings that are too vague, already partially implemented, or would require architectural changes
-    - Changes to Claude Code configuration (CLAUDE.md content, hooks, permissions, skills, MCP servers) MUST target the relevant Nix module files under ~/nix-config/nixos/modules/home/cli/claude-code/, NOT runtime files in ~/.claude/ directly. The Nix modules are the source of truth and generate runtime config on rebuild.
+    - Changes to the GLOBAL Claude Code configuration (~/.claude/CLAUDE.md, hooks, permissions, skills, MCP servers) MUST target the relevant Nix module files under ~/nix-config/nixos/modules/home/cli/claude-code/, NOT runtime files in ~/.claude/ directly. The Nix modules are the source of truth and generate runtime config on rebuild. However, PROJECT-SPECIFIC CLAUDE.md files (e.g., ~/nix-config/nixos/CLAUDE.md) are regular git-tracked files and can be edited directly.
     - For each plan item, list the exact required_permissions needed for execution as Claude Code tool permission strings (e.g., Edit(/path/to/file), Write(/path/to/file), Read(/dir/*)). Use absolute paths based on the repository root. These are shown to the user as part of the approval and used to grant permissions at execution time.
 
     Be conservative with risk assessment. Mark anything touching permissions or system config as medium or high risk."
@@ -616,8 +616,11 @@ let
     - Make minimal, precise edits — do not refactor surrounding code
     - All target files are in the Nix configuration repository — changes to Claude Code configuration go through Nix modules, not runtime files"
 
+        log "Allowed tools: ''${ALLOWED_TOOLS[*]}"
+
         echo "$EXEC_PROMPT" | claude -p \
           --model "${si.executionModel}" \
+          --permission-mode acceptEdits \
           --output-format json \
           --json-schema "$(${pkgs.coreutils}/bin/cat ${executionSchema})" \
           --max-budget-usd "${si.budgetExecution}" \
