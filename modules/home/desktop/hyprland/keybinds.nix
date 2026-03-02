@@ -41,11 +41,11 @@ in
           "$mod, Space, togglefloating,"
           "$mod, N, layoutmsg, togglesplit"
 
-          # Focus (dwindle/master) / Column swap + resize (scrolling)
-          "$mod, h, movefocus, l"
-          "$mod, l, movefocus, r"
-          "$mod, k, movefocus, u"
-          "$mod, j, movefocus, d"
+          # Focus — scrolling layout uses layoutmsg focus (handles off-screen windows + wraps instead of crossing monitors)
+          (if isScrolling then "$mod, h, layoutmsg, focus l" else "$mod, h, movefocus, l")
+          (if isScrolling then "$mod, l, layoutmsg, focus r" else "$mod, l, movefocus, r")
+          (if isScrolling then "$mod, k, layoutmsg, focus u" else "$mod, k, movefocus, u")
+          (if isScrolling then "$mod, j, layoutmsg, focus d" else "$mod, j, movefocus, d")
 
           # Move window
           (if isScrolling then "$mod_CTRL, h, layoutmsg, swapcol l" else "$mod_CTRL, h, movewindow, l")
