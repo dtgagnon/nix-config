@@ -102,7 +102,7 @@ in
           hyprshot
           swappy
           ## image viewer
-          nsxiv
+          imv
           ## monitor controls
           ddcutil
           brightnessctl
@@ -116,10 +116,19 @@ in
         ) pkgs.spirenix.hyprland-gpu-tools;
 
       xdg.mimeApps.defaultApplications = {
-        "image/*" = "nsxiv.desktop";
-        "image/png" = "nsxiv.desktop";
-        "image/jpg" = "nsxiv.desktop";
-        "image/jpeg" = "nsxiv.desktop";
+        "image/png" = "imv.desktop";
+        "image/jpeg" = "imv.desktop";
+        "image/jpg" = "imv.desktop";
+        "image/gif" = "imv.desktop";
+        "image/bmp" = "imv.desktop";
+        "image/svg+xml" = "imv.desktop";
+        "image/tiff" = "imv.desktop";
+        "image/webp" = "imv.desktop";
+        "image/avif" = "imv.desktop";
+        "image/heif" = "imv.desktop";
+        "image/jxl" = "imv.desktop";
+        "image/x-bmp" = "imv.desktop";
+        "image/x-png" = "imv.desktop";
       };
 
       spirenix.preservation.directories = [

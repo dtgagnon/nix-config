@@ -41,7 +41,7 @@ in
               { run = "$EDITOR '$@'"; block = true; for = "unix"; }
             ];
             imgviewer = [
-              { run = "nsxiv '$@'"; block = true; for = "unix"; }
+              { run = "imv '$@'"; for = "unix"; }
             ];
             okular = [
               { run = "okular '$@'"; orphan = true; for = "unix"; }
