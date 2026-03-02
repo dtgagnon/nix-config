@@ -14,9 +14,6 @@ in
     ./hardware.nix
   ];
 
-  # OpenClaw runs in isolated VM - prompt injection risk accepted
-  nixpkgs.config.permittedInsecurePackages = [ "openclaw-2026.2.24" ];
-
   # ============================================================================
   # Boot Configuration
   # ============================================================================
@@ -131,6 +128,10 @@ in
     vms.openclaw = {
       pkgs = pkgs;
       config = {
+        imports = [
+          ({ lib, pkgs, config, ... }@args: import ../../../modules/nixos/services/openclaw (args // { namespace = "spirenix"; }))
+        ];
+
         microvm = {
           hypervisor = "cloud-hypervisor";
           vcpu = 4;
@@ -188,7 +189,15 @@ in
           ];
         };
 
-        environment.systemPackages = [ pkgs.${namespace}.openclaw ];
+        environment.systemPackages = [
+          pkgs.ghostty.terminfo
+          pkgs.nodejs_22 # required for `openclaw plugins install`
+        ];
+
+        spirenix.services.openclaw = {
+          enable = true;
+          bindAddress = "tailnet";
+        };
 
         # Enable flakes for per-task environments
         nix.settings = {
@@ -205,38 +214,6 @@ in
           dates = "weekly";
           options = "--delete-older-than 7d";
         };
-
-        # OpenClaw service
-        systemd.services.openclaw = {
-          description = "OpenClaw AI Assistant Gateway";
-          wantedBy = [ "multi-user.target" ];
-          after = [ "network.target" ];
-
-          environment = {
-            HOME = "/var/lib/openclaw";
-            NODE_ENV = "production";
-          };
-
-          serviceConfig = {
-            Type = "simple";
-            User = "openclaw";
-            Group = "openclaw";
-            WorkingDirectory = "/var/lib/openclaw";
-            ExecStartPre = "!${pkgs.coreutils}/bin/chown -R openclaw:openclaw /var/lib/openclaw";
-            ExecStart = "${lib.getExe pkgs.${namespace}.openclaw} gateway --bind 0.0.0.0 --port 18789";
-            Restart = "on-failure";
-            RestartSec = 5;
-          };
-        };
-
-        users.users.openclaw = {
-          isSystemUser = true;
-          group = "openclaw";
-          home = "/var/lib/openclaw";
-          createHome = true;
-        };
-
-        users.groups.openclaw = { };
 
         services.tailscale = {
           enable = true;

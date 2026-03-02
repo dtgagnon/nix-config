@@ -100,6 +100,7 @@ in
 
   o = :open<Enter>
   O = :open -a<Enter>
+  ga = :prompt "Download all attachments from: %{subject}?" pipe -m sh -c 'TMP=$(mktemp); cat >"$TMP"; SUBJ=$(sed -n "s/^Subject: *//Ip" "$TMP" | head -1 | tr "/\\:" "-"); DIR="$HOME/Downloads/$SUBJ"; mkdir -p "$DIR" && , ripmime -i "$TMP" -d "$DIR"; rm -f "$TMP"'<Enter>
 
   <A-h> = :prev-tab<Enter>
   <A-l> = :next-tab<Enter>

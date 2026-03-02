@@ -26,9 +26,9 @@ in
     };
 
     bindAddress = mkOption {
-      type = types.str;
-      default = "127.0.0.1";
-      description = "Address to bind the gateway to. Use 0.0.0.0 for all interfaces.";
+      type = types.enum [ "loopback" "lan" "tailnet" "auto" "custom" ];
+      default = "loopback";
+      description = "Bind mode for the gateway: loopback, lan, tailnet, auto, or custom.";
     };
 
     user = mkOption {
@@ -45,8 +45,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    # Persistence for openclaw data
-    ${namespace}.system.preservation.extraSysDirs = [ cfg.dataDir ];
+    environment.systemPackages = [ pkgs.${namespace}.openclaw ];
 
     users.users.${cfg.user} = {
       isSystemUser = true;
@@ -73,7 +72,7 @@ in
         User = cfg.user;
         Group = cfg.group;
         WorkingDirectory = cfg.dataDir;
-        ExecStart = "${lib.getExe pkgs.${namespace}.openclaw} gateway --bind ${cfg.bindAddress} --port ${toString cfg.port}";
+        ExecStart = "${lib.getExe pkgs.${namespace}.openclaw} gateway --bind ${cfg.bindAddress} --port ${toString cfg.port} --allow-unconfigured";
         Restart = "on-failure";
         RestartSec = 5;
 

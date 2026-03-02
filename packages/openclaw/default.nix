@@ -6,9 +6,13 @@
 , pnpm_10
 , nodejs_22
 , makeWrapper
-, rolldown
+, callPackage
 ,
 }:
+
+let
+  rolldown = callPackage ../rolldown { };
+in
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "openclaw";
@@ -71,11 +75,16 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       $libdir/node_modules/.pnpm/node_modules/moltbot \
       $libdir/node_modules/.pnpm/node_modules/openclaw-control-ui
 
+    # Patch: allow hardlinks when serving control-ui static files.
+    # Nix store optimization hardlinks identical files (nlink > 1), but openclaw's
+    # openBoundaryFileSync rejects hardlinks by default as a security measure.
+    # This only affects the read-only control-ui assets, not user-writable paths.
+    sed -i 's/boundaryLabel: "control ui root",/boundaryLabel: "control ui root", rejectHardlinks: false,/' \
+      $libdir/dist/gateway-cli-*.js
+
     makeWrapper ${lib.getExe nodejs_22} $out/bin/openclaw \
       --add-flags "$libdir/dist/index.js" \
       --set NODE_PATH "$libdir/node_modules"
-    ln -s $out/bin/openclaw $out/bin/moltbot
-    ln -s $out/bin/openclaw $out/bin/clawdbot
 
     runHook postInstall
   '';
@@ -103,8 +112,5 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     mainProgram = "openclaw";
     maintainers = with lib.maintainers; [ chrisportela ];
     platforms = with lib.platforms; linux ++ darwin;
-    knownVulnerabilities = [
-      "Project uses LLMs to parse untrusted content, making it vulnerable to prompt injection, while having full access to system by default."
-    ];
   };
 })

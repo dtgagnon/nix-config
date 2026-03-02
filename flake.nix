@@ -23,13 +23,14 @@
 
       channels-config = {
         allowUnfree = true;
-        # TODO: Remove after confirming sonarr builds without these (now on .NET 8)
-        # permittedInsecurePackages = [
-        #   "aspnetcore-runtime-6.0.36"
-        #   "aspnetcore-runtime-wrapped-6.0.36"
-        #   "dotnet-sdk-6.0.428"
-        #   "dotnet-sdk-wrapped-6.0.428"
-        # ];
+
+        permittedInsecurePackages = [
+          # TODO: Remove after confirming sonarr builds without these (now on .NET 8)
+          #   "aspnetcore-runtime-6.0.36"
+          #   "aspnetcore-runtime-wrapped-6.0.36"
+          #   "dotnet-sdk-6.0.428"
+          #   "dotnet-sdk-wrapped-6.0.428"
+        ];
       };
 
       alias = {
