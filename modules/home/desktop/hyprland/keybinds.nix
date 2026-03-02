@@ -41,11 +41,11 @@ in
           "$mod, Space, togglefloating,"
           "$mod, N, layoutmsg, togglesplit"
 
-          # Focus
-          (if isScrolling then "$mod, h, layoutmsg, focus l" else "$mod, h, movefocus, l")
-          (if isScrolling then "$mod, l, layoutmsg, focus r" else "$mod, l, movefocus, r")
-          (if isScrolling then "$mod, k, layoutmsg, focus u" else "$mod, k, movefocus, u")
-          (if isScrolling then "$mod, j, layoutmsg, focus d" else "$mod, j, movefocus, d")
+          # Focus (dwindle/master) / Column swap + resize (scrolling)
+          (if isScrolling then "$mod, h, layoutmsg, swapcol l" else "$mod, h, movefocus, l")
+          (if isScrolling then "$mod, l, layoutmsg, swapcol r" else "$mod, l, movefocus, r")
+          (if isScrolling then "$mod, k, layoutmsg, colresize +conf" else "$mod, k, movefocus, u")
+          (if isScrolling then "$mod, j, layoutmsg, colresize -conf" else "$mod, j, movefocus, d")
 
           # Move window
           "$mod_CTRL, h, movewindow, l"
@@ -91,6 +91,7 @@ in
 
           # General Desktop
           "$mod_SHIFT_CTRL, L, exec, $lock"
+          (lib.optional (config.spirenix.desktop.addons.sysbar.quickshell.premade == "noctalia-shell") "$mod_ALT, slash, exec, noctalia-shell ipc call plugin:keybind-cheatsheet toggle")
 
           # Submap entry points
           "$mod, A, submap, apps"
@@ -106,9 +107,6 @@ in
           (lib.optional config.spirenix.apps.yell.enable "$mod_CTRL, Z, exec, yell submit")
         ]
         ++ lib.optionals isScrolling [
-          # Cycle column width through explicit_column_widths presets
-          "$mod_SHIFT, j, layoutmsg, colresize -conf"
-          "$mod_SHIFT, k, layoutmsg, colresize +conf"
           # Horizontal scroll wheel pans the scrolling layout viewport
           "$mod, mouse_left, layoutmsg, move -250"
           "$mod, mouse_right, layoutmsg, move 250"
@@ -179,12 +177,11 @@ in
           ", escape, submap, reset"
         ]
         ++ lib.optionals isScrolling [
-          # Promote window into its own column to the left
-          '', h, exec, hyprctl --batch "dispatch layoutmsg promote ; dispatch layoutmsg swapcol l"''
-          ", h, submap, reset"
-          # Promote window into its own column to the right
-          ", l, layoutmsg, promote"
-          ", l, submap, reset"
+          # Window movement (stays in submap for repeated moves)
+          ", h, movewindow, l"
+          ", l, movewindow, r"
+          ", k, movewindow, u"
+          ", j, movewindow, d"
         ];
         # Repeatable window appearance adjustments
         binde = [
