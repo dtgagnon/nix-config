@@ -182,6 +182,9 @@ in
           ", l, movewindow, r"
           ", k, movewindow, u"
           ", j, movewindow, d"
+          # Promote focused window to first position
+          ", p, layoutmsg, promote"
+          ", p, submap, reset"
         ];
         # Repeatable window appearance adjustments
         binde = [
