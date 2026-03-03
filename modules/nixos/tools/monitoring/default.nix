@@ -20,7 +20,6 @@ in
       btop
       htop
       glances
-      hwinfo
     ];
   };
 }
