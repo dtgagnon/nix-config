@@ -58,6 +58,7 @@ in
       enable = true;
       ip = "127.0.0.1";
       port = cfg.jupyter.port;
+      password = "";
       notebookConfig = ''
         c.ServerApp.token = ""
         c.ServerApp.password = ""
