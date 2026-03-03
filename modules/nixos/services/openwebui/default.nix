@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkIf mkOption types;
   cfg = config.${namespace}.services.openwebui;
 
   # Check which LLM backend is enabled
@@ -15,6 +15,14 @@ in
 {
   options.${namespace}.services.openwebui = {
     enable = mkEnableOption "Enable the Open WebUI local LLM interface";
+    jupyter = {
+      enable = mkEnableOption "Enable Jupyter as the code execution backend for Open WebUI";
+      port = mkOption {
+        type = types.port;
+        default = 8888;
+        description = "Port for the Jupyter server (localhost-only)";
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -38,8 +46,25 @@ in
         WEBUI_AUTH = "True";
         # PostgreSQL database configuration
         DATABASE_URL = "postgresql:///openwebui?host=/run/postgresql";
+      } // lib.optionalAttrs cfg.jupyter.enable {
+        CODE_EXECUTION_ENGINE = "jupyter";
+        CODE_EXECUTION_JUPYTER_URL = "http://127.0.0.1:${toString cfg.jupyter.port}";
       };
       # environmentFile = ""; # Useful for passing secrets to the service
+    };
+
+    # Jupyter code execution backend (localhost-only, no auth needed for local IPC)
+    services.jupyter = lib.mkIf cfg.jupyter.enable {
+      enable = true;
+      ip = "127.0.0.1";
+      port = cfg.jupyter.port;
+      notebookConfig = ''
+        c.ServerApp.token = ""
+        c.ServerApp.password = ""
+        c.ServerApp.disable_check_xsrf = True
+        c.ServerApp.allow_origin = "*"
+        c.ServerApp.allow_credentials = True
+      '';
     };
 
     systemd.services.open-webui = {
@@ -47,13 +72,15 @@ in
         "postgresql.service"
         "tailscaled.service"
       ] ++ lib.optional ollamaEnabled "ollama.service"
-        ++ lib.optional llamaCppEnabled "llama-cpp.service";
+        ++ lib.optional llamaCppEnabled "llama-cpp.service"
+        ++ lib.optional cfg.jupyter.enable "jupyter.service";
 
       requires = [
         "postgresql.service"
         "tailscaled.service"
       ] ++ lib.optional ollamaEnabled "ollama.service"
-        ++ lib.optional llamaCppEnabled "llama-cpp.service";
+        ++ lib.optional llamaCppEnabled "llama-cpp.service"
+        ++ lib.optional cfg.jupyter.enable "jupyter.service";
 
       serviceConfig = {
         DynamicUser = lib.mkForce false;
