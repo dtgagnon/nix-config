@@ -4,7 +4,7 @@
 , namespace
 , ... }:
 let
-  inherit (lib) mkEnableOption mkIf mkOption types literalExpression;
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.${namespace}.apps.element;
 in {
   options.${namespace}.apps.element = {
@@ -14,11 +14,10 @@ in {
   config = mkIf cfg.enable {
     programs.element-desktop = {
       enable = true;
-    };
-
-    # Tell Electron to use gnome-keyring for secure credential storage
-    xdg.configFile."Element/argv.json".text = builtins.toJSON {
-      password-store = "gnome-libsecret";
+      # Tell Electron to use gnome-keyring for secure credential storage
+      package = pkgs.element-desktop.override {
+        commandLineArgs = "--password-store=gnome-libsecret";
+      };
     };
   };
 }
