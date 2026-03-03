@@ -15,5 +15,10 @@ in {
     programs.element-desktop = {
       enable = true;
     };
+
+    # Tell Electron to use gnome-keyring for secure credential storage
+    xdg.configFile."Element/argv.json".text = builtins.toJSON {
+      password-store = "gnome-libsecret";
+    };
   };
 }
