@@ -78,12 +78,12 @@ in
                 hideWhenIdle = false;
                 maxWidth = 145;
                 panelShowAlbumArt = true;
-                panelShowVisualizer = true;
+                panelShowVisualizer = false;
                 scrollingMode = "hover";
                 showAlbumArt = true;
                 showArtistFirst = true;
                 showProgressRing = true;
-                showVisualizer = true;
+                showVisualizer = false;
                 textColor = "none";
                 useFixedWidth = false;
                 visualizerType = "linear";
