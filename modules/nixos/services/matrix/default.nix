@@ -37,7 +37,7 @@ in
   config = mkIf cfg.enable {
     # Persist the RocksDB database across reboots
     ${namespace}.system.preservation.extraSysDirs = [
-      "/var/lib/tuwunel"
+      "/var/lib/private/tuwunel"
     ];
 
     services.matrix-tuwunel = {

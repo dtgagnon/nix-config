@@ -649,11 +649,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1772509268,
-        "narHash": "sha256-UtRUMaxP3e5GagNbBN5D7tHvDhNCrQ1tKgQ3HTIYwDg=",
+        "lastModified": 1772510240,
+        "narHash": "sha256-zLNm+Bv9BRbyAyDOLv6en31sEbBvl/D5zABjoFWvi9A=",
         "ref": "refs/heads/main",
-        "rev": "136388505d468ea5a52f1a83f8b54a17cf6b9b68",
-        "revCount": 71,
+        "rev": "32aec4437d281eb90c7f3f44a5e46d33580c8ff8",
+        "revCount": 73,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/dtg-engineering"
       },
@@ -687,11 +687,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1772509276,
-        "narHash": "sha256-zLIT8EGtejXvJKDBvwrQnPYHREUarPwvXp5PCELD4KE=",
+        "lastModified": 1772510083,
+        "narHash": "sha256-+7gPqnKrsAx4Myd2dV+82/7yo4wpFN7MU7hBviDO4Q8=",
         "ref": "refs/heads/main",
-        "rev": "cec069957ded06784933d4c031538391508bbe52",
-        "revCount": 151,
+        "rev": "c066e46e16353a311f41f797647cc7343f91ce4d",
+        "revCount": 152,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/eterna-design"
       },
@@ -3159,11 +3159,11 @@
     },
     "nixpkgs_16": {
       "locked": {
-        "lastModified": 1765803225,
-        "narHash": "sha256-xwaZV/UgJ04+ixbZZfoDE8IsOWjtvQZICh9aamzPnrg=",
+        "lastModified": 1772419343,
+        "narHash": "sha256-QU3Cd5DJH7dHyMnGEFfPcZDaCAsJQ6tUD+JuUsYqnKU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ac9a217389ee622d4e1e727c4efcc9c4bc9089ba",
+        "rev": "93178f6a00c22fcdee1c6f5f9ab92f2072072ea9",
         "type": "github"
       },
       "original": {
@@ -3223,11 +3223,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1771177547,
-        "narHash": "sha256-trTtk3WTOHz7hSw89xIIvahkgoFJYQ0G43IlqprFoMA=",
+        "lastModified": 1772419343,
+        "narHash": "sha256-QU3Cd5DJH7dHyMnGEFfPcZDaCAsJQ6tUD+JuUsYqnKU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ac055f38c798b0d87695240c7b761b82fc7e5bc2",
+        "rev": "93178f6a00c22fcdee1c6f5f9ab92f2072072ea9",
         "type": "github"
       },
       "original": {
@@ -3319,11 +3319,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1752950548,
-        "narHash": "sha256-NS6BLD0lxOrnCiEOcvQCDVPXafX1/ek1dfJHX1nUIzc=",
+        "lastModified": 1772433332,
+        "narHash": "sha256-izhTDFKsg6KeVBxJS9EblGeQ8y+O8eCa6RcW874vxEc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "c87b95e25065c028d31a94f06a62927d18763fdf",
+        "rev": "cf59864ef8aa2e178cccedbe2c178185b0365705",
         "type": "github"
       },
       "original": {
@@ -3680,11 +3680,11 @@
         "nixpkgs": "nixpkgs_16"
       },
       "locked": {
-        "lastModified": 1772505791,
-        "narHash": "sha256-MalmGtgzHOobxaQuurnQ9qvB0hrmJUtUg6kOayjtfLo=",
+        "lastModified": 1772510094,
+        "narHash": "sha256-oNttEs+zUyjHG0X+uNu77BCPAFlaqQp01YoeORh6ziE=",
         "ref": "refs/heads/main",
-        "rev": "c5c23fae0b375582d2775344de8133cff1647cca",
-        "revCount": 212,
+        "rev": "fe3c5704cfc313e4ed6db7b0dde6e615f7e947aa",
+        "revCount": 213,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/web-portfolio"
       },

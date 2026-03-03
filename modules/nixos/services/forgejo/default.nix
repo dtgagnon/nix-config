@@ -27,7 +27,7 @@ in
   config = mkIf cfg.enable rec {
     # Persistence for Forgejo data
     ${namespace}.system.preservation.extraSysDirs = [
-      "/var/lib/forgejo"
+      { directory = "/var/lib/forgejo"; user = "forgejo"; group = "forgejo"; mode = "0750"; }
     ];
 
     # Sops secret for Forgejo DB password.
