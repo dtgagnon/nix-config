@@ -40,6 +40,7 @@ in
 
       forgejo = {
         enable = true;
+        domain = "git.spirenet.link";
       };
 
       matrix = {
