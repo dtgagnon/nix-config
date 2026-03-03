@@ -32,14 +32,26 @@ in
       default = 6167;
       description = "Local port tuwunel listens on (reverse-proxied by Pangolin/Traefik).";
     };
+
+    federation = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable Matrix federation with other homeservers.";
+      };
+
+      trustedServers = mkOption {
+        type = types.listOf types.str;
+        default = [ "matrix.org" ];
+        description = ''
+          Trusted key servers for room key lookups.
+          When federation is disabled, this is ignored and set to an empty list.
+        '';
+      };
+    };
   };
 
   config = mkIf cfg.enable {
-    # Persist the RocksDB database across reboots
-    ${namespace}.system.preservation.extraSysDirs = [
-      "/var/lib/private/tuwunel"
-    ];
-
     services.matrix-tuwunel = {
       enable = true;
 
@@ -55,14 +67,13 @@ in
         # Admin creates accounts via: `tuwunel-admin users create <name> <password>`
         allow_registration = false;
 
-        # Disabled federation — private server for friends only.
-        allow_federation = false;
+        # Federation controls whether this server can talk to other homeservers.
+        allow_federation = cfg.federation.enable;
 
         # Allow end-to-end encrypted rooms.
         allow_encryption = true;
 
-        # Remove matrix.org from trusted_servers since we're not federating.
-        trusted_servers = [ ];
+        trusted_servers = if cfg.federation.enable then cfg.federation.trustedServers else [ ];
       };
     };
   };

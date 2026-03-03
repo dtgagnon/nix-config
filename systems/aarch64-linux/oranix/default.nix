@@ -87,7 +87,14 @@ in
 
     system = {
       enable = true;
-      preservation = enabled;
+      preservation = {
+        enable = true;
+        # Persist /var/lib/private so DynamicUser services (tuwunel, etc.) retain state
+        # without conflicting with systemd's per-service namespace bind mounts.
+        extraSysDirs = [
+          { directory = "/var/lib/private"; mode = "0700"; }
+        ];
+      };
     };
 
     tools = {
