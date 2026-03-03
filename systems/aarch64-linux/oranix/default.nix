@@ -42,6 +42,11 @@ in
         enable = true;
       };
 
+      matrix = {
+        enable = true;
+        serverName = "matrix.spirenet.link";
+      };
+
       rybbit = {
         enable = true;
         domain = "analytics.spirenet.link";

@@ -3680,11 +3680,11 @@
         "nixpkgs": "nixpkgs_16"
       },
       "locked": {
-        "lastModified": 1772140815,
-        "narHash": "sha256-JzOUtQLmMzCZnOBUt7E0lZuImghwaCrFXcVZD6yma7w=",
+        "lastModified": 1772505791,
+        "narHash": "sha256-MalmGtgzHOobxaQuurnQ9qvB0hrmJUtUg6kOayjtfLo=",
         "ref": "refs/heads/main",
-        "rev": "7e9e89baa369770014563e4e52bfca564ff9a0a0",
-        "revCount": 210,
+        "rev": "c5c23fae0b375582d2775344de8133cff1647cca",
+        "revCount": 212,
         "type": "git",
         "url": "ssh://git@github.com/dtgagnon/web-portfolio"
       },
