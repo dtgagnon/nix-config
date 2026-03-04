@@ -70,6 +70,7 @@
       ];
 
       systems.hosts."DG-PC".modules = with inputs; [
+        comfyui-nix.nixosModules.default
         hyprland.nixosModules.default
       ];
 
@@ -275,6 +276,7 @@
     spirenet-dashboard.url = "git+ssh://git@github.com/dtgagnon/spirenet-dashboard";
 
     ## ai tools
+    comfyui-nix.url = "github:utensils/comfyui-nix";
     nix-llm-agents.url = "github:numtide/llm-agents.nix";
     ### mcp servers
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";

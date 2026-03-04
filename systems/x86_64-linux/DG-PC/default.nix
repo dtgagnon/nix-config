@@ -55,6 +55,7 @@ in
       keyd = enabled;
       # n8n = enabled; #TODO: Fix build failures
       # llama-cpp = enabled; # Replaced Ollama with llama.cpp + llama-swap
+      comfyui = enabled;
       ollama = enabled; # Disabled in favor of llama-cpp
       openwebui = {
         enable = true;
