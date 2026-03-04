@@ -631,6 +631,9 @@ in
       desktop.addons.hyprlock.enable = mkOverride 90 false;
       desktop.addons.hyprpaper.enable = mkOverride 90 false;
       desktop.hyprland.extraKeybinds."$lock" = mkOverride 90 "noctalia-shell ipc call lockScreen lock";
+      desktop.hyprland.extraKeybinds.bind = [
+        "$mod_ALT, slash, exec, noctalia-shell ipc call plugin:keybind-cheatsheet toggle"
+      ];
     };
     services.hypridle.settings.general.lock_cmd =
       mkOverride 90 "noctalia-shell ipc call lockScreen lock";

@@ -91,7 +91,6 @@ in
 
           # General Desktop
           "$mod_SHIFT_CTRL, L, exec, $lock"
-          (lib.optional (config.spirenix.desktop.addons.sysbar.quickshell.premade == "noctalia-shell") "$mod_ALT, slash, exec, noctalia-shell ipc call plugin:keybind-cheatsheet toggle")
 
           # Submap entry points
           "$mod, A, submap, apps"
