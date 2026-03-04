@@ -1,12 +1,42 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
+  inputs,
   ...
 }:
 let
   inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.${namespace}.services.comfyui;
+
+  comfyuiSrc = inputs.comfyui-nix;
+
+  # Upstream template-inputs.nix has a broken fetchurl (frog_depth_input.mp4 returns 404).
+  # Intercept pkgs.fetchurl to skip that URL, then rebuild the package from source.
+  brokenUrls = [
+    "https://raw.githubusercontent.com/Comfy-Org/workflow_templates/refs/heads/main/input/frog_depth_input.mp4"
+  ];
+  patchedPkgs = pkgs // {
+    fetchurl =
+      args:
+      if builtins.elem (args.url or "") brokenUrls then
+        builtins.toFile "placeholder" ""
+      else
+        pkgs.fetchurl args;
+  };
+
+  versions = import "${comfyuiSrc}/nix/versions.nix";
+  pythonOverrides = import "${comfyuiSrc}/nix/python-overrides.nix" {
+    inherit pkgs versions;
+    gpuSupport = "cuda";
+  };
+  comfyuiPackages = import "${comfyuiSrc}/nix/packages.nix" {
+    pkgs = patchedPkgs;
+    inherit (pkgs) lib;
+    inherit versions pythonOverrides;
+    gpuSupport = "cuda";
+  };
 in
 {
   options.${namespace}.services.comfyui = {
@@ -37,6 +67,7 @@ in
     services.comfyui = {
       enable = true;
       gpuSupport = "cuda";
+      package = comfyuiPackages.default;
       port = cfg.port;
       listenAddress = cfg.listenAddress;
       enableManager = cfg.enableManager;
