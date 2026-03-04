@@ -66,6 +66,11 @@ in
       };
       copyparty = enabled;
       odoo = enabled;
+      searxng = {
+        enable = true;
+        listenAddress = "0.0.0.0";
+        openFirewall = true;
+      };
     };
 
     system = {
