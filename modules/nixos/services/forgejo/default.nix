@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
@@ -12,6 +13,7 @@ let
     types
     ;
   cfg = config.${namespace}.services.forgejo;
+  stateDir = config.services.forgejo.stateDir;
 in
 {
   options.${namespace}.services.forgejo = {
@@ -56,8 +58,8 @@ in
           HTTP_PORT = 3055;
           SSH_DOMAIN = cfg.domain;
           START_SSH_SERVER = true;
-          # Internal SSH port; adjust firewall/Pangolin routing for external port 22 if needed
           SSH_PORT = 2222;
+          SSH_SERVER_HOST_KEYS = "ssh/forgejo-ed25519";
         };
 
         service = {
@@ -67,8 +69,13 @@ in
       };
     };
 
-    # Open the internal SSH port in the firewall.
-    # HTTP port 3000 is intentionally left local (Pangolin proxies it).
-    networking.firewall.allowedTCPPorts = [ 2222 ];
+    # Generate ed25519 host key for the built-in SSH server (it only auto-generates RSA)
+    systemd.services.forgejo.preStart = lib.mkBefore ''
+      dir="${stateDir}/data/ssh"
+      mkdir -p "$dir"
+      if [ ! -f "$dir/forgejo-ed25519" ]; then
+        ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -f "$dir/forgejo-ed25519" -N ""
+      fi
+    '';
   };
 }

@@ -49,6 +49,7 @@ in
         url = {
           "ssh://git@github.com".insteadOf = "https://github.com";
           "ssh://git@gitlab.com".insteadOf = "https://gitlab.com";
+          "ssh://git@git.spirenet.link".insteadOf = "https://git.spirenet.link";
         };
         commit.gpgsign = true;
       };
@@ -59,6 +60,14 @@ in
           host = "github.com gitlab.com";
           user = "git";
           forwardAgent = true;
+          identitiesOnly = true;
+          identityFile = "~/.ssh/${user.name}-key";
+        };
+        "forgejo" = {
+          host = "git.spirenet.link";
+          hostname = "100.100.90.1";
+          port = 2222;
+          user = "git";
           identitiesOnly = true;
           identityFile = "~/.ssh/${user.name}-key";
         };
