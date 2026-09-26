@@ -10,6 +10,8 @@
 
 </div>
 
+# Migrated to my personal Forejo git repository. While the config continues to evolve, updates will no longer be reflected on GitHub.
+
 ## Table of contents
 
 - [Features](#-features)
